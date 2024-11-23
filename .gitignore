@@ -4,6 +4,8 @@
 /out/
 /.pnp
 .pnp.js
+build
+dist
 
 # testing
 /coverage
