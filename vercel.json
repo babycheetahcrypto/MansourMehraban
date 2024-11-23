@@ -11,5 +11,7 @@
       "src": "/(.*)",
       "dest": "/"
     }
-  ]
+  ],
+  "buildCommand": "next build",
+  "installCommand": "npm install"
 }

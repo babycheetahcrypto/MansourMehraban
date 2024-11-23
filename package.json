@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "build-debug": "node build.js",
-    "vercel-build": "npm run sentry:sourcemaps && next build",
+    "vercel-build": "next build",
     "sentry:sourcemaps": "sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps ./build",
     "start": "next start",
     "lint": "next lint",
