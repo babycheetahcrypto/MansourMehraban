@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect, useMemo, useRef, ErrorInfo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import TonConnect, { WalletInfo } from '@tonconnect/sdk';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -88,10 +88,9 @@ const TelegramWebApp =
         },
         getUserName: () => 'Player',
         getUserProfilePhoto: () =>
-          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-oktTJZxRtnt9hm2dFnUILkTW3Dvnui.png', // Changed default image
+          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-oktTJZxRtnt9hm2dFnUILkTW3Dvnui.png',
         hapticFeedback: {
           impactOccurred: (style: string) => {
-            // Fallback vibration if available
             if ('vibrate' in navigator) {
               navigator.vibrate(50);
             }
@@ -99,14 +98,11 @@ const TelegramWebApp =
           },
         },
         openLink: (url: string) => {
-          // Fallback to browser window open if Telegram WebApp is not available
           window.open(url, '_blank');
         },
         openTelegramLink: (url: string) => {
-          // Fallback to browser window open if Telegram WebApp is not available
           window.open(url, '_blank');
         },
-        // Add other mock methods as needed
       };
 
 const StarryBackground: React.FC = () => (
@@ -296,6 +292,7 @@ const playCoinSound = () => {
 const playHeaderFooterSound = () => {
   const audio = new Audio(
     'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
+
   );
   audio.play();
 };
@@ -327,7 +324,6 @@ type Task = {
   completed: boolean;
   claimed: boolean;
   icon: React.ReactNode;
-
   action: () => void;
 };
 
@@ -341,9 +337,9 @@ const CryptoGame = () => {
     profilePhoto: TelegramWebApp.getUserProfilePhoto(),
   });
 
+  const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentUserRank, setCurrentUserRank] = useState(0);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
@@ -351,10 +347,6 @@ const CryptoGame = () => {
   const [energy, setEnergy] = useState(5000);
   const [maxEnergy] = useState(5000);
   const energyRef = useRef<HTMLDivElement>(null);
-  const [clickFeedback, setClickFeedback] = useState<{
-    amount: number;
-    position: { x: number; y: number };
-  } | null>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);
 
@@ -373,8 +365,6 @@ const CryptoGame = () => {
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
 
-  const [pphPopupShown, setPphPopupShown] = useState(false);
-
   const [dailyReward, setDailyReward] = useState({
     lastClaimed: null as string | null,
     streak: 0,
@@ -383,22 +373,18 @@ const CryptoGame = () => {
   });
   const [multiplier, setMultiplier] = useState(1);
   const [multiplierEndTime, setMultiplierEndTime] = useState<number | null>(null);
-  const [multiplierCooldown, setMultiplierCooldown] = useState<number | null>(null);
+  const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
   const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[0]);
-  const [inviteCode, setInviteCode] = useState('CRYPTO123');
-  const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
-  const [dailyChallenge, setDailyChallenge] = useState({ task: '', reward: 0, completed: false });
+  const [inviteCode] = useState('CRYPTO123');
+  const [friendsCoins] = useState<{ [key: string]: number }>({});
 
   const [congratulationPopup, setCongratulationPopup] = useState({
     show: false,
     item: null as ShopItem | PremiumShopItem | null,
   });
-  const [hasShownCongratulationPopup, setHasShownCongratulationPopup] = useState(false);
-  const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
   const [clickEffects, setClickEffects] = useState<
     { id: number; x: number; y: number; value: number }[]
   >([]);
-  const [hasShownPopup, setHasShownPopup] = useState(false);
   const [popupShown, setPopupShown] = useState({
     pph: false,
     levelUp: false,
@@ -724,8 +710,6 @@ rS8HlS44YDNgGaCuH.png"
     },
   ]);
 
-  const [leaderboard, setLeaderboard] = useState([]);
-
   const level = useMemo(() => {
     const maxPredefinedLevel = levelRequirements.length - 1;
     if (user.coins < levelRequirements[maxPredefinedLevel]) {
@@ -748,7 +732,7 @@ rS8HlS44YDNgGaCuH.png"
 
   const clickCoin = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
-      event.preventDefault(); // Prevent default touch behavior
+      event.preventDefault();
 
       const getCoordinates = (
         e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>
@@ -805,7 +789,7 @@ rS8HlS44YDNgGaCuH.png"
         });
         setEnergy((prev) => Math.max(prev - 1, 0));
 
-        //  Trigger haptic feedback
+        // Trigger haptic feedback
         if (settings.vibration) {
           TelegramWebApp.hapticFeedback.impactOccurred('medium');
         }
@@ -819,7 +803,7 @@ rS8HlS44YDNgGaCuH.png"
         TelegramWebApp.sendData(JSON.stringify({ action: 'tap', amount: clickPower * multiplier }));
       }
     },
-    [clickPower, multiplier, energy, settings, TelegramWebApp, playCoinSound]
+    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect]
   );
 
   const buyItem = useCallback(
@@ -868,7 +852,9 @@ rS8HlS44YDNgGaCuH.png"
         }
 
         // Send purchase data to Telegram Mini App
-        TelegramWebApp.sendData({ action: 'purchase', item: item.name, cost: price, isPremium });
+        TelegramWebApp.sendData(
+          JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
+        );
       } else {
         TelegramWebApp.showAlert('Not enough coins!');
       }
@@ -923,10 +909,9 @@ rS8HlS44YDNgGaCuH.png"
       }));
       setPphAccumulated(0);
       setShowPPHPopup(false);
-      setPphPopupShown(false);
       TelegramWebApp.showAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
 
-      TelegramWebApp.sendData({ action: 'claim', amount: pphAccumulated });
+      TelegramWebApp.sendData(JSON.stringify({ action: 'claim', amount: pphAccumulated }));
     } else {
       TelegramWebApp.showAlert('No profits to claim yet!');
     }
@@ -966,12 +951,12 @@ rS8HlS44YDNgGaCuH.png"
       const newDay = (dailyReward.day % 30) + 1;
       const completed = newDay === 1;
 
-      setDailyReward(() => ({
+      setDailyReward({
         lastClaimed: now.toISOString(),
         streak: newStreak,
         day: newDay,
         completed: completed,
-      }));
+      });
 
       TelegramWebApp.showAlert(
         `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`
@@ -992,27 +977,21 @@ rS8HlS44YDNgGaCuH.png"
   };
 
   const activateMultiplier = useCallback(() => {
-    if (!multiplierCooldown && !boosterCooldown) {
+    if (!multiplierEndTime && !boosterCooldown) {
       setMultiplier(2);
       const endTime = Date.now() + 2 * 60 * 1000;
       setMultiplierEndTime(endTime);
       TelegramWebApp.showAlert(`Activated 2x multiplier for 2 minutes!`);
 
-      const cooldownTimer = setTimeout(
-        () => {
-          setMultiplier(1);
-          setMultiplierEndTime(null);
-          setBoosterCooldown(Date.now() + 10 * 60 * 1000);
-          const unlockTimer = setTimeout(
-            () => {
-              setBoosterCooldown(null);
-            },
-            10 * 60 * 1000
-          );
-          return () => clearTimeout(unlockTimer);
-        },
-        2 * 60 * 1000
-      );
+      const cooldownTimer = setTimeout(() => {
+        setMultiplier(1);
+        setMultiplierEndTime(null);
+        setBoosterCooldown(Date.now() + 10 * 60 * 1000);
+        const unlockTimer = setTimeout(() => {
+          setBoosterCooldown(null);
+        }, 10 * 60 * 1000);
+        return () => clearTimeout(unlockTimer);
+      }, 2 * 60 * 1000);
 
       return () => clearTimeout(cooldownTimer);
     } else if (boosterCooldown) {
@@ -1022,7 +1001,7 @@ rS8HlS44YDNgGaCuH.png"
       const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
       TelegramWebApp.showAlert(`Multiplier active for ${remainingMultiplier} more seconds.`);
     }
-  }, [multiplierCooldown, boosterCooldown, multiplierEndTime]);
+  }, [multiplierEndTime, boosterCooldown]);
 
   const shareToSocialMedia = useCallback((platform: string) => {
     const message =
@@ -1041,60 +1020,37 @@ rS8HlS44YDNgGaCuH.png"
     } else if (platform === 'whatsapp') {
       TelegramWebApp.openLink(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`);
     }
-    updateTaskProgress(
-      platform === 'facebook' ? 1 : platform === 'x' ? 2 : platform === 'instagram' ? 3 : 12
-    );
   }, []);
 
   const openYouTubeChannel = useCallback(() => {
     TelegramWebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
-    updateTaskProgress(4);
   }, []);
 
   const watchYouTubeVideos = useCallback(() => {
     TelegramWebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
-    updateTaskProgress(5);
   }, []);
 
   const joinTelegramChannel = useCallback(() => {
     TelegramWebApp.openTelegramLink('https://t.me/babycheetahcrypto');
-    updateTaskProgress(6);
   }, []);
 
   const inviteFriends = useCallback(() => {
     TelegramWebApp.showConfirm(`Share your invite code: ${inviteCode}`, (confirmed) => {
       if (confirmed) {
-        updateTaskProgress(7);
       }
     });
   }, [inviteCode]);
 
   const followX = useCallback(() => {
     TelegramWebApp.openLink('https://x.com/BabyCheetahTeam');
-    updateTaskProgress(10);
   }, []);
 
   const followInstagram = useCallback(() => {
     TelegramWebApp.openLink('https://www.instagram.com/babycheetahcrypto/');
-    updateTaskProgress(11);
   }, []);
 
   const followWhatsApp = useCallback(() => {
     TelegramWebApp.openLink('https://whatsapp.com/channel/0029VasnzUPAO7RJkehdu43p');
-    updateTaskProgress(12);
-  }, []);
-
-  const updateTaskProgress = useCallback((taskId: number) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id === taskId && !task.completed) {
-          const newProgress = task.progress + 1;
-          const completed = newProgress >= (task.maxProgress || 1);
-          return { ...task, progress: newProgress, completed };
-        }
-        return task;
-      })
-    );
   }, []);
 
   // Types defined at the top level
@@ -1106,26 +1062,34 @@ rS8HlS44YDNgGaCuH.png"
     rank: number;
   };
 
-  // Leaderboard fetch function
-  const fetchLeaderboard = async (): Promise<LeaderboardEntry[]> => {
+  // Update the fetchLeaderboard function
+  const fetchLeaderboard = useCallback(async (): Promise<LeaderboardEntry[]> => {
     try {
-      return Array.from({ length: 200 }, (_, i) => ({
+      const leaderboardData = Array.from({ length: 200 }, (_, i) => ({
         id: i + 1,
         name: `Player${i + 1}`,
         coins: Math.floor(Math.random() * 1000000) + 500000,
         profitPerHour: Math.floor(Math.random() * 50000) + 25000,
         rank: i + 1,
       })).sort((a, b) => b.coins - a.coins);
+
+      // Find the current user's rank
+      const userRank = leaderboardData.findIndex(entry => entry.name === user.name) + 1;
+      setCurrentUserRank(userRank);
+
+      return leaderboardData;
     } catch (error) {
       console.error('Failed to fetch leaderboard:', error);
       return [];
     }
-  };
+  }, [user.name]);
 
+  // Fetch leaderboard data
   useEffect(() => {
     fetchLeaderboard().then((data) => setLeaderboardData(data));
-  }, []);
+  }, [fetchLeaderboard]);
 
+  // Initialize game and Telegram WebApp
   useEffect(() => {
     let isMounted = true;
 
@@ -1186,7 +1150,7 @@ rS8HlS44YDNgGaCuH.png"
       TelegramWebApp.expand();
     }
   }, []);
-
+  // Energy regeneration and profit accumulation
   useEffect(() => {
     const timer = setInterval(() => {
       setEnergy((prevEnergy) => {
@@ -1201,6 +1165,7 @@ rS8HlS44YDNgGaCuH.png"
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
 
+  // Show PPH popup
   useEffect(() => {
     if (!popupShown.pph && pphAccumulated > 0) {
       setShowPPHPopup(true);
@@ -1208,6 +1173,7 @@ rS8HlS44YDNgGaCuH.png"
     }
   }, [pphAccumulated, popupShown.pph]);
 
+  // Level up and task progress
   useEffect(() => {
     if (!popupShown.levelUp && level > user.level) {
       setNewLevel(level);
@@ -1683,7 +1649,7 @@ rS8HlS44YDNgGaCuH.png"
                   : index % 2 === 0
                     ? 'bg-gray-800/30'
                     : 'bg-gray-900/30'
-              } ${player.id === currentUserRank ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
+              } ${player.rank === currentUserRank ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
             >
               <div className="flex items-center space-x-4">
                 <div
@@ -2346,6 +2312,6 @@ rS8HlS44YDNgGaCuH.png"
       {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
     </div>
   );
-}
+};
 
 export default CryptoGame;
