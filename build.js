@@ -1,38 +1,27 @@
 import { exec } from 'child_process';
-import path from 'path';
 
-async function runBuild() {
-  return new Promise((resolve, reject) => {
-    const buildProcess = exec(
-      'next build', 
-      { 
-        env: { ...process.env },
-        cwd: path.resolve(process.cwd())
-      }, 
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Build Error: ${error.message}`);
-          reject(error);
-          return;
-        }
-        if (stderr) {
-          console.error(`Build Stderr: ${stderr}`);
-        }
-        console.log(`Build Output: ${stdout}`);
-        resolve();
-      }
-    );
+function runBuild() {
+  const buildProcess = exec('next build', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Build Error: ${error.message}`);
+      process.exit(1);
+    }
+    if (stderr) {
+      console.error(`Build Stderr: ${stderr}`);
+      process.exit(1);
+    }
+    console.log(`Build Output: ${stdout}`);
+  });
 
-    buildProcess.stdout.on('data', (data) => {
-      console.log(data);
-    });
+  buildProcess.stdout.on('data', (data) => {
+    console.log(data);
+  });
 
-    buildProcess.stderr.on('data', (data) => {
-      console.error(data);
-    });
+  buildProcess.stderr.on('data', (data) => {
+    console.error(data);
   });
 }
 
-runBuild().catch(console.error);
+runBuild();
 
 export default runBuild;
