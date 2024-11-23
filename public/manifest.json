@@ -1,0 +1,21 @@
+{
+    "name": "Crypto Cheetah Game",
+    "short_name": "CryptoCheetah",
+    "description": "An exciting crypto game featuring Baby Cheetah!",
+    "start_url": "https://baby-cheetah.vercel.app/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#4A90E2",
+    "icons": [
+      {
+        "src": "/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }

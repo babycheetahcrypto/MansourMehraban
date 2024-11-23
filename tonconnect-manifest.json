@@ -1,0 +1,11 @@
+{
+  "name": "Baby Cheetah",
+  "description": "Your fun, fast-paced crypto game for racing, collecting, and stacking Baby Cheetah Coins! 🐾💸🏆.",
+  "url": "https://baby-cheetah-git-main-babycheetahcrypto.vercel.app/",
+  "icon": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-oktTJZxRtnt9hm2dFnUILkTW3Dvnui.png",
+  "start_url": "https://baby-cheetah.vercel.app/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#FFFFFF"
+}
