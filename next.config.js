@@ -1,16 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   images: {
     domains: [
-      'hebbkx1anhila5yf.public.blob.vercel-storage.com',
-      'vercel-storage.com'
-    ],
-  },
-  webpack: (config) => {
-    config.resolve.fallback = { fs: false, net: false, tls: false };
-    return config;
-  },
+      'hebbkx1anhila5yf.public.blob.vercel-storage.com'
+      // Add other domains you use
+    ]
+  }
 };
 
-export default nextConfig;
+module.exports = nextConfig;
