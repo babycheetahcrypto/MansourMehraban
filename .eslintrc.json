@@ -7,6 +7,9 @@
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "plugins": ["@typescript-eslint", "react-hooks", "prettier"],
   "rules": {
     "no-unused-vars": "off",
@@ -23,5 +26,11 @@
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
     "react/no-unescaped-entities": "off"
-  }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "ignorePatterns": ["node_modules/", ".next/", "out/", "build/"]
 }
