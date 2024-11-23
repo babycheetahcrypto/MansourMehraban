@@ -331,7 +331,7 @@ type Task = {
   action: () => void;
 };
 
-export default function Component() {
+const CryptoGame = () => {
   const [user, setUser] = useState({
     name: TelegramWebApp.getUserName(),
     coins: 0,
@@ -2347,3 +2347,5 @@ rS8HlS44YDNgGaCuH.png"
     </div>
   );
 }
+
+export default CryptoGame;
