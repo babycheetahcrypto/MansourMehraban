@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../utils/database';
 import { User } from '../../../models/User';
-import { validateTelegramInitData } from '../../../utils/telegramAuth';
+import { validateTelegramInitData } from '../../../middleware/telegramAuth'; // Use correct import
 
-// Define interface for incoming request body
 interface RegisterRequestBody {
   user: {
     id: number;
@@ -16,39 +15,33 @@ interface RegisterRequestBody {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Ensure database connection
     await connectToDatabase();
 
-    // Validate request method
     if (req.method !== 'POST') {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // Type-safe body parsing
     const { user, initData } = req.body as RegisterRequestBody;
 
-    // Validate Telegram init data
-    if (!validateTelegramInitData(initData)) {
-      return res.status(401).json({ error: 'Unauthorized' });
+    // Validate Telegram init data more strictly
+    if (!initData || !validateTelegramInitData(initData)) {
+      return res.status(401).json({ error: 'Invalid Telegram authentication' });
     }
 
-    // Validate user data
     if (!user || !user.id) {
       return res.status(400).json({ error: 'Invalid user data' });
     }
 
     try {
-      // Try to find existing user
       let existingUser = await User.findOne({ telegramId: user.id });
 
-      // If user doesn't exist, create new user
       if (!existingUser) {
         existingUser = new User({
           telegramId: user.id,
           username: user.username || '',
           firstName: user.first_name || '',
           lastName: user.last_name || '',
-          coins: 1000, // Initial coins
+          coins: 1000,
           level: 1,
           experience: 0,
           referralCode: generateReferralCode(),
@@ -56,7 +49,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           lastActive: new Date(),
         });
 
-        // Save the new user
         await existingUser.save();
 
         return res.status(201).json({
@@ -71,11 +63,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       }
 
-      // Update last active timestamp for existing user
       existingUser.lastActive = new Date();
       await existingUser.save();
 
-      // Return existing user data
       return res.status(200).json({
         message: 'User retrieved successfully',
         user: {
@@ -99,7 +89,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-// Helper function to generate referral code
 function generateReferralCode(length: number = 8): string {
   return Math.random()
     .toString(36)

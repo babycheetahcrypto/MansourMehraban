@@ -338,6 +338,58 @@ const CryptoGame: React.FC = () => {
     telegramId: '',
   });
 
+  // Function to fetch user data from the backend
+  const fetchUserData = async () => {
+    try {
+      if (window.Telegram && window.Telegram.WebApp) {
+        const webApp = window.Telegram.WebApp;
+        const telegramUser = webApp.initDataUnsafe.user;
+
+        if (telegramUser) {
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user: {
+                id: telegramUser.id,
+                username: telegramUser.username,
+                first_name: telegramUser.first_name,
+                last_name: telegramUser.last_name,
+              },
+              initData: webApp.initData,
+            }),
+          });
+
+          if (response.ok) {
+            const userData = await response.json();
+            setUser({
+              name:
+                userData.user.username ||
+                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+              telegramId: userData.user.id,
+              coins: userData.user.coins,
+              level: userData.user.level,
+              exp: 0,
+              profilePhoto: '',
+              rank: '',
+            });
+          } else {
+            console.error('Failed to fetch user data:', await response.json());
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  // Use effect to fetch user data when the component mounts
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
