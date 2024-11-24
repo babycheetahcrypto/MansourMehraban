@@ -39,70 +39,73 @@ const styles = `
   }
 `;
 
-// Real TelegramWebApp API
+// Telegram WebApp type definition
 declare global {
   interface Window {
-    Telegram?: {
-      WebApp?: {
-        initData: string;
-        sendData: (data: any) => void;
-        showAlert: (message: string) => void;
-        showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
+    Telegram: {
+      WebApp: {
         ready: () => void;
         expand: () => void;
         close: () => void;
         MainButton: {
           text: string;
+          color: string;
+          textColor: string;
+          isVisible: boolean;
+          isActive: boolean;
+          setText: (text: string) => void;
           onClick: (callback: () => void) => void;
           show: () => void;
           hide: () => void;
         };
         BackButton: {
+          isVisible: boolean;
+          onClick: (callback: () => void) => void;
           show: () => void;
           hide: () => void;
         };
-        onEvent: (eventType: string, callback: () => void) => void;
-        getUserName: () => string;
-        getUserProfilePhoto: () => string;
-        hapticFeedback: {
-          impactOccurred: (style: string) => void;
+        onEvent: (eventType: string, eventHandler: () => void) => void;
+        sendData: (data: string) => void;
+        initDataUnsafe: {
+          user?: {
+            id: number;
+            first_name: string;
+            last_name?: string;
+            username?: string;
+            language_code?: string;
+            photo_url?: string;
+          };
+          start_param?: string;
         };
-        openTelegramLink: (url: string) => void;
+        initData: string;
+        colorScheme: 'light' | 'dark';
+        themeParams: {
+          bg_color: string;
+          text_color: string;
+          hint_color: string;
+          link_color: string;
+          button_color: string;
+          button_text_color: string;
+        };
+        isExpanded: boolean;
+        viewportHeight: number;
+        viewportStableHeight: number;
+        headerColor: string;
+        backgroundColor: string;
+        HapticFeedback: {
+          impactOccurred: (style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft') => void;
+          notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
+          selectionChanged: () => void;
+        };
+        showAlert: (message: string) => Promise<void>;
+        // Updated showConfirm to accept two arguments
+        showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
         openLink: (url: string) => void;
+        openTelegramLink: (url: string) => void;
       };
     };
   }
 }
-
-// Check if Telegram WebApp is available
-const TelegramWebApp =
-  typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp
-    ? window.Telegram.WebApp
-    : {
-        initData: '',
-        sendData: () => console.log('sendData called, but Telegram WebApp is not available. '),
-        showAlert: (message: string) => alert(message),
-        showConfirm: (message: string, callback: (confirmed: boolean) => void) => {
-          const result = window.confirm(message);
-          callback(result);
-        },
-        getUserName: () => '',
-        getUserProfilePhoto: () => '',
-        hapticFeedback: {
-          impactOccurred: (style: string) => {
-            if ('vibrate' in navigator) {
-              navigator.vibrate(50);
-            }
-            console.log(`Haptic feedback: ${style}`);
-          },
-        },
-        openLink: (url: string) => {
-          window.open(url, 'https://t.me/BabyCheetah_Bot');
-        },
-        openTelegramLink: (url: string) => {
-          window.open(url, 'https://t.me/BabyCheetah_Bot');
-        },
-      };
 
 const StarryBackground: React.FC = () => (
   <div className="fixed inset-0 z-0">
@@ -325,20 +328,20 @@ type Task = {
   action: () => void;
 };
 
-const CryptoGame = () => {
+const CryptoGame: React.FC = () => {
   const [user, setUser] = useState({
-    id: '',
     name: '',
     coins: 0,
-    rank: '',
+    rank: 7352,
     level: 1,
     exp: 0,
     profilePhoto: '',
+    telegramId: '',
   });
 
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
@@ -753,7 +756,7 @@ rS8HlS44YDNgGaCuH.png"
           const newExp = prevUser.exp + 1;
           const newLevel = newExp >= 100 ? prevUser.level + 1 : prevUser.level;
 
-          // Add visual number show with animation
+          // Visual number show with animation
           const numberShow = document.createElement('div');
           numberShow.textContent = `+${formatNumber(clickValue)}`;
           numberShow.style.position = 'absolute';
@@ -767,7 +770,6 @@ rS8HlS44YDNgGaCuH.png"
           numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
           document.body.appendChild(numberShow);
 
-          // Animate the number
           numberShow.animate(
             [
               { opacity: 1, transform: 'translateY(0) scale(1)' },
@@ -789,8 +791,8 @@ rS8HlS44YDNgGaCuH.png"
         setEnergy((prev) => Math.max(prev - 1, 0));
 
         // Trigger haptic feedback
-        if (settings.vibration) {
-          TelegramWebApp.hapticFeedback.impactOccurred('medium');
+        if (settings.vibration && window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
         }
 
         // Play sound effect
@@ -799,7 +801,11 @@ rS8HlS44YDNgGaCuH.png"
         }
 
         // Send tap data to Telegram Mini App
-        TelegramWebApp.sendData(JSON.stringify({ action: 'tap', amount: clickPower * multiplier }));
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.sendData(
+            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
+          );
+        }
       }
     },
     [clickPower, multiplier, energy, settings.vibration, settings.soundEffect]
@@ -851,11 +857,24 @@ rS8HlS44YDNgGaCuH.png"
         }
 
         // Send purchase data to Telegram Mini App
-        TelegramWebApp.sendData(
-          JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
-        );
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.sendData(
+            JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
+          );
+        }
+
+        // Show success message
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
+        } else {
+          alert(`Successfully purchased ${item.name}!`);
+        }
       } else {
-        TelegramWebApp.showAlert('Not enough coins!');
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Not enough coins!');
+        } else {
+          alert('Not enough coins!');
+        }
       }
     },
     [user.coins, popupShown.congratulation]
@@ -885,7 +904,7 @@ rS8HlS44YDNgGaCuH.png"
           'address' in walletInfo.account
         ) {
           setWallet(walletInfo.account.address as string);
-          TelegramWebApp.showAlert('Wallet connected successfully with Tonkeeper!');
+          window.Telegram.WebApp.showAlert('Wallet connected successfully with Tonkeeper!');
         } else {
           throw new Error('Failed to get wallet address');
         }
@@ -894,7 +913,7 @@ rS8HlS44YDNgGaCuH.png"
       }
     } catch (error) {
       console.error('Failed to connect wallet:', error);
-      TelegramWebApp.showAlert('Failed to connect wallet. Please try again.');
+      window.Telegram.WebApp.showAlert('Failed to connect wallet. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -908,16 +927,16 @@ rS8HlS44YDNgGaCuH.png"
       }));
       setPphAccumulated(0);
       setShowPPHPopup(false);
-      TelegramWebApp.showAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
+      window.Telegram.WebApp.showAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
 
-      TelegramWebApp.sendData(JSON.stringify({ action: 'claim', amount: pphAccumulated }));
+      window.Telegram.WebApp.sendData(JSON.stringify({ action: 'claim', amount: pphAccumulated }));
     } else {
-      TelegramWebApp.showAlert('No profits to claim yet!');
+      window.Telegram.WebApp.showAlert('No profits to claim yet!');
     }
   }, [pphAccumulated]);
 
   const claimNewLevel = useCallback(() => {
-    TelegramWebApp.showAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
+    window.Telegram.WebApp.showAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
     setUser((prevUser) => ({
       ...prevUser,
       level: newLevel,
@@ -957,13 +976,13 @@ rS8HlS44YDNgGaCuH.png"
         completed: completed,
       });
 
-      TelegramWebApp.showAlert(
+      window.Telegram.WebApp.showAlert(
         `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`
       );
     } else if (dailyReward.completed) {
-      TelegramWebApp.showAlert('You have completed the 30-day reward cycle!');
+      window.Telegram.WebApp.showAlert('You have completed the 30-day reward cycle!');
     } else {
-      TelegramWebApp.showAlert('You have already claimed your daily reward today!');
+      window.Telegram.WebApp.showAlert('You have already claimed your daily reward today!');
     }
   }, [dailyReward]);
 
@@ -980,7 +999,7 @@ rS8HlS44YDNgGaCuH.png"
       setMultiplier(2);
       const endTime = Date.now() + 2 * 60 * 1000;
       setMultiplierEndTime(endTime);
-      TelegramWebApp.showAlert(`Activated 2x multiplier for 2 minutes!`);
+      window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 2 minutes!`);
 
       const cooldownTimer = setTimeout(
         () => {
@@ -1001,10 +1020,14 @@ rS8HlS44YDNgGaCuH.png"
       return () => clearTimeout(cooldownTimer);
     } else if (boosterCooldown) {
       const remainingCooldown = Math.ceil((boosterCooldown - Date.now()) / 1000);
-      TelegramWebApp.showAlert(`Booster on cooldown. Available in ${remainingCooldown} seconds.`);
+      window.Telegram.WebApp.showAlert(
+        `Booster on cooldown. Available in ${remainingCooldown} seconds.`
+      );
     } else if (multiplierEndTime) {
       const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
-      TelegramWebApp.showAlert(`Multiplier active for ${remainingMultiplier} more seconds.`);
+      window.Telegram.WebApp.showAlert(
+        `Multiplier active for ${remainingMultiplier} more seconds.`
+      );
     }
   }, [multiplierEndTime, boosterCooldown]);
 
@@ -1012,50 +1035,55 @@ rS8HlS44YDNgGaCuH.png"
     const message =
       "🏆 Just claimed some coins in Baby Cheetah! 🚀 Join me in this exciting crypto game and start earning too! 🤑 Complete tasks, invite friends, and rise in the ranks. Let's get those coins together! 💰🐾";
     if (platform === 'facebook') {
-      TelegramWebApp.openLink(
+      window.Telegram.WebApp.openLink(
         `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(message)}`
       );
     } else if (platform === 'x') {
-      TelegramWebApp.openLink(
+      window.Telegram.WebApp.openLink(
         `https://x.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.href)}`
       );
     } else if (platform === 'instagram') {
-      TelegramWebApp.openLink(`https://www.instagram.com/`);
-      TelegramWebApp.showAlert('Copy and paste the message to your Instagram post!');
+      window.Telegram.WebApp.openLink(`https://www.instagram.com/`);
+      window.Telegram.WebApp.showAlert('Copy and paste the message to your Instagram post!');
     } else if (platform === 'whatsapp') {
-      TelegramWebApp.openLink(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`);
+      window.Telegram.WebApp.openLink(
+        `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`
+      );
     }
   }, []);
 
   const openYouTubeChannel = useCallback(() => {
-    TelegramWebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
+    window.Telegram.WebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
   }, []);
 
   const watchYouTubeVideos = useCallback(() => {
-    TelegramWebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
+    window.Telegram.WebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
   }, []);
 
   const joinTelegramChannel = useCallback(() => {
-    TelegramWebApp.openTelegramLink('https://t.me/babycheetahcrypto');
+    window.Telegram.WebApp.openTelegramLink('https://t.me/babycheetahcrypto');
   }, []);
 
   const inviteFriends = useCallback(() => {
-    TelegramWebApp.showConfirm(`Share your invite code: ${inviteCode}`, (confirmed) => {
-      if (confirmed) {
+    window.Telegram.WebApp.showConfirm(
+      `Share your invite code: ${inviteCode}`,
+      (confirmed: boolean) => {
+        if (confirmed) {
+        }
       }
-    });
+    );
   }, [inviteCode]);
 
   const followX = useCallback(() => {
-    TelegramWebApp.openLink('https://x.com/BabyCheetahTeam');
+    window.Telegram.WebApp.openLink('https://x.com/BabyCheetahTeam');
   }, []);
 
   const followInstagram = useCallback(() => {
-    TelegramWebApp.openLink('https://www.instagram.com/babycheetahcrypto/');
+    window.Telegram.WebApp.openLink('https://www.instagram.com/babycheetahcrypto/');
   }, []);
 
   const followWhatsApp = useCallback(() => {
-    TelegramWebApp.openLink('https://whatsapp.com/channel/0029VasnzUPAO7RJkehdu43p');
+    window.Telegram.WebApp.openLink('https://whatsapp.com/channel/0029VasnzUPAO7RJkehdu43p');
   }, []);
 
   // Types defined at the top level
@@ -1096,54 +1124,79 @@ rS8HlS44YDNgGaCuH.png"
 
   // Initialize game and Telegram WebApp
   useEffect(() => {
-    let isMounted = true;
-
     const initializeGame = async () => {
       setIsLoading(true);
       try {
-        const params = new URLSearchParams(TelegramWebApp.initData);
-        const telegramId = params.get('user_id');
-        const username = params.get('username');
+        if (window.Telegram && window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp;
+          webApp.ready();
+          webApp.expand();
 
-        if (telegramId && username && isMounted) {
-          setUser((prevUser) => ({
-            ...prevUser,
-            name: username,
-            telegramId: telegramId,
-          }));
+          // Get user data from Telegram
+          const telegramUser = webApp.initDataUnsafe.user;
+          if (telegramUser) {
+            setUser((prevUser) => ({
+              ...prevUser,
+              name:
+                telegramUser.username ||
+                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+              telegramId: telegramUser.id.toString(),
+              profilePhoto: telegramUser.photo_url || '',
+            }));
+          }
+
+          // Set up main button
+          webApp.MainButton.setText('Play Now!');
+          webApp.MainButton.show();
+          webApp.MainButton.onClick(() => setCurrentPage('home'));
+
+          // Set up back button
+          webApp.BackButton.show();
+          webApp.BackButton.onClick(() => {
+            if (currentPage === 'home') {
+              webApp.close();
+            } else {
+              setCurrentPage('home');
+            }
+          });
+
+          // Apply Telegram theme
+          document.body.style.setProperty('--tg-theme-bg-color', webApp.backgroundColor);
+          document.body.style.setProperty('--tg-theme-text-color', webApp.themeParams.text_color);
+          document.body.style.setProperty(
+            '--tg-theme-button-color',
+            webApp.themeParams.button_color
+          );
+          document.body.style.setProperty(
+            '--tg-theme-button-text-color',
+            webApp.themeParams.button_text_color
+          );
         }
 
-        // Simulate initialization delay
+        // Simulate fetching game data
         await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        // Initialize game state (this would typically come from a backend)
+        setUser((prevUser) => ({
+          ...prevUser,
+          coins: 1000,
+          level: 1,
+          exp: 0,
+        }));
+
+        setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
-        if (isMounted) {
-          TelegramWebApp.showAlert('Failed to load game data. Please try again.');
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+        } else {
+          alert('Failed to load game data. Please try again.');
         }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       }
     };
 
-    // Telegram WebApp initialization
-    const initTelegramWebApp = () => {
-      if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
-        const TelegramWebApp = window.Telegram.WebApp;
-        TelegramWebApp.ready();
-        TelegramWebApp.expand();
-      }
-    };
-
-    // Call initialization functions
     initializeGame();
-    initTelegramWebApp();
-
-    // Cleanup function
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   // Check if TelegramWebApp is available
@@ -1208,7 +1261,10 @@ rS8HlS44YDNgGaCuH.png"
           <div className="flex items-center space-x-2">
             <div className="w-10 h-10 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden">
               <Image
-                src={user.profilePhoto}
+                src={
+                  user.profilePhoto ||
+                  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-oktTJZxRtnt9hm2dFnUILkTW3Dvnui.png'
+                }
                 alt={user.name}
                 width={40}
                 height={40}
@@ -1609,7 +1665,7 @@ rS8HlS44YDNgGaCuH.png"
                       setTasks((prevTasks) =>
                         prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
                       );
-                      TelegramWebApp.showAlert(`Claimed ${task.reward} coins!`);
+                      window.Telegram.WebApp.showAlert(`Claimed ${task.reward} coins!`);
                     }}
                   >
                     <Star className="w-4 h-4 mr-1" />
@@ -2041,7 +2097,7 @@ rS8HlS44YDNgGaCuH.png"
               <Button
                 onClick={() => {
                   navigator.clipboard.writeText(`https://babycheetah.com/invite/${inviteCode}`);
-                  TelegramWebApp.showAlert('Referral link copied to clipboard!');
+                  window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
                 }}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"
               >
@@ -2128,7 +2184,7 @@ rS8HlS44YDNgGaCuH.png"
                   className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white mt-4"
                   onClick={() => {
                     setUser((prev) => ({ ...prev, coins: prev.coins + trophy.prize }));
-                    TelegramWebApp.showAlert(
+                    window.Telegram.WebApp.showAlert(
                       `Congratulations! You've claimed the ${trophy.name} trophy and earned ${formatNumber(trophy.prize)} coins!`
                     );
                     playHeaderFooterSound();
