@@ -98,7 +98,6 @@ declare global {
           selectionChanged: () => void;
         };
         showAlert: (message: string) => Promise<void>;
-        // Updated showConfirm to accept two arguments
         showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
         openLink: (url: string) => void;
         openTelegramLink: (url: string) => void;
