@@ -29,7 +29,7 @@
     "@swc/core": "^1.9.2",
     "@telegram-apps/sdk": "^2.6.2",
     "@tonconnect/sdk": "^2.2.0",
-    "@twa-dev/sdk": "^7.x.x",
+    "@twa-dev/sdk": "^7.10.1",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { WebApp } from '@twa-dev/sdk';
+import * as TWAsdk from '@twa-dev/sdk'; // Import entire module
 
 interface TelegramUser {
   id: number;
@@ -22,8 +22,8 @@ export default function Page() {
 
   useEffect(() => {
     const initTelegramWebApp = () => {
-      if (WebApp && WebApp.initDataUnsafe) {
-        const userData = WebApp.initDataUnsafe.user;
+      if (TWAsdk.WebApp && TWAsdk.WebApp.initDataUnsafe) {
+        const userData = TWAsdk.WebApp.initDataUnsafe.user;
 
         if (userData) {
           setUser({
@@ -36,8 +36,8 @@ export default function Page() {
           console.error('No Telegram user data available');
         }
 
-        WebApp.ready();
-        WebApp.expand();
+        TWAsdk.WebApp.ready();
+        TWAsdk.WebApp.expand();
       }
     };
 
