@@ -928,7 +928,11 @@ rS8HlS44YDNgGaCuH.png"
       setIsLoading(true);
 
       // Initialize TonConnect
-      const tonConnect = new TonConnect();
+      const manifestUrl =
+        process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
+        'https://babycheetah.vercel.app/tonconnect-manifest.json';
+
+      const tonConnect = new TonConnect({ manifestUrl });
 
       // Connect to wallet
       const walletConnectionSource = {
