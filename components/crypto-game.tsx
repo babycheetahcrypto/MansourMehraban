@@ -97,10 +97,10 @@ const TelegramWebApp =
           },
         },
         openLink: (url: string) => {
-          window.open(url, '_blank');
+          window.open(url, 'https://t.me/BabyCheetah_Bot');
         },
         openTelegramLink: (url: string) => {
-          window.open(url, '_blank');
+          window.open(url, 'https://t.me/BabyCheetah_Bot');
         },
       };
 
