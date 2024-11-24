@@ -332,7 +332,7 @@ const CryptoGame: React.FC = () => {
   const [user, setUser] = useState({
     name: '',
     coins: 0,
-    rank: 7352,
+    rank: '',
     level: 1,
     exp: 0,
     profilePhoto: '',
@@ -1146,7 +1146,7 @@ rS8HlS44YDNgGaCuH.png"
           }
 
           // Set up main button
-          webApp.MainButton.setText('Play Now!');
+          webApp.MainButton.setText('Play');
           webApp.MainButton.show();
           webApp.MainButton.onClick(() => setCurrentPage('home'));
 
@@ -1179,7 +1179,7 @@ rS8HlS44YDNgGaCuH.png"
         // Initialize game state (this would typically come from a backend)
         setUser((prevUser) => ({
           ...prevUser,
-          coins: 1000,
+          coins: 0,
           level: 1,
           exp: 0,
         }));
