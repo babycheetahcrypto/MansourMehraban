@@ -1,15 +1,18 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../utils/database';
 import { User } from '../../../models/User';
 import { validateTelegramInitData } from '../../../utils/telegramAuth';
 
-// Replace empty interface with a more meaningful type or remove if not needed
-type UserData = {
-  id: number;
-  username?: string;
-  first_name?: string;
-  last_name?: string;
-};
+// Define interface for incoming request body
+interface RegisterRequestBody {
+  user: {
+    id: number;
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+  };
+  initData: string;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -21,8 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // Extract Telegram user data and init data
-    const { user, initData } = req.body;
+    // Type-safe body parsing
+    const { user, initData } = req.body as RegisterRequestBody;
 
     // Validate Telegram init data
     if (!validateTelegramInitData(initData)) {
@@ -34,73 +37,72 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Invalid user data' });
     }
 
-    // Type assertion and immediate destructuring to handle unused variable warning
-    const { id, username, first_name, last_name } = user as UserData;
+    try {
+      // Try to find existing user
+      let existingUser = await User.findOne({ telegramId: user.id });
 
-    // Try to find existing user
-    const existingUser = await User.findOne({
-      telegramId: id,
-    });
+      // If user doesn't exist, create new user
+      if (!existingUser) {
+        existingUser = new User({
+          telegramId: user.id,
+          username: user.username || '',
+          firstName: user.first_name || '',
+          lastName: user.last_name || '',
+          coins: 1000, // Initial coins
+          level: 1,
+          experience: 0,
+          referralCode: generateReferralCode(),
+          referrals: 0,
+          lastActive: new Date(),
+        });
 
-    // If user doesn't exist, create new user
-    if (!existingUser) {
-      const newUser = new User({
-        telegramId: id,
-        username: username || '',
-        firstName: first_name || '',
-        lastName: last_name || '',
-        referralCode: generateReferralCode(),
-        coins: 1000,
-        level: 1,
-        experience: 0,
-        lastActive: new Date(),
-      });
+        // Save the new user
+        await existingUser.save();
 
-      // Save the new user
-      await newUser.save();
+        return res.status(201).json({
+          message: 'User registered successfully',
+          user: {
+            id: existingUser.telegramId,
+            username: existingUser.username,
+            coins: existingUser.coins,
+            level: existingUser.level,
+            referralCode: existingUser.referralCode,
+          },
+        });
+      }
 
-      // Return new user data
-      return res.status(201).json({
-        message: 'User registered',
+      // Update last active timestamp for existing user
+      existingUser.lastActive = new Date();
+      await existingUser.save();
+
+      // Return existing user data
+      return res.status(200).json({
+        message: 'User retrieved successfully',
         user: {
-          id: newUser.telegramId,
-          username: newUser.username,
-          coins: newUser.coins,
-          level: newUser.level,
-          referralCode: newUser.referralCode,
+          id: existingUser.telegramId,
+          username: existingUser.username,
+          coins: existingUser.coins,
+          level: existingUser.level,
+          referralCode: existingUser.referralCode,
         },
       });
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      return res.status(500).json({ error: 'Database error', details: dbError });
     }
-
-    // If user exists, update last active timestamp
-    existingUser.lastActive = new Date();
-    await existingUser.save();
-
-    // Return existing user data
-    return res.status(200).json({
-      message: 'User updated',
-      user: {
-        id: existingUser.telegramId,
-        username: existingUser.username,
-        coins: existingUser.coins,
-        level: existingUser.level,
-        referralCode: existingUser.referralCode,
-      },
-    });
   } catch (error) {
     console.error('Registration error:', error);
-
-    // Improved error handling
-    const errorMessage = error instanceof Error ? error.message : 'Unknown registration error';
-
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Registration failed',
-      details: errorMessage,
+      details: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }
 
-// Function to generate a unique referral code
-function generateReferralCode(): string {
-  return Math.random().toString(36).substring(2, 10).toUpperCase();
+// Helper function to generate referral code
+function generateReferralCode(length: number = 8): string {
+  return Math.random()
+    .toString(36)
+    .substring(2, length + 2)
+    .toUpperCase();
 }

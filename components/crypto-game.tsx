@@ -39,7 +39,21 @@ const styles = `
   }
 `;
 
-// Real TelegramWebApp API
+// Interface for Telegram User
+interface TelegramUser {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  language_code?: string;
+}
+
+// Interface for Crypto Game Component Props
+interface CryptoGameProps {
+  user: TelegramUser | null;
+}
+
+// Real TelegramWebApp API Declaration
 declare global {
   interface Window {
     Telegram?: {
@@ -74,13 +88,13 @@ declare global {
   }
 }
 
-// Check if Telegram WebApp is available
+// Fallback TelegramWebApp if not available
 const TelegramWebApp =
   typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp
     ? window.Telegram.WebApp
     : {
         initData: '',
-        sendData: () => console.log('sendData called, but Telegram WebApp is not available. '),
+        sendData: () => console.log('sendData called, but Telegram WebApp is not available.'),
         showAlert: (message: string) => alert(message),
         showConfirm: (message: string, callback: (confirmed: boolean) => void) => {
           const result = window.confirm(message);
@@ -292,7 +306,6 @@ const playCoinSound = () => {
 const playHeaderFooterSound = () => {
   const audio = new Audio(
     'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
-
   );
   audio.play();
 };
@@ -862,6 +875,7 @@ rS8HlS44YDNgGaCuH.png"
     [user.coins, popupShown.congratulation]
   );
 
+  // Wallet connection method
   const connectWallet = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -983,15 +997,21 @@ rS8HlS44YDNgGaCuH.png"
       setMultiplierEndTime(endTime);
       TelegramWebApp.showAlert(`Activated 2x multiplier for 2 minutes!`);
 
-      const cooldownTimer = setTimeout(() => {
-        setMultiplier(1);
-        setMultiplierEndTime(null);
-        setBoosterCooldown(Date.now() + 10 * 60 * 1000);
-        const unlockTimer = setTimeout(() => {
-          setBoosterCooldown(null);
-        }, 10 * 60 * 1000);
-        return () => clearTimeout(unlockTimer);
-      }, 2 * 60 * 1000);
+      const cooldownTimer = setTimeout(
+        () => {
+          setMultiplier(1);
+          setMultiplierEndTime(null);
+          setBoosterCooldown(Date.now() + 10 * 60 * 1000);
+          const unlockTimer = setTimeout(
+            () => {
+              setBoosterCooldown(null);
+            },
+            10 * 60 * 1000
+          );
+          return () => clearTimeout(unlockTimer);
+        },
+        2 * 60 * 1000
+      );
 
       return () => clearTimeout(cooldownTimer);
     } else if (boosterCooldown) {
@@ -1074,7 +1094,7 @@ rS8HlS44YDNgGaCuH.png"
       })).sort((a, b) => b.coins - a.coins);
 
       // Find the current user's rank
-      const userRank = leaderboardData.findIndex(entry => entry.name === user.name) + 1;
+      const userRank = leaderboardData.findIndex((entry) => entry.name === user.name) + 1;
       setCurrentUserRank(userRank);
 
       return leaderboardData;

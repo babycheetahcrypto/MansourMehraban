@@ -1,12 +1,5 @@
 import crypto from 'crypto';
 
-interface TelegramInitData {
-  query_id?: string;
-  user?: string;
-  auth_date?: string;
-  hash?: string;
-}
-
 export function validateTelegramInitData(initData: string): boolean {
   if (!initData) return false;
 
@@ -18,12 +11,12 @@ export function validateTelegramInitData(initData: string): boolean {
   try {
     // Parse the init data
     const params = new URLSearchParams(initData);
-    const dataToCheck: TelegramInitData = {};
+    const dataToCheck: Record<string, string> = {};
 
     // Extract and sort parameters
     params.forEach((value, key) => {
       if (key !== 'hash') {
-        dataToCheck[key as keyof TelegramInitData] = value;
+        dataToCheck[key] = value;
       }
     });
 

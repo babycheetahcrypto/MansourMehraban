@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { randomBytes } from 'crypto';
 
 // Define an interface for the User document
 export interface IUser extends mongoose.Document {
@@ -37,7 +38,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     },
     coins: {
       type: Number,
-      default: 0,
+      default: 1000,
       min: 0,
     },
     level: {
@@ -53,7 +54,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     referralCode: {
       type: String,
       unique: true,
-      sparse: true,
+      default: () => generateReferralCode(),
     },
     referrals: {
       type: Number,
@@ -70,20 +71,15 @@ const UserSchema = new mongoose.Schema<IUser>(
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields
-    collection: 'users', // Optional: specify collection name
+    timestamps: true,
+    collection: 'users',
   }
 );
 
-// Create a method to generate a referral code
-UserSchema.methods.generateReferralCode = function () {
-  return Math.random().toString(36).substring(2, 10).toUpperCase();
-};
+// Generate a unique referral code
+export function generateReferralCode(): string {
+  return randomBytes(4).toString('hex').toUpperCase();
+}
 
-// Create a static method to find by Telegram ID
-UserSchema.statics.findByTelegramId = function (telegramId: number) {
-  return this.findOne({ telegramId });
-};
-
-// Compile the model
-export const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+// Create or retrieve the model
+export const User = mongoose.models.User || mongoose.model<IUser>('User ', UserSchema);
