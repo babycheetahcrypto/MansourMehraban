@@ -86,9 +86,8 @@ const TelegramWebApp =
           const result = window.confirm(message);
           callback(result);
         },
-        getUserName: () => 'Player',
-        getUserProfilePhoto: () =>
-          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-oktTJZxRtnt9hm2dFnUILkTW3Dvnui.png',
+        getUserName: () => '',
+        getUserProfilePhoto: () => '',
         hapticFeedback: {
           impactOccurred: (style: string) => {
             if ('vibrate' in navigator) {
@@ -328,12 +327,13 @@ type Task = {
 
 const CryptoGame = () => {
   const [user, setUser] = useState({
-    name: TelegramWebApp.getUserName(),
+    id: '',
+    name: '',
     coins: 0,
-    rank: 7352,
+    rank: '',
     level: 1,
     exp: 0,
-    profilePhoto: TelegramWebApp.getUserProfilePhoto(),
+    profilePhoto: '',
   });
 
   const [currentUserRank, setCurrentUserRank] = useState(0);
