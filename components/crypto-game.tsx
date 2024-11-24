@@ -331,14 +331,12 @@ const CryptoGame: React.FC = () => {
   const [user, setUser] = useState({
     name: '',
     coins: 0,
-    rank: '',
     level: 1,
     exp: 0,
     profilePhoto: '',
     telegramId: '',
   });
 
-  // Function to fetch user data from the backend
   const fetchUserData = async () => {
     try {
       if (window.Telegram && window.Telegram.WebApp) {
@@ -373,7 +371,6 @@ const CryptoGame: React.FC = () => {
               level: userData.user.level,
               exp: 0,
               profilePhoto: '',
-              rank: '',
             });
           } else {
             console.error('Failed to fetch user data:', await response.json());
@@ -384,11 +381,6 @@ const CryptoGame: React.FC = () => {
       console.error('Error fetching user data:', error);
     }
   };
-
-  // Use effect to fetch user data when the component mounts
-  useEffect(() => {
-    fetchUserData();
-  }, []);
 
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
