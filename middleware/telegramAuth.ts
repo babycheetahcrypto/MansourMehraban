@@ -1,3 +1,4 @@
+// middleware/telegramAuth.ts
 import crypto from 'crypto';
 
 export function validateTelegramInitData(initData: string): boolean {

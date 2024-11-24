@@ -1,3 +1,4 @@
+// utils/database.ts
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
@@ -27,18 +28,31 @@ export async function connectToDatabase() {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
-      return mongoose.connection;
-    });
+    const opts = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+    };
+
+    cached.promise = mongoose
+      .connect(MONGODB_URI, opts)
+      .then((mongoose) => {
+        console.log('MongoDB connected successfully');
+        return mongoose.connection;
+      })
+      .catch((error) => {
+        console.error('MongoDB Connection Error:', error);
+        throw error;
+      });
   }
 
   try {
     cached.conn = await cached.promise;
-    console.log('MongoDB connected successfully');
     return cached.conn;
   } catch (e) {
     cached.promise = null;
-    console.error('MongoDB Connection Error:', e);
+    console.error('Failed to connect to MongoDB:', e);
     throw e;
   }
 }

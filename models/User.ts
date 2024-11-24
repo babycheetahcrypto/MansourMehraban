@@ -1,7 +1,6 @@
+// models/User.ts
 import mongoose from 'mongoose';
-import { randomBytes } from 'crypto';
 
-// Define an interface for the User document
 export interface IUser extends mongoose.Document {
   telegramId: number;
   username?: string;
@@ -13,10 +12,8 @@ export interface IUser extends mongoose.Document {
   referralCode: string;
   referrals: number;
   lastActive: Date;
-  walletAddress?: string;
 }
 
-// Create the Mongoose schema
 const UserSchema = new mongoose.Schema<IUser>(
   {
     telegramId: {
@@ -65,10 +62,6 @@ const UserSchema = new mongoose.Schema<IUser>(
       type: Date,
       default: Date.now,
     },
-    walletAddress: {
-      type: String,
-      trim: true,
-    },
   },
   {
     timestamps: true,
@@ -77,9 +70,9 @@ const UserSchema = new mongoose.Schema<IUser>(
 );
 
 // Generate a unique referral code
-export function generateReferralCode(): string {
-  return randomBytes(4).toString('hex').toUpperCase();
+function generateReferralCode(): string {
+  return Math.random().toString(36).substring(2, 10).toUpperCase();
 }
 
 // Create or retrieve the model
-export const User = mongoose.models.User || mongoose.model<IUser>('User ', UserSchema);
+export const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
