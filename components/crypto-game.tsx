@@ -39,21 +39,7 @@ const styles = `
   }
 `;
 
-// Interface for Telegram User
-interface TelegramUser {
-  id: number;
-  first_name?: string;
-  last_name?: string;
-  username?: string;
-  language_code?: string;
-}
-
-// Interface for Crypto Game Component Props
-interface CryptoGameProps {
-  user: TelegramUser | null;
-}
-
-// Real TelegramWebApp API Declaration
+// Real TelegramWebApp API
 declare global {
   interface Window {
     Telegram?: {
@@ -88,13 +74,13 @@ declare global {
   }
 }
 
-// Fallback TelegramWebApp if not available
+// Check if Telegram WebApp is available
 const TelegramWebApp =
   typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp
     ? window.Telegram.WebApp
     : {
         initData: '',
-        sendData: () => console.log('sendData called, but Telegram WebApp is not available.'),
+        sendData: () => console.log('sendData called, but Telegram WebApp is not available. '),
         showAlert: (message: string) => alert(message),
         showConfirm: (message: string, callback: (confirmed: boolean) => void) => {
           const result = window.confirm(message);
@@ -875,7 +861,6 @@ rS8HlS44YDNgGaCuH.png"
     [user.coins, popupShown.congratulation]
   );
 
-  // Wallet connection method
   const connectWallet = useCallback(async () => {
     try {
       setIsLoading(true);
