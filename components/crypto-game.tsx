@@ -1308,10 +1308,7 @@ rS8HlS44YDNgGaCuH.png"
           <div className="flex items-center space-x-2">
             <div className="w-10 h-10 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden">
               <Image
-                src={
-                  user.profilePhoto ||
-                  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-oktTJZxRtnt9hm2dFnUILkTW3Dvnui.png'
-                }
+                src={user.profilePhoto}
                 alt={user.name}
                 width={40}
                 height={40}
