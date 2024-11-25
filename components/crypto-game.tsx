@@ -1048,7 +1048,7 @@ const CryptoGame: React.FC = () => {
   const activateMultiplier = useCallback(() => {
     if (!multiplierEndTime && !boosterCooldown) {
       setMultiplier(2);
-      const endTime = Date.now() + 30 * 60 * 1000;
+      const endTime = Date.now() + 1 * 60 * 1000;
       setMultiplierEndTime(endTime);
       window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 2 minutes!`);
 
@@ -1065,7 +1065,7 @@ const CryptoGame: React.FC = () => {
           );
           return () => clearTimeout(unlockTimer);
         },
-        30 * 60 * 1000
+        1 * 60 * 1000
       );
 
       return () => clearTimeout(cooldownTimer);
