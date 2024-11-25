@@ -1195,6 +1195,11 @@ const CryptoGame: React.FC = () => {
             }));
           }
 
+          // Set up main button
+          webApp.MainButton.setText('Play');
+          webApp.MainButton.show();
+          webApp.MainButton.onClick(() => setCurrentPage('home'));
+
           // Set up back button
           webApp.BackButton.show();
           webApp.BackButton.onClick(() => {
