@@ -74,6 +74,9 @@ declare global {
             username?: string;
             language_code?: string;
             photo_url?: string;
+            coins: number;
+            level: number;
+            tasksCompleted: number;
           };
           start_param?: string;
         };
@@ -1415,10 +1418,6 @@ const CryptoGame: React.FC = () => {
                 width={32}
                 height={32}
                 {...props}
-                onClick={() => {
-                  setCurrentPage('settings');
-                  playHeaderFooterSound();
-                }}
               />
             )}
             href={page}
