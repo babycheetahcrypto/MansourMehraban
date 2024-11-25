@@ -366,11 +366,11 @@ const CryptoGame: React.FC = () => {
               name:
                 userData.user.username ||
                 `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-              telegramId: userData.user.id,
+              telegramId: userData.user.id.toString(),
               coins: userData.user.coins,
               level: userData.user.level,
               exp: 0,
-              profilePhoto: '',
+              profilePhoto: telegramUser.photo_url || '',
             });
           } else {
             console.error('Failed to fetch user data:', await response.json());
@@ -834,7 +834,12 @@ rS8HlS44YDNgGaCuH.png"
         setEnergy((prev) => Math.max(prev - 1, 0));
 
         // Trigger haptic feedback
-        if (settings.vibration && window.Telegram && window.Telegram.WebApp) {
+        if (
+          settings.vibration &&
+          window.Telegram &&
+          window.Telegram.WebApp &&
+          window.Telegram.WebApp.HapticFeedback
+        ) {
           window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
         }
 
