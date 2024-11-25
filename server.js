@@ -22,7 +22,7 @@ app.use(limiter);
 // CORS configuration
 app.use(
   cors({
-    origin: 'https://baby-cheetah.vercel.app/',
+    origin: 'https://t.me/BabyCheetah_Bot/',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })

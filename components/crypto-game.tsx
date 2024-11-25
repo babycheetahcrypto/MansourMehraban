@@ -184,7 +184,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 };
 
 const levelRequirements = [
-  0, 25000, 300000, 500000, 1000000, 10000000, 50000000, 100000000, 500000000, 1000000000,
+  0, 50000, 100000, 500000, 1000000, 50000000, 15000000, 550000000, 100000000, 10000000000,
 ];
 
 const levelImages = [
@@ -204,7 +204,7 @@ const trophies = [
   {
     name: 'Crypto Novice',
     description: 'First steps into the digital realm',
-    requirement: 5000,
+    requirement: 50000,
     prize: 20000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1T-nUWKYBAKLuUbRUCtQ4Pe6bKVvuayqD.png',
   },
@@ -933,7 +933,7 @@ const CryptoGame: React.FC = () => {
       // Initialize TonConnect
       const manifestUrl =
         process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
-        'https://wallet.tonkeeper.com//tonconnect-manifest.json';
+        'https://t.me/BabyCheetah_Bot/tonconnect-manifest.json';
 
       const tonConnect = new TonConnect({ manifestUrl });
 
@@ -2139,11 +2139,13 @@ const CryptoGame: React.FC = () => {
             <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
               <span className="text-sm text-white truncate mr-2">
-                https://babycheetah.com/invite/{inviteCode}
+                https://t.me/BabyCheetah_Bot/invite/{inviteCode}
               </span>
               <Button
                 onClick={() => {
-                  navigator.clipboard.writeText(`https://babycheetah.com/invite/${inviteCode}`);
+                  navigator.clipboard.writeText(
+                    `https://t.me/BabyCheetah_Bot/invite/${inviteCode}`
+                  );
                   window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
                 }}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"

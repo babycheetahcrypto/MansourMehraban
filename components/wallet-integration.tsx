@@ -6,7 +6,7 @@ export async function connectWallet(): Promise<string | null> {
     const tonConnect = new TonConnect({
       manifestUrl:
         process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
-        'https://babycheetah.vercel.app/tonconnect-manifest.json',
+        'https://t.me/BabyCheetah_Bot/tonconnect-manifest.json',
     });
 
     // Get available wallets

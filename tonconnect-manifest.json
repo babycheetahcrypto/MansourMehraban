@@ -1,9 +1,9 @@
 {
   "name": "Baby Cheetah",
   "description": "Your fun, fast-paced crypto game for racing, collecting, and stacking Baby Cheetah Coins! 🐾💸🏆.",
-  "url": "https://babycheetah.vercel.app/",
+  "url": "https://t.me/BabyCheetah_Bot/tonconnect-manifest.json",
   "icon": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-oktTJZxRtnt9hm2dFnUILkTW3Dvnui.png",
-  "start_url": "https://babycheetah.vercel.app/",
+  "start_url": "https://t.me/BabyCheetah_Bot/tonconnect-manifest.json",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#000000",
