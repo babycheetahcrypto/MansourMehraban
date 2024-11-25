@@ -1415,6 +1415,10 @@ const CryptoGame: React.FC = () => {
                 width={32}
                 height={32}
                 {...props}
+                onClick={() => {
+                  setCurrentPage('settings');
+                  playHeaderFooterSound();
+                }}
               />
             )}
             href={page}
@@ -1591,7 +1595,7 @@ const CryptoGame: React.FC = () => {
                     src={item.image}
                     alt={item.name}
                     layout="fill"
-                    objectFit="contain"
+                    objectFit="cover"
                     className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
                   />
                 </div>
