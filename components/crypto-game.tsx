@@ -933,7 +933,7 @@ const CryptoGame: React.FC = () => {
       // Initialize TonConnect
       const manifestUrl =
         process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
-        'https://babycheetahvercel.app/tonconnect-manifest.json';
+        'https://wallet.tonkeeper.com//tonconnect-manifest.json';
 
       const tonConnect = new TonConnect({ manifestUrl });
 
