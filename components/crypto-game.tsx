@@ -726,9 +726,7 @@ const CryptoGame: React.FC = () => {
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20icon-oGuCqwnySi2zD
-
-rS8HlS44YDNgGaCuH.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20icon-oGuCqwnySi2zDrS8HlS44YDNgGaCuH.png"
           alt="Instagram"
           width={48}
           height={48}
@@ -935,7 +933,7 @@ rS8HlS44YDNgGaCuH.png"
       // Initialize TonConnect
       const manifestUrl =
         process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
-        'https://babycheetah.vercel.app/tonconnect-manifest.json';
+        'https://babycheetahvercel.app/tonconnect-manifest.json';
 
       const tonConnect = new TonConnect({ manifestUrl });
 
@@ -1196,11 +1194,6 @@ rS8HlS44YDNgGaCuH.png"
               profilePhoto: telegramUser.photo_url || '',
             }));
           }
-
-          // Set up main button
-          webApp.MainButton.setText('Play');
-          webApp.MainButton.show();
-          webApp.MainButton.onClick(() => setCurrentPage('home'));
 
           // Set up back button
           webApp.BackButton.show();

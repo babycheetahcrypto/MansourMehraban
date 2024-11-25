@@ -4,7 +4,9 @@ export async function connectWallet(): Promise<string | null> {
   try {
     // Initialize TonConnect with manifest URL
     const tonConnect = new TonConnect({
-      manifestUrl: process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL || 'https://your-domain.com/tonconnect-manifest.json'
+      manifestUrl:
+        process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
+        'https://babycheetah.vercel.app/tonconnect-manifest.json',
     });
 
     // Get available wallets
@@ -21,20 +23,23 @@ export async function connectWallet(): Promise<string | null> {
 
     // Attempt to connect to the wallet
     return new Promise((resolve, reject) => {
-      const unsubscribe = tonConnect.onStatusChange((wallet) => {
-        if (wallet?.account) {
-          // Resolve with the wallet address
-          resolve(wallet.account.address);
-          unsubscribe();
+      const unsubscribe = tonConnect.onStatusChange(
+        (wallet) => {
+          if (wallet?.account) {
+            // Resolve with the wallet address
+            resolve(wallet.account.address);
+            unsubscribe();
+          }
+        },
+        (error) => {
+          console.error('Wallet connection error:', error);
+          reject(null);
         }
-      }, (error) => {
-        console.error('Wallet connection error:', error);
-        reject(null);
-      });
+      );
 
       // Initiate wallet connection
       tonConnect.connect({
-        jsBridgeKey: selectedWallet.name.toLowerCase()
+        jsBridgeKey: selectedWallet.name.toLowerCase(),
       });
     });
   } catch (error) {
