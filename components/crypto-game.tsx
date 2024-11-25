@@ -1590,8 +1590,8 @@ const CryptoGame: React.FC = () => {
                   <Image
                     src={item.image}
                     alt={item.name}
-                    layout="fill"
-                    objectFit="fit"
+                    layout="full"
+                    objectFit="cover"
                     className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
                   />
                 </div>
