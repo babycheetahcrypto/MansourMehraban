@@ -1040,7 +1040,7 @@ const CryptoGame: React.FC = () => {
     const rewards = [
       100, 250, 350, 450, 550, 650, 750, 850, 1000, 2500, 3500, 4500, 5500, 6500, 7500, 8500, 10000,
       20000, 30000, 40000, 50000, 60000, 70000, 80000, 100000, 300000, 600000, 700000, 800000,
-      1000000, 5000000,
+      1000000, 2000000,
     ];
     return rewards[day % rewards.length];
   };
@@ -1590,8 +1590,8 @@ const CryptoGame: React.FC = () => {
                   <Image
                     src={item.image}
                     alt={item.name}
-                    layout="full image"
-                    objectFit="cover"
+                    layout="fill"
+                    objectFit="contain"
                     className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
                   />
                 </div>
