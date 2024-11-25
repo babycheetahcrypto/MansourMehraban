@@ -184,7 +184,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 };
 
 const levelRequirements = [
-  0, 50000, 500000, 1000000, 5000000, 100000000, 500000000, 1000000000, 10000000000, 50000000000,
+  0, 5000, 50000, 100000, 500000, 10000000, 50000000, 500000000, 1000000000, 5000000000,
 ];
 
 const levelImages = [
@@ -204,71 +204,71 @@ const trophies = [
   {
     name: 'Crypto Novice',
     description: 'First steps into the digital realm',
-    requirement: 50000,
-    prize: 20000,
+    requirement: 10000,
+    prize: 1000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1T-nUWKYBAKLuUbRUCtQ4Pe6bKVvuayqD.png',
   },
   {
     name: 'Blockchain Pioneer',
     description: 'Exploring the foundations of crypto',
     requirement: 50000,
-    prize: 50000,
+    prize: 5000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2T-qkckZRo7F2pFbjOXFUsmZW1aVDaKkX.png',
   },
   {
     name: 'DeFi Explorer',
     description: 'Venturing into decentralized finance',
     requirement: 100000,
-    prize: 100000,
+    prize: 10000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3T-S4ZJ26mqOyNGPIIBKrLLwkozCZFPru.png',
   },
   {
     name: 'NFT Collector',
     description: 'Embracing the world of digital art',
     requirement: 250000,
-    prize: 250000,
+    prize: 25000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4T-8R9RicTTe3vC5WD0wWAY7OCNaF1vxx.png',
   },
   {
     name: 'Hodl Master',
     description: 'Showing true diamond hands',
     requirement: 500000,
-    prize: 500000,
+    prize: 50000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5T-QEssxxIveH9hiQ0nJcZZrmdJJguJbF.png',
   },
   {
     name: 'Altcoin Adventurer',
     description: 'Diversifying beyond Bitcoin',
     requirement: 1000000,
-    prize: 1000000,
+    prize: 100000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/6T-fnsT0zSHQjez6E6KHO3AjIwflnyT1P.png',
   },
   {
     name: 'Smart Contract Sage',
     description: 'Mastering the art of crypto automation',
     requirement: 2500000,
-    prize: 2500000,
+    prize: 250000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7T-2DEkkrvJaawGC1O7GADjiHOn8RQfia.png',
   },
   {
     name: 'Crypto Whale',
     description: 'Making waves in the digital ocean',
     requirement: 5000000,
-    prize: 5000000,
+    prize: 500000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8T-i7iib3r4xoqtY9qYHdrOOgiUflPOCu.png',
   },
   {
     name: 'Metaverse Mogul',
     description: 'Conquering virtual worlds',
     requirement: 7500000,
-    prize: 7500000,
+    prize: 750000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/9T-FOz1XZIhMkDitSvZsKOFXfYkP6QdQt.png',
   },
   {
     name: 'Crypto Legend',
     description: 'Achieving legendary status in the crypto world',
     requirement: 10000000,
-    prize: 10000000,
+    prize: 1000000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/10-m1ABpvscvGrraWnHOclc7sLK531TqB.png',
   },
 ];
@@ -444,7 +444,7 @@ const CryptoGame: React.FC = () => {
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah's%20Crypto%20Cave-eB3Jjfhp3OKWoHzZkYofYq2JvIoFte.jpg",
       basePrice: 1000,
-      baseProfit: 500,
+      baseProfit: 50,
       level: 1,
     },
     {
@@ -453,7 +453,7 @@ const CryptoGame: React.FC = () => {
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Baby%20Cheetah%20Vault-onkCfliqq8Zkv4EH70q1RjevRwpSrS.jpg',
       basePrice: 2000,
-      baseProfit: 1000,
+      baseProfit: 100,
       level: 1,
     },
     {
@@ -462,7 +462,7 @@ const CryptoGame: React.FC = () => {
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner-nMIyFzaXX5TkKWs2rtuCgEe3f7xNT4.jpg',
       basePrice: 4000,
-      baseProfit: 2000,
+      baseProfit: 1000,
       level: 1,
     },
     {
@@ -471,7 +471,7 @@ const CryptoGame: React.FC = () => {
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%E2%80%99s%20Stellar%20Fleet-RpIrYyUw2ijaNvNOC29XpaAl538qgI.jpg',
       basePrice: 8000,
-      baseProfit: 4000,
+      baseProfit: 2000,
       level: 1,
     },
     {
@@ -480,7 +480,7 @@ const CryptoGame: React.FC = () => {
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bugatti%20Crypto%20Orbit-mKpzDd9UUkgWF8vXui59EjtC2O49E0.jpg',
       basePrice: 16000,
-      baseProfit: 8000,
+      baseProfit: 4000,
       level: 1,
     },
     {
@@ -489,7 +489,7 @@ const CryptoGame: React.FC = () => {
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Speedy%20Coin%20Shop-4Pjy8KKoF4mPmJqSCKaeBmVjjOeDmG.jpg',
       basePrice: 32000,
-      baseProfit: 16000,
+      baseProfit: 8000,
       level: 1,
     },
     {
@@ -498,7 +498,7 @@ const CryptoGame: React.FC = () => {
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SpaceXcelerate%20Crypto-tRNfj0y3wKPzkeompo47K0INGZ8RzP.jpg',
       basePrice: 64000,
-      baseProfit: 32000,
+      baseProfit: 12000,
       level: 1,
     },
     {
@@ -507,7 +507,7 @@ const CryptoGame: React.FC = () => {
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lunar%20Cruiser%20Exchange-l3lp6JnCc43BWBNbDAmfoTDRfgVIPr.jpg',
       basePrice: 128000,
-      baseProfit: 64000,
+      baseProfit: 20000,
       level: 1,
     },
     {
@@ -516,7 +516,7 @@ const CryptoGame: React.FC = () => {
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Hyperdrive%20Coin%20Garage-p3lGkiS6WCbCuwUBxy75HFwCkRjbJU.jpg',
       basePrice: 256000,
-      baseProfit: 128000,
+      baseProfit: 50000,
       level: 1,
     },
     {
@@ -524,8 +524,8 @@ const CryptoGame: React.FC = () => {
       name: 'MoonShip Hangar',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/MoonShip%20Hangar-A3Pne3hTeraZk7TTZDnekdMmnVytf3.jpg',
-      basePrice: 512000,
-      baseProfit: 256000,
+      basePrice: 1000000,
+      baseProfit: 100000,
       level: 1,
     },
   ]);
@@ -536,7 +536,7 @@ const CryptoGame: React.FC = () => {
       name: 'Quantum Coin Accelerator',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SpaceXcelerate%20Crypto-0HG6KC5mE8P28FwqDdoyPDRv978heW.jpg',
-      basePrice: 2000,
+      basePrice: 10000,
       effect: 'Doubles coin button taps',
       level: 1,
     },
@@ -614,7 +614,7 @@ const CryptoGame: React.FC = () => {
     {
       id: 5,
       description: 'Watch YouTube videos',
-      reward: 1500,
+      reward: 1000,
       progress: 0,
       maxProgress: 10,
       completed: false,
@@ -667,7 +667,7 @@ const CryptoGame: React.FC = () => {
     {
       id: 8,
       description: 'Reach level 10',
-      reward: 1000000,
+      reward: 100000,
       progress: 0,
       maxProgress: 10,
       completed: false,
