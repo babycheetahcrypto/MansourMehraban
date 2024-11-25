@@ -184,7 +184,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 };
 
 const levelRequirements = [
-  0, 5000, 50000, 100000, 500000, 10000000, 50000000, 500000000, 1000000000, 5000000000,
+  0, 5000, 50000, 100000, 500000, 1000000, 100000000, 500000000, 1000000000, 5000000000,
 ];
 
 const levelImages = [
@@ -389,8 +389,8 @@ const CryptoGame: React.FC = () => {
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
   const [currentPage, setCurrentPage] = useState('home');
-  const [energy, setEnergy] = useState(5000);
-  const [maxEnergy] = useState(5000);
+  const [energy, setEnergy] = useState(1000);
+  const [maxEnergy] = useState(1000);
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);
@@ -1038,8 +1038,9 @@ const CryptoGame: React.FC = () => {
 
   const getDailyReward = (day: number) => {
     const rewards = [
-      100, 250, 350, 650, 10000, 2500, 5000, 15000, 25000, 50000, 100000, 250000, 500000, 1000000,
-      2500000, 5000000,
+      100, 250, 350, 450, 550, 650, 750, 850, 1000, 2500, 3500, 4500, 5500, 6500, 7500, 8500, 10000,
+      20000, 30000, 40000, 50000, 60000, 70000, 80000, 100000, 300000, 600000, 700000, 800000,
+      1000000,
     ];
     return rewards[day % rewards.length];
   };
@@ -1194,21 +1195,6 @@ const CryptoGame: React.FC = () => {
               profilePhoto: telegramUser.photo_url || '',
             }));
           }
-
-          // Set up main button
-          webApp.MainButton.setText('Play');
-          webApp.MainButton.show();
-          webApp.MainButton.onClick(() => setCurrentPage('home'));
-
-          // Set up back button
-          webApp.BackButton.show();
-          webApp.BackButton.onClick(() => {
-            if (currentPage === 'home') {
-              webApp.close();
-            } else {
-              setCurrentPage('home');
-            }
-          });
 
           // Apply Telegram theme
           document.body.style.setProperty('--tg-theme-bg-color', webApp.backgroundColor);
@@ -1604,7 +1590,8 @@ const CryptoGame: React.FC = () => {
                   <Image
                     src={item.image}
                     alt={item.name}
-                    fill
+                    layout="fill"
+                    objectFit="cover"
                     className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'opacity-50 grayscale' : ''}`}
                   />
                 </div>
