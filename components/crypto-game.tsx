@@ -1050,7 +1050,7 @@ const CryptoGame: React.FC = () => {
       setMultiplier(2);
       const endTime = Date.now() + 1 * 60 * 1000;
       setMultiplierEndTime(endTime);
-      window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 2 minutes!`);
+      window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 1 minutes!`);
 
       const cooldownTimer = setTimeout(
         () => {
@@ -1592,7 +1592,7 @@ const CryptoGame: React.FC = () => {
                     alt={item.name}
                     layout="fill"
                     objectFit="cover"
-                    className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'opacity-50 grayscale' : ''}`}
+                    className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
                   />
                 </div>
                 <p className="text-xs text-cyan-300 mb-2">
