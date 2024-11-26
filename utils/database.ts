@@ -1,4 +1,3 @@
-// utils/database.ts
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
@@ -32,7 +31,7 @@ export async function connectToDatabase() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       bufferCommands: false,
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      serverSelectionTimeoutMS: 5000,
     };
 
     cached.promise = mongoose
@@ -56,16 +55,3 @@ export async function connectToDatabase() {
     throw e;
   }
 }
-
-// Connection event listeners
-mongoose.connection.on('connected', () => {
-  console.log('Mongoose connected to database');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error('Mongoose connection error:', err);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('Mongoose disconnected');
-});
