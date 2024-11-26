@@ -6,6 +6,7 @@
 .pnp.js
 build
 dist
+.yarn/install-state.gz
 
 # testing
 /coverage
@@ -19,6 +20,8 @@ out/
 
 # Local env files
 .env.local
+.env*.local
+.env
 .env.development.local
 .env.test.local
 .env.production.local

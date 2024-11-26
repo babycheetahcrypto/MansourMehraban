@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const newUser = new User({
         telegramId: user.id,
         username: user.username,
-        coins: 1000,
+        coins: 0,
         level: 1,
         tasksCompleted: 0,
       });
