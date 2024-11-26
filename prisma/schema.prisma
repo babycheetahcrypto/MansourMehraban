@@ -5,6 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["mongodb"]
 }
 
 model User {
@@ -13,7 +14,7 @@ model User {
   username   String?
   firstName  String?
   lastName   String?
-  coins      Int      @default(0)  // Add coins field
+  coins      Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

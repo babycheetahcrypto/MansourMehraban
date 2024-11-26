@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@opentelemetry/instrumentation": "^0.55.0",
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^5.0.0",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.0.3",
@@ -48,9 +48,9 @@
     "mogodb": "^0.0.1-security",
     "mongodb": "^6.11.0",
     "mongoose": "^8.8.2",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
+    "next": "13.4.12",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "rimraf": "^6.0.1",
     "tailwind-merge": "^2.5.4"
   },
@@ -71,9 +71,9 @@
     "@types/mime": "^3.0.4",
     "@types/mongodb": "^4.0.6",
     "@types/mongoose": "^5.11.96",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
+    "@types/node": "20.4.5",
+    "@types/react": "18.2.17",
+    "@types/react-dom": "18.2.7",
     "@types/tailwindcss": "^3.0.11",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
@@ -87,13 +87,13 @@
     "husky": "^9.1.7",
     "postcss": "^8.4.49",
     "prettier": "^3.3.3",
-    "prisma": "^5.22.0",
+    "prisma": "^5.0.0",
     "speed-measure-webpack-plugin": "^1.5.0",
     "stream-browserify": "^3.0.0",
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
-    "typescript": "latest"
+    "typescript": "5.1.6"
   },
   "engines": {
     "node": ">=18.0.0 <21.0.0"
