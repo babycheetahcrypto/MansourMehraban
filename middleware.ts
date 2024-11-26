@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const telegram = request.headers.get('user-agent')?.includes('TelegramWebApp');
 
   if (!telegram && process.env.NODE_ENV === 'production') {
-    return NextResponse.redirect(new URL('https://t.me/your_bot_username'));
+    return NextResponse.redirect(new URL('https://t.me/BabyCheetah_Bot'));
   }
 
   return NextResponse.next();
