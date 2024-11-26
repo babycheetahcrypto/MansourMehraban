@@ -1,5 +1,6 @@
+// utils/referral.ts
 import crypto from 'crypto';
-import { User } from '../models/User';
+import User from '../models/User'; // Make sure to import the User model correctly
 
 export function generateReferralCode(length: number = 8): string {
   return crypto
@@ -11,9 +12,9 @@ export function generateReferralCode(length: number = 8): string {
 
 export async function processReferral(referrerId: number, referredId: number): Promise<void> {
   try {
-    // Use findOne with proper type
-    const referrer = await User.findOne({ telegramId: referrerId });
-    const referred = await User.findOne({ telegramId: referredId });
+    // Use the User model to find users based on telegramId
+    const referrer = await User.findOne({ telegramId: referrerId }).exec();
+    const referred = await User.findOne({ telegramId: referredId }).exec();
 
     if (referrer && referred) {
       referrer.coins += 1000; // Referral bonus

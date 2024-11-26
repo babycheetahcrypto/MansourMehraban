@@ -1,23 +1,19 @@
 // models/User.ts
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
-export interface IUser extends mongoose.Document {
+interface IUser extends Document {
   telegramId: number;
   username?: string;
   coins: number;
-  level: number;
-  tasksCompleted: number;
+  referrals: number;
 }
 
-const UserSchema = new mongoose.Schema<IUser>(
-  {
-    telegramId: { type: Number, required: true, unique: true },
-    username: { type: String, trim: true },
-    coins: { type: Number, default: 0 },
-    level: { type: Number, default: 1 },
-    tasksCompleted: { type: Number, default: 0 },
-  },
-  { timestamps: true, collection: 'users' }
-);
+const userSchema = new Schema<IUser>({
+  telegramId: { type: Number, required: true, unique: true },
+  coins: { type: Number, default: 0 },
+  referrals: { type: Number, default: 0 },
+});
 
-export const User = mongoose.models.User || mongoose.model<IUser>('User ', UserSchema);
+const User: Model<IUser> = mongoose.model('User ', userSchema);
+
+export default User;
