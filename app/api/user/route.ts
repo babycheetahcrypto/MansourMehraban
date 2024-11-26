@@ -16,10 +16,10 @@ export async function POST(request: Request) {
   try {
     const user = await prisma.user.create({
       data: {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        // Add other fields as necessary
+        telegramId: data.id,
+        username: data.username || '',
+        firstName: data.first_name || '',
+        lastName: data.last_name || '',
       },
     });
     return NextResponse.json(user);
