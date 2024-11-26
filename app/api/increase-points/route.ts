@@ -1,22 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { connectToDatabase } from '../../../utils/database';
+import { User } from '../../../models/User';
 
-export async function POST(req: NextRequest) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const { userId, points } = req.body;
+
   try {
-    const { telegramId } = await req.json();
+    await connectToDatabase();
 
-    if (!telegramId) {
-      return NextResponse.json({ error: 'Invalid telegramId' }, { status: 400 });
+    const user = await User.findOne({ telegramId: userId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User  not found' });
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { telegramId },
-      data: { points: { increment: 1 } },
-    });
+    user.coins += points; // or however you want to increase points
+    await user.save();
 
-    return NextResponse.json({ success: true, points: updatedUser.points });
+    return res.status(200).json({ message: 'Points increased successfully', user });
   } catch (error) {
     console.error('Error increasing points:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
