@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       data: { coins: { increment: 1 } },
     });
 
-    return NextResponse.json({ success: true, coins: updatedUser.points });
+    return NextResponse.json({ success: true, coins: updatedUser.coins });
   } catch (error) {
     console.error('Error increasing coins:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
