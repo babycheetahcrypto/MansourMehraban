@@ -2,27 +2,22 @@
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
-// Dynamically import the CryptoGame component
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
 });
 
 export default function Page() {
   useEffect(() => {
-    // Ensure Telegram WebApp is initialized
-    if (window.Telegram && window.Telegram.WebApp) {
+    if (window.Telegram?.WebApp) {
       const webApp = window.Telegram.WebApp;
       webApp.ready();
       webApp.expand();
 
-      // Define the fetchUser  function
       const fetchUser = async (): Promise<void> => {
         try {
-          // Retrieve the user data from Telegram WebApp
-          const telegramUser = webApp.initDataUnsafe.user;
+          const telegramUser = webApp.initDataUnsafe?.user;
 
           if (telegramUser) {
-            // Send user data to the API for registration
             const response = await fetch('/api/auth/register', {
               method: 'POST',
               headers: {
@@ -31,15 +26,16 @@ export default function Page() {
               body: JSON.stringify({
                 user: {
                   telegramId: telegramUser.id,
-                  username: telegramUser.username,
-                  firstName: telegramUser.first_name,
-                  lastName: telegramUser.last_name,
+                  username: telegramUser.username || null,
+                  firstName: telegramUser.first_name || null,
+                  lastName: telegramUser.last_name || null,
                 },
               }),
             });
 
             if (!response.ok) {
-              console.error('Failed to fetch user data:', await response.json());
+              const errorData = await response.json();
+              console.error('Failed to register user:', errorData);
             }
           }
         } catch (error) {
@@ -47,7 +43,7 @@ export default function Page() {
         }
       };
 
-      fetchUser(); // Call the function
+      fetchUser();
     }
   }, []);
 

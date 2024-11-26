@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "build-debug": "node build.js",
-    "vercel-build": "next build",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma db push && next build",
     "sentry:sourcemaps": "sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps ./build",
     "start": "next start",
     "sentry:release": "sentry-cli releases files <RELEASE_NAME> upload-sourcemaps ./build",
@@ -47,9 +48,9 @@
     "mogodb": "^0.0.1-security",
     "mongodb": "^6.11.0",
     "mongoose": "^8.8.2",
-    "next": "^14.x.x",
-    "react": "^18.x.x",
-    "react-dom": "^18.x.x",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
     "rimraf": "^6.0.1",
     "tailwind-merge": "^2.5.4"
   },
@@ -70,9 +71,9 @@
     "@types/mime": "^3.0.4",
     "@types/mongodb": "^4.0.6",
     "@types/mongoose": "^5.11.96",
-    "@types/node": "^20.x.x",
-    "@types/react": "^18.x.x",
-    "@types/react-dom": "^18.x.x",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
     "@types/tailwindcss": "^3.0.11",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
@@ -92,7 +93,7 @@
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.x.x"
+    "typescript": "latest"
   },
   "engines": {
     "node": ">=18.0.0 <21.0.0"
