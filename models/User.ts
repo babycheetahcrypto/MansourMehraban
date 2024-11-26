@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema<IUser>(
   {
     telegramId: { type: Number, required: true, unique: true },
     username: { type: String, trim: true },
-    coins: { type: Number, default: 1000 },
+    coins: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
     tasksCompleted: { type: Number, default: 0 },
   },
