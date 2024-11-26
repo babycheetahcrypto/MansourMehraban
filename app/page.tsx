@@ -1,7 +1,6 @@
 'use client';
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { prisma } from '@/lib/prisma'; // Adjust the import based on your project structure
 
 // Dynamically import the CryptoGame component
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
@@ -19,9 +18,11 @@ export default function Page() {
       // Define the fetchUser  function
       const fetchUser = async (): Promise<void> => {
         try {
+          // Retrieve the user data from Telegram WebApp
           const telegramUser = webApp.initDataUnsafe.user;
 
           if (telegramUser) {
+            // Send user data to the API for registration
             const response = await fetch('/api/auth/register', {
               method: 'POST',
               headers: {
@@ -29,12 +30,11 @@ export default function Page() {
               },
               body: JSON.stringify({
                 user: {
-                  id: telegramUser.id,
+                  telegramId: telegramUser.id,
                   username: telegramUser.username,
-                  first_name: telegramUser.first_name,
-                  last_name: telegramUser.last_name,
+                  firstName: telegramUser.first_name,
+                  lastName: telegramUser.last_name,
                 },
-                initData: webApp.initData,
               }),
             });
 
