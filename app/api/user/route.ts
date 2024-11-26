@@ -1,32 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma'; // Ensure this path is correct
 
-export async function POST(req: NextRequest) {
+export async function GET(request: Request) {
   try {
-    const userData = await req.json();
+    const users = await prisma.user.findMany();
+    return NextResponse.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return NextResponse.error();
+  }
+}
 
-    if (!userData || !userData.id) {
-      return NextResponse.json({ error: 'Invalid user data' }, { status: 400 });
-    }
-
-    let user = await prisma.user.findUnique({
-      where: { telegramId: userData.id },
+export async function POST(request: Request) {
+  const data = await request.json();
+  try {
+    const user = await prisma.user.create({
+      data: {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        // Add other fields as necessary
+      },
     });
-
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          telegramId: userData.id,
-          username: userData.username || '',
-          firstName: userData.first_name || '',
-          lastName: userData.last_name || '',
-        },
-      });
-    }
-
     return NextResponse.json(user);
   } catch (error) {
-    console.error('Error processing user data:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Error creating user:', error);
+    return NextResponse.error();
   }
 }
