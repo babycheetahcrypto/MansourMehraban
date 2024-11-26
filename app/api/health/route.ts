@@ -1,17 +1,26 @@
 import { NextResponse } from 'next/server';
-import { testMongoDBConnection } from 'lib/mongodb-test';
+import prisma from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const isConnected = await testMongoDBConnection();
-    if (!isConnected) {
-      return NextResponse.json(
-        { status: 'error', message: 'Database connection failed' },
-        { status: 500 }
-      );
-    }
-    return NextResponse.json({ status: 'ok', message: 'Service is healthy' });
+    // Test database connection
+    await prisma.$connect();
+    await prisma.$disconnect();
+
+    return NextResponse.json({
+      status: 'ok',
+      message: 'Service is healthy',
+      timestamp: new Date().toISOString(),
+    });
   } catch (error) {
-    return NextResponse.json({ status: 'error', message: String(error) }, { status: 500 });
+    console.error('Health check failed:', error);
+    return NextResponse.json(
+      {
+        status: 'error',
+        message: String(error),
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }

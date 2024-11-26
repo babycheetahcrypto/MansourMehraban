@@ -1,7 +1,6 @@
 {
   "name": "baby-cheetah-crypto",
   "version": "0.1.0",
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -38,6 +37,7 @@
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
+    "encoding": "^0.1.13",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-rate-limit": "^7.4.1",
@@ -46,9 +46,9 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.374.0",
     "mogodb": "^0.0.1-security",
-    "mongodb": "^6.11.0",
+    "mongodb": "^5.7.0",
     "mongoose": "^8.8.2",
-    "next": "^13.5.7",
+    "next": "13.4.12",
     "prisma": "^5.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
