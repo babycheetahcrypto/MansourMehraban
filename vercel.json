@@ -1,16 +1,8 @@
 {
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
+  "buildCommand": "npm run vercel-build",
+  "framework": "nextjs",
+  "installCommand": "npm install",
   "env": {
     "MONGODB_URI": "@mongodb_uri"
-  },
-  "build": {
-    "env": {
-      "MONGODB_URI": "@mongodb_uri"
-    }
   }
 }
