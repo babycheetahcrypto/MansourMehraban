@@ -1,6 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { prisma } from '@/lib/prisma'; // Adjust the import based on your project structure
 
 // Dynamically import the CryptoGame component
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
