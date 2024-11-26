@@ -3,13 +3,16 @@ import prisma from '@/lib/prisma';
 
 export async function GET() {
   try {
-    // Test database connection
     await prisma.$connect();
+
+    // Test query
+    await prisma.user.findFirst();
+
     await prisma.$disconnect();
 
     return NextResponse.json({
       status: 'ok',
-      message: 'Service is healthy',
+      message: 'Database connection successful',
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
