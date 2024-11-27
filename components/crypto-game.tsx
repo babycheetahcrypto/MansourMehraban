@@ -387,12 +387,14 @@ const CryptoGame: React.FC = () => {
               profilePhoto: telegramUser.photo_url || '',
             });
           } else {
-            console.error('Failed to fetch user data:', await response.json());
+            console.error('Failed to fetch user data:', await response.text());
+            // Handle the error, maybe set some default values or show an error message
           }
         }
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+      // Handle the error, maybe set some default values or show an error message
     }
   }, []);
 
@@ -413,10 +415,12 @@ const CryptoGame: React.FC = () => {
       });
 
       if (!response.ok) {
-        console.error('Failed to save user data:', await response.json());
+        console.error('Failed to save user data:', await response.text());
+        // Handle the error, maybe show an error message to the user
       }
     } catch (error) {
       console.error('Error saving user data:', error);
+      // Handle the error, maybe show an error message to the user
     }
   }, [user]);
 

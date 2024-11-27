@@ -10,7 +10,12 @@ const options = {};
 let client;
 let clientPromise: Promise<MongoClient>;
 
-client = new MongoClient(uri, options);
-clientPromise = client.connect();
+try {
+  client = new MongoClient(uri, options);
+  clientPromise = client.connect();
+} catch (error) {
+  console.error('Failed to connect to MongoDB:', error);
+  throw new Error('Unable to connect to MongoDB');
+}
 
 export default clientPromise;
