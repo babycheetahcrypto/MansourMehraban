@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export const runtime = 'edge';
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
+// Remove dynamic export
+// export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
