@@ -37,6 +37,7 @@ interface CryptoGameProps {
   onCoinsUpdate: (amount: number) => Promise<void>;
 }
 
+
 // Add keyframe animation
 const styles = `
   @keyframes pulse {
@@ -346,7 +347,7 @@ type Task = {
   action: () => void;
 };
 
-const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
+const CryptoGame: React.FC = () => {
   const [user, setUser] = useState({
     name: '',
     coins: 0,

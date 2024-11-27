@@ -34,7 +34,6 @@ export default function Page() {
                   username: telegramUser.username,
                   firstName: telegramUser.first_name,
                   lastName: telegramUser.last_name,
-                  coins: telegramUser.coins || 0,
                 },
               }),
             });
@@ -52,12 +51,5 @@ export default function Page() {
     }
   }, []);
 
-  return (
-    <CryptoGame
-      userData={null}
-      onCoinsUpdate={function (amount: number): Promise<void> {
-        throw new Error('Function not implemented.');
-      }}
-    />
-  );
+  return <CryptoGame />;
 }
