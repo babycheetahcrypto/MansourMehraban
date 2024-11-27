@@ -1,56 +1,34 @@
-import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-
-interface UserData {
-  telegramId: number;
-  username?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  coins?: number;
-}
+import prisma from '@/lib/prisma';
 
 export async function POST(request: Request) {
   try {
-    const { user }: { user: UserData } = await request.json();
+    const { user } = await request.json();
 
     if (!user.telegramId) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
-    // Check if user exists
-    const existingUser = await prisma.user.findUnique({
+    // Create or update user without lastUpdated field
+    const updatedUser = await prisma.user.upsert({
       where: {
         telegramId: user.telegramId,
       },
-    });
-
-    if (existingUser) {
-      // Update existing user
-      const updatedUser = await prisma.user.update({
-        where: {
-          telegramId: user.telegramId,
-        },
-        data: {
-          username: user.username ?? null,
-          firstName: user.firstName ?? null,
-          lastName: user.lastName ?? null,
-        },
-      });
-      return NextResponse.json(updatedUser);
-    }
-
-    // Create new user with initial coins
-    const newUser = await prisma.user.create({
-      data: {
+      update: {
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      create: {
         telegramId: user.telegramId,
-        username: user.username ?? null,
-        firstName: user.firstName ?? null,
-        lastName: user.lastName ?? null,
-        coins: 0, // Initial coins
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        coins: 0,
       },
     });
 
-    return NextResponse.json(newUser);
+    return NextResponse.json(updatedUser);
   } catch (error) {
     console.error('Registration error:', error);
     return NextResponse.json({ error: 'Failed to register user' }, { status: 500 });
