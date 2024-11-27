@@ -1,9 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export async function POST(request: Request) {
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
+export async function POST(request: NextRequest) {
   try {
-    const { telegramId, amount } = await request.json();
+    const data = await request.json();
+    const { telegramId, amount } = data;
 
     if (!telegramId || amount === undefined) {
       return NextResponse.json({ error: 'Telegram ID and amount are required' }, { status: 400 });
