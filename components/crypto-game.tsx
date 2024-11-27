@@ -19,9 +19,10 @@ import {
   Copy,
   Vibrate,
   Music,
+  Eye,
 } from 'lucide-react';
 
-// Add interfaces for props
+// Interfaces and Types
 interface UserData {
   id: string;
   telegramId: number;
@@ -37,8 +38,45 @@ interface CryptoGameProps {
   onCoinsUpdate: (amount: number) => Promise<void>;
 }
 
+type ShopItem = {
+  id: number;
+  name: string;
+  image: string;
+  basePrice: number;
+  baseProfit: number;
+  level: number;
+};
 
-// Add keyframe animation
+type PremiumShopItem = {
+  id: number;
+  name: string;
+  image: string;
+  basePrice: number;
+  effect: string;
+  level: number;
+};
+
+type Task = {
+  id: number;
+  description: string;
+  reward: number;
+  progress: number;
+  maxProgress?: number;
+  completed: boolean;
+  claimed: boolean;
+  icon: React.ReactNode;
+  action: () => void;
+};
+
+type LeaderboardEntry = {
+  id: number;
+  name: string;
+  coins: number;
+  profitPerHour: number;
+  rank: number;
+};
+
+// Keyframe animation
 const styles = `
   @keyframes pulse {
     0% {
@@ -126,6 +164,7 @@ declare global {
   }
 }
 
+// Component definitions
 const StarryBackground: React.FC = () => (
   <div className="fixed inset-0 z-0">
     <div className="absolute inset-0 bg-black opacity-70"></div>
@@ -317,36 +356,6 @@ const playHeaderFooterSound = () => {
   audio.play();
 };
 
-type ShopItem = {
-  id: number;
-  name: string;
-  image: string;
-  basePrice: number;
-  baseProfit: number;
-  level: number;
-};
-
-type PremiumShopItem = {
-  id: number;
-  name: string;
-  image: string;
-  basePrice: number;
-  effect: string;
-  level: number;
-};
-
-type Task = {
-  id: number;
-  description: string;
-  reward: number;
-  progress: number;
-  maxProgress?: number;
-  completed: boolean;
-  claimed: boolean;
-  icon: React.ReactNode;
-  action: () => void;
-};
-
 const CryptoGame: React.FC = () => {
   const [user, setUser] = useState({
     name: '',
@@ -357,39 +366,24 @@ const CryptoGame: React.FC = () => {
     telegramId: '',
   });
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       if (window.Telegram && window.Telegram.WebApp) {
         const webApp = window.Telegram.WebApp;
         const telegramUser = webApp.initDataUnsafe.user;
 
         if (telegramUser) {
-          const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              user: {
-                id: telegramUser.id,
-                username: telegramUser.username,
-                first_name: telegramUser.first_name,
-                last_name: telegramUser.last_name,
-              },
-              initData: webApp.initData,
-            }),
-          });
-
+          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
           if (response.ok) {
             const userData = await response.json();
             setUser({
               name:
-                userData.user.username ||
+                userData.name ||
                 `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-              telegramId: userData.user.id.toString(),
-              coins: userData.user.coins,
-              level: userData.user.level,
-              exp: 0,
+              telegramId: telegramUser.id.toString(),
+              coins: userData.coins || 0,
+              level: userData.level || 1,
+              exp: userData.exp || 0,
               profilePhoto: telegramUser.photo_url || '',
             });
           } else {
@@ -400,7 +394,31 @@ const CryptoGame: React.FC = () => {
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
-  };
+  }, []);
+
+  const saveUserData = useCallback(async () => {
+    try {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          telegramId: user.telegramId,
+          name: user.name,
+          coins: user.coins,
+          level: user.level,
+          exp: user.exp,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save user data:', await response.json());
+      }
+    } catch (error) {
+      console.error('Error saving user data:', error);
+    }
+  }, [user]);
 
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
@@ -817,6 +835,13 @@ const CryptoGame: React.FC = () => {
           const newExp = prevUser.exp + 1;
           const newLevel = newExp >= 100 ? prevUser.level + 1 : prevUser.level;
 
+          const updatedUser = {
+            ...prevUser,
+            coins: newCoins,
+            exp: newExp % 100,
+            level: newLevel,
+          };
+
           // Visual number show with animation
           const numberShow = document.createElement('div');
           numberShow.textContent = `+${formatNumber(clickValue)}`;
@@ -874,7 +899,7 @@ const CryptoGame: React.FC = () => {
         }
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect]
+    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect, saveUserData]
   );
 
   const buyItem = useCallback(
@@ -883,10 +908,17 @@ const CryptoGame: React.FC = () => {
         ? item.basePrice * Math.pow(5, item.level - 1)
         : item.basePrice * Math.pow(2, item.level - 1);
       if (user.coins >= price) {
-        setUser((prevUser) => ({
-          ...prevUser,
-          coins: prevUser.coins - price,
-        }));
+        setUser((prevUser) => {
+          const updatedUser = {
+            ...prevUser,
+            coins: prevUser.coins - price,
+          };
+
+          // Save the updated user data
+          saveUserData();
+
+          return updatedUser;
+        });
         if (isPremium) {
           setPremiumShopItems((prevItems) =>
             prevItems.map((i) => {
@@ -943,7 +975,7 @@ const CryptoGame: React.FC = () => {
         }
       }
     },
-    [user.coins, popupShown.congratulation]
+    [user.coins, popupShown.congratulation, saveUserData]
   );
 
   const connectWallet = useCallback(async () => {
@@ -1190,10 +1222,9 @@ const CryptoGame: React.FC = () => {
 
   // Fetch leaderboard data
   useEffect(() => {
-    fetchLeaderboard().then((data) => setLeaderboardData(data));
-  }, [fetchLeaderboard]);
+    fetchUserData();
+  }, [fetchUserData]);
 
-  // Initialize game and Telegram WebApp
   useEffect(() => {
     const initializeGame = async () => {
       setIsLoading(true);
@@ -1231,14 +1262,6 @@ const CryptoGame: React.FC = () => {
 
         // Simulate fetching game data
         await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        // Initialize game state (this would typically come from a backend)
-        setUser((prevUser) => ({
-          ...prevUser,
-          coins: 0,
-          level: 1,
-          exp: 0,
-        }));
 
         setIsLoading(false);
       } catch (error) {
@@ -1328,7 +1351,7 @@ const CryptoGame: React.FC = () => {
               <h2 className="font-bold text-sm text-white">{user.name}</h2>
               <div className="text-xs text-white flex items-center">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-oktTJZxRtnt9hm2dFnUILkTW3Dvnui.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-iTiljsrx8N2IGIdjozA2tXBHhaCi8x.png"
                   alt="Coin"
                   width={16}
                   height={16}
