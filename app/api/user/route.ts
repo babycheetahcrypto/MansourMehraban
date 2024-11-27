@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export async function GET(request: NextRequest) {
+// Add segment config
+export const runtime = 'edge';
+export const preferredRegion = 'auto';
+export const revalidate = 0;
+
+export async function GET(req: NextRequest) {
   try {
-    const telegramId = request.nextUrl.searchParams.get('telegramId');
+    // Get telegramId from header instead of searchParams
+    const telegramId = req.headers.get('x-telegram-id');
 
     if (!telegramId) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });

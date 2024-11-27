@@ -18,6 +18,7 @@ export default function Page() {
           const telegramUser = webApp.initDataUnsafe.user;
           if (!telegramUser) return;
 
+          // First register the user
           await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
@@ -32,6 +33,13 @@ export default function Page() {
                 coins: 0,
               },
             }),
+          });
+
+          // Then fetch user data using header
+          await fetch('/api/user', {
+            headers: {
+              'x-telegram-id': telegramUser.id.toString(),
+            },
           });
         } catch (error) {
           console.error('Error initializing user:', error);
