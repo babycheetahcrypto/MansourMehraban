@@ -69,7 +69,8 @@ type Task = {
 };
 
 type LeaderboardEntry = {
-  id: number;
+  id: string;
+  telegramId: string;
   name: string;
   coins: number;
   profitPerHour: number;
@@ -1191,9 +1192,9 @@ const CryptoGame: React.FC = () => {
     window.Telegram.WebApp.openLink('https://whatsapp.com/channel/0029VasnzUPAO7RJkehdu43p');
   }, []);
 
-  // Types defined at the top level
   type LeaderboardEntry = {
-    id: number;
+    id: string;
+    telegramId: string;
     name: string;
     coins: number;
     profitPerHour: number;
@@ -1201,26 +1202,34 @@ const CryptoGame: React.FC = () => {
   };
 
   // Update the fetchLeaderboard function
-  const fetchLeaderboard = useCallback(async (): Promise<LeaderboardEntry[]> => {
+  const fetchLeaderboard = useCallback(async () => {
     try {
-      const leaderboardData = Array.from({ length: 200 }, (_, i) => ({
-        id: i + 1,
-        name: `Player${i + 1}`,
-        coins: Math.floor(Math.random() * 1000000) + 500000,
-        profitPerHour: Math.floor(Math.random() * 50000) + 25000,
-        rank: i + 1,
-      })).sort((a, b) => b.coins - a.coins);
-
-      // Find the current user's rank
-      const userRank = leaderboardData.findIndex((entry) => entry.name === user.name) + 1;
-      setCurrentUserRank(userRank);
-
-      return leaderboardData;
+      const response = await fetch('/api/leaderboard');
+      if (!response.ok) {
+        throw new Error('Failed to fetch leaderboard data');
+      }
+      const data = await response.json();
+      setLeaderboardData(data);
+      const userRank = data.findIndex(
+        (entry: LeaderboardEntry) => entry.telegramId === user.telegramId
+      );
+      setCurrentUserRank(userRank !== -1 ? userRank + 1 : 0);
     } catch (error) {
-      console.error('Failed to fetch leaderboard:', error);
-      return [];
+      console.error('Error fetching leaderboard:', error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [user.name]);
+  }, [user.telegramId]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
+  useEffect(() => {
+    if (user.telegramId) {
+      fetchLeaderboard();
+    }
+  }, [user.telegramId, fetchLeaderboard]);
 
   // Fetch leaderboard data
   useEffect(() => {
@@ -1771,10 +1780,14 @@ const CryptoGame: React.FC = () => {
   );
 
   const renderRating = () => {
+    if (isLoading) {
+      return <div className="text-center text-white">Loading leaderboard...</div>;
+    }
+
     return (
       <div className="flex flex-col items-center justify-start p-6 min-h-screen">
-        <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
-          {leaderboardData.slice(0, 200).map((player, index) => (
+        <Card className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
+          {leaderboardData.map((player, index) => (
             <div
               key={player.id}
               className={`flex items-center justify-between p-4 ${
@@ -1789,7 +1802,7 @@ const CryptoGame: React.FC = () => {
                   : index % 2 === 0
                     ? 'bg-gray-800/30'
                     : 'bg-gray-900/30'
-              } ${player.rank === currentUserRank ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
+              } ${player.telegramId === user.telegramId ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
             >
               <div className="flex items-center space-x-4">
                 <div
@@ -1803,7 +1816,7 @@ const CryptoGame: React.FC = () => {
                       : 'bg-gray-600'
                   }`}
                 >
-                  {index + 1}
+                  {player.rank}
                 </div>
                 <div>
                   <h3 className="font-bold text-white">{player.name}</h3>
@@ -1816,7 +1829,7 @@ const CryptoGame: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
+        </Card>
         {currentUserRank > 0 && (
           <div className="mt-8 p-4 bg-gradient-to-r from-primary/30 to-primary-foreground/30 rounded-lg shadow-lg backdrop-blur-md">
             <p className="text-white text-xl">
