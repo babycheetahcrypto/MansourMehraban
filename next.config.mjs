@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'export',
+  output: 'standalone',
   images: {
     domains: ['hebbkx1anhila5yf.public.blob.vercel-storage.com', 'vercel-storage.com'],
   },
@@ -12,6 +12,19 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.fallback = { fs: false, net: false, tls: false };
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: 'frame-ancestors https://telegram.org https://*.telegram.org',
+          },
+        ],
+      },
+    ];
   },
 };
 

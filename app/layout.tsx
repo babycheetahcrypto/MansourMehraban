@@ -1,5 +1,6 @@
 import './globals.css';
 import Script from 'next/script';
+import TelegramInitializer from './TelegramInitializer';
 
 export const metadata = {
   title: 'Baby Cheetah Crypto',
@@ -12,7 +13,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       </head>
-      <body>{children}</body>
+      <body>
+        <TelegramInitializer />
+        {children}
+      </body>
     </html>
   );
 }
