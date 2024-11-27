@@ -1780,14 +1780,10 @@ const CryptoGame: React.FC = () => {
   );
 
   const renderRating = () => {
-    if (isLoading) {
-      return <div className="text-center text-white">Loading leaderboard...</div>;
-    }
-
     return (
       <div className="flex flex-col items-center justify-start p-6 min-h-screen">
-        <Card className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
-          {leaderboardData.map((player, index) => (
+        <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
+          {leaderboardData.slice(0, 200).map((player, index) => (
             <div
               key={player.id}
               className={`flex items-center justify-between p-4 ${
@@ -1802,7 +1798,7 @@ const CryptoGame: React.FC = () => {
                   : index % 2 === 0
                     ? 'bg-gray-800/30'
                     : 'bg-gray-900/30'
-              } ${player.telegramId === user.telegramId ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
+              } ${player.rank === currentUserRank ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
             >
               <div className="flex items-center space-x-4">
                 <div
@@ -1816,7 +1812,7 @@ const CryptoGame: React.FC = () => {
                       : 'bg-gray-600'
                   }`}
                 >
-                  {player.rank}
+                  {index + 1}
                 </div>
                 <div>
                   <h3 className="font-bold text-white">{player.name}</h3>
@@ -1829,7 +1825,7 @@ const CryptoGame: React.FC = () => {
               </div>
             </div>
           ))}
-        </Card>
+        </div>
         {currentUserRank > 0 && (
           <div className="mt-8 p-4 bg-gradient-to-r from-primary/30 to-primary-foreground/30 rounded-lg shadow-lg backdrop-blur-md">
             <p className="text-white text-xl">
