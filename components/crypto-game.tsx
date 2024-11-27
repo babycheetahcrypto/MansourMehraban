@@ -68,15 +68,6 @@ type Task = {
   action: () => void;
 };
 
-type LeaderboardEntry = {
-  id: string;
-  telegramId: string;
-  name: string;
-  coins: number;
-  profitPerHour: number;
-  rank: number;
-};
-
 // Keyframe animation
 const styles = `
   @keyframes pulse {
@@ -1193,7 +1184,7 @@ const CryptoGame: React.FC = () => {
   }, []);
 
   type LeaderboardEntry = {
-    id: string;
+    _id: string;
     telegramId: string;
     name: string;
     coins: number;
@@ -1208,11 +1199,9 @@ const CryptoGame: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to fetch leaderboard data');
       }
-      const data = await response.json();
+      const data: LeaderboardEntry[] = await response.json();
       setLeaderboardData(data);
-      const userRank = data.findIndex(
-        (entry: LeaderboardEntry) => entry.telegramId === user.telegramId
-      );
+      const userRank = data.findIndex((entry) => entry.telegramId === user.telegramId);
       setCurrentUserRank(userRank !== -1 ? userRank + 1 : 0);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
@@ -1780,12 +1769,16 @@ const CryptoGame: React.FC = () => {
   );
 
   const renderRating = () => {
+    if (isLoading) {
+      return <div className="text-center text-white">Loading leaderboard...</div>;
+    }
+
     return (
       <div className="flex flex-col items-center justify-start p-6 min-h-screen">
         <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
-          {leaderboardData.slice(0, 200).map((player, index) => (
+          {leaderboardData.map((player, index) => (
             <div
-              key={player.id}
+              key={player._id}
               className={`flex items-center justify-between p-4 ${
                 index < 3
                   ? `bg-gradient-to-r ${
@@ -1798,7 +1791,7 @@ const CryptoGame: React.FC = () => {
                   : index % 2 === 0
                     ? 'bg-gray-800/30'
                     : 'bg-gray-900/30'
-              } ${player.rank === currentUserRank ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
+              } ${player.telegramId === user.telegramId ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
             >
               <div className="flex items-center space-x-4">
                 <div
@@ -1812,7 +1805,7 @@ const CryptoGame: React.FC = () => {
                       : 'bg-gray-600'
                   }`}
                 >
-                  {index + 1}
+                  {player.rank}
                 </div>
                 <div>
                   <h3 className="font-bold text-white">{player.name}</h3>
