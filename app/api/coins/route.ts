@@ -1,29 +1,7 @@
-import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const telegramId = searchParams.get('telegramId');
-
-    if (!telegramId) {
-      return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        telegramId: parseInt(telegramId),
-      },
-      select: {
-        coins: true,
-      },
-    });
-
-    return NextResponse.json(user);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch coins' }, { status: 500 });
-  }
-}
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
@@ -46,6 +24,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(updatedUser);
   } catch (error) {
+    console.error('Error updating coins:', error);
     return NextResponse.json({ error: 'Failed to update coins' }, { status: 500 });
   }
 }
