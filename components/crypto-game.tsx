@@ -867,12 +867,10 @@ const CryptoGame: React.FC = () => {
             }
           ).onfinish = () => document.body.removeChild(numberShow);
 
-          return {
-            ...prevUser,
-            coins: newCoins,
-            exp: newExp % 100,
-            level: newLevel,
-          };
+          // Save the updated user data
+          saveUserData();
+
+          return updatedUser;
         });
         setEnergy((prev) => Math.max(prev - 1, 0));
 
