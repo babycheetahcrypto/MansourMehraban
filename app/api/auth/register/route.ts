@@ -21,13 +21,18 @@ export async function POST(request: NextRequest) {
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
+        coins: user.coins || 0,
+        level: user.level || 1,
+        exp: user.exp || 0,
       },
       create: {
         telegramId: user.telegramId,
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
-        coins: 0,
+        coins: user.coins || 0,
+        level: user.level || 1,
+        exp: user.exp || 0,
       },
     });
 

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
@@ -7,6 +7,8 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 });
 
 export default function Page() {
+  const [userData, setUserData] = useState(null);
+
   useEffect(() => {
     if (window.Telegram?.WebApp) {
       const webApp = window.Telegram.WebApp;
@@ -19,7 +21,7 @@ export default function Page() {
           if (!telegramUser) return;
 
           // First register the user
-          await fetch('/api/auth/register', {
+          const registerResponse = await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -31,16 +33,29 @@ export default function Page() {
                 firstName: telegramUser.first_name,
                 lastName: telegramUser.last_name,
                 coins: 0,
+                level: 1,
+                exp: 0,
               },
             }),
           });
 
+          if (!registerResponse.ok) {
+            throw new Error('Failed to register user');
+          }
+
           // Then fetch user data using header
-          await fetch('/api/user', {
+          const userDataResponse = await fetch('/api/user', {
             headers: {
               'x-telegram-id': telegramUser.id.toString(),
             },
           });
+
+          if (!userDataResponse.ok) {
+            throw new Error('Failed to fetch user data');
+          }
+
+          const userData = await userDataResponse.json();
+          setUserData(userData);
         } catch (error) {
           console.error('Error initializing user:', error);
         }
@@ -50,5 +65,5 @@ export default function Page() {
     }
   }, []);
 
-  return <CryptoGame />;
+  return <CryptoGame userData={userData} />;
 }

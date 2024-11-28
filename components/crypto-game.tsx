@@ -30,12 +30,13 @@ interface UserData {
   firstName?: string;
   lastName?: string;
   coins: number;
+  level: number;
+  exp: number;
   lastUpdated: Date;
 }
 
 interface CryptoGameProps {
   userData: UserData | null;
-  onCoinsUpdate: (amount: number) => Promise<void>;
 }
 
 interface ShopItem {
@@ -348,7 +349,7 @@ const playHeaderFooterSound = () => {
   audio.play();
 };
 
-const CryptoGame: React.FC = () => {
+const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
   const [user, setUser] = useState({
     name: '',
     coins: 0,
@@ -391,28 +392,22 @@ const CryptoGame: React.FC = () => {
   }, []);
 
   const saveUserData = useCallback(async () => {
-    try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          telegramId: user.telegramId,
-          name: user.name,
-          coins: user.coins,
-          level: user.level,
-          exp: user.exp,
-        }),
-      });
+    if (user) {
+      try {
+        const response = await fetch('/api/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(user),
+        });
 
-      if (!response.ok) {
-        console.error('Failed to save user data:', await response.text());
-        // Handle the error, maybe show an error message to the user
+        if (!response.ok) {
+          console.error('Failed to save user data:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error saving user data:', error);
       }
-    } catch (error) {
-      console.error('Error saving user data:', error);
-      // Handle the error, maybe show an error message to the user
     }
   }, [user]);
 
