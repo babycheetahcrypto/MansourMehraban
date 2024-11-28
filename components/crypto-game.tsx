@@ -897,7 +897,7 @@ const CryptoGame: React.FC = () => {
   );
 
   const buyItem = useCallback(
-    (item: ShopItem | PremiumShopItem, isPremium = false) => {
+    async (item: ShopItem | PremiumShopItem, isPremium = false) => {
       const price = isPremium
         ? item.basePrice * Math.pow(5, item.level - 1)
         : item.basePrice * Math.pow(2, item.level - 1);
@@ -913,53 +913,64 @@ const CryptoGame: React.FC = () => {
 
           return updatedUser;
         });
-        if (isPremium) {
-          setPremiumShopItems((prevItems) =>
-            prevItems.map((i) => {
-              if (i.id === item.id) {
-                const newLevel = i.level + 1;
-                return {
-                  ...i,
-                  level: newLevel,
-                  basePrice: i.basePrice * 5,
-                  effect: `Multiplies coin button taps by ${newLevel + 1}x`,
-                };
-              }
-              return i;
-            })
-          );
-          setClickPower((prev) => prev * 2);
-        } else {
-          setShopItems((prevItems) =>
-            prevItems.map((i) => {
-              if (i.id === item.id) {
-                const newLevel = i.level + 1;
-                const newProfit = i.baseProfit * newLevel;
-                setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
-                return { ...i, level: newLevel, basePrice: i.basePrice * 3 };
-              }
-              return i;
-            })
-          );
-        }
 
-        if (!popupShown.congratulation) {
-          setCongratulationPopup({ show: true, item: item });
-          setPopupShown((prev) => ({ ...prev, congratulation: true }));
-        }
+        const newLevel = item.level + 1;
 
-        // Send purchase data to Telegram Mini App
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
-          );
-        }
+        try {
+          const response = await fetch('/api/shop', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              itemId: item.id,
+              isPremium,
+              newLevel,
+            }),
+          });
 
-        // Show success message
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
-        } else {
-          alert(`Successfully purchased ${item.name}!`);
+          if (response.ok) {
+            if (isPremium) {
+              setPremiumShopItems((prevItems) =>
+                prevItems.map((i) => (i.id === item.id ? { ...i, level: newLevel } : i))
+              );
+              setClickPower((prev) => prev * 2);
+            } else {
+              setShopItems((prevItems) =>
+                prevItems.map((i) => {
+                  if (i.id === item.id) {
+                    const newProfit = i.baseProfit * newLevel;
+                    setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
+                    return { ...i, level: newLevel };
+                  }
+                  return i;
+                })
+              );
+            }
+
+            if (!popupShown.congratulation) {
+              setCongratulationPopup({ show: true, item: item });
+              setPopupShown((prev) => ({ ...prev, congratulation: true }));
+            }
+
+            // Send purchase data to Telegram Mini App
+            if (window.Telegram && window.Telegram.WebApp) {
+              window.Telegram.WebApp.sendData(
+                JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
+              );
+            }
+
+            // Show success message
+            if (window.Telegram && window.Telegram.WebApp) {
+              window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
+            } else {
+              alert(`Successfully purchased ${item.name}!`);
+            }
+          } else {
+            console.error('Failed to update item in the database');
+          }
+        } catch (error) {
+          console.error('Error updating item:', error);
         }
       } else {
         if (window.Telegram && window.Telegram.WebApp) {
@@ -1209,6 +1220,25 @@ const CryptoGame: React.FC = () => {
       setIsLoading(false);
     }
   }, [user.telegramId]);
+
+  useEffect(() => {
+    const fetchShopItems = async () => {
+      try {
+        const response = await fetch('/api/shop');
+        if (response.ok) {
+          const data = await response.json();
+          setShopItems(data.shopItems);
+          setPremiumShopItems(data.premiumShopItems);
+        } else {
+          console.error('Failed to fetch shop items');
+        }
+      } catch (error) {
+        console.error('Error fetching shop items:', error);
+      }
+    };
+
+    fetchShopItems();
+  }, []);
 
   useEffect(() => {
     fetchUserData();
