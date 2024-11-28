@@ -28,8 +28,6 @@ model User {
   multiplier Multiplier[]
   multiplierEndTime MultiplierEndTime
   boosterCooldown BoosterCooldown[]
-  selectedCoinImage SelectedCoinImage
-  settings Settings
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
