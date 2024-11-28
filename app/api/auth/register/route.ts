@@ -7,32 +7,27 @@ export const revalidate = 0;
 
 export async function POST(request: NextRequest) {
   try {
-    const { users } = await request.json();
+    const { user } = await request.json();
 
-    if (!users.telegramId) {
+    if (!user.telegramId) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
     const updatedUser = await prisma.user.upsert({
       where: {
-        telegramId: users.telegramId,
+        telegramId: user.telegramId,
       },
       update: {
-        username: users.username,
-        firstName: users.firstName,
-        lastName: users.lastName,
-        coins: users.coins || 0,
-        level: users.level || 1,
-        exp: users.exp || 0,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
       create: {
-        telegramId: users.telegramId,
-        username: users.username,
-        firstName: users.firstName,
-        lastName: users.lastName,
-        coins: users.coins || 0,
-        level: users.level || 1,
-        exp: users.exp || 0,
+        telegramId: user.telegramId,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        coins: 0,
       },
     });
 
