@@ -115,7 +115,7 @@ declare global {
         onEvent: (eventType: string, eventHandler: () => void) => void;
         sendData: (data: string) => void;
         initDataUnsafe: {
-          user?: {
+          user: {
             id: number;
             first_name: string;
             last_name?: string;
