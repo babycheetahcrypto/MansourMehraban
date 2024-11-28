@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
@@ -7,9 +7,6 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 });
 
 export default function Page() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     if (window.Telegram?.WebApp) {
       const webApp = window.Telegram.WebApp;
@@ -18,15 +15,11 @@ export default function Page() {
 
       const initializeUser = async () => {
         try {
-          setIsLoading(true);
           const telegramUser = webApp.initDataUnsafe.user;
-          if (!telegramUser) {
-            setError('No Telegram user data found');
-            return;
-          }
+          if (!telegramUser) return;
 
           // First register the user
-          const registerResponse = await fetch('/api/auth/register', {
+          await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -42,38 +35,20 @@ export default function Page() {
             }),
           });
 
-          if (!registerResponse.ok) {
-            throw new Error('Failed to register user');
-          }
-
-          // Then fetch user data
-          const userDataResponse = await fetch(`/api/user?telegramId=${telegramUser.id}`);
-          if (!userDataResponse.ok) {
-            throw new Error('Failed to fetch user data');
-          }
-
-          setIsLoading(false);
+          // Then fetch user data using header
+          await fetch('/api/user', {
+            headers: {
+              'x-telegram-id': telegramUser.id.toString(),
+            },
+          });
         } catch (error) {
           console.error('Error initializing user:', error);
-          setError('Failed to initialize user');
-          setIsLoading(false);
         }
       };
 
       initializeUser();
-    } else {
-      setError('Telegram WebApp not available');
-      setIsLoading(false);
     }
   }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return <CryptoGame />;
 }
