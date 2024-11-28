@@ -1,5 +1,4 @@
 'use client';
-'use client';
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
@@ -379,30 +378,15 @@ const CryptoGame: React.FC = () => {
               exp: userData.exp || 0,
               profilePhoto: telegramUser.photo_url || '',
             });
-            setProfitPerHour(userData.profitPerHour || 0);
-            setShopItems(userData.shopItems || shopItems);
-            setPremiumShopItems(userData.premiumShopItems || premiumShopItems);
-            setTasks(userData.tasks || tasks);
-            setDailyReward(userData.dailyReward || dailyReward);
-            setUnlockedLevels(userData.unlockedLevels || unlockedLevels);
-            setClickPower(userData.clickPower || 1);
-            setFriendsCoins(userData.friendsCoins || {});
-            setEnergy(userData.energy || 1000);
-            setPphAccumulated(userData.pphAccumulated || 0);
-            setMultiplier(userData.multiplier || 1);
-            setMultiplierEndTime(userData.multiplierEndTime || null);
-            setBoosterCooldown(userData.boosterCooldown || null);
-            setSelectedCoinImage(userData.selectedCoinImage || levelImages[0]);
-            setSettings(userData.settings || settings);
           } else {
             console.error('Failed to fetch user data:', await response.text());
+            // Handle the error, maybe set some default values or show an error message
           }
         }
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-    } finally {
-      setIsLoading(false);
+      // Handle the error, maybe set some default values or show an error message
     }
   }, []);
 
@@ -419,29 +403,16 @@ const CryptoGame: React.FC = () => {
           coins: user.coins,
           level: user.level,
           exp: user.exp,
-          profitPerHour,
-          shopItems,
-          premiumShopItems,
-          tasks,
-          dailyReward,
-          unlockedLevels,
-          clickPower,
-          friendsCoins,
-          energy,
-          pphAccumulated,
-          multiplier,
-          multiplierEndTime,
-          boosterCooldown,
-          selectedCoinImage,
-          settings,
         }),
       });
 
       if (!response.ok) {
         console.error('Failed to save user data:', await response.text());
+        // Handle the error, maybe show an error message to the user
       }
     } catch (error) {
       console.error('Error saving user data:', error);
+      // Handle the error, maybe show an error message to the user
     }
   }, [user]);
 
@@ -484,7 +455,7 @@ const CryptoGame: React.FC = () => {
   const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
   const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[0]);
   const [inviteCode] = useState('CRYPTO123');
-  const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
+  const [friendsCoins] = useState<{ [key: string]: number }>({});
 
   const [congratulationPopup, setCongratulationPopup] = useState({
     show: false,
@@ -1248,15 +1219,6 @@ const CryptoGame: React.FC = () => {
       fetchLeaderboard();
     }
   }, [user.telegramId, fetchLeaderboard]);
-
-  // Add this effect to save user data periodically
-  useEffect(() => {
-    const saveInterval = setInterval(() => {
-      saveUserData();
-    }, 60000); // Save every minute
-
-    return () => clearInterval(saveInterval);
-  }, [saveUserData]);
 
   // Fetch leaderboard data
   useEffect(() => {

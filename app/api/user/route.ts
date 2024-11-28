@@ -28,28 +28,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      telegramId,
-      name,
-      coins,
-      level,
-      exp,
-      profitPerHour,
-      shopItems,
-      premiumShopItems,
-      tasks,
-      dailyReward,
-      unlockedLevels,
-      clickPower,
-      friendsCoins,
-      energy,
-      pphAccumulated,
-      multiplier,
-      multiplierEndTime,
-      boosterCooldown,
-      selectedCoinImage,
-      settings,
-    } = body;
+    const { telegramId, name, coins, level, exp } = body;
 
     if (!telegramId) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
@@ -57,34 +36,13 @@ export async function POST(request: NextRequest) {
 
     const client = await clientPromise;
     const db = client.db('cryptoGame');
-    const result = await db.collection('users').updateOne(
-      { telegramId: telegramId },
-      {
-        $set: {
-          name,
-          coins,
-          level,
-          exp,
-          profitPerHour,
-          shopItems,
-          premiumShopItems,
-          tasks,
-          dailyReward,
-          unlockedLevels,
-          clickPower,
-          friendsCoins,
-          energy,
-          pphAccumulated,
-          multiplier,
-          multiplierEndTime,
-          boosterCooldown,
-          selectedCoinImage,
-          settings,
-          lastUpdated: new Date(),
-        },
-      },
-      { upsert: true }
-    );
+    const result = await db
+      .collection('users')
+      .updateOne(
+        { telegramId: telegramId },
+        { $set: { name, coins, level, exp } },
+        { upsert: true }
+      );
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
