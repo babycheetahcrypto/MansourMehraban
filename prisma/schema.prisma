@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model user {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   telegramId  Int      @unique
   username    String

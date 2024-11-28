@@ -27,7 +27,7 @@ export default function Page() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              user: {
+              users: {
                 telegramId: telegramUser.id,
                 username: telegramUser.username || `user${telegramUser.id}`,
                 firstName: telegramUser.first_name,
