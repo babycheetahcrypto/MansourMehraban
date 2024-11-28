@@ -14,6 +14,22 @@ model User {
   firstName   String?
   lastName    String?
   coins       Int      @default(0)
+  proitperhour Int      @default(0)
+  proitperday  Int      @default(0)
+  shopItems ShopItem[]
+  premiumShopItems PremiumShopItem[]
+  tasks Task[]
+  dailyReward DailyReward[]
+  unlockedLevels UnlockedLevel[]
+  clickPower ClickPower[]
+  friendsCoins FriendsCoins[]
+  energy Energy[]
+  pphAccumulated PPHAccumulated[]
+  multiplier Multiplier[]
+  multiplierEndTime MultiplierEndTime
+  boosterCooldown BoosterCooldown[]
+  selectedCoinImage SelectedCoinImage
+  settings Settings
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
