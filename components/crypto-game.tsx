@@ -38,23 +38,23 @@ interface CryptoGameProps {
   onCoinsUpdate: (amount: number) => Promise<void>;
 }
 
-type ShopItem = {
+interface ShopItem {
   id: number;
   name: string;
   image: string;
   basePrice: number;
   baseProfit: number;
   level: number;
-};
+}
 
-type PremiumShopItem = {
+interface PremiumShopItem {
   id: number;
   name: string;
   image: string;
   basePrice: number;
   effect: string;
   level: number;
-};
+}
 
 type Task = {
   id: number;
@@ -914,8 +914,6 @@ const CryptoGame: React.FC = () => {
           return updatedUser;
         });
 
-        const newLevel = item.level + 1;
-
         try {
           const response = await fetch('/api/shop', {
             method: 'POST',
@@ -925,23 +923,24 @@ const CryptoGame: React.FC = () => {
             body: JSON.stringify({
               itemId: item.id,
               isPremium,
-              newLevel,
+              newLevel: item.level + 1,
             }),
           });
 
           if (response.ok) {
+            const updatedItem = await response.json();
             if (isPremium) {
               setPremiumShopItems((prevItems) =>
-                prevItems.map((i) => (i.id === item.id ? { ...i, level: newLevel } : i))
+                prevItems.map((i) => (i.id === item.id ? updatedItem : i))
               );
               setClickPower((prev) => prev * 2);
             } else {
               setShopItems((prevItems) =>
                 prevItems.map((i) => {
                   if (i.id === item.id) {
-                    const newProfit = i.baseProfit * newLevel;
+                    const newProfit = updatedItem.baseProfit * updatedItem.level;
                     setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
-                    return { ...i, level: newLevel };
+                    return updatedItem;
                   }
                   return i;
                 })
@@ -949,7 +948,7 @@ const CryptoGame: React.FC = () => {
             }
 
             if (!popupShown.congratulation) {
-              setCongratulationPopup({ show: true, item: item });
+              setCongratulationPopup({ show: true, item: updatedItem });
               setPopupShown((prev) => ({ ...prev, congratulation: true }));
             }
 
@@ -1221,6 +1220,7 @@ const CryptoGame: React.FC = () => {
     }
   }, [user.telegramId]);
 
+  // Fetch shop items
   useEffect(() => {
     const fetchShopItems = async () => {
       try {
@@ -1650,7 +1650,7 @@ const CryptoGame: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl font-bold mb-8 text-center text-white">Crypto Emporium</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {shopItems.map((item, index) => (
+          {shopItems.map((item) => (
             <div
               key={item.id}
               className="bg-gradient-to-br from-gray-900/70 to-black/70 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-800/50 hover:border-primary/50 group"
@@ -1665,7 +1665,7 @@ const CryptoGame: React.FC = () => {
                     alt={item.name}
                     layout="fill"
                     objectFit="cover"
-                    className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
+                    className="relative z-10"
                   />
                 </div>
                 <p className="text-xs text-cyan-300 mb-2">
