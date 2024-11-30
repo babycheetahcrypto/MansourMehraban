@@ -9,6 +9,7 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 export default function Page() {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -21,7 +22,7 @@ export default function Page() {
           setIsLoading(true);
           const telegramUser = webApp.initDataUnsafe.user;
           if (!telegramUser) {
-            setIsLoading(false);
+            setError('No Telegram user data found');
             return;
           }
 
@@ -48,13 +49,8 @@ export default function Page() {
             throw new Error('Failed to register user');
           }
 
-          // Then fetch user data using header
-          const userDataResponse = await fetch('/api/user', {
-            headers: {
-              'x-telegram-id': telegramUser.id.toString(),
-            },
-          });
-
+          // Then fetch user data
+          const userDataResponse = await fetch(`/api/user?telegramId=${telegramUser.id}`);
           if (!userDataResponse.ok) {
             throw new Error('Failed to fetch user data');
           }
@@ -63,12 +59,16 @@ export default function Page() {
           setUserData(userData);
         } catch (error) {
           console.error('Error initializing user:', error);
+          setError('Failed to initialize user');
         } finally {
           setIsLoading(false);
         }
       };
 
       initializeUser();
+    } else {
+      setError('Telegram WebApp not available');
+      setIsLoading(false);
     }
   }, []);
 
