@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 
 // Interfaces and Types
-interface UserData {
+interface GameUserData {
   id: string;
   telegramId: number;
   username: string;
@@ -34,8 +34,34 @@ interface UserData {
 }
 
 interface CryptoGameProps {
-  userData: UserData | null;
+  userData: GameUserData | null;
   onCoinsUpdate?: (amount: number) => Promise<void>;
+}
+
+interface GameState {
+  name: string;
+  coins: number;
+  level: number;
+  exp: number;
+  profilePhoto: string;
+  telegramId: string;
+  shopItems: any[];
+  premiumShopItems: any[];
+  tasks: any[];
+  dailyReward: null | {
+    lastClaimed: Date;
+    streak: number;
+  };
+  unlockedLevels: number[];
+  clickPower: number;
+  friendsCoins: number;
+  energy: number;
+  pphAccumulated: number;
+  multiplier: number;
+  multiplierEndTime: Date | null;
+  boosterCooldown: Date | null;
+  selectedCoinImage: string;
+  settings: Record<string, any>;
 }
 
 type ShopItem = {
