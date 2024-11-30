@@ -23,45 +23,47 @@ import {
 } from 'lucide-react';
 
 // Interfaces and Types
-interface GameUserData {
-  id: string;
-  telegramId: number;
-  username: string;
-  firstName?: string;
-  lastName?: string;
-  coins: number;
-  lastUpdated: Date;
-}
-
-interface CryptoGameProps {
-  userData: GameUserData | null;
-  onCoinsUpdate?: (amount: number) => Promise<void>;
-}
-
-interface GameState {
+interface User {
   name: string;
   coins: number;
   level: number;
   exp: number;
   profilePhoto: string;
   telegramId: string;
-  shopItems: any[];
-  premiumShopItems: any[];
-  tasks: any[];
-  dailyReward: null | {
-    lastClaimed: Date;
+  shopItems: ShopItem[];
+  premiumShopItems: PremiumShopItem[];
+  tasks: Task[];
+  dailyReward: {
+    lastClaimed: string | null;
     streak: number;
+    day: number;
+    completed: boolean;
   };
   unlockedLevels: number[];
   clickPower: number;
-  friendsCoins: number;
+  friendsCoins: { [key: string]: number };
   energy: number;
   pphAccumulated: number;
   multiplier: number;
   multiplierEndTime: Date | null;
   boosterCooldown: Date | null;
   selectedCoinImage: string;
-  settings: Record<string, any>;
+  settings: {
+    vibration: boolean;
+    backgroundMusic: boolean;
+    soundEffect: boolean;
+    backgroundMusicAudio: HTMLAudioElement | null;
+  };
+}
+
+interface UserData {
+  username: string;
+  telegramId: number;
+}
+
+interface CryptoGameProps {
+  userData: UserData | null;
+  onCoinsUpdate?: (amount: number) => Promise<void>;
 }
 
 type ShopItem = {
