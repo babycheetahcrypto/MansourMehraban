@@ -1254,25 +1254,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
     const initializeGame = async () => {
       setIsLoading(true);
       try {
+        // Fetch shop items
+        const shopResponse = await fetch('/api/shop');
+        if (shopResponse.ok) {
+          const shopData = await shopResponse.json();
+          setShopItems(shopData.shopItems);
+          setPremiumShopItems(shopData.premiumShopItems);
+        } else {
+          throw new Error('Failed to fetch shop items');
+        }
+
+        // Fetch leaderboard data
+        await fetchLeaderboard();
+
+        // Apply Telegram theme
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
-          webApp.ready();
-          webApp.expand();
-
-          // Get user data from Telegram
-          const telegramUser = webApp.initDataUnsafe.user;
-          if (telegramUser) {
-            setUser((prevUser) => ({
-              ...prevUser,
-              name:
-                telegramUser.username ||
-                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-              telegramId: telegramUser.id.toString(),
-              profilePhoto: telegramUser.photo_url || '',
-            }));
-          }
-
-          // Apply Telegram theme
           document.body.style.setProperty('--tg-theme-bg-color', webApp.backgroundColor);
           document.body.style.setProperty('--tg-theme-text-color', webApp.themeParams.text_color);
           document.body.style.setProperty(
@@ -1284,9 +1281,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
             webApp.themeParams.button_text_color
           );
         }
-
-        // Simulate fetching game data
-        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         setIsLoading(false);
       } catch (error) {
@@ -2356,6 +2350,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
               style={{ width: '100%' }}
             />
           </div>
+          <p className="mt-4 text-white text-xl">Loading game data...</p>
         </div>
       </div>
     );

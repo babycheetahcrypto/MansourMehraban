@@ -8,6 +8,7 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 
 export default function Page() {
   const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -17,8 +18,12 @@ export default function Page() {
 
       const initializeUser = async () => {
         try {
+          setIsLoading(true);
           const telegramUser = webApp.initDataUnsafe.user;
-          if (!telegramUser) return;
+          if (!telegramUser) {
+            setIsLoading(false);
+            return;
+          }
 
           // First register the user
           const registerResponse = await fetch('/api/auth/register', {
@@ -58,12 +63,25 @@ export default function Page() {
           setUserData(userData);
         } catch (error) {
           console.error('Error initializing user:', error);
+        } finally {
+          setIsLoading(false);
         }
       };
 
       initializeUser();
     }
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+          <p className="mt-4 text-white text-xl">Loading game data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return <CryptoGame userData={userData} />;
 }
