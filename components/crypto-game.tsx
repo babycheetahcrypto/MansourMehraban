@@ -984,7 +984,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
       // Initialize TonConnect
       const manifestUrl =
         process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
-        'https://t.me/BabyCheetah_Bot/tonconnect-manifest.json';
+        'https://babycheetah.vercel.app/tonconnect-manifest.json';
 
       const tonConnect = new TonConnect({ manifestUrl });
 
