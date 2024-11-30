@@ -34,7 +34,7 @@ interface UserData {
 }
 
 interface CryptoGameProps {
-  userData: UserData | null;
+  userData: UserData;
   onCoinsUpdate: (amount: number) => Promise<void>;
 }
 
@@ -348,7 +348,7 @@ const playHeaderFooterSound = () => {
   audio.play();
 };
 
-const CryptoGame: React.FC = () => {
+const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const [user, setUser] = useState({
     name: '',
     coins: 0,
