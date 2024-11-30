@@ -95,10 +95,6 @@ export default function Page() {
     }
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (!userData) {
     return <div>Error: Unable to load user data</div>;
   }
