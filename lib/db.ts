@@ -4,7 +4,7 @@ if (!process.env.DATABASE_URL) {
   throw new Error('Please add your MongoDB URI to .env');
 }
 
-const uri = process.env.DATABASE_URL;
+const url = process.env.DATABASE_URL;
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
@@ -16,13 +16,13 @@ if (process.env.NODE_ENV === 'development') {
   };
 
   if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(uri);
+    client = new MongoClient(url);
     globalWithMongo._mongoClientPromise = client.connect();
   }
   clientPromise = globalWithMongo._mongoClientPromise;
 } else {
   // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri);
+  client = new MongoClient(url);
   clientPromise = client.connect();
 }
 

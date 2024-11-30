@@ -4,7 +4,7 @@ if (!process.env.DATABASE_URL) {
   throw new Error('Please add your MongoDB URI to .env.local');
 }
 
-const uri = process.env.DATABASE_URL;
+const url = process.env.DATABASE_URL;
 const options = {
   maxPoolSize: 10,
   serverSelectionTimeoutMS: 5000,
@@ -15,7 +15,7 @@ let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
 try {
-  client = new MongoClient(uri, options);
+  client = new MongoClient(url, options);
   clientPromise = client.connect();
   // Verify connection
   clientPromise
