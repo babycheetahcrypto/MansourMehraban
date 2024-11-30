@@ -1259,19 +1259,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
           webApp.ready();
           webApp.expand();
 
-          // Get user data from Telegram
-          const telegramUser = webApp.initDataUnsafe.user;
-          if (telegramUser) {
-            setUser((prevUser) => ({
-              ...prevUser,
-              name:
-                telegramUser.username ||
-                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-              telegramId: telegramUser.id.toString(),
-              profilePhoto: telegramUser.photo_url || '',
-            }));
-          }
-
           // Apply Telegram theme
           document.body.style.setProperty('--tg-theme-bg-color', webApp.backgroundColor);
           document.body.style.setProperty('--tg-theme-text-color', webApp.themeParams.text_color);
@@ -1284,6 +1271,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
             webApp.themeParams.button_text_color
           );
         }
+
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
