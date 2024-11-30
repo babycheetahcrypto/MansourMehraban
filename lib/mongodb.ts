@@ -4,14 +4,14 @@ if (!process.env.DATABASE_URL) {
   throw new Error('Invalid/Missing environment variable: "DATABASE_URL"');
 }
 
-const url = process.env.DATABASE_URL;
+const uri = process.env.DATABASE_URL;
 const options = {};
 
 let client;
 let clientPromise: Promise<MongoClient>;
 
 try {
-  client = new MongoClient(url, options);
+  client = new MongoClient(uri, options);
   clientPromise = client.connect();
 } catch (error) {
   console.error('Failed to connect to MongoDB:', error);
