@@ -30,32 +30,31 @@ interface UserData {
   firstName?: string;
   lastName?: string;
   coins: number;
-  level: number;
-  exp: number;
   lastUpdated: Date;
 }
 
 interface CryptoGameProps {
   userData: UserData | null;
+  onCoinsUpdate: (amount: number) => Promise<void>;
 }
 
-interface ShopItem {
+type ShopItem = {
   id: number;
   name: string;
   image: string;
   basePrice: number;
   baseProfit: number;
   level: number;
-}
+};
 
-interface PremiumShopItem {
+type PremiumShopItem = {
   id: number;
   name: string;
   image: string;
   basePrice: number;
   effect: string;
   level: number;
-}
+};
 
 type Task = {
   id: number;
@@ -115,7 +114,7 @@ declare global {
         onEvent: (eventType: string, eventHandler: () => void) => void;
         sendData: (data: string) => void;
         initDataUnsafe: {
-          user: {
+          user?: {
             id: number;
             first_name: string;
             last_name?: string;
@@ -349,7 +348,7 @@ const playHeaderFooterSound = () => {
   audio.play();
 };
 
-const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
+const CryptoGame: React.FC = () => {
   const [user, setUser] = useState({
     name: '',
     coins: 0,
@@ -392,22 +391,28 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
   }, []);
 
   const saveUserData = useCallback(async () => {
-    if (user) {
-      try {
-        const response = await fetch('/api/user', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(user),
-        });
+    try {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          telegramId: user.telegramId,
+          name: user.name,
+          coins: user.coins,
+          level: user.level,
+          exp: user.exp,
+        }),
+      });
 
-        if (!response.ok) {
-          console.error('Failed to save user data:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error saving user data:', error);
+      if (!response.ok) {
+        console.error('Failed to save user data:', await response.text());
+        // Handle the error, maybe show an error message to the user
       }
+    } catch (error) {
+      console.error('Error saving user data:', error);
+      // Handle the error, maybe show an error message to the user
     }
   }, [user]);
 
@@ -892,7 +897,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
   );
 
   const buyItem = useCallback(
-    async (item: ShopItem | PremiumShopItem, isPremium = false) => {
+    (item: ShopItem | PremiumShopItem, isPremium = false) => {
       const price = isPremium
         ? item.basePrice * Math.pow(5, item.level - 1)
         : item.basePrice * Math.pow(2, item.level - 1);
@@ -908,63 +913,53 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
 
           return updatedUser;
         });
+        if (isPremium) {
+          setPremiumShopItems((prevItems) =>
+            prevItems.map((i) => {
+              if (i.id === item.id) {
+                const newLevel = i.level + 1;
+                return {
+                  ...i,
+                  level: newLevel,
+                  basePrice: i.basePrice * 5,
+                  effect: `Multiplies coin button taps by ${newLevel + 1}x`,
+                };
+              }
+              return i;
+            })
+          );
+          setClickPower((prev) => prev * 2);
+        } else {
+          setShopItems((prevItems) =>
+            prevItems.map((i) => {
+              if (i.id === item.id) {
+                const newLevel = i.level + 1;
+                const newProfit = i.baseProfit * newLevel;
+                setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
+                return { ...i, level: newLevel, basePrice: i.basePrice * 3 };
+              }
+              return i;
+            })
+          );
+        }
 
-        try {
-          const response = await fetch('/api/shop', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              itemId: item.id,
-              isPremium,
-              newLevel: item.level + 1,
-            }),
-          });
+        if (!popupShown.congratulation) {
+          setCongratulationPopup({ show: true, item: item });
+          setPopupShown((prev) => ({ ...prev, congratulation: true }));
+        }
 
-          if (response.ok) {
-            const updatedItem = await response.json();
-            if (isPremium) {
-              setPremiumShopItems((prevItems) =>
-                prevItems.map((i) => (i.id === item.id ? updatedItem : i))
-              );
-              setClickPower((prev) => prev * 2);
-            } else {
-              setShopItems((prevItems) =>
-                prevItems.map((i) => {
-                  if (i.id === item.id) {
-                    const newProfit = updatedItem.baseProfit * updatedItem.level;
-                    setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
-                    return updatedItem;
-                  }
-                  return i;
-                })
-              );
-            }
+        // Send purchase data to Telegram Mini App
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.sendData(
+            JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
+          );
+        }
 
-            if (!popupShown.congratulation) {
-              setCongratulationPopup({ show: true, item: updatedItem });
-              setPopupShown((prev) => ({ ...prev, congratulation: true }));
-            }
-
-            // Send purchase data to Telegram Mini App
-            if (window.Telegram && window.Telegram.WebApp) {
-              window.Telegram.WebApp.sendData(
-                JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
-              );
-            }
-
-            // Show success message
-            if (window.Telegram && window.Telegram.WebApp) {
-              window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
-            } else {
-              alert(`Successfully purchased ${item.name}!`);
-            }
-          } else {
-            console.error('Failed to update item in the database');
-          }
-        } catch (error) {
-          console.error('Error updating item:', error);
+        // Show success message
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
+        } else {
+          alert(`Successfully purchased ${item.name}!`);
         }
       } else {
         if (window.Telegram && window.Telegram.WebApp) {
@@ -984,7 +979,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
       // Initialize TonConnect
       const manifestUrl =
         process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
-        'https://babycheetah.vercel.app/tonconnect-manifest.json';
+        'https://t.me/BabyCheetah_Bot/tonconnect-manifest.json';
 
       const tonConnect = new TonConnect({ manifestUrl });
 
@@ -1215,26 +1210,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
     }
   }, [user.telegramId]);
 
-  // Fetch shop items
-  useEffect(() => {
-    const fetchShopItems = async () => {
-      try {
-        const response = await fetch('/api/shop');
-        if (response.ok) {
-          const data = await response.json();
-          setShopItems(data.shopItems);
-          setPremiumShopItems(data.premiumShopItems);
-        } else {
-          console.error('Failed to fetch shop items');
-        }
-      } catch (error) {
-        console.error('Error fetching shop items:', error);
-      }
-    };
-
-    fetchShopItems();
-  }, []);
-
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
@@ -1259,6 +1234,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
           webApp.ready();
           webApp.expand();
 
+          // Get user data from Telegram
+          const telegramUser = webApp.initDataUnsafe.user;
+          if (telegramUser) {
+            setUser((prevUser) => ({
+              ...prevUser,
+              name:
+                telegramUser.username ||
+                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+              telegramId: telegramUser.id.toString(),
+              profilePhoto: telegramUser.photo_url || '',
+            }));
+          }
+
           // Apply Telegram theme
           document.body.style.setProperty('--tg-theme-bg-color', webApp.backgroundColor);
           document.body.style.setProperty('--tg-theme-text-color', webApp.themeParams.text_color);
@@ -1271,6 +1259,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
             webApp.themeParams.button_text_color
           );
         }
+
+        // Simulate fetching game data
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         setIsLoading(false);
       } catch (error) {
@@ -1629,7 +1620,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl font-bold mb-8 text-center text-white">Crypto Emporium</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {shopItems.map((item) => (
+          {shopItems.map((item, index) => (
             <div
               key={item.id}
               className="bg-gradient-to-br from-gray-900/70 to-black/70 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-800/50 hover:border-primary/50 group"
@@ -1644,7 +1635,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
                     alt={item.name}
                     layout="fill"
                     objectFit="cover"
-                    className="relative z-10"
+                    className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
                   />
                 </div>
                 <p className="text-xs text-cyan-300 mb-2">
