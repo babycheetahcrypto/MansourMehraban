@@ -28,6 +28,8 @@ export async function POST(request: NextRequest) {
         firstName: user.firstName,
         lastName: user.lastName,
         coins: 0,
+        level: 1,
+        exp: 0,
       },
     });
 
