@@ -72,16 +72,5 @@ export default function Page() {
     }
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
-          <p className="mt-4 text-white text-xl">Loading game data...</p>
-        </div>
-      </div>
-    );
-  }
-
   return <CryptoGame userData={userData} />;
 }
