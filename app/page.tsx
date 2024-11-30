@@ -35,12 +35,8 @@ export default function Page() {
             }),
           });
 
-          // Then fetch user data using header
-          await fetch('/api/user', {
-            headers: {
-              'x-telegram-id': telegramUser.id.toString(),
-            },
-          });
+          // Then fetch user data
+          await fetch(`/api/user?telegramId=${telegramUser.id}`);
         } catch (error) {
           console.error('Error initializing user:', error);
         }

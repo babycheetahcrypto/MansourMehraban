@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export const runtime = 'edge';
-export const preferredRegion = 'auto';
-export const revalidate = 0;
-
 export async function GET(request: NextRequest) {
-  const telegramId = request.headers.get('x-telegram-id');
+  const searchParams = request.nextUrl.searchParams;
+  const telegramId = searchParams.get('telegramId');
 
   if (!telegramId) {
     return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
@@ -15,6 +12,12 @@ export async function GET(request: NextRequest) {
   try {
     const user = await prisma.user.findUnique({
       where: { telegramId: parseInt(telegramId) },
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+      },
     });
 
     if (!user) {
@@ -31,34 +34,100 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { telegramId, username, firstName, lastName, coins, level, exp } = body;
+    const {
+      telegramId,
+      username,
+      coins,
+      level,
+      exp,
+      profitPerHour,
+      shopItems,
+      premiumShopItems,
+      tasks,
+      dailyReward,
+      unlockedLevels,
+      clickPower,
+      friendsCoins,
+      energy,
+      pphAccumulated,
+      multiplier,
+      multiplierEndTime,
+      boosterCooldown,
+      selectedCoinImage,
+      settings,
+    } = body;
 
     if (!telegramId) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
-    const updatedUser = await prisma.user.upsert({
+    const result = await prisma.user.upsert({
       where: { telegramId: parseInt(telegramId) },
       update: {
         username,
-        firstName,
-        lastName,
         coins,
         level,
         exp,
+        profitPerHour,
+        shopItems: {
+          set: shopItems,
+        },
+        premiumShopItems: {
+          set: premiumShopItems,
+        },
+        tasks: {
+          set: tasks,
+        },
+        dailyReward: {
+          upsert: {
+            create: dailyReward,
+            update: dailyReward,
+          },
+        },
+        unlockedLevels,
+        clickPower,
+        friendsCoins,
+        energy,
+        pphAccumulated,
+        multiplier,
+        multiplierEndTime,
+        boosterCooldown,
+        selectedCoinImage,
+        settings,
       },
       create: {
         telegramId: parseInt(telegramId),
         username,
-        firstName,
-        lastName,
-        coins: coins || 0,
-        level: level || 1,
-        exp: exp || 0,
+        coins,
+        level,
+        exp,
+        profitPerHour,
+        shopItems: {
+          create: shopItems,
+        },
+        premiumShopItems: {
+          create: premiumShopItems,
+        },
+        tasks: {
+          create: tasks,
+        },
+        dailyReward: {
+          create: dailyReward,
+        },
+        unlockedLevels,
+        clickPower,
+        friendsCoins,
+        energy,
+        pphAccumulated,
+        multiplier,
+        multiplierEndTime,
+        boosterCooldown,
+        selectedCoinImage,
+        settings,
       },
     });
 
-    return NextResponse.json({ success: true, user: updatedUser });
+    return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error('Database error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

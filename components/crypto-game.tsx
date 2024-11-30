@@ -358,6 +358,24 @@ const CryptoGame: React.FC = () => {
     telegramId: '',
   });
 
+  const fetchLeaderboard = useCallback(async () => {
+    try {
+      const response = await fetch('/api/leaderboard');
+      if (response.ok) {
+        const data = await response.json();
+        setLeaderboardData(data);
+        const userRank = data.findIndex(
+          (entry: LeaderboardEntry) => entry.telegramId === user.telegramId
+        );
+        setCurrentUserRank(userRank !== -1 ? userRank + 1 : 0);
+      } else {
+        console.error('Failed to fetch leaderboard data');
+      }
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+    }
+  }, [user.telegramId]);
+
   const fetchUserData = useCallback(async () => {
     try {
       if (window.Telegram && window.Telegram.WebApp) {
@@ -370,7 +388,7 @@ const CryptoGame: React.FC = () => {
             const userData = await response.json();
             setUser({
               name:
-                userData.name ||
+                userData.username ||
                 `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
               telegramId: telegramUser.id.toString(),
               coins: userData.coins || 0,
@@ -378,15 +396,30 @@ const CryptoGame: React.FC = () => {
               exp: userData.exp || 0,
               profilePhoto: telegramUser.photo_url || '',
             });
+            setProfitPerHour(userData.profitPerHour || 0);
+            setShopItems(userData.shopItems || shopItems);
+            setPremiumShopItems(userData.premiumShopItems || premiumShopItems);
+            setTasks(userData.tasks || tasks);
+            setDailyReward(userData.dailyReward || dailyReward);
+            setUnlockedLevels(userData.unlockedLevels || unlockedLevels);
+            setClickPower(userData.clickPower || 1);
+            setFriendsCoins(userData.friendsCoins || {});
+            setEnergy(userData.energy || 1000);
+            setPphAccumulated(userData.pphAccumulated || 0);
+            setMultiplier(userData.multiplier || 1);
+            setMultiplierEndTime(userData.multiplierEndTime || null);
+            setBoosterCooldown(userData.boosterCooldown || null);
+            setSelectedCoinImage(userData.selectedCoinImage || levelImages[0]);
+            setSettings(userData.settings || settings);
           } else {
             console.error('Failed to fetch user data:', await response.text());
-            // Handle the error, maybe set some default values or show an error message
           }
         }
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      // Handle the error, maybe set some default values or show an error message
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -399,20 +432,33 @@ const CryptoGame: React.FC = () => {
         },
         body: JSON.stringify({
           telegramId: user.telegramId,
-          name: user.name,
+          username: user.name,
           coins: user.coins,
           level: user.level,
           exp: user.exp,
+          profitPerHour,
+          shopItems,
+          premiumShopItems,
+          tasks,
+          dailyReward,
+          unlockedLevels,
+          clickPower,
+          friendsCoins,
+          energy,
+          pphAccumulated,
+          multiplier,
+          multiplierEndTime,
+          boosterCooldown,
+          selectedCoinImage,
+          settings,
         }),
       });
 
       if (!response.ok) {
         console.error('Failed to save user data:', await response.text());
-        // Handle the error, maybe show an error message to the user
       }
     } catch (error) {
       console.error('Error saving user data:', error);
-      // Handle the error, maybe show an error message to the user
     }
   }, [user]);
 
@@ -428,7 +474,6 @@ const CryptoGame: React.FC = () => {
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);
-
   const [settings, setSettings] = useState({
     vibration: true,
     backgroundMusic: false,
@@ -443,7 +488,6 @@ const CryptoGame: React.FC = () => {
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
-
   const [dailyReward, setDailyReward] = useState({
     lastClaimed: null as string | null,
     streak: 0,
@@ -455,8 +499,7 @@ const CryptoGame: React.FC = () => {
   const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
   const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[0]);
   const [inviteCode] = useState('CRYPTO123');
-  const [friendsCoins] = useState<{ [key: string]: number }>({});
-
+  const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
   const [congratulationPopup, setCongratulationPopup] = useState({
     show: false,
     item: null as ShopItem | PremiumShopItem | null,
@@ -470,7 +513,6 @@ const CryptoGame: React.FC = () => {
     congratulation: false,
   });
   const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
-
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
       id: 1,
@@ -897,69 +939,78 @@ const CryptoGame: React.FC = () => {
   );
 
   const buyItem = useCallback(
-    (item: ShopItem | PremiumShopItem, isPremium = false) => {
+    async (item: ShopItem | PremiumShopItem, isPremium = false) => {
       const price = isPremium
         ? item.basePrice * Math.pow(5, item.level - 1)
         : item.basePrice * Math.pow(2, item.level - 1);
       if (user.coins >= price) {
-        setUser((prevUser) => {
-          const updatedUser = {
-            ...prevUser,
-            coins: prevUser.coins - price,
-          };
+        try {
+          const response = await fetch('/api/shop', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              telegramId: user.telegramId,
+              itemId: item.id,
+              isPremium,
+              price,
+            }),
+          });
 
-          // Save the updated user data
-          saveUserData();
+          if (response.ok) {
+            const result = await response.json();
+            setUser((prevUser) => ({
+              ...prevUser,
+              coins: result.updatedCoins,
+            }));
 
-          return updatedUser;
-        });
-        if (isPremium) {
-          setPremiumShopItems((prevItems) =>
-            prevItems.map((i) => {
-              if (i.id === item.id) {
-                const newLevel = i.level + 1;
-                return {
-                  ...i,
-                  level: newLevel,
-                  basePrice: i.basePrice * 5,
-                  effect: `Multiplies coin button taps by ${newLevel + 1}x`,
-                };
-              }
-              return i;
-            })
-          );
-          setClickPower((prev) => prev * 2);
-        } else {
-          setShopItems((prevItems) =>
-            prevItems.map((i) => {
-              if (i.id === item.id) {
-                const newLevel = i.level + 1;
-                const newProfit = i.baseProfit * newLevel;
-                setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
-                return { ...i, level: newLevel, basePrice: i.basePrice * 3 };
-              }
-              return i;
-            })
-          );
-        }
+            if (isPremium) {
+              setPremiumShopItems((prevItems) =>
+                prevItems.map((i) => (i.id === item.id ? result.updatedItem : i))
+              );
+              setClickPower((prev) => prev * 2);
+            } else {
+              setShopItems((prevItems) =>
+                prevItems.map((i) => {
+                  if (i.id === item.id) {
+                    const newProfit = result.updatedItem.baseProfit * result.updatedItem.level;
+                    setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
+                    return result.updatedItem;
+                  }
+                  return i;
+                })
+              );
+            }
 
-        if (!popupShown.congratulation) {
-          setCongratulationPopup({ show: true, item: item });
-          setPopupShown((prev) => ({ ...prev, congratulation: true }));
-        }
+            if (!popupShown.congratulation) {
+              setCongratulationPopup({ show: true, item: result.updatedItem });
+              setPopupShown((prev) => ({ ...prev, congratulation: true }));
+            }
 
-        // Send purchase data to Telegram Mini App
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
-          );
-        }
+            // Send purchase data to Telegram Mini App
+            if (window.Telegram && window.Telegram.WebApp) {
+              window.Telegram.WebApp.sendData(
+                JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
+              );
+            }
 
-        // Show success message
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
-        } else {
-          alert(`Successfully purchased ${item.name}!`);
+            // Show success message
+            if (window.Telegram && window.Telegram.WebApp) {
+              window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
+            } else {
+              alert(`Successfully purchased ${item.name}!`);
+            }
+          } else {
+            throw new Error('Failed to purchase item');
+          }
+        } catch (error) {
+          console.error('Error purchasing item:', error);
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.showAlert('Failed to purchase item. Please try again.');
+          } else {
+            alert('Failed to purchase item. Please try again.');
+          }
         }
       } else {
         if (window.Telegram && window.Telegram.WebApp) {
@@ -969,7 +1020,7 @@ const CryptoGame: React.FC = () => {
         }
       }
     },
-    [user.coins, popupShown.congratulation, saveUserData]
+    [user.coins, user.telegramId, popupShown.congratulation]
   );
 
   const connectWallet = useCallback(async () => {
@@ -1193,22 +1244,25 @@ const CryptoGame: React.FC = () => {
   };
 
   // Update the fetchLeaderboard function
-  const fetchLeaderboard = useCallback(async () => {
-    try {
-      const response = await fetch('/api/leaderboard');
-      if (!response.ok) {
-        throw new Error('Failed to fetch leaderboard data');
+  useEffect(() => {
+    const fetchShopItems = async () => {
+      try {
+        const response = await fetch('/api/shop');
+        if (response.ok) {
+          const data = await response.json();
+          setShopItems(data.shopItems);
+          setPremiumShopItems(data.premiumShopItems);
+        } else {
+          console.error('Failed to fetch shop items');
+        }
+      } catch (error) {
+        console.error('Error fetching shop items:', error);
       }
-      const data: LeaderboardEntry[] = await response.json();
-      setLeaderboardData(data);
-      const userRank = data.findIndex((entry) => entry.telegramId === user.telegramId);
-      setCurrentUserRank(userRank !== -1 ? userRank + 1 : 0);
-    } catch (error) {
-      console.error('Error fetching leaderboard:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [user.telegramId]);
+    };
+
+    fetchShopItems();
+    fetchUserData();
+  }, [fetchUserData]);
 
   useEffect(() => {
     fetchUserData();
@@ -1220,10 +1274,14 @@ const CryptoGame: React.FC = () => {
     }
   }, [user.telegramId, fetchLeaderboard]);
 
-  // Fetch leaderboard data
+  // Add this effect to save user data periodically
   useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
+    const saveInterval = setInterval(() => {
+      saveUserData();
+    }, 60000); // Save every minute
+
+    return () => clearInterval(saveInterval);
+  }, [saveUserData]);
 
   useEffect(() => {
     const initializeGame = async () => {

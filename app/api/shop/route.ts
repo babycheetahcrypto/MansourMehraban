@@ -15,23 +15,43 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { itemId, isPremium, newLevel } = body;
+    const { telegramId, itemId, isPremium, price } = body;
 
-    if (!itemId || typeof isPremium !== 'boolean' || !newLevel) {
+    if (!telegramId || !itemId || typeof isPremium !== 'boolean' || !price) {
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
 
-    const updatedItem = isPremium
-      ? await prisma.premiumShopItem.update({
-          where: { id: itemId },
-          data: { level: newLevel },
-        })
-      : await prisma.shopItem.update({
-          where: { id: itemId },
-          data: { level: newLevel },
-        });
+    const user = await prisma.user.findUnique({
+      where: { telegramId: parseInt(telegramId) },
+    });
 
-    return NextResponse.json({ success: true, updatedItem });
+    if (!user || user.coins < price) {
+      return NextResponse.json({ error: 'Not enough coins' }, { status: 400 });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { telegramId: parseInt(telegramId) },
+      data: { coins: user.coins - price },
+    });
+
+    let updatedItem;
+    if (isPremium) {
+      updatedItem = await prisma.premiumShopItem.update({
+        where: { id: itemId },
+        data: { level: { increment: 1 } },
+      });
+    } else {
+      updatedItem = await prisma.shopItem.update({
+        where: { id: itemId },
+        data: { level: { increment: 1 } },
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      updatedItem,
+      updatedCoins: updatedUser.coins,
+    });
   } catch (error) {
     console.error('Database error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
