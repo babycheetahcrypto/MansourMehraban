@@ -34,8 +34,8 @@ interface UserData {
 }
 
 interface CryptoGameProps {
-  userData: UserData;
-  onCoinsUpdate: (amount: number) => Promise<void>;
+  userData: UserData | null;
+  onCoinsUpdate?: (amount: number) => Promise<void>;
 }
 
 type ShopItem = {
