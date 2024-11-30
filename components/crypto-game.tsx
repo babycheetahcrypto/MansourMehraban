@@ -2350,7 +2350,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData }) => {
               style={{ width: '100%' }}
             />
           </div>
-          <p className="mt-4 text-white text-xl">Loading game data...</p>
+          <p className="mt-4 text-white text-xl">Loading...</p>
         </div>
       </div>
     );
