@@ -103,7 +103,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         premiumShopItems: true,
         tasks: true,
         dailyReward: true,
-        wallet: true,
       },
     });
 
