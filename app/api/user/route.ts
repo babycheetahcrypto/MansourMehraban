@@ -41,26 +41,7 @@ export async function GET(request: NextRequest) {
             backgroundMusic: true,
             soundEffect: true,
           },
-          tasks: {
-            create: [
-              {
-                description: 'Click 100 times',
-                maxProgress: 100,
-                reward: 1000,
-                completed: false,
-                claimed: false,
-                progress: 0,
-              },
-              {
-                description: 'Collect energy 3 times',
-                maxProgress: 3,
-                reward: 500,
-                completed: false,
-                claimed: false,
-                progress: 0,
-              },
-            ],
-          },
+
           dailyReward: {
             create: {
               streak: 0,
