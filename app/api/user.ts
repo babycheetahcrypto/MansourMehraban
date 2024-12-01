@@ -70,8 +70,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: { telegramId: parseInt(telegramId) },
         update: {
           username,
-          firstName,
-          lastName,
           coins,
           level,
           exp,
