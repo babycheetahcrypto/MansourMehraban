@@ -37,8 +37,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const {
       telegramId,
       username,
-      firstName,
-      lastName,
       coins,
       level,
       exp,
@@ -89,8 +87,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         create: {
           telegramId: parseInt(telegramId),
           username,
-          firstName,
-          lastName,
           coins,
           level,
           exp,
