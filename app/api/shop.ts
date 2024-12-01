@@ -14,8 +14,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { userId, itemId, isPremium } = req.body;
 
-    if (!userId || !itemId) {
-      return res.status(400).json({ error: 'User ID and Item ID are required' });
+    if (!userId || !itemId || typeof userId !== 'string' || typeof itemId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID and Item ID are required' });
     }
 
     try {

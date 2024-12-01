@@ -5,13 +5,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { userId } = req.query;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID is required' });
     }
 
     try {
       const referralRewards = await prisma.referralReward.findMany({
-        where: { userId: userId as string },
+        where: { userId },
       });
       res.status(200).json(referralRewards);
     } catch (error) {
@@ -21,8 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { userId, referredId, amount } = req.body;
 
-    if (!userId || !referredId || !amount) {
-      return res.status(400).json({ error: 'User ID, Referred ID, and Amount are required' });
+    if (!userId || !referredId || typeof amount !== 'number') {
+      return res.status(400).json({ error: 'Valid User ID, Referred ID, and Amount are required' });
     }
 
     try {
@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
-      res.status(200).json(newReferralReward);
+      res.status(201).json(newReferralReward);
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Internal server error' });

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../lib/prisma';
+import prisma from '@/lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         take: 100,
       });
 
-      const leaderboard = users.map((user: any, index: number) => ({
+      const leaderboard = users.map((user, index) => ({
         id: user.id,
         telegramId: user.telegramId,
         name: user.username,

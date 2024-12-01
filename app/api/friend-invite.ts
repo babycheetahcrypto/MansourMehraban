@@ -5,13 +5,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { userId } = req.query;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID is required' });
     }
 
     try {
       const sentInvites = await prisma.friendInvite.findMany({
-        where: { inviterId: userId as string },
+        where: { inviterId: userId },
         include: {
           invitee: {
             select: { username: true, profilePhoto: true },
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       const receivedInvites = await prisma.friendInvite.findMany({
-        where: { inviteeId: userId as string },
+        where: { inviteeId: userId },
         include: {
           inviter: {
             select: { username: true, profilePhoto: true },
@@ -36,8 +36,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { inviterId, inviteeId } = req.body;
 
-    if (!inviterId || !inviteeId) {
-      return res.status(400).json({ error: 'Inviter ID and Invitee ID are required' });
+    if (
+      !inviterId ||
+      !inviteeId ||
+      typeof inviterId !== 'string' ||
+      typeof inviteeId !== 'string'
+    ) {
+      return res.status(400).json({ error: 'Valid Inviter ID and Invitee ID are required' });
     }
 
     try {
@@ -57,8 +62,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'PUT') {
     const { inviteId, status } = req.body;
 
-    if (!inviteId || !status) {
-      return res.status(400).json({ error: 'Invite ID and status are required' });
+    if (!inviteId || !status || typeof inviteId !== 'string' || typeof status !== 'string') {
+      return res.status(400).json({ error: 'Valid Invite ID and status are required' });
     }
 
     try {

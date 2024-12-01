@@ -14,6 +14,7 @@ export default function Home() {
         const tg = window.Telegram?.WebApp;
         if (!tg?.initDataUnsafe?.user) {
           console.error('No Telegram user data available');
+          setLoading(false);
           return;
         }
 
@@ -50,7 +51,11 @@ export default function Home() {
               ...newUser,
               lastUpdated: new Date(newUser.lastUpdated),
             });
+          } else {
+            console.error('Failed to create new user');
           }
+        } else {
+          console.error('Failed to fetch user data');
         }
       } catch (error) {
         console.error('Error initializing user:', error);
@@ -84,11 +89,17 @@ export default function Home() {
           ...updatedUser,
           lastUpdated: new Date(updatedUser.lastUpdated),
         });
+      } else {
+        console.error('Failed to update coins');
       }
     } catch (error) {
       console.error('Error updating coins:', error);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main>

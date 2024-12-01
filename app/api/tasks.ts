@@ -5,13 +5,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { userId } = req.query;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID is required' });
     }
 
     try {
       const tasks = await prisma.task.findMany({
-        where: { userId: userId as string },
+        where: { userId },
       });
       res.status(200).json(tasks);
     } catch (error) {
@@ -21,8 +21,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { userId, taskId, progress } = req.body;
 
-    if (!userId || !taskId) {
-      return res.status(400).json({ error: 'User ID and Task ID are required' });
+    if (
+      !userId ||
+      !taskId ||
+      typeof userId !== 'string' ||
+      typeof taskId !== 'string' ||
+      typeof progress !== 'number'
+    ) {
+      return res.status(400).json({ error: 'Valid User ID, Task ID, and progress are required' });
     }
 
     try {

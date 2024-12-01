@@ -5,13 +5,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { userId } = req.query;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID is required' });
     }
 
     try {
       const wallet = await prisma.wallet.findUnique({
-        where: { userId: userId as string },
+        where: { userId },
       });
 
       if (!wallet) {
@@ -26,8 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { userId, address } = req.body;
 
-    if (!userId || !address) {
-      return res.status(400).json({ error: 'User ID and address are required' });
+    if (!userId || typeof userId !== 'string' || !address || typeof address !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID and address are required' });
     }
 
     try {

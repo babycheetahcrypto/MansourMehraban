@@ -5,13 +5,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { userId } = req.query;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID is required' });
     }
 
     try {
       const dailyReward = await prisma.dailyReward.findUnique({
-        where: { userId: userId as string },
+        where: { userId },
       });
       res.status(200).json(dailyReward);
     } catch (error) {
@@ -21,8 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { userId } = req.body;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID is required' });
     }
 
     try {
