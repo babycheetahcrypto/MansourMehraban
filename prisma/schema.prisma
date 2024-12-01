@@ -121,7 +121,5 @@ model FriendInvite {
   status    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  inviter   User     @relation("SentInvites", fields: [inviterId], references: [id])
-  invitee   User     @relation("ReceivedInvites", fields: [inviteeId], references: [id])
 }
 
