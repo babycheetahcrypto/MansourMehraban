@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/prisma';
+import prisma from '../../lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const leaderboard = await prisma.user.findMany({
+      const users = await prisma.user.findMany({
         select: {
           id: true,
           telegramId: true,
@@ -18,15 +18,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         take: 100,
       });
 
-      const leaderboardWithRanks = leaderboard.map((user, index) => ({
-        ...user,
+      const leaderboard = users.map((user: any, index: number) => ({
+        id: user.id,
+        telegramId: user.telegramId,
+        name: user.username,
+        coins: user.coins,
+        profitPerHour: user.profitPerHour,
         rank: index + 1,
       }));
 
-      res.status(200).json(leaderboardWithRanks);
+      res.status(200).json(leaderboard);
     } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error('Error fetching leaderboard:', error);
+      res.status(500).json({ error: 'Failed to fetch leaderboard' });
     }
   } else {
     res.setHeader('Allow', ['GET']);
