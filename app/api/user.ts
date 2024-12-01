@@ -17,6 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           premiumShopItems: true,
           tasks: true,
           dailyReward: true,
+          wallet: true,
+          friendInvites: true,
+          sentInvites: true,
+          trophies: true,
         },
       });
 
@@ -33,6 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const {
       telegramId,
       username,
+      firstName,
+      lastName,
       coins,
       level,
       exp,
@@ -52,6 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       selectedCoinImage,
       settings,
       profitPerHour,
+      walletAddress,
     } = req.body;
 
     if (!telegramId) {
@@ -63,6 +70,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: { telegramId: parseInt(telegramId) },
         update: {
           username,
+          firstName,
+          lastName,
           coins,
           level,
           exp,
@@ -82,6 +91,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         create: {
           telegramId: parseInt(telegramId),
           username,
+          firstName,
+          lastName,
           coins,
           level,
           exp,
@@ -145,7 +156,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       }
 
-      res.status(200).json(user);
+      if (walletAddress) {
+        await prisma.wallet.upsert({
+          where: { userId: user.id },
+          update: { address: walletAddress },
+          create: { userId: user.id, address: walletAddress },
+        });
+      }
+
+      // Fetch the updated user data with all related information
+      const updatedUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        include: {
+          shopItems: true,
+          premiumShopItems: true,
+          tasks: true,
+          dailyReward: true,
+          wallet: true,
+          friendInvites: true,
+          sentInvites: true,
+          trophies: true,
+        },
+      });
+
+      res.status(200).json(updatedUser);
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Internal server error' });
