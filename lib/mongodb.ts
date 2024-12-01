@@ -14,20 +14,31 @@ const options = {
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
-try {
+if (process.env.NODE_ENV === 'development') {
+  let globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>;
+  };
+
+  if (!globalWithMongo._mongoClientPromise) {
+    client = new MongoClient(url, options);
+    globalWithMongo._mongoClientPromise = client.connect();
+  }
+  clientPromise = globalWithMongo._mongoClientPromise;
+} else {
   client = new MongoClient(url, options);
   clientPromise = client.connect();
-  // Verify connection
-  clientPromise
-    .then(() => {
-      console.log('Successfully connected to MongoDB.');
-    })
-    .catch((error) => {
-      console.error('MongoDB connection error:', error);
-    });
-} catch (error) {
-  console.error('Failed to connect to MongoDB:', error);
-  throw new Error('Unable to connect to MongoDB.');
 }
 
 export default clientPromise;
+
+export async function testMongoConnection() {
+  try {
+    const client = await clientPromise;
+    await client.db().command({ ping: 1 });
+    console.log('Successfully connected to MongoDB');
+    await client.close();
+  } catch (error) {
+    console.error('Failed to connect to MongoDB:', error);
+    throw error;
+  }
+}

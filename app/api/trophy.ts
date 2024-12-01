@@ -5,13 +5,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { userId } = req.query;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID is required' });
     }
 
     try {
       const trophies = await prisma.trophy.findMany({
-        where: { userId: userId as string },
+        where: { userId },
       });
       res.status(200).json(trophies);
     } catch (error) {
@@ -21,8 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { userId, trophyId } = req.body;
 
-    if (!userId || !trophyId) {
-      return res.status(400).json({ error: 'User ID and Trophy ID are required' });
+    if (!userId || !trophyId || typeof userId !== 'string' || typeof trophyId !== 'string') {
+      return res.status(400).json({ error: 'Valid User ID and Trophy ID are required' });
     }
 
     try {

@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import prisma from '@/lib/prisma';
+import { testPrismaConnection } from '@/lib/prisma';
+import { testMongoConnection } from '@/lib/mongodb';
 import Image from 'next/image';
 import TonConnect, { WalletInfo } from '@tonconnect/sdk';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -482,22 +485,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
         settings,
       });
 
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          telegramId: user.telegramId,
+      const updatedUser = await prisma.user.upsert({
+        where: { telegramId: parseInt(user.telegramId) },
+        update: {
           username: user.name,
           coins: user.coins,
           level: user.level,
           exp: user.exp,
           profitPerHour,
-          shopItems,
-          premiumShopItems,
-          tasks,
-          dailyReward,
+          shopItems: { set: shopItems },
+          premiumShopItems: { set: premiumShopItems },
+          tasks: { set: tasks },
+          dailyReward: { update: dailyReward },
           unlockedLevels,
           clickPower,
           friendsCoins,
@@ -508,21 +507,53 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           boosterCooldown,
           selectedCoinImage,
           settings,
-        }),
+        },
+        create: {
+          telegramId: parseInt(user.telegramId),
+          username: user.name,
+          coins: user.coins,
+          level: user.level,
+          exp: user.exp,
+          profitPerHour,
+          shopItems: { create: shopItems },
+          premiumShopItems: { create: premiumShopItems },
+          tasks: { create: tasks },
+          dailyReward: { create: dailyReward },
+          unlockedLevels,
+          clickPower,
+          friendsCoins,
+          energy,
+          pphAccumulated,
+          multiplier,
+          multiplierEndTime,
+          boosterCooldown,
+          selectedCoinImage,
+          settings,
+        },
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to save user data:', errorText);
-        throw new Error('Failed to save user data');
-      }
-
-      const savedData = await response.json();
-      console.log('User data saved successfully:', savedData);
+      console.log('User data saved successfully:', updatedUser);
     } catch (error) {
       console.error('Error saving user data:', error);
     }
-  }, [user]);
+  }, [
+    user,
+    profitPerHour,
+    shopItems,
+    premiumShopItems,
+    tasks,
+    dailyReward,
+    unlockedLevels,
+    clickPower,
+    friendsCoins,
+    energy,
+    pphAccumulated,
+    multiplier,
+    multiplierEndTime,
+    boosterCooldown,
+    selectedCoinImage,
+    settings,
+  ]);
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -1359,6 +1390,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     const initializeGame = async () => {
       setIsLoading(true);
       try {
+        // Test database connections
+        await testPrismaConnection();
+        await testMongoConnection();
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           webApp.ready();
