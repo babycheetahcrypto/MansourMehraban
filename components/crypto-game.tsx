@@ -498,7 +498,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const [profitPerHour, setProfitPerHour] = useState(0);
   const [currentPage, setCurrentPage] = useState('home');
   const [energy, setEnergy] = useState(500);
-  const [maxEnergy] = useState(1000);
+  const [maxEnergy] = useState(500);
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);
@@ -526,7 +526,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const [multiplierEndTime, setMultiplierEndTime] = useState<number | null>(null);
   const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
   const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[0]);
-  const [inviteCode] = useState('CRYPTO123');
+  const [inviteCode] = useState('');
   const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
   const [congratulationPopup, setCongratulationPopup] = useState({
     show: false,
