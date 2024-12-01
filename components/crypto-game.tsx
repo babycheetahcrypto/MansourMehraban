@@ -409,11 +409,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       if (window.Telegram && window.Telegram.WebApp) {
         const webApp = window.Telegram.WebApp;
         const telegramUser = webApp.initDataUnsafe.user;
+        console.log('Telegram user data:', telegramUser);
 
         if (telegramUser) {
           const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
           if (response.ok) {
             const userData = await response.json();
+            console.log('Fetched user data:', userData);
             setUser({
               name:
                 userData.username ||
@@ -442,7 +444,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           } else {
             console.error('Failed to fetch user data:', await response.text());
           }
+        } else {
+          console.error('No Telegram user data available');
         }
+      } else {
+        console.error('Telegram WebApp not available');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -453,6 +459,29 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
 
   const saveUserData = useCallback(async () => {
     try {
+      console.log('Saving user data:', {
+        telegramId: user.telegramId,
+        username: user.name,
+        coins: user.coins,
+        level: user.level,
+        exp: user.exp,
+        profitPerHour,
+        shopItems,
+        premiumShopItems,
+        tasks,
+        dailyReward,
+        unlockedLevels,
+        clickPower,
+        friendsCoins,
+        energy,
+        pphAccumulated,
+        multiplier,
+        multiplierEndTime,
+        boosterCooldown,
+        selectedCoinImage,
+        settings,
+      });
+
       const response = await fetch('/api/user', {
         method: 'POST',
         headers: {
@@ -483,8 +512,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       });
 
       if (!response.ok) {
-        console.error('Failed to save user data:', await response.text());
+        const errorText = await response.text();
+        console.error('Failed to save user data:', errorText);
+        throw new Error('Failed to save user data');
       }
+
+      const savedData = await response.json();
+      console.log('User data saved successfully:', savedData);
     } catch (error) {
       console.error('Error saving user data:', error);
     }
@@ -1277,86 +1311,34 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     const initTelegram = async () => {
       if (window.Telegram?.WebApp) {
         const tg = window.Telegram.WebApp;
+        console.log('Telegram WebApp initialized:', tg);
 
         try {
-          // Get telegram user data
+          tg.ready();
+          tg.expand();
+
           const telegramUser = tg.initDataUnsafe?.user;
+          console.log('Telegram user:', telegramUser);
 
           if (!telegramUser?.id) {
             throw new Error('No Telegram user ID found');
           }
 
-          // Fetch user data from your API
-          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch user data');
-          }
-
-          const userData = await response.json();
-          setUser(userData);
+          await fetchUserData();
         } catch (err) {
           console.error('Error:', err);
           setError(err instanceof Error ? err.message : 'Unknown error');
         } finally {
           setLoading(false);
         }
+      } else {
+        console.error('Telegram WebApp not available');
+        setError('Telegram WebApp not available');
+        setLoading(false);
       }
     };
 
     initTelegram();
-  }, []);
-
-  // Save user progress
-  const saveUserProgress = async (updatedData: Partial<User>) => {
-    if (!user?.telegramId) return;
-
-    try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          telegramId: user.telegramId,
-          ...updatedData,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save progress');
-      }
-
-      const savedUser = await response.json();
-      setUser(savedUser);
-    } catch (err) {
-      console.error('Error saving progress:', err);
-    }
-  };
-
-  // Update the fetchLeaderboard function
-  useEffect(() => {
-    const fetchShopItems = async () => {
-      try {
-        const response = await fetch('/api/shop');
-        if (response.ok) {
-          const data = await response.json();
-          setShopItems(data.shopItems);
-          setPremiumShopItems(data.premiumShopItems);
-        } else {
-          console.error('Failed to fetch shop items');
-        }
-      } catch (error) {
-        console.error('Error fetching shop items:', error);
-      }
-    };
-
-    fetchShopItems();
-    fetchUserData();
-  }, [fetchUserData]);
-
-  useEffect(() => {
-    fetchUserData();
   }, [fetchUserData]);
 
   useEffect(() => {
@@ -1365,7 +1347,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     }
   }, [user.telegramId, fetchLeaderboard]);
 
-  // Add this effect to save user data periodically
   useEffect(() => {
     const saveInterval = setInterval(() => {
       saveUserData();

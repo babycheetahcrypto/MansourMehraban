@@ -2,14 +2,18 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    const { telegramId } = req.query;
+  console.log('User API route called, method:', req.method);
+  console.log('Request body:', req.body);
+  console.log('Request query:', req.query);
 
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
-    }
+  try {
+    if (req.method === 'GET') {
+      const { telegramId } = req.query;
 
-    try {
+      if (!telegramId) {
+        return res.status(400).json({ error: 'Telegram ID is required' });
+      }
+
       const user = await prisma.user.findUnique({
         where: { telegramId: parseInt(telegramId as string) },
         include: {
@@ -29,41 +33,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       res.status(200).json(user);
-    } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else if (req.method === 'POST') {
-    const {
-      telegramId,
-      username,
-      coins,
-      level,
-      exp,
-      profilePhoto,
-      shopItems,
-      premiumShopItems,
-      tasks,
-      dailyReward,
-      unlockedLevels,
-      clickPower,
-      friendsCoins,
-      energy,
-      pphAccumulated,
-      multiplier,
-      multiplierEndTime,
-      boosterCooldown,
-      selectedCoinImage,
-      settings,
-      profitPerHour,
-      walletAddress,
-    } = req.body;
+    } else if (req.method === 'POST') {
+      const {
+        telegramId,
+        username,
+        coins,
+        level,
+        exp,
+        profilePhoto,
+        shopItems,
+        premiumShopItems,
+        tasks,
+        dailyReward,
+        unlockedLevels,
+        clickPower,
+        friendsCoins,
+        energy,
+        pphAccumulated,
+        multiplier,
+        multiplierEndTime,
+        boosterCooldown,
+        selectedCoinImage,
+        settings,
+        profitPerHour,
+        walletAddress,
+      } = req.body;
 
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
-    }
+      if (!telegramId) {
+        return res.status(400).json({ error: 'Telegram ID is required' });
+      }
 
-    try {
       const user = await prisma.user.upsert({
         where: { telegramId: parseInt(telegramId) },
         update: {
@@ -174,12 +173,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       res.status(200).json(updatedUser);
-    } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.setHeader('Allow', ['GET', 'POST']);
+      res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-  } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error) {
+    console.error('Error in user API route:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
