@@ -25,6 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           friendInvites: true,
           sentInvites: true,
           trophies: true,
+          referralRewards: true,
         },
       });
 
@@ -41,10 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         level,
         exp,
         profilePhoto,
-        shopItems,
-        premiumShopItems,
-        tasks,
-        dailyReward,
         unlockedLevels,
         clickPower,
         friendsCoins,
@@ -56,7 +53,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         selectedCoinImage,
         settings,
         profitPerHour,
-        walletAddress,
       } = req.body;
 
       if (!telegramId) {
@@ -86,76 +82,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         create: {
           telegramId: parseInt(telegramId),
           username,
-          coins,
-          level,
-          exp,
+          coins: coins || 0,
+          level: level || 1,
+          exp: exp || 0,
           profilePhoto,
-          unlockedLevels,
-          clickPower,
-          friendsCoins,
-          energy,
-          pphAccumulated,
-          multiplier,
+          unlockedLevels: unlockedLevels || [1],
+          clickPower: clickPower || 1,
+          friendsCoins: friendsCoins || {},
+          energy: energy || 500,
+          pphAccumulated: pphAccumulated || 0,
+          multiplier: multiplier || 1,
           multiplierEndTime,
           boosterCooldown,
           selectedCoinImage,
-          settings,
-          profitPerHour,
+          settings: settings || { vibration: true, backgroundMusic: false, soundEffect: true },
+          profitPerHour: profitPerHour || 0,
         },
       });
-
-      // Update or create related data
-      if (shopItems) {
-        await Promise.all(
-          shopItems.map((item: any) =>
-            prisma.shopItem.upsert({
-              where: { id: item.id },
-              update: { ...item, userId: user.id },
-              create: { ...item, userId: user.id },
-            })
-          )
-        );
-      }
-
-      if (premiumShopItems) {
-        await Promise.all(
-          premiumShopItems.map((item: any) =>
-            prisma.premiumShopItem.upsert({
-              where: { id: item.id },
-              update: { ...item, userId: user.id },
-              create: { ...item, userId: user.id },
-            })
-          )
-        );
-      }
-
-      if (tasks) {
-        await Promise.all(
-          tasks.map((task: any) =>
-            prisma.task.upsert({
-              where: { id: task.id },
-              update: { ...task, userId: user.id },
-              create: { ...task, userId: user.id },
-            })
-          )
-        );
-      }
-
-      if (dailyReward) {
-        await prisma.dailyReward.upsert({
-          where: { userId: user.id },
-          update: dailyReward,
-          create: { ...dailyReward, userId: user.id },
-        });
-      }
-
-      if (walletAddress) {
-        await prisma.wallet.upsert({
-          where: { userId: user.id },
-          update: { address: walletAddress },
-          create: { userId: user.id, address: walletAddress },
-        });
-      }
 
       // Fetch the updated user data with all related information
       const updatedUser = await prisma.user.findUnique({
@@ -169,6 +112,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           friendInvites: true,
           sentInvites: true,
           trophies: true,
+          referralRewards: true,
         },
       });
 
