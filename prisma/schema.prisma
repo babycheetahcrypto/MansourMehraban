@@ -32,9 +32,6 @@ model User {
   profitPerHour     Float             @default(0)
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
-  wallet            Wallet?
-  friendInvites     FriendInvite[]    @relation("ReceivedInvites")
-  sentInvites       FriendInvite[]    @relation("SentInvites")
   trophies          Trophy[]
   referralRewards   ReferralReward[]
 }
