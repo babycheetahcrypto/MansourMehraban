@@ -72,3 +72,18 @@ export interface UserData {
     soundEffect: boolean;
   };
 }
+
+export interface Wallet {
+  id: string;
+  userId: string;
+  address: string;
+  balance: number;
+}
+export interface FriendInvite {
+  id: string;
+  inviterId: string;
+  inviteeId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: Date;
+  updatedAt: Date;
+}

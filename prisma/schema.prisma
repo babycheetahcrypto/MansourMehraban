@@ -11,91 +11,70 @@ model User {
   id                String            @id @default(auto()) @map("_id") @db.ObjectId
   telegramId        Int               @unique
   username          String
-  firstName         String?
-  lastName          String?
-  profilePhoto      String?
-  
-  // Basic Game Stats
   coins             Float             @default(0)
   level             Int               @default(1)
   exp               Float             @default(0)
-  energy            Int               @default(500)
-  clickPower        Int               @default(1)
-  
-  // Game Progress
-  profitPerHour     Float             @default(0)
-  pphAccumulated    Float             @default(0)
-  unlockedLevels    Int[]             @default([1])
-  selectedCoinImage String?
-  
-  // Boosters & Multipliers
-  multiplier        Float             @default(1)
-  multiplierEndTime DateTime?
-  boosterCooldown   DateTime?
-  
-  // Game Items & Progress
+  profilePhoto      String?
   shopItems         ShopItem[]
   premiumShopItems  PremiumShopItem[]
   tasks             Task[]
-  trophies          Trophy[]
-  
-  // Daily & Social Features
   dailyReward       DailyReward?
+  unlockedLevels    Int[]             @default([1])
+  clickPower        Int               @default(1)
   friendsCoins      Json?             @default("{}")
-  referralCode      String?           @unique
-  referredBy        String?
-  referralRewards   ReferralReward[]
-  
-  // Game Settings
-  settings          Json              @default("{\"vibration\": true, \"backgroundMusic\": true, \"soundEffect\": true}")
-  
-  // Leaderboard Stats
-  totalEarnings     Float             @default(0)
-  totalClicks       Int               @default(0)
-  rank              Int?
-  
-  // Timestamps
-  lastActive        DateTime          @default(now())
+  energy            Int               @default(500)
+  pphAccumulated    Float             @default(0)
+  multiplier        Float             @default(1)
+  multiplierEndTime DateTime?
+  boosterCooldown   DateTime?
+  selectedCoinImage String?
+  settings          Json              @default("{\"vibration\": true, \"backgroundMusic\": false, \"soundEffect\": true}")
+  profitPerHour     Float             @default(0)
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
+  wallet            Wallet?
+  friendInvites     FriendInvite[]    @relation("ReceivedInvites")
+  sentInvites       FriendInvite[]    @relation("SentInvites")
+  trophies          Trophy[]
+  referralRewards   ReferralReward[]
 }
 
 model ShopItem {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String    @db.ObjectId
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String @db.ObjectId
   name        String
   image       String
   basePrice   Float
   baseProfit  Float
-  level       Int       @default(1)
-  quantity    Int       @default(0)
-  user        User      @relation(fields: [userId], references: [id])
+  level       Int    @default(1)
+  quantity    Int    @default(0)
+  user        User   @relation(fields: [userId], references: [id])
 }
 
 model PremiumShopItem {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String    @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String  @db.ObjectId
   name        String
   image       String
   basePrice   Float
   effect      String
-  level       Int       @default(1)
-  duration    Int?      // Duration in seconds
-  user        User      @relation(fields: [userId], references: [id])
+  level       Int     @default(1)
+  duration    Int?
+  user        User    @relation(fields: [userId], references: [id])
 }
 
 model Task {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String    @db.ObjectId
-  type        String    // "daily" or "achievement"
-  description String
-  progress    Int       @default(0)
-  maxProgress Int
-  reward      Float
-  completed   Boolean   @default(false)
-  claimed     Boolean   @default(false)
-  expiresAt   DateTime?
-  user        User      @relation(fields: [userId], references: [id])
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String    @db.ObjectId
+  type         String
+  description  String
+  progress     Int       @default(0)
+  maxProgress  Int
+  reward       Float
+  completed    Boolean   @default(false)
+  claimed      Boolean   @default(false)
+  expiresAt    DateTime?
+  user         User      @relation(fields: [userId], references: [id])
 }
 
 model Trophy {
@@ -130,3 +109,22 @@ model ReferralReward {
   claimedAt   DateTime?
   user        User      @relation(fields: [userId], references: [id])
 }
+
+model Wallet {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String @unique @db.ObjectId
+  address String @unique
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model FriendInvite {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  inviterId String   @db.ObjectId
+  inviteeId String   @db.ObjectId
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  inviter   User     @relation("SentInvites", fields: [inviterId], references: [id])
+  invitee   User     @relation("ReceivedInvites", fields: [inviteeId], references: [id])
+}
+
