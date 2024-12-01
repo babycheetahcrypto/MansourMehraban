@@ -1,9 +1,6 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import prisma from '@/lib/prisma';
-import { testPrismaConnection } from '@/lib/prisma';
-import { testMongoConnection } from '@/lib/mongodb';
 import Image from 'next/image';
 import TonConnect, { WalletInfo } from '@tonconnect/sdk';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -1362,9 +1359,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     const initializeGame = async () => {
       setIsLoading(true);
       try {
-        // Test database connections
-        await testPrismaConnection();
-        await testMongoConnection();
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           webApp.ready();
