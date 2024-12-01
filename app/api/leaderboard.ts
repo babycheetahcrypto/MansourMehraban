@@ -10,10 +10,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           telegramId: true,
           username: true,
           coins: true,
-          level: true,
           profitPerHour: true,
         },
-        orderBy: [{ coins: 'desc' }, { level: 'desc' }],
+        orderBy: {
+          coins: 'desc',
+        },
         take: 100,
       });
 
