@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import clientPromise from '@/lib/mongodb';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -10,15 +10,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { telegramId: parseInt(telegramId) },
-      include: {
-        shopItems: true,
-        premiumShopItems: true,
-        tasks: true,
-        dailyReward: true,
-      },
-    });
+    const client = await clientPromise;
+    const db = client.db('cryptoGame');
+    const user = await db.collection('users').findOne({ telegramId: telegramId });
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -34,98 +28,21 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      telegramId,
-      username,
-      coins,
-      level,
-      exp,
-      profitPerHour,
-      shopItems,
-      premiumShopItems,
-      tasks,
-      dailyReward,
-      unlockedLevels,
-      clickPower,
-      friendsCoins,
-      energy,
-      pphAccumulated,
-      multiplier,
-      multiplierEndTime,
-      boosterCooldown,
-      selectedCoinImage,
-      settings,
-    } = body;
+    const { telegramId, name, coins, level, exp } = body;
 
     if (!telegramId) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
-    const result = await prisma.user.upsert({
-      where: { telegramId: parseInt(telegramId) },
-      update: {
-        username,
-        coins,
-        level,
-        exp,
-        profitPerHour,
-        shopItems: {
-          set: shopItems,
-        },
-        premiumShopItems: {
-          set: premiumShopItems,
-        },
-        tasks: {
-          set: tasks,
-        },
-        dailyReward: {
-          upsert: {
-            create: dailyReward,
-            update: dailyReward,
-          },
-        },
-        unlockedLevels,
-        clickPower,
-        friendsCoins,
-        energy,
-        pphAccumulated,
-        multiplier,
-        multiplierEndTime,
-        boosterCooldown,
-        selectedCoinImage,
-        settings,
-      },
-      create: {
-        telegramId: parseInt(telegramId),
-        username,
-        coins,
-        level,
-        exp,
-        profitPerHour,
-        shopItems: {
-          create: shopItems,
-        },
-        premiumShopItems: {
-          create: premiumShopItems,
-        },
-        tasks: {
-          create: tasks,
-        },
-        dailyReward: {
-          create: dailyReward,
-        },
-        unlockedLevels,
-        clickPower,
-        friendsCoins,
-        energy,
-        pphAccumulated,
-        multiplier,
-        multiplierEndTime,
-        boosterCooldown,
-        selectedCoinImage,
-        settings,
-      },
-    });
+    const client = await clientPromise;
+    const db = client.db('cryptoGame');
+    const result = await db
+      .collection('users')
+      .updateOne(
+        { telegramId: telegramId },
+        { $set: { name, coins, level, exp } },
+        { upsert: true }
+      );
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
