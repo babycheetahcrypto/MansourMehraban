@@ -1346,9 +1346,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           );
         }
 
-        // Simulate fetching game data
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
