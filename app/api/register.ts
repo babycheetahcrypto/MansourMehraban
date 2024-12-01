@@ -97,13 +97,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             completed: false,
           },
         },
-        wallet: walletAddress
-          ? {
-              create: {
-                address: walletAddress,
-              },
-            }
-          : undefined,
       },
       include: {
         shopItems: true,
