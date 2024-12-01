@@ -485,18 +485,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
         settings,
       });
 
-      const updatedUser = await prisma.user.upsert({
-        where: { telegramId: parseInt(user.telegramId) },
-        update: {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          telegramId: user.telegramId,
           username: user.name,
           coins: user.coins,
           level: user.level,
           exp: user.exp,
           profitPerHour,
-          shopItems: { set: shopItems },
-          premiumShopItems: { set: premiumShopItems },
-          tasks: { set: tasks },
-          dailyReward: { update: dailyReward },
+          shopItems,
+          premiumShopItems,
+          tasks,
+          dailyReward,
           unlockedLevels,
           clickPower,
           friendsCoins,
@@ -507,53 +511,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           boosterCooldown,
           selectedCoinImage,
           settings,
-        },
-        create: {
-          telegramId: parseInt(user.telegramId),
-          username: user.name,
-          coins: user.coins,
-          level: user.level,
-          exp: user.exp,
-          profitPerHour,
-          shopItems: { create: shopItems },
-          premiumShopItems: { create: premiumShopItems },
-          tasks: { create: tasks },
-          dailyReward: { create: dailyReward },
-          unlockedLevels,
-          clickPower,
-          friendsCoins,
-          energy,
-          pphAccumulated,
-          multiplier,
-          multiplierEndTime,
-          boosterCooldown,
-          selectedCoinImage,
-          settings,
-        },
+        }),
       });
 
-      console.log('User data saved successfully:', updatedUser);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Failed to save user data:', errorText);
+        throw new Error('Failed to save user data');
+      }
+
+      const savedData = await response.json();
+      console.log('User data saved successfully:', savedData);
     } catch (error) {
       console.error('Error saving user data:', error);
     }
-  }, [
-    user,
-    profitPerHour,
-    shopItems,
-    premiumShopItems,
-    tasks,
-    dailyReward,
-    unlockedLevels,
-    clickPower,
-    friendsCoins,
-    energy,
-    pphAccumulated,
-    multiplier,
-    multiplierEndTime,
-    boosterCooldown,
-    selectedCoinImage,
-    settings,
-  ]);
+  }, [user]);
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
