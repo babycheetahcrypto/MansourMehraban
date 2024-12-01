@@ -10,53 +10,70 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
-    const parsedTelegramId = parseInt(telegramId);
-
-    // First check if user exists
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        telegramId: parsedTelegramId,
-      },
-      include: {
-        shopItems: true,
-        premiumShopItems: true,
-        tasks: true,
-        trophies: true,
-        dailyReward: true,
-        referralRewards: true,
-      },
-    });
-
-    if (existingUser) {
-      return NextResponse.json(existingUser);
+    // Test database connection
+    try {
+      await prisma.$connect();
+      console.log('Database connection successful');
+    } catch (connError) {
+      console.error('Database connection failed:', connError);
+      return NextResponse.json({ error: 'Database connection failed' }, { status: 500 });
     }
 
-    // If user doesn't exist, create a new one with all required fields
-    const newUser = await prisma.user.create({
-      data: {
-        telegramId: parsedTelegramId,
-        username: '',
-        firstName: '',
-        lastName: '',
-        coins: 0,
-        level: 1,
-        exp: 0,
-        energy: 500,
-        clickPower: 1,
-        profitPerHour: 0,
-        pphAccumulated: 0,
-        multiplier: 1,
-        unlockedLevels: [1],
-        totalEarnings: 0,
-        totalClicks: 0,
-        settings: {
-          vibration: true,
-          backgroundMusic: true,
-          soundEffect: true,
+    const parsedTelegramId = parseInt(telegramId);
+
+    // First try to find the user
+    try {
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          telegramId: parsedTelegramId,
         },
+      });
+
+      if (existingUser) {
+        const userWithRelations = await prisma.user.findUnique({
+          where: { telegramId: parsedTelegramId },
+          include: {
+            shopItems: true,
+            premiumShopItems: true,
+            tasks: true,
+            trophies: true,
+            dailyReward: true,
+            referralRewards: true,
+          },
+        });
+        return NextResponse.json(userWithRelations);
+      }
+
+      // If user doesn't exist, create new user
+      const newUser = await prisma.user.create({
+        data: {
+          telegramId: parsedTelegramId,
+          username: '',
+          coins: 0,
+          level: 1,
+          exp: 0,
+          energy: 500,
+          clickPower: 1,
+          profitPerHour: 0,
+          pphAccumulated: 0,
+          multiplier: 1,
+          unlockedLevels: [1],
+          totalEarnings: 0,
+          totalClicks: 0,
+          settings: {
+            vibration: true,
+            backgroundMusic: true,
+            soundEffect: true,
+          },
+        },
+      });
+
+      // After creating the base user, create related records
+      if (newUser) {
         // Create initial task
-        tasks: {
-          create: {
+        await prisma.task.create({
+          data: {
+            userId: newUser.id,
             type: 'daily',
             description: 'Click 100 times',
             maxProgress: 100,
@@ -65,36 +82,45 @@ export async function GET(request: NextRequest) {
             claimed: false,
             progress: 0,
           },
-        },
+        });
+
         // Create daily reward
-        dailyReward: {
-          create: {
+        await prisma.dailyReward.create({
+          data: {
+            userId: newUser.id,
             streak: 0,
             day: 1,
             completed: false,
           },
+        });
+
+        // Return user with all relations
+        const createdUserWithRelations = await prisma.user.findUnique({
+          where: { telegramId: parsedTelegramId },
+          include: {
+            shopItems: true,
+            premiumShopItems: true,
+            tasks: true,
+            trophies: true,
+            dailyReward: true,
+            referralRewards: true,
+          },
+        });
+
+        return NextResponse.json(createdUserWithRelations);
+      }
+    } catch (dbError) {
+      console.error('Database operation failed:', dbError);
+      return NextResponse.json(
+        {
+          error: 'Database operation failed',
+          details: dbError instanceof Error ? dbError.message : 'Unknown error',
         },
-      },
-    });
-
-    // Fetch the created user with all relations
-    const createdUserWithRelations = await prisma.user.findUnique({
-      where: {
-        id: newUser.id,
-      },
-      include: {
-        shopItems: true,
-        premiumShopItems: true,
-        tasks: true,
-        trophies: true,
-        dailyReward: true,
-        referralRewards: true,
-      },
-    });
-
-    return NextResponse.json(createdUserWithRelations);
+        { status: 500 }
+      );
+    }
   } catch (error) {
-    console.error('Error in GET:', error);
+    console.error('Unexpected error:', error);
     return NextResponse.json(
       {
         error: 'Internal server error',
@@ -102,6 +128,8 @@ export async function GET(request: NextRequest) {
       },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
@@ -114,61 +142,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
+    // Test database connection
+    try {
+      await prisma.$connect();
+      console.log('Database connection successful');
+    } catch (connError) {
+      console.error('Database connection failed:', connError);
+      return NextResponse.json({ error: 'Database connection failed' }, { status: 500 });
+    }
+
     const parsedTelegramId = parseInt(telegramId);
 
-    // First check if user exists
-    const existingUser = await prisma.user.findUnique({
+    const updatedUser = await prisma.user.upsert({
       where: {
         telegramId: parsedTelegramId,
       },
-    });
-
-    if (existingUser) {
-      // Update existing user
-      const updatedUser = await prisma.user.update({
-        where: {
-          telegramId: parsedTelegramId,
-        },
-        data: {
-          lastActive: new Date(),
-          coins: typeof updateData.coins === 'number' ? updateData.coins : undefined,
-          level: typeof updateData.level === 'number' ? updateData.level : undefined,
-          exp: typeof updateData.exp === 'number' ? updateData.exp : undefined,
-          energy: typeof updateData.energy === 'number' ? updateData.energy : undefined,
-          clickPower: typeof updateData.clickPower === 'number' ? updateData.clickPower : undefined,
-          profitPerHour:
-            typeof updateData.profitPerHour === 'number' ? updateData.profitPerHour : undefined,
-          pphAccumulated:
-            typeof updateData.pphAccumulated === 'number' ? updateData.pphAccumulated : undefined,
-          multiplier: typeof updateData.multiplier === 'number' ? updateData.multiplier : undefined,
-          totalClicks:
-            typeof updateData.totalClicks === 'number' ? updateData.totalClicks : undefined,
-          totalEarnings:
-            typeof updateData.totalEarnings === 'number' ? updateData.totalEarnings : undefined,
-          unlockedLevels: Array.isArray(updateData.unlockedLevels)
-            ? updateData.unlockedLevels
-            : undefined,
-          settings: updateData.settings || undefined,
-        },
-        include: {
-          shopItems: true,
-          premiumShopItems: true,
-          tasks: true,
-          trophies: true,
-          dailyReward: true,
-          referralRewards: true,
-        },
-      });
-      return NextResponse.json(updatedUser);
-    }
-
-    // Create new user if doesn't exist
-    const newUser = await prisma.user.create({
-      data: {
+      update: {
+        lastActive: new Date(),
+        ...updateData,
+      },
+      create: {
         telegramId: parsedTelegramId,
         username: updateData.username || '',
-        firstName: updateData.firstName || '',
-        lastName: updateData.lastName || '',
         coins: 0,
         level: 1,
         exp: 0,
@@ -196,7 +191,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(newUser);
+    return NextResponse.json(updatedUser);
   } catch (error) {
     console.error('Error in POST:', error);
     return NextResponse.json(
@@ -206,5 +201,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }
