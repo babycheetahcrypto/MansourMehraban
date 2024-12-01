@@ -3,7 +3,7 @@ import Script from 'next/script';
 import TelegramInitializer from './TelegramInitializer';
 
 export const metadata = {
-  title: 'Baby Cheetah Crypto',
+  title: 'Baby Cheetah',
   description: 'Baby Cheetah Crypto Game',
 };
 

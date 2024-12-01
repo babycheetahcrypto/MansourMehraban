@@ -24,7 +24,7 @@ model User {
   unlockedLevels    Int[]
   clickPower        Int               @default(1)
   friendsCoins      Json?
-  energy            Int               @default(1000)
+  energy            Int               @default(500)
   pphAccumulated    Float             @default(0)
   multiplier        Int               @default(1)
   multiplierEndTime DateTime?

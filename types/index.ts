@@ -38,7 +38,7 @@ export interface LeaderboardEntry {
 }
 
 export interface UserData {
-  id: string;
+  id: number;
   telegramId: number;
   username: string;
   firstName?: string;

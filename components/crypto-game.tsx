@@ -432,7 +432,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
             setUnlockedLevels(userData.unlockedLevels || unlockedLevels);
             setClickPower(userData.clickPower || 1);
             setFriendsCoins(userData.friendsCoins || {});
-            setEnergy(userData.energy || 1000);
+            setEnergy(userData.energy || 500);
             setPphAccumulated(userData.pphAccumulated || 0);
             setMultiplier(userData.multiplier || 1);
             setMultiplierEndTime(userData.multiplierEndTime || null);
@@ -497,7 +497,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
   const [currentPage, setCurrentPage] = useState('home');
-  const [energy, setEnergy] = useState(1000);
+  const [energy, setEnergy] = useState(500);
   const [maxEnergy] = useState(1000);
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
@@ -1374,7 +1374,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   useEffect(() => {
     const timer = setInterval(() => {
       setEnergy((prevEnergy) => {
-        const newEnergy = Math.min(prevEnergy + 0.5, maxEnergy);
+        const newEnergy = Math.min(prevEnergy + 0.1, maxEnergy);
         if (energyRef.current) {
           energyRef.current.style.width = `${(newEnergy / maxEnergy) * 100}%`;
         }
