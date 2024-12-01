@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@opentelemetry/instrumentation": "^0.55.0",
-    "@prisma/client": "latest",
+    "@prisma/client": "^6.0.0",
     "@prisma/extension-accelerate": "^1.2.1",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.1.0",
