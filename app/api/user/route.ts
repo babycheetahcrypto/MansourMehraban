@@ -10,19 +10,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
-    // Add validation for telegramId format
-    const parsedTelegramId = parseInt(telegramId);
-    if (isNaN(parsedTelegramId)) {
-      return NextResponse.json({ error: 'Invalid Telegram ID format' }, { status: 400 });
-    }
-
     const user = await prisma.user.findUnique({
-      where: { telegramId: parsedTelegramId },
-      include: {
-        shopItems: true,
-        premiumShopItems: true,
-        tasks: true,
-        dailyReward: true,
+      where: {
+        telegramId: parseInt(telegramId),
       },
     });
 
@@ -33,13 +23,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(user);
   } catch (error) {
     console.error('Database error:', error);
-    return NextResponse.json(
-      {
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Database error' }, { status: 500 });
   }
 }
 
@@ -52,47 +36,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
-    // Add validation for telegramId format
-    const parsedTelegramId = parseInt(telegramId);
-    if (isNaN(parsedTelegramId)) {
-      return NextResponse.json({ error: 'Invalid Telegram ID format' }, { status: 400 });
-    }
-
-    const result = await prisma.user.upsert({
-      where: { telegramId: parsedTelegramId },
+    const user = await prisma.user.upsert({
+      where: {
+        telegramId: parseInt(telegramId),
+      },
       update: {
         ...body,
-        shopItems: body.shopItems ? { set: body.shopItems } : undefined,
-        premiumShopItems: body.premiumShopItems ? { set: body.premiumShopItems } : undefined,
-        tasks: body.tasks ? { set: body.tasks } : undefined,
-        dailyReward: body.dailyReward
-          ? {
-              upsert: {
-                create: body.dailyReward,
-                update: body.dailyReward,
-              },
-            }
-          : undefined,
+        lastSeen: new Date(),
       },
       create: {
-        telegramId: parsedTelegramId,
         ...body,
-        shopItems: body.shopItems ? { create: body.shopItems } : undefined,
-        premiumShopItems: body.premiumShopItems ? { create: body.premiumShopItems } : undefined,
-        tasks: body.tasks ? { create: body.tasks } : undefined,
-        dailyReward: body.dailyReward ? { create: body.dailyReward } : undefined,
+        telegramId: parseInt(telegramId),
       },
     });
 
-    return NextResponse.json({ success: true, result });
+    return NextResponse.json(user);
   } catch (error) {
     console.error('Database error:', error);
-    return NextResponse.json(
-      {
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Database error' }, { status: 500 });
   }
 }

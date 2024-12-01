@@ -490,6 +490,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     }
   }, [user]);
 
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -1269,6 +1271,67 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     coins: number;
     profitPerHour: number;
     rank: number;
+  };
+
+  useEffect(() => {
+    const initTelegram = async () => {
+      if (window.Telegram?.WebApp) {
+        const tg = window.Telegram.WebApp;
+
+        try {
+          // Get telegram user data
+          const telegramUser = tg.initDataUnsafe?.user;
+
+          if (!telegramUser?.id) {
+            throw new Error('No Telegram user ID found');
+          }
+
+          // Fetch user data from your API
+          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+          }
+
+          const userData = await response.json();
+          setUser(userData);
+        } catch (err) {
+          console.error('Error:', err);
+          setError(err instanceof Error ? err.message : 'Unknown error');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    initTelegram();
+  }, []);
+
+  // Save user progress
+  const saveUserProgress = async (updatedData: Partial<User>) => {
+    if (!user?.telegramId) return;
+
+    try {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          telegramId: user.telegramId,
+          ...updatedData,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save progress');
+      }
+
+      const savedUser = await response.json();
+      setUser(savedUser);
+    } catch (err) {
+      console.error('Error saving progress:', err);
+    }
   };
 
   // Update the fetchLeaderboard function
