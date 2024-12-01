@@ -41,8 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: {
         telegramId: parseInt(telegramId),
         username,
-        firstName,
-        lastName,
         coins,
         level,
         exp,
