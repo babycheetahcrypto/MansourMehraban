@@ -108,15 +108,26 @@ const styles = `
   @keyframes pulse {
     0% {
       transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+      opacity: 1;
     }
-    70% {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 20px rgba(0, 255, 0, 0);
+    50% {
+      transform: scale(1.05);
+      opacity: 0.7;
     }
     100% {
       transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+      opacity: 1;
+    }
+  }
+  @keyframes twinkle {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
     }
   }
 `;
@@ -867,6 +878,30 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
               easing: 'ease-out',
             }
           ).onfinish = () => document.body.removeChild(numberShow);
+
+          // Add shaking effect to the coin button
+          const coinButton = document.querySelector('.coin-button');
+          if (coinButton) {
+            coinButton.animate(
+              [
+                { transform: 'translate(1px, 1px) rotate(0deg)' },
+                { transform: 'translate(-1px, -2px) rotate(-1deg)' },
+                { transform: 'translate(-3px, 0px) rotate(1deg)' },
+                { transform: 'translate(3px, 2px) rotate(0deg)' },
+                { transform: 'translate(1px, -1px) rotate(1deg)' },
+                { transform: 'translate(-1px, 2px) rotate(-1deg)' },
+                { transform: 'translate(-3px, 1px) rotate(0deg)' },
+                { transform: 'translate(3px, 1px) rotate(-1deg)' },
+                { transform: 'translate(-1px, -1px) rotate(1deg)' },
+                { transform: 'translate(1px, 2px) rotate(0deg)' },
+                { transform: 'translate(1px, -2px) rotate(-1deg)' },
+              ],
+              {
+                duration: 100,
+                iterations: 1,
+              }
+            );
+          }
 
           return updatedUser;
         });
@@ -1736,7 +1771,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
 
         <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto mb-16">
           <button
-            className="w-[calc(100vw-8px)] max-w-[650px] aspect-square rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 transform transition-all duration-100 active:scale-95 hover:shadow-2xl hover:scale-105"
+            className="w-[calc(100vw-8px)] max-w-[650px] aspect-square rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 transform transition-all duration-100 active:scale-95 hover:shadow-2xl hover:scale-105 relative"
             onClick={clickCoin}
             onTouchStart={(e) => {
               e.preventDefault();
@@ -1745,13 +1780,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
             onTouchEnd={(e) => e.preventDefault()}
           >
             <Image
-              src={selectedCoinImage}
+              src={
+                selectedCoinImage ||
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png'
+              }
               alt={`Level ${level} Cheetah`}
               layout="fill"
               objectFit="contain"
-              className="relative z-10"
+              className="relative z-10 animate-pulse"
               priority
             />
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-50 animate-pulse"></div>
           </button>
 
           <div className="w-full space-y-4">
