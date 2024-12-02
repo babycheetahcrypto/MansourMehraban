@@ -406,7 +406,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
       multiplier: 1,
       multiplierEndTime: null,
       boosterCooldown: null,
-      selectedCoinImage: '', // Replace with actual image URL
+      selectedCoinImage: 'hebbkx1anhila5yf.public.blob.vercel-storage.com , vercel-storage.com',
       settings: {
         vibration: true,
         backgroundMusic: false,
@@ -1223,7 +1223,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
     multiplier: 1,
     multiplierEndTime: null,
     boosterCooldown: null,
-    selectedCoinImage: '', // Replace with actual image URL
+    selectedCoinImage: 'hebbkx1anhila5yf.public.blob.vercel-storage.com , vercel-storage.com',
     settings: {
       vibration: true,
       backgroundMusic: false,
