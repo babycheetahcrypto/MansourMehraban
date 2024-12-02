@@ -411,8 +411,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       multiplier: 1,
       multiplierEndTime: null,
       boosterCooldown: null,
-      selectedCoinImage:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-AZ7Z66QUFCG9MgyuTsUhX0UQCZJO8I.png',
+      selectedCoinImage: '',
       settings: {
         vibration: true,
         backgroundMusic: false,
@@ -460,9 +459,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const [multiplier, setMultiplier] = useState(1);
   const [multiplierEndTime, setMultiplierEndTime] = useState<number | null>(null);
   const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
-  const [selectedCoinImage, setSelectedCoinImage] = useState(
-    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-AZ7Z66QUFCG9MgyuTsUhX0UQCZJO8I.png'
-  );
+  const [selectedCoinImage, setSelectedCoinImage] = useState('');
   const [inviteCode] = useState('');
   const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
   const [congratulationPopup, setCongratulationPopup] = useState({
@@ -1285,8 +1282,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
                 multiplier: 1,
                 multiplierEndTime: null,
                 boosterCooldown: null,
-                selectedCoinImage:
-                  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-AZ7Z66QUFCG9MgyuTsUhX0UQCZJO8I.png',
+                selectedCoinImage: '',
                 settings: {
                   vibration: true,
                   backgroundMusic: false,
@@ -1352,8 +1348,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           multiplier: 1,
           multiplierEndTime: null,
           boosterCooldown: null,
-          selectedCoinImage:
-            'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
+          selectedCoinImage: '',
           settings: {
             vibration: true,
             backgroundMusic: false,
