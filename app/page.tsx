@@ -1,36 +1,46 @@
 'use client';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { User } from '@/types/user';
+import type { User } from '@/types/user';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
 }) as React.ComponentType<{
-  initialUserData: User | null;
+  userData: User | null;
   onCoinsUpdate: (amount: number) => Promise<void>;
 }>;
 
-export default function Page() {
+export default function Home() {
   const [userData, setUserData] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const initializeUser = async () => {
-      if (window.Telegram?.WebApp) {
-        const webApp = window.Telegram.WebApp;
-        webApp.ready();
-        webApp.expand();
+      try {
+        // Get Telegram WebApp data
+        const tg = window.Telegram?.WebApp;
+        if (!tg?.initDataUnsafe?.user) {
+          console.error('No Telegram user data available');
+          setLoading(false);
+          return;
+        }
 
-        try {
-          setIsLoading(true);
-          const telegramUser = webApp.initDataUnsafe.user;
-          if (!telegramUser) {
-            setIsLoading(false);
-            return;
-          }
+        const telegramUser = tg.initDataUnsafe.user;
 
-          // First register or update the user
-          const registerResponse = await fetch('/api/user', {
+        // Try to fetch existing user
+        const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserData({
+            ...data,
+            lastUpdated: new Date(data.lastUpdated),
+            name: data.username || `user${telegramUser.id}`,
+            profilePhoto: telegramUser.photo_url || '',
+          });
+        } else if (response.status === 404) {
+          // Create new user if not found
+          const newUserResponse = await fetch('/api/user', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -40,21 +50,29 @@ export default function Page() {
               username: telegramUser.username || `user${telegramUser.id}`,
               firstName: telegramUser.first_name,
               lastName: telegramUser.last_name,
-              profilePhoto: telegramUser.photo_url,
+              coins: 0,
+              profilePhoto: telegramUser.photo_url || '',
             }),
           });
 
-          if (!registerResponse.ok) {
-            throw new Error('Failed to register/update user');
+          if (newUserResponse.ok) {
+            const newUser = await newUserResponse.json();
+            setUserData({
+              ...newUser,
+              lastUpdated: new Date(newUser.lastUpdated),
+              name: newUser.username || `user${telegramUser.id}`,
+              profilePhoto: telegramUser.photo_url || '',
+            });
+          } else {
+            console.error('Failed to create new user');
           }
-
-          const userData = await registerResponse.json();
-          setUserData(userData);
-        } catch (error) {
-          console.error('Error initializing user:', error);
-        } finally {
-          setIsLoading(false);
+        } else {
+          console.error('Failed to fetch user data');
         }
+      } catch (error) {
+        console.error('Error initializing user:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -67,19 +85,24 @@ export default function Page() {
     try {
       const updatedCoins = userData.coins + amount;
       const response = await fetch('/api/user', {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          telegramId: userData.telegramId,
+          ...userData,
           coins: updatedCoins,
         }),
       });
 
       if (response.ok) {
         const updatedUser = await response.json();
-        setUserData(updatedUser);
+        setUserData({
+          ...updatedUser,
+          lastUpdated: new Date(updatedUser.lastUpdated),
+          name: updatedUser.username || userData.name,
+          profilePhoto: updatedUser.profilePhoto || userData.profilePhoto,
+        });
       } else {
         console.error('Failed to update coins');
       }
@@ -88,5 +111,13 @@ export default function Page() {
     }
   };
 
-  return <CryptoGame initialUserData={userData} onCoinsUpdate={handleCoinsUpdate} />;
+  return (
+    <main>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} />
+      )}
+    </main>
+  );
 }

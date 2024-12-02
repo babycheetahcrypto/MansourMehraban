@@ -23,16 +23,16 @@ import {
 } from 'lucide-react';
 
 // Interfaces and Types
-type User = {
+interface User {
   name: string;
   coins: number;
   level: number;
   exp: number;
   profilePhoto: string;
   telegramId: string;
-  shopItems: ShopItem[];
-  premiumShopItems: PremiumShopItem[];
-  tasks: Task[];
+  shopItems: any[];
+  premiumShopItems: any[];
+  tasks: any[];
   dailyReward: {
     lastClaimed: Date | null;
     streak: number;
@@ -41,7 +41,7 @@ type User = {
   };
   unlockedLevels: number[];
   clickPower: number;
-  friendsCoins: Record<string, number>;
+  friendsCoins: { [key: string]: number };
   energy: number;
   pphAccumulated: number;
   multiplier: number;
@@ -54,11 +54,11 @@ type User = {
     soundEffect: boolean;
     backgroundMusicAudio: HTMLAudioElement | null;
   };
-};
+}
 
 interface CryptoGameProps {
-  initialUserData: User | null;
-  onCoinsUpdate?: (amount: number) => Promise<void>;
+  userData: User | null;
+  onCoinsUpdate: (amount: number) => Promise<void>;
 }
 
 type ShopItem = {
@@ -380,9 +380,9 @@ const playHeaderFooterSound = () => {
   audio.play();
 };
 
-const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate }) => {
+const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const [user, setUser] = useState<User>(
-    initialUserData || {
+    userData || {
       name: '',
       coins: 0,
       level: 1,
@@ -406,7 +406,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
       multiplier: 1,
       multiplierEndTime: null,
       boosterCooldown: null,
-      selectedCoinImage: 'hebbkx1anhila5yf.public.blob.vercel-storage.com , vercel-storage.com',
+      selectedCoinImage:
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
       settings: {
         vibration: true,
         backgroundMusic: false,
@@ -420,7 +421,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
   const [error, setError] = useState<string | null>(null);
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
@@ -1247,7 +1248,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-      // Fetch user data on component mount
       const fetchUserData = async () => {
         try {
           const response = await fetch('/api/user');
@@ -1264,15 +1264,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
       fetchUserData();
     }, []);
 
-    const saveUserData = async (updatedUser: User) => {
-      if (!updatedUser) return;
+    const saveUserData = useCallback(async () => {
+      if (!user) return;
       try {
+        console.log('Saving user data:', user);
         const response = await fetch('/api/user', {
-          method: 'POST',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(updatedUser),
+          body: JSON.stringify(user),
         });
 
         if (!response.ok) {
@@ -1285,8 +1286,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
       } catch (error) {
         console.error('Error saving user data:', error);
       }
-    };
-
+    }, [user]);
     return { user, setUser, saveUserData };
   };
 
@@ -1340,8 +1340,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
                   soundEffect: true,
                 },
                 profitPerHour: 0,
-                trophies: [],
-                referralRewards: [],
               };
               const createResponse = await fetch('/api/user', {
                 method: 'POST',
@@ -1402,6 +1400,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
         } else {
           alert('Failed to load game data. Please try again.');
         }
+      } finally {
+        setIsLoading(false);
       }
     };
 
