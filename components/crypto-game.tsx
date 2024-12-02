@@ -459,9 +459,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const [multiplier, setMultiplier] = useState(1);
   const [multiplierEndTime, setMultiplierEndTime] = useState<number | null>(null);
   const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
-  const [selectedCoinImage, setSelectedCoinImage] = useState(
-    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-AZ7Z66QUFCG9MgyuTsUhX0UQCZJO8I.png'
-  );
+  const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[1]);
   const [inviteCode] = useState('');
   const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
   const [congratulationPopup, setCongratulationPopup] = useState({
