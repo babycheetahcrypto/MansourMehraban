@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         multiplier = 1,
         multiplierEndTime = null,
         boosterCooldown = null,
-        selectedCoinImage = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
+        selectedCoinImage = '',
         settings = { vibration: true, backgroundMusic: false, soundEffect: true },
         profitPerHour = 0,
       } = req.body;

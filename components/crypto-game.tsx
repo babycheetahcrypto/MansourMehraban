@@ -411,7 +411,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       multiplier: 1,
       multiplierEndTime: null,
       boosterCooldown: null,
-      selectedCoinImage: '',
+      selectedCoinImage: levelImages[0],
       settings: {
         vibration: true,
         backgroundMusic: false,
@@ -1282,7 +1282,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
                 multiplier: 1,
                 multiplierEndTime: null,
                 boosterCooldown: null,
-                selectedCoinImage: '',
+                selectedCoinImage: levelImages[0],
                 settings: {
                   vibration: true,
                   backgroundMusic: false,
@@ -1348,7 +1348,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           multiplier: 1,
           multiplierEndTime: null,
           boosterCooldown: null,
-          selectedCoinImage: '',
+          selectedCoinImage: levelImages[0],
           settings: {
             vibration: true,
             backgroundMusic: false,
