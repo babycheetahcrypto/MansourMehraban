@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 
 // Interfaces and Types
-interface User {
+type User = {
   name: string;
   coins: number;
   level: number;
@@ -54,7 +54,7 @@ interface User {
     soundEffect: boolean;
     backgroundMusicAudio: HTMLAudioElement | null;
   };
-}
+};
 
 interface CryptoGameProps {
   initialUserData: User | null;
@@ -978,7 +978,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
 
   const connectWallet = async () => {
     try {
-      const manifestUrl = 'tg://resolve?domain=tonkeeper/tonconnect-manifest.json';
+      const manifestUrl = 'https://babycheetah.vercel.app/tonconnect-manifest.json';
       const tonConnect = new TonConnect({ manifestUrl });
 
       const walletConnectionSource = {
