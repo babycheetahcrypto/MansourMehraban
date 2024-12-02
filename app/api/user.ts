@@ -35,21 +35,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const {
         telegramId,
         username,
-        coins,
-        level,
-        exp,
+        name,
         profilePhoto,
-        unlockedLevels,
-        clickPower,
-        friendsCoins,
-        energy,
-        pphAccumulated,
-        multiplier,
-        multiplierEndTime,
-        boosterCooldown,
-        selectedCoinImage,
-        settings,
-        profitPerHour,
+        coins = 0,
+        level = 1,
+        exp = 0,
+        unlockedLevels = [1],
+        clickPower = 1,
+        friendsCoins = {},
+        energy = 500,
+        pphAccumulated = 0,
+        multiplier = 1,
+        multiplierEndTime = null,
+        boosterCooldown = null,
+        selectedCoinImage = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
+        settings = { vibration: true, backgroundMusic: false, soundEffect: true },
+        profitPerHour = 0,
       } = req.body;
 
       if (!telegramId) {
@@ -60,10 +61,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: { telegramId: parseInt(telegramId) },
         update: {
           username,
+          profilePhoto,
           coins,
           level,
           exp,
-          profilePhoto,
           unlockedLevels,
           clickPower,
           friendsCoins,
@@ -79,27 +80,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         create: {
           telegramId: parseInt(telegramId),
           username,
-          coins: coins || 0,
-          level: level || 1,
-          exp: exp || 0,
           profilePhoto,
-          unlockedLevels: unlockedLevels || [1],
-          clickPower: clickPower || 1,
-          friendsCoins: friendsCoins || {},
-          energy: energy || 500,
-          pphAccumulated: pphAccumulated || 0,
-          multiplier: multiplier || 1,
+          coins,
+          level,
+          exp,
+          unlockedLevels,
+          clickPower,
+          friendsCoins,
+          energy,
+          pphAccumulated,
+          multiplier,
           multiplierEndTime,
           boosterCooldown,
           selectedCoinImage,
-          settings: settings || { vibration: true, backgroundMusic: false, soundEffect: true },
-          profitPerHour: profitPerHour || 0,
+          settings,
+          profitPerHour,
+          dailyReward: {
+            create: {
+              lastClaimed: null,
+              streak: 0,
+              day: 1,
+              completed: false,
+            },
+          },
         },
-      });
-
-      // Fetch the updated user data with all related information
-      const updatedUser = await prisma.user.findUnique({
-        where: { id: user.id },
         include: {
           shopItems: true,
           premiumShopItems: true,
@@ -110,7 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
-      res.status(200).json(updatedUser);
+      res.status(200).json(user);
     } else {
       res.setHeader('Allow', ['GET', 'POST']);
       res.status(405).end(`Method ${req.method} Not Allowed`);

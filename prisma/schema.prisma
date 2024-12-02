@@ -107,3 +107,21 @@ model ReferralReward {
   user        User      @relation(fields: [userId], references: [id])
 }
 
+model Wallet {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String @unique @db.ObjectId
+  address String @unique
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model FriendInvite {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  inviterId String   @db.ObjectId
+  inviteeId String   @db.ObjectId
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  inviter   User     @relation("SentInvites", fields: [inviterId], references: [id])
+  invitee   User     @relation("ReceivedInvites", fields: [inviteeId], references: [id])
+}
+

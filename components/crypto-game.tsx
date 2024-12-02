@@ -1106,12 +1106,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
         () => {
           setMultiplier(1);
           setMultiplierEndTime(null);
-          setBoosterCooldown(Date.now() + 10 * 60 * 1000);
+          setBoosterCooldown(Date.now() + 100 * 60 * 1000);
           const unlockTimer = setTimeout(
             () => {
               setBoosterCooldown(null);
             },
-            10 * 60 * 1000
+            100 * 60 * 1000
           );
           return () => clearTimeout(unlockTimer);
         },
@@ -1291,6 +1291,58 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
             setUser(userData);
           } else {
             console.error('Failed to fetch user data:', await response.text());
+            // If user doesn't exist, create a new user
+            if (response.status === 404) {
+              const newUser = {
+                telegramId: telegramUser.id,
+                username: telegramUser.username || `user${telegramUser.id}`,
+                name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+                profilePhoto: telegramUser.photo_url || '',
+                coins: 0,
+                level: 1,
+                exp: 0,
+                shopItems: [],
+                premiumShopItems: [],
+                tasks: [],
+                dailyReward: {
+                  lastClaimed: null,
+                  streak: 0,
+                  day: 1,
+                  completed: false,
+                },
+                unlockedLevels: [1],
+                clickPower: 1,
+                friendsCoins: {},
+                energy: 500,
+                pphAccumulated: 0,
+                multiplier: 1,
+                multiplierEndTime: null,
+                boosterCooldown: null,
+                selectedCoinImage:
+                  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
+                settings: {
+                  vibration: true,
+                  backgroundMusic: false,
+                  soundEffect: true,
+                },
+                profitPerHour: 0,
+                trophies: [],
+                referralRewards: [],
+              };
+              const createResponse = await fetch('/api/user', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newUser),
+              });
+              if (createResponse.ok) {
+                const createdUser = await createResponse.json();
+                setUser(createdUser);
+              } else {
+                console.error('Failed to create new user:', await createResponse.text());
+              }
+            }
           }
         } else {
           console.error('No Telegram user data available');
