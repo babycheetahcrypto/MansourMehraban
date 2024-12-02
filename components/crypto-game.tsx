@@ -34,14 +34,14 @@ interface User {
   premiumShopItems: PremiumShopItem[];
   tasks: Task[];
   dailyReward: {
-    lastClaimed: string | null;
+    lastClaimed: Date | null;
     streak: number;
     day: number;
     completed: boolean;
   };
   unlockedLevels: number[];
   clickPower: number;
-  friendsCoins: { [key: string]: number };
+  friendsCoins: Record<string, number>;
   energy: number;
   pphAccumulated: number;
   multiplier: number;
@@ -56,13 +56,8 @@ interface User {
   };
 }
 
-interface UserData {
-  username: string;
-  telegramId: number;
-}
-
 interface CryptoGameProps {
-  userData: UserData | null;
+  initialUserData: User | null;
   onCoinsUpdate?: (amount: number) => Promise<void>;
 }
 
@@ -94,6 +89,15 @@ type Task = {
   claimed: boolean;
   icon: React.ReactNode;
   action: () => void;
+};
+
+type LeaderboardEntry = {
+  id: string;
+  telegramId: string;
+  name: string;
+  coins: number;
+  profitPerHour: number;
+  rank: number;
 };
 
 // Keyframe animation
@@ -263,7 +267,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 };
 
 const levelRequirements = [
-  0, 5000, 50000, 100000, 500000, 1000000, 100000000, 500000000, 1000000000, 5000000000,
+  0, 5000, 50000, 100000, 500000, 1000000, 100000000, 500000000, 700000000, 1000000000,
 ];
 
 const levelImages = [
@@ -376,159 +380,47 @@ const playHeaderFooterSound = () => {
   audio.play();
 };
 
-const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
-  const [user, setUser] = useState({
-    name: '',
-    coins: 0,
-    level: 1,
-    exp: 0,
-    profilePhoto: '',
-    telegramId: '',
-  });
-
-  const fetchLeaderboard = useCallback(async () => {
-    try {
-      const response = await fetch('/api/leaderboard');
-      if (response.ok) {
-        const data = await response.json();
-        setLeaderboardData(data);
-        const userRank = data.findIndex(
-          (entry: LeaderboardEntry) => entry.telegramId === user.telegramId
-        );
-        setCurrentUserRank(userRank !== -1 ? userRank + 1 : 0);
-      } else {
-        console.error('Failed to fetch leaderboard data');
-      }
-    } catch (error) {
-      console.error('Error fetching leaderboard:', error);
+const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate }) => {
+  const [user, setUser] = useState<User>(
+    initialUserData || {
+      name: '',
+      coins: 0,
+      level: 1,
+      exp: 0,
+      profilePhoto: '',
+      telegramId: '',
+      shopItems: [],
+      premiumShopItems: [],
+      tasks: [],
+      dailyReward: {
+        lastClaimed: null,
+        streak: 0,
+        day: 1,
+        completed: false,
+      },
+      unlockedLevels: [1],
+      clickPower: 1,
+      friendsCoins: {},
+      energy: 500,
+      pphAccumulated: 0,
+      multiplier: 1,
+      multiplierEndTime: null,
+      boosterCooldown: null,
+      selectedCoinImage: '', // Replace with actual image URL
+      settings: {
+        vibration: true,
+        backgroundMusic: false,
+        soundEffect: true,
+        backgroundMusicAudio: null,
+      },
     }
-  }, [user.telegramId]);
+  );
 
-  const fetchUserData = useCallback(async () => {
-    try {
-      if (window.Telegram && window.Telegram.WebApp) {
-        const webApp = window.Telegram.WebApp;
-        const telegramUser = webApp.initDataUnsafe.user;
-        console.log('Telegram user data:', telegramUser);
-
-        if (telegramUser) {
-          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
-          if (response.ok) {
-            const userData = await response.json();
-            console.log('Fetched user data:', userData);
-            setUser({
-              name:
-                userData.username ||
-                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-              telegramId: telegramUser.id.toString(),
-              coins: userData.coins || 0,
-              level: userData.level || 1,
-              exp: userData.exp || 0,
-              profilePhoto: telegramUser.photo_url || '',
-            });
-            setProfitPerHour(userData.profitPerHour || 0);
-            setShopItems(userData.shopItems || shopItems);
-            setPremiumShopItems(userData.premiumShopItems || premiumShopItems);
-            setTasks(userData.tasks || tasks);
-            setDailyReward(userData.dailyReward || dailyReward);
-            setUnlockedLevels(userData.unlockedLevels || unlockedLevels);
-            setClickPower(userData.clickPower || 1);
-            setFriendsCoins(userData.friendsCoins || {});
-            setEnergy(userData.energy || 500);
-            setPphAccumulated(userData.pphAccumulated || 0);
-            setMultiplier(userData.multiplier || 1);
-            setMultiplierEndTime(userData.multiplierEndTime || null);
-            setBoosterCooldown(userData.boosterCooldown || null);
-            setSelectedCoinImage(userData.selectedCoinImage || levelImages[0]);
-            setSettings(userData.settings || settings);
-          } else {
-            console.error('Failed to fetch user data:', await response.text());
-          }
-        } else {
-          console.error('No Telegram user data available');
-        }
-      } else {
-        console.error('Telegram WebApp not available');
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const saveUserData = useCallback(async () => {
-    try {
-      console.log('Saving user data:', {
-        telegramId: user.telegramId,
-        username: user.name,
-        coins: user.coins,
-        level: user.level,
-        exp: user.exp,
-        profitPerHour,
-        shopItems,
-        premiumShopItems,
-        tasks,
-        dailyReward,
-        unlockedLevels,
-        clickPower,
-        friendsCoins,
-        energy,
-        pphAccumulated,
-        multiplier,
-        multiplierEndTime,
-        boosterCooldown,
-        selectedCoinImage,
-        settings,
-      });
-
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          telegramId: user.telegramId,
-          username: user.name,
-          coins: user.coins,
-          level: user.level,
-          exp: user.exp,
-          profitPerHour,
-          shopItems,
-          premiumShopItems,
-          tasks,
-          dailyReward,
-          unlockedLevels,
-          clickPower,
-          friendsCoins,
-          energy,
-          pphAccumulated,
-          multiplier,
-          multiplierEndTime,
-          boosterCooldown,
-          selectedCoinImage,
-          settings,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to save user data:', errorText);
-        throw new Error('Failed to save user data');
-      }
-
-      const savedData = await response.json();
-      console.log('User data saved successfully:', savedData);
-    } catch (error) {
-      console.error('Error saving user data:', error);
-    }
-  }, [user]);
-
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
@@ -561,7 +453,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const [multiplier, setMultiplier] = useState(1);
   const [multiplierEndTime, setMultiplierEndTime] = useState<number | null>(null);
   const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
-  const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[0]);
+  const [selectedCoinImage, setSelectedCoinImage] = useState('');
   const [inviteCode] = useState('');
   const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
   const [congratulationPopup, setCongratulationPopup] = useState({
@@ -999,7 +891,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
         }
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect, saveUserData]
+    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect]
   );
 
   const buyItem = useCallback(
@@ -1307,55 +1199,91 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     rank: number;
   };
 
-  useEffect(() => {
-    const initTelegram = async () => {
-      if (window.Telegram?.WebApp) {
-        const tg = window.Telegram.WebApp;
-        console.log('Telegram WebApp initialized:', tg);
+  const fetchedUserData: User = {
+    name: '',
+    coins: 0,
+    level: 1,
+    exp: 0,
+    profilePhoto: '',
+    telegramId: '',
+    shopItems: [],
+    premiumShopItems: [],
+    tasks: [],
+    dailyReward: {
+      lastClaimed: null,
+      streak: 0,
+      day: 1,
+      completed: false,
+    },
+    unlockedLevels: [1],
+    clickPower: 1,
+    friendsCoins: {},
+    energy: 500,
+    pphAccumulated: 0,
+    multiplier: 1,
+    multiplierEndTime: null,
+    boosterCooldown: null,
+    selectedCoinImage: '', // Replace with actual image URL
+    settings: {
+      vibration: true,
+      backgroundMusic: false,
+      soundEffect: true,
+      backgroundMusicAudio: null,
+    },
+  };
 
-        try {
-          tg.ready();
-          tg.expand();
+  const saveUserData = async () => {
+    if (!user) return;
+    try {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
 
-          const telegramUser = tg.initDataUnsafe?.user;
-          console.log('Telegram user:', telegramUser);
+      if (!response.ok) {
+        throw new Error('Failed to save user data');
+      }
 
-          if (!telegramUser?.id) {
-            throw new Error('No Telegram user ID found');
+      console.log('User data saved successfully');
+    } catch (error) {
+      console.error('Error saving user data:', error);
+    }
+  };
+
+  const fetchUserData = useCallback(async () => {
+    try {
+      if (window.Telegram && window.Telegram.WebApp) {
+        const webApp = window.Telegram.WebApp;
+        const telegramUser = webApp.initDataUnsafe.user;
+        console.log('Telegram user data:', telegramUser);
+
+        if (telegramUser) {
+          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+          if (response.ok) {
+            const userData = await response.json();
+            console.log('Fetched user data:', userData);
+            setUser(userData);
+          } else {
+            console.error('Failed to fetch user data:', await response.text());
           }
-
-          await fetchUserData();
-        } catch (err) {
-          console.error('Error:', err);
-          setError(err instanceof Error ? err.message : 'Unknown error');
-        } finally {
-          setLoading(false);
+        } else {
+          console.error('No Telegram user data available');
         }
       } else {
         console.error('Telegram WebApp not available');
-        setError('Telegram WebApp not available');
-        setLoading(false);
       }
-    };
-
-    initTelegram();
-  }, [fetchUserData]);
-
-  useEffect(() => {
-    if (user.telegramId) {
-      fetchLeaderboard();
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [user.telegramId, fetchLeaderboard]);
+  }, []);
 
   useEffect(() => {
-    const saveInterval = setInterval(() => {
-      saveUserData();
-    }, 60000); // Save every minute
-
-    return () => clearInterval(saveInterval);
-  }, [saveUserData]);
-
-  useEffect(() => {
+    console.log('Initializing game...');
     const initializeGame = async () => {
       setIsLoading(true);
       try {
@@ -1363,19 +1291,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           const webApp = window.Telegram.WebApp;
           webApp.ready();
           webApp.expand();
-
-          // Get user data from Telegram
-          const telegramUser = webApp.initDataUnsafe.user;
-          if (telegramUser) {
-            setUser((prevUser) => ({
-              ...prevUser,
-              name:
-                telegramUser.username ||
-                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-              telegramId: telegramUser.id.toString(),
-              profilePhoto: telegramUser.photo_url || '',
-            }));
-          }
 
           // Apply Telegram theme
           document.body.style.setProperty('--tg-theme-bg-color', webApp.backgroundColor);
@@ -1390,7 +1305,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           );
         }
 
-        setIsLoading(false);
+        await fetchUserData();
       } catch (error) {
         console.error('Failed to initialize game:', error);
         if (window.Telegram && window.Telegram.WebApp) {
@@ -1398,12 +1313,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
         } else {
           alert('Failed to load game data. Please try again.');
         }
-        setIsLoading(false);
       }
     };
 
     initializeGame();
-  }, []);
+  }, [fetchUserData]);
 
   // Check if TelegramWebApp is available
   useEffect(() => {
