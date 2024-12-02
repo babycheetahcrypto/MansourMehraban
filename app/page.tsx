@@ -100,38 +100,5 @@ export default function Page() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-black opacity-50"></div>
-          <div className="absolute inset-0">
-            {[...Array(50)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full bg-white"
-                style={{
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                  width: `${Math.random() * 3 + 1}px`,
-                  height: `${Math.random() * 3 + 1}px`,
-                  animation: `twinkle ${Math.random() * 5 + 3}s infinite`,
-                }}
-              ></div>
-            ))}
-          </div>
-        </div>
-        <div className="text-center z-10">
-          <div className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-primary via-purple-500 to-pink-500 animate-pulse"
-              style={{ width: '100%' }}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return <CryptoGame initialUserData={userData} onCoinsUpdate={handleCoinsUpdate} />;
 }

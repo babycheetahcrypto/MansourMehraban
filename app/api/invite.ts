@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
       res.status(201).json(invite);
     } catch (error) {
+      console.error('Error creating invite:', error);
       res.status(400).json({ error: 'Failed to create invite' });
     }
   } else if (req.method === 'GET') {
@@ -34,6 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
       res.status(200).json(invites);
     } catch (error) {
+      console.error('Error fetching invites:', error);
       res.status(400).json({ error: 'Failed to fetch invites' });
     }
   } else {
