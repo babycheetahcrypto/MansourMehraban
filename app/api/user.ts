@@ -37,8 +37,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const {
         telegramId,
         username,
-        firstName,
-        lastName,
         profilePhoto,
         coins = 0,
         level = 1,
