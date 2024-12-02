@@ -1,5 +1,5 @@
-// app/page.tsx
 'use client';
+
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import type { User } from '@/types/user';
@@ -18,41 +18,53 @@ export default function Home() {
   useEffect(() => {
     const initializeUser = async () => {
       try {
-        const tg = window.Telegram?.WebApp;
-        if (!tg?.initDataUnsafe?.user) {
-          console.error('No Telegram user data available');
-          setLoading(false);
-          return;
-        }
+        if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+          const tg = window.Telegram.WebApp;
+          tg.ready();
+          tg.expand();
 
-        const telegramUser = tg.initDataUnsafe.user;
-        const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+          const telegramUser = tg.initDataUnsafe.user;
+          if (!telegramUser) {
+            console.error('No Telegram user data available');
+            setLoading(false);
+            return;
+          }
 
-        if (response.ok) {
-          const data = await response.json();
-          setUserData(data);
-        } else if (response.status === 404) {
-          // User not found, create a new user
-          const newUserResponse = await fetch('/api/user', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              telegramId: telegramUser.id,
-              username: telegramUser.username || `user${telegramUser.id}`,
-              firstName: telegramUser.first_name,
-              lastName: telegramUser.last_name,
-              profilePhoto: telegramUser.photo_url || '',
-            }),
-          });
+          console.log('Telegram user data:', telegramUser);
 
-          if (newUserResponse.ok) {
-            const newUser = await newUserResponse.json();
-            setUserData(newUser);
+          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+          console.log('Fetch response status:', response.status);
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Fetched user data:', data);
+            setUserData(data);
+          } else if (response.status === 404) {
+            // User not found, create a new user
+            const newUserResponse = await fetch('/api/user', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                telegramId: telegramUser.id,
+                username: telegramUser.username || `user${telegramUser.id}`,
+                firstName: telegramUser.first_name,
+                lastName: telegramUser.last_name,
+                profilePhoto: telegramUser.photo_url || '',
+              }),
+            });
+
+            if (newUserResponse.ok) {
+              const newUser = await newUserResponse.json();
+              console.log('Created new user:', newUser);
+              setUserData(newUser);
+            } else {
+              console.error('Failed to create new user:', await newUserResponse.text());
+            }
           } else {
-            console.error('Failed to create new user');
+            console.error('Failed to fetch user data:', await response.text());
           }
         } else {
-          console.error('Failed to fetch user data');
+          console.error('Telegram WebApp not available');
         }
       } catch (error) {
         console.error('Error initializing user:', error);
