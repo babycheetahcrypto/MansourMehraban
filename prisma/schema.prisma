@@ -34,8 +34,8 @@ model User {
   updatedAt         DateTime          @updatedAt
   trophies          Trophy[]
   referralRewards   ReferralReward[]
-  sentInvites     FriendInvite[] @relation("SentInvites")
-  receivedInvites FriendInvite[] @relation("ReceivedInvites")
+  sentInvites       FriendInvite[]    @relation("SentInvites")
+  receivedInvites   FriendInvite[]    @relation("ReceivedInvites")
 }
 
 model ShopItem {
