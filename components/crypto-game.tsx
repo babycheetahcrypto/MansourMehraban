@@ -21,7 +21,6 @@ import {
   Music,
   Eye,
 } from 'lucide-react';
-import { TonConnect as TonConnectType } from '@tonconnect/sdk';
 
 // Interfaces and Types
 interface User {
@@ -979,7 +978,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
 
   const connectWallet = async () => {
     try {
-      const manifestUrl = 'https://babycheetah.vercel.app/tonconnect-manifest.json';
+      const manifestUrl = 'tg://resolve?domain=tonkeeper/tonconnect-manifest.json';
       const tonConnect = new TonConnect({ manifestUrl });
 
       const walletConnectionSource = {
