@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import { User } from '@/types/user';
 import Image from 'next/image';
 import TonConnect from '@tonconnect/sdk';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,14 +23,15 @@ import {
   Eye,
 } from 'lucide-react';
 
-// Interfaces and Types
-interface User {
+interface GameUser {
+  id: string;
+  telegramId: string;
+  username: string;
   name: string;
   coins: number;
   level: number;
   exp: number;
   profilePhoto: string;
-  telegramId: string;
   shopItems: any[];
   premiumShopItems: any[];
   tasks: any[];
@@ -54,6 +56,7 @@ interface User {
     soundEffect: boolean;
     backgroundMusicAudio: HTMLAudioElement | null;
   };
+  profitPerHour: number;
 }
 
 interface CryptoGameProps {
@@ -381,14 +384,16 @@ const playHeaderFooterSound = () => {
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
-  const [user, setUser] = useState<User>(
+  const [user, setUser] = useState<GameUser>(
     userData || {
+      id: '',
+      telegramId: '',
+      username: '',
       name: '',
       coins: 0,
       level: 1,
       exp: 0,
       profilePhoto: '',
-      telegramId: '',
       shopItems: [],
       premiumShopItems: [],
       tasks: [],
@@ -414,6 +419,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
         soundEffect: true,
         backgroundMusicAudio: null,
       },
+      profitPerHour: 0,
     }
   );
 
@@ -1211,39 +1217,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     rank: number;
   };
 
-  const fetchedUserData: User = {
-    name: '',
-    coins: 0,
-    level: 1,
-    exp: 0,
-    profilePhoto: '',
-    telegramId: '',
-    shopItems: [],
-    premiumShopItems: [],
-    tasks: [],
-    dailyReward: {
-      lastClaimed: null,
-      streak: 0,
-      day: 1,
-      completed: false,
-    },
-    unlockedLevels: [1],
-    clickPower: 1,
-    friendsCoins: {},
-    energy: 500,
-    pphAccumulated: 0,
-    multiplier: 1,
-    multiplierEndTime: null,
-    boosterCooldown: null,
-    selectedCoinImage: 'hebbkx1anhila5yf.public.blob.vercel-storage.com , vercel-storage.com',
-    settings: {
-      vibration: true,
-      backgroundMusic: false,
-      soundEffect: true,
-      backgroundMusicAudio: null,
-    },
-  };
-
   const useUserData = () => {
     const [user, setUser] = useState<User | null>(null);
 
@@ -1254,9 +1227,146 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       }
     };
 
+    const fetchUserData = useCallback(async () => {
+      try {
+        let telegramUser;
+        if (window.Telegram && window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp;
+          telegramUser = webApp.initDataUnsafe.user;
+          console.log('Telegram user data:', telegramUser);
+        } else {
+          console.warn('Telegram WebApp not available, using fallback user data');
+          telegramUser = {
+            id: 'testuser',
+            username: 'TestUser',
+            first_name: 'Test',
+            last_name: 'User',
+          };
+        }
+
+        if (telegramUser) {
+          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+          console.log('Fetch response status:', response.status);
+
+          if (response.ok) {
+            const userData = await response.json();
+            console.log('Fetched user data:', userData);
+            setUser(userData);
+          } else {
+            const errorText = await response.text();
+            console.error('Failed to fetch user data:', errorText);
+
+            if (response.status === 404) {
+              console.log('User not found, creating new user');
+              const newUser = {
+                telegramId: telegramUser.id,
+                username: telegramUser.username || `user${telegramUser.id}`,
+                name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+                profilePhoto: telegramUser.photo_url || '',
+                coins: 0,
+                level: 1,
+                exp: 0,
+                shopItems: [],
+                premiumShopItems: [],
+                tasks: [],
+                dailyReward: {
+                  lastClaimed: null,
+                  streak: 0,
+                  day: 1,
+                  completed: false,
+                },
+                unlockedLevels: [1],
+                clickPower: 1,
+                friendsCoins: {},
+                energy: 500,
+                pphAccumulated: 0,
+                multiplier: 1,
+                multiplierEndTime: null,
+                boosterCooldown: null,
+                selectedCoinImage:
+                  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
+                settings: {
+                  vibration: true,
+                  backgroundMusic: false,
+                  soundEffect: true,
+                  backgroundMusicAudio: null,
+                },
+                profitPerHour: 0,
+              };
+
+              const createResponse = await fetch('/api/user', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newUser),
+              });
+
+              if (createResponse.ok) {
+                const createdUser = await createResponse.json();
+                console.log('Created new user:', createdUser);
+                setUser(createdUser);
+              } else {
+                const createErrorText = await createResponse.text();
+                console.error('Failed to create new user:', createErrorText);
+              }
+            }
+          }
+        } else {
+          console.error('No user data available');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }, []);
+
     useEffect(() => {
-      setUser(userData);
+      setUser(
+        userData || {
+          id: '',
+          telegramId: '',
+          username: '',
+          name: '',
+          coins: 0,
+          level: 1,
+          exp: 0,
+          profilePhoto: '',
+          shopItems: [],
+          premiumShopItems: [],
+          tasks: [],
+          dailyReward: {
+            lastClaimed: null,
+            streak: 0,
+            day: 1,
+            completed: false,
+          },
+          unlockedLevels: [1],
+          clickPower: 1,
+          friendsCoins: {},
+          energy: 500,
+          pphAccumulated: 0,
+          multiplier: 1,
+          multiplierEndTime: null,
+          boosterCooldown: null,
+          selectedCoinImage:
+            'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
+          settings: {
+            vibration: true,
+            backgroundMusic: false,
+            soundEffect: true,
+            backgroundMusicAudio: null,
+          },
+          profitPerHour: 0,
+        }
+      );
     }, [userData]);
+
+    useEffect(() => {
+      console.log('Initializing game...');
+      fetchUserData();
+    }, [fetchUserData]);
 
     useEffect(() => {
       const fetchUserData = async () => {
@@ -1303,90 +1413,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
 
   const fetchUserData = useCallback(async () => {
     try {
-      let telegramUser;
       if (window.Telegram && window.Telegram.WebApp) {
         const webApp = window.Telegram.WebApp;
-        telegramUser = webApp.initDataUnsafe.user;
+        const telegramUser = webApp.initDataUnsafe.user;
         console.log('Telegram user data:', telegramUser);
-      } else {
-        console.warn('Telegram WebApp not available, using fallback user data');
-        telegramUser = {
-          id: 'testuser',
-          username: 'TestUser',
-          first_name: 'Test',
-          last_name: 'User',
-        };
-      }
 
-      if (telegramUser) {
-        const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
-        console.log('Fetch response status:', response.status);
-
-        if (response.ok) {
-          const userData = await response.json();
-          console.log('Fetched user data:', userData);
-          setUser(userData);
-        } else {
-          const errorText = await response.text();
-          console.error('Failed to fetch user data:', errorText);
-
-          if (response.status === 404) {
-            console.log('User not found, creating new user');
-            const newUser = {
-              telegramId: telegramUser.id,
-              username: telegramUser.username || `user${telegramUser.id}`,
-              name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-              profilePhoto: telegramUser.photo_url || '',
-              coins: 0,
-              level: 1,
-              exp: 0,
-              shopItems: [],
-              premiumShopItems: [],
-              tasks: [],
-              dailyReward: {
-                lastClaimed: null,
-                streak: 0,
-                day: 1,
-                completed: false,
-              },
-              unlockedLevels: [1],
-              clickPower: 1,
-              friendsCoins: {},
-              energy: 500,
-              pphAccumulated: 0,
-              multiplier: 1,
-              multiplierEndTime: null,
-              boosterCooldown: null,
-              selectedCoinImage:
-                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
-              settings: {
-                vibration: true,
-                backgroundMusic: false,
-                soundEffect: true,
-              },
-              profitPerHour: 0,
-            };
-
-            const createResponse = await fetch('/api/user', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(newUser),
-            });
-
-            if (createResponse.ok) {
-              const createdUser = await createResponse.json();
-              console.log('Created new user:', createdUser);
-              setUser(createdUser);
-            } else {
-              const createErrorText = await createResponse.text();
-              console.error('Failed to create new user:', createErrorText);
-            }
+        if (telegramUser) {
+          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+          if (response.ok) {
+            const userData = await response.json();
+            console.log('Fetched user data:', userData);
+            setUser(userData);
+          } else {
+            console.error('Failed to fetch user data:', await response.text());
           }
+        } else {
+          console.error('No Telegram user data available');
         }
       } else {
-        console.error('No user data available');
+        console.error('Telegram WebApp not available');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -1394,6 +1439,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       setIsLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    console.log('Initializing game...');
+    fetchUserData();
+  }, [fetchUserData]);
 
   useEffect(() => {
     console.log('Initializing game...');

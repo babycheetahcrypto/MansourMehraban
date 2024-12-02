@@ -1,13 +1,15 @@
 export interface User {
+  id: string;
+  telegramId: string;
+  username: string;
   name: string;
   coins: number;
   level: number;
   exp: number;
   profilePhoto: string;
-  telegramId: string;
-  shopItems: ShopItem[];
-  premiumShopItems: PremiumShopItem[];
-  tasks: Task[];
+  shopItems: any[];
+  premiumShopItems: any[];
+  tasks: any[];
   dailyReward: {
     lastClaimed: Date | null;
     streak: number;
@@ -16,7 +18,7 @@ export interface User {
   };
   unlockedLevels: number[];
   clickPower: number;
-  friendsCoins: Record<string, number>;
+  friendsCoins: { [key: string]: number };
   energy: number;
   pphAccumulated: number;
   multiplier: number;
@@ -29,12 +31,12 @@ export interface User {
     soundEffect: boolean;
     backgroundMusicAudio: HTMLAudioElement | null;
   };
+  profitPerHour: number;
 }
 
-export interface UserData extends User {
+export interface UserData extends Omit<User, 'id'> {
   id: number;
   lastUpdated: Date;
-  profitPerHour: number;
 }
 
 export interface ShopItem {
