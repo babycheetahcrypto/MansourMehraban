@@ -29,41 +29,108 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        // Create a new user if not found
+        user = await prisma.user.create({
+          data: {
+            telegramId: parseInt(telegramId as string),
+            username: `user${telegramId}`,
+            coins: 0,
+            level: 1,
+            exp: 0,
+            unlockedLevels: [1],
+            clickPower: 1,
+            friendsCoins: {},
+            energy: 500,
+            pphAccumulated: 0,
+            multiplier: 1,
+            settings: { vibration: true, backgroundMusic: false, soundEffect: true },
+            profitPerHour: 0,
+            dailyReward: {
+              create: {
+                lastClaimed: null,
+                streak: 0,
+                day: 1,
+                completed: false,
+              },
+            },
+          },
+          include: {
+            shopItems: true,
+            premiumShopItems: true,
+            tasks: true,
+            dailyReward: true,
+            trophies: true,
+            referralRewards: true,
+            sentInvites: true,
+            receivedInvites: true,
+          },
+        });
       }
 
       res.status(200).json(user);
     } else if (req.method === 'POST') {
-      const { telegramId, username, name, profilePhoto } = req.body;
+      const {
+        telegramId,
+        username,
+        profilePhoto,
+        coins = 0,
+        level = 1,
+        exp = 0,
+        unlockedLevels = [1],
+        clickPower = 1,
+        friendsCoins = {},
+        energy = 500,
+        pphAccumulated = 0,
+        multiplier = 1,
+        multiplierEndTime = null,
+        boosterCooldown = null,
+        selectedCoinImage = '',
+        settings = { vibration: true, backgroundMusic: false, soundEffect: true },
+        profitPerHour = 0,
+      } = req.body;
 
-      if (!telegramId || !username) {
-        return res.status(400).json({ error: 'Telegram ID and username are required' });
+      if (!telegramId) {
+        return res.status(400).json({ error: 'Telegram ID is required' });
       }
 
-      const existingUser = await prisma.user.findUnique({
+      const user = await prisma.user.upsert({
         where: { telegramId: parseInt(telegramId) },
-      });
-
-      if (existingUser) {
-        return res.status(409).json({ error: 'User already exists' });
-      }
-
-      const newUser = await prisma.user.create({
-        data: {
+        update: {
+          username,
+          profilePhoto,
+          coins,
+          level,
+          exp,
+          unlockedLevels,
+          clickPower,
+          friendsCoins,
+          energy,
+          pphAccumulated,
+          multiplier,
+          multiplierEndTime,
+          boosterCooldown,
+          selectedCoinImage,
+          settings,
+          profitPerHour,
+        },
+        create: {
           telegramId: parseInt(telegramId),
           username,
-          profilePhoto: profilePhoto || '',
-          coins: 0,
-          level: 1,
-          exp: 0,
-          unlockedLevels: [1],
-          clickPower: 1,
-          friendsCoins: {},
-          energy: 500,
-          pphAccumulated: 0,
-          multiplier: 1,
-          settings: { vibration: true, backgroundMusic: false, soundEffect: true },
-          profitPerHour: 0,
+          profilePhoto,
+          coins,
+          level,
+          exp,
+          unlockedLevels,
+          clickPower,
+          friendsCoins,
+          energy,
+          pphAccumulated,
+          multiplier,
+          multiplierEndTime,
+          boosterCooldown,
+          selectedCoinImage,
+          settings,
+          profitPerHour,
           dailyReward: {
             create: {
               lastClaimed: null,
@@ -85,7 +152,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
-      res.status(201).json(newUser);
+      res.status(200).json(user);
     } else if (req.method === 'PATCH') {
       const { telegramId, ...updateData } = req.body;
 
