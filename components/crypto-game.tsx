@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
-import TonConnect, { WalletInfo } from '@tonconnect/sdk';
+import TonConnect from '@tonconnect/sdk';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -21,6 +21,7 @@ import {
   Music,
   Eye,
 } from 'lucide-react';
+import { TonConnect as TonConnectType } from '@tonconnect/sdk';
 
 // Interfaces and Types
 interface User {
@@ -976,48 +977,62 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
     [user.coins, user.telegramId, popupShown.congratulation]
   );
 
-  const connectWallet = useCallback(async () => {
+  const connectWallet = async () => {
     try {
-      setIsLoading(true);
-
-      // Initialize TonConnect
-      const manifestUrl =
-        process.env.NEXT_PUBLIC_TONCONNECT_MANIFEST_URL ||
-        'https://babycheetah.vercel.app/tonconnect-manifest.json';
-
+      const manifestUrl = 'https://babycheetah.vercel.app/tonconnect-manifest.json';
       const tonConnect = new TonConnect({ manifestUrl });
 
-      // Connect to wallet
       const walletConnectionSource = {
         jsBridgeKey: 'tonkeeper',
       };
+
       await tonConnect.connect(walletConnectionSource);
 
-      // Get the wallet address
-      const wallets = await tonConnect.getWallets();
-      if (wallets && wallets.length > 0) {
-        const walletInfo = wallets[0] as WalletInfo;
-        if (
-          'account' in walletInfo &&
-          typeof walletInfo.account === 'object' &&
-          walletInfo.account &&
-          'address' in walletInfo.account
-        ) {
-          setWallet(walletInfo.account.address as string);
-          window.Telegram.WebApp.showAlert('Wallet connected successfully with Tonkeeper!');
+      const walletInfo = await tonConnect.getWallets();
+      if (walletInfo && walletInfo.length > 0) {
+        const firstWallet = walletInfo[0];
+        if ('address' in firstWallet) {
+          return firstWallet.address as string;
         } else {
           throw new Error('Failed to get wallet address');
         }
       } else {
-        throw new Error('Failed to get wallet address');
+        throw new Error('No wallets available');
       }
     } catch (error) {
       console.error('Failed to connect wallet:', error);
-      window.Telegram.WebApp.showAlert('Failed to connect wallet. Please try again.');
-    } finally {
-      setIsLoading(false);
+      throw error;
     }
-  }, []);
+  };
+
+  const App: React.FC = () => {
+    const [wallet, setWallet] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleConnectWallet = useCallback(async () => {
+      try {
+        setIsLoading(true);
+        const address = await connectWallet();
+        setWallet(address);
+        window.Telegram.WebApp.showAlert('Wallet connected successfully with Tonkeeper!');
+      } catch (error) {
+        console.error('Failed to connect wallet:', error);
+        window.Telegram.WebApp.showAlert('Failed to connect wallet. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    }, []);
+
+    return (
+      <div>
+        <h1>Tonkeeper</h1>
+        <button onClick={handleConnectWallet} disabled={isLoading}>
+          {isLoading ? 'Connecting...' : 'Connect Wallet'}
+        </button>
+        {wallet && <p>Connected Wallet: {wallet}</p>}
+      </div>
+    );
+  };
 
   const claimPPH = useCallback(() => {
     if (pphAccumulated > 0) {
