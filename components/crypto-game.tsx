@@ -1446,7 +1446,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   }, [fetchUserData]);
 
   useEffect(() => {
-    console.log('Initializing game...');
     const initializeGame = async () => {
       setIsLoading(true);
       try {
@@ -1454,6 +1453,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           const webApp = window.Telegram.WebApp;
           webApp.ready();
           webApp.expand();
+
+          // Get user data from Telegram
+          const telegramUser = webApp.initDataUnsafe.user;
+          if (telegramUser) {
+            setUser((prevUser) => ({
+              ...prevUser,
+              name:
+                telegramUser.username ||
+                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+              telegramId: telegramUser.id.toString(),
+              profilePhoto: telegramUser.photo_url || '',
+            }));
+          }
 
           // Apply Telegram theme
           document.body.style.setProperty('--tg-theme-bg-color', webApp.backgroundColor);
@@ -1468,7 +1480,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           );
         }
 
-        await fetchUserData();
+        setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
         if (window.Telegram && window.Telegram.WebApp) {
@@ -1476,13 +1488,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
         } else {
           alert('Failed to load game data. Please try again.');
         }
-      } finally {
         setIsLoading(false);
       }
     };
 
     initializeGame();
-  }, [fetchUserData]);
+  }, []);
 
   // Check if TelegramWebApp is available
   useEffect(() => {
