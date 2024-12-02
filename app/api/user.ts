@@ -23,6 +23,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           dailyReward: true,
           trophies: true,
           referralRewards: true,
+          sentInvites: true,
+          receivedInvites: true,
         },
       });
 
@@ -35,7 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const {
         telegramId,
         username,
-        name,
+        firstName,
+        lastName,
         profilePhoto,
         coins = 0,
         level = 1,
@@ -111,12 +114,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           dailyReward: true,
           trophies: true,
           referralRewards: true,
+          sentInvites: true,
+          receivedInvites: true,
         },
       });
 
       res.status(200).json(user);
+    } else if (req.method === 'PATCH') {
+      const { telegramId, ...updateData } = req.body;
+
+      if (!telegramId) {
+        return res.status(400).json({ error: 'Telegram ID is required' });
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: { telegramId: parseInt(telegramId) },
+        data: updateData,
+        include: {
+          shopItems: true,
+          premiumShopItems: true,
+          tasks: true,
+          dailyReward: true,
+          trophies: true,
+          referralRewards: true,
+          sentInvites: true,
+          receivedInvites: true,
+        },
+      });
+
+      res.status(200).json(updatedUser);
     } else {
-      res.setHeader('Allow', ['GET', 'POST']);
+      res.setHeader('Allow', ['GET', 'POST', 'PATCH']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {

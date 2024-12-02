@@ -29,38 +29,26 @@ export default function Page() {
             return;
           }
 
-          // First register the user
-          const registerResponse = await fetch('/api/auth/register', {
+          // First register or update the user
+          const registerResponse = await fetch('/api/user', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              user: {
-                telegramId: telegramUser.id,
-                username: telegramUser.username || `user${telegramUser.id}`,
-                firstName: telegramUser.first_name,
-                lastName: telegramUser.last_name,
-              },
+              telegramId: telegramUser.id,
+              username: telegramUser.username || `user${telegramUser.id}`,
+              firstName: telegramUser.first_name,
+              lastName: telegramUser.last_name,
+              profilePhoto: telegramUser.photo_url,
             }),
           });
 
           if (!registerResponse.ok) {
-            throw new Error('Failed to register user');
+            throw new Error('Failed to register/update user');
           }
 
-          // Then fetch user data
-          const userDataResponse = await fetch('/api/user', {
-            headers: {
-              'x-telegram-id': telegramUser.id.toString(),
-            },
-          });
-
-          if (!userDataResponse.ok) {
-            throw new Error('Failed to fetch user data');
-          }
-
-          const userData = await userDataResponse.json();
+          const userData = await registerResponse.json();
           setUserData(userData);
         } catch (error) {
           console.error('Error initializing user:', error);
@@ -79,12 +67,12 @@ export default function Page() {
     try {
       const updatedCoins = userData.coins + amount;
       const response = await fetch('/api/user', {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...userData,
+          telegramId: userData.telegramId,
           coins: updatedCoins,
         }),
       });
