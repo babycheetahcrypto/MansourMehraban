@@ -119,25 +119,6 @@ const styles = `
       box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
     }
   }
-
-  @keyframes float {
-    0% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(-50px);
-      opacity: 0;
-    }
-  }
-
-  .coin-button {
-    animation: pulse 2s infinite;
-  }
-
-  .animate-float {
-    animation: float 1s ease-out forwards;
-  }
 `;
 
 // Telegram WebApp type definition
@@ -430,7 +411,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       multiplier: 1,
       multiplierEndTime: null,
       boosterCooldown: null,
-      selectedCoinImage: levelImages[0], // Set to the first level image
+      selectedCoinImage:
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
       settings: {
         vibration: true,
         backgroundMusic: false,
@@ -861,8 +843,30 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
             level: newLevel,
           };
 
-          // Add click effect
-          setClickEffects((prev) => [...prev, { id: Date.now(), x, y, value: clickValue }]);
+          // Visual number show with animation
+          const numberShow = document.createElement('div');
+          numberShow.textContent = `+${formatNumber(clickValue)}`;
+          numberShow.style.position = 'absolute';
+          numberShow.style.left = `${x}px`;
+          numberShow.style.top = `${y}px`;
+          numberShow.style.color = 'white';
+          numberShow.style.fontSize = '24px';
+          numberShow.style.fontWeight = 'bold';
+          numberShow.style.pointerEvents = 'none';
+          numberShow.style.zIndex = '9999';
+          numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
+          document.body.appendChild(numberShow);
+
+          numberShow.animate(
+            [
+              { opacity: 1, transform: 'translateY(0) scale(1)' },
+              { opacity: 0, transform: 'translateY(-50px) scale(1.5)' },
+            ],
+            {
+              duration: 1000,
+              easing: 'ease-out',
+            }
+          ).onfinish = () => document.body.removeChild(numberShow);
 
           return updatedUser;
         });
