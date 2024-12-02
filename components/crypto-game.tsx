@@ -861,9 +861,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
             }
           ).onfinish = () => document.body.removeChild(numberShow);
 
-          // Save the updated user data
-          saveUserData();
-
           return updatedUser;
         });
         setEnergy((prev) => Math.max(prev - 1, 0));
@@ -1232,25 +1229,51 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ initialUserData, onCoinsUpdate 
     },
   };
 
-  const saveUserData = async () => {
-    if (!user) return;
-    try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      });
+  const useUserData = () => {
+    const [user, setUser] = useState<User | null>(null);
 
-      if (!response.ok) {
-        throw new Error('Failed to save user data');
+    useEffect(() => {
+      // Fetch user data on component mount
+      const fetchUserData = async () => {
+        try {
+          const response = await fetch('/api/user');
+          if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+          }
+          const userData = await response.json();
+          setUser(userData);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
+    }, []);
+
+    const saveUserData = async (updatedUser: User) => {
+      if (!updatedUser) return;
+      try {
+        const response = await fetch('/api/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedUser),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save user data');
+        }
+
+        const savedUser = await response.json();
+        setUser(savedUser);
+        console.log('User data saved successfully');
+      } catch (error) {
+        console.error('Error saving user data:', error);
       }
+    };
 
-      console.log('User data saved successfully');
-    } catch (error) {
-      console.error('Error saving user data:', error);
-    }
+    return { user, setUser, saveUserData };
   };
 
   const fetchUserData = useCallback(async () => {
