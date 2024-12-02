@@ -100,10 +100,6 @@ export default function Home() {
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <main>
       <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} />

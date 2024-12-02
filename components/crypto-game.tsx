@@ -868,30 +868,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
             }
           ).onfinish = () => document.body.removeChild(numberShow);
 
-          // Add shaking effect to the coin button
-          const coinButton = document.querySelector('.coin-button');
-          if (coinButton) {
-            coinButton.animate(
-              [
-                { transform: 'translate(1px, 1px) rotate(0deg)' },
-                { transform: 'translate(-1px, -2px) rotate(-1deg)' },
-                { transform: 'translate(-3px, 0px) rotate(1deg)' },
-                { transform: 'translate(3px, 2px) rotate(0deg)' },
-                { transform: 'translate(1px, -1px) rotate(1deg)' },
-                { transform: 'translate(-1px, 2px) rotate(-1deg)' },
-                { transform: 'translate(-3px, 1px) rotate(0deg)' },
-                { transform: 'translate(3px, 1px) rotate(-1deg)' },
-                { transform: 'translate(-1px, -1px) rotate(1deg)' },
-                { transform: 'translate(1px, 2px) rotate(0deg)' },
-                { transform: 'translate(1px, -2px) rotate(-1deg)' },
-              ],
-              {
-                duration: 100,
-                iterations: 1,
-              }
-            );
-          }
-
           return updatedUser;
         });
         setEnergy((prev) => Math.max(prev - 1, 0));
