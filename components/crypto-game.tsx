@@ -1456,16 +1456,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           if (telegramUser) {
             try {
               const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+              let userData;
+
               if (response.ok) {
-                const userData = await response.json();
-                setUser({
-                  ...userData,
-                  name:
-                    telegramUser.username ||
-                    `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-                  telegramId: telegramUser.id.toString(),
-                  profilePhoto: telegramUser.photo_url || '',
-                });
+                userData = await response.json();
               } else if (response.status === 404) {
                 // User not found, create a new user
                 const newUser = {
@@ -1511,14 +1505,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
                 });
 
                 if (createResponse.ok) {
-                  const createdUser = await createResponse.json();
-                  setUser(createdUser);
+                  userData = await createResponse.json();
                 } else {
                   throw new Error('Failed to create new user');
                 }
               } else {
                 throw new Error('Failed to fetch user data');
               }
+
+              setUser({
+                ...userData,
+                name:
+                  telegramUser.username ||
+                  `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+                telegramId: telegramUser.id.toString(),
+                profilePhoto: telegramUser.photo_url || '',
+              });
             } catch (error) {
               console.error('Error fetching/creating user:', error);
               throw error;
@@ -1552,6 +1554,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
 
     initializeGame();
   }, []);
+
   // Check if TelegramWebApp is available
   useEffect(() => {
     if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
