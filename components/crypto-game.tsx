@@ -1247,6 +1247,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   const useUserData = () => {
     const [user, setUser] = useState<User | null>(null);
 
+    const handleCoinChange = async (amount: number) => {
+      if (user) {
+        await onCoinsUpdate(amount);
+        setUser((prevUser) => (prevUser ? { ...prevUser, coins: prevUser.coins + amount } : null));
+      }
+    };
+
+    useEffect(() => {
+      setUser(userData);
+    }, [userData]);
+
     useEffect(() => {
       const fetchUserData = async () => {
         try {

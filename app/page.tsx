@@ -17,7 +17,6 @@ export default function Home() {
   useEffect(() => {
     const initializeUser = async () => {
       try {
-        // Get Telegram WebApp data
         const tg = window.Telegram?.WebApp;
         if (!tg?.initDataUnsafe?.user) {
           console.error('No Telegram user data available');
@@ -26,43 +25,27 @@ export default function Home() {
         }
 
         const telegramUser = tg.initDataUnsafe.user;
-
-        // Try to fetch existing user
         const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
 
         if (response.ok) {
           const data = await response.json();
-          setUserData({
-            ...data,
-            lastUpdated: new Date(data.lastUpdated),
-            name: data.username || `user${telegramUser.id}`,
-            profilePhoto: telegramUser.photo_url || '',
-          });
+          setUserData(data);
         } else if (response.status === 404) {
-          // Create new user if not found
           const newUserResponse = await fetch('/api/user', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               telegramId: telegramUser.id,
               username: telegramUser.username || `user${telegramUser.id}`,
               firstName: telegramUser.first_name,
               lastName: telegramUser.last_name,
-              coins: 0,
               profilePhoto: telegramUser.photo_url || '',
             }),
           });
 
           if (newUserResponse.ok) {
             const newUser = await newUserResponse.json();
-            setUserData({
-              ...newUser,
-              lastUpdated: new Date(newUser.lastUpdated),
-              name: newUser.username || `user${telegramUser.id}`,
-              profilePhoto: telegramUser.photo_url || '',
-            });
+            setUserData(newUser);
           } else {
             console.error('Failed to create new user');
           }
@@ -83,26 +66,18 @@ export default function Home() {
     if (!userData) return;
 
     try {
-      const updatedCoins = userData.coins + amount;
       const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...userData,
-          coins: updatedCoins,
+          telegramId: userData.telegramId,
+          coins: userData.coins + amount,
         }),
       });
 
       if (response.ok) {
         const updatedUser = await response.json();
-        setUserData({
-          ...updatedUser,
-          lastUpdated: new Date(updatedUser.lastUpdated),
-          name: updatedUser.username || userData.name,
-          profilePhoto: updatedUser.profilePhoto || userData.profilePhoto,
-        });
+        setUserData(updatedUser);
       } else {
         console.error('Failed to update coins');
       }
@@ -113,11 +88,7 @@ export default function Home() {
 
   return (
     <main>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} />
-      )}
+      <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} />
     </main>
   );
 }
