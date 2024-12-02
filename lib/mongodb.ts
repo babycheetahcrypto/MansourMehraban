@@ -1,3 +1,4 @@
+// lib/mongodb.ts
 import { MongoClient } from 'mongodb';
 
 if (!process.env.DATABASE_URL) {
@@ -30,15 +31,3 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default clientPromise;
-
-export async function testMongoConnection() {
-  try {
-    const client = await clientPromise;
-    await client.db().command({ ping: 1 });
-    console.log('Successfully connected to MongoDB');
-    await client.close();
-  } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
-    throw error;
-  }
-}

@@ -1,3 +1,4 @@
+// app/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -31,6 +32,7 @@ export default function Home() {
           const data = await response.json();
           setUserData(data);
         } else if (response.status === 404) {
+          // User not found, create a new user
           const newUserResponse = await fetch('/api/user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
