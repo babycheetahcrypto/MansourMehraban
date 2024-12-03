@@ -1,28 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 
-let prisma: PrismaClient;
-
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient();
-} else {
-  if (!(global as any).prisma) {
-    (global as any).prisma = new PrismaClient();
-  }
-  prisma = (global as any).prisma;
+declare global {
+  var prisma: PrismaClient | undefined;
 }
+
+const prisma =
+  global.prisma ||
+  new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  });
+
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
 export default prisma;
-
-export async function testPrismaConnection() {
-  try {
-    await prisma.$connect();
-    console.log('Successfully connected to the database via Prisma');
-    // Test query
-    const userCount = await prisma.user.count();
-    console.log(`Current user count: ${userCount}`);
-    await prisma.$disconnect();
-  } catch (error) {
-    console.error('Failed to connect to the database via Prisma:', error);
-    throw error;
-  }
-}
