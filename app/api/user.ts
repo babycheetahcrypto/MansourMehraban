@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(200).json(user);
     } else if (req.method === 'POST') {
-      const { telegramId, username, profilePhoto } = req.body;
+      const { telegramId, username, firstName, lastName, profilePhoto } = req.body;
 
       if (!telegramId || !username) {
         return res.status(400).json({ error: 'Telegram ID and username are required' });
@@ -52,6 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           telegramId: parseInt(telegramId),
           username,
+          name: `${firstName} ${lastName || ''}`.trim(),
           profilePhoto: profilePhoto || '',
           coins: 0,
           level: 1,
