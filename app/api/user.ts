@@ -90,3 +90,31 @@ export async function POST(request: NextRequest) {
     await prisma.$disconnect();
   }
 }
+
+// PATCH endpoint to update user data
+export async function PATCH(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { telegramId, ...updateData } = body;
+
+    // Validate required fields
+    if (!telegramId) {
+      return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+    }
+
+    // Update user
+    const user = await prisma.user.update({
+      where: {
+        telegramId: parseInt(telegramId),
+      },
+      data: updateData,
+    });
+
+    return NextResponse.json({ success: true, user });
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
+}

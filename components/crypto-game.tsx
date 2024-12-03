@@ -1057,6 +1057,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           {isLoading ? 'Connecting...' : 'Connect Wallet'}
         </button>
         {wallet && <p>Connected Wallet: {wallet}</p>}
+        {/* Display user data */}
+        {user && (
+          <div>
+            <p>User ID: {user.telegramId}</p>
+            <p>Username: {user.username}</p>
+            <p>Name: {user.name}</p>
+            <p>Coins: {user.coins}</p>
+          </div>
+        )}
       </div>
     );
   };

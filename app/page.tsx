@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import type { User } from '@/types/user';
@@ -85,7 +84,7 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           telegramId: userData.telegramId,
-          coins: userData.coins + amount,
+          coins: amount,
         }),
       });
 
