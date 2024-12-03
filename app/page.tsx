@@ -6,6 +6,7 @@ import type { User } from '@/types/user';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
+  loading: () => <div>Loading game...</div>,
 }) as React.ComponentType<{
   userData: User | null;
   onCoinsUpdate: (amount: number) => Promise<void>;
@@ -46,7 +47,6 @@ export default function Home() {
               body: JSON.stringify({
                 telegramId: telegramUser.id,
                 username: telegramUser.username || `user${telegramUser.id}`,
-                name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
                 profilePhoto: telegramUser.photo_url || '',
               }),
             });
@@ -101,20 +101,24 @@ export default function Home() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!userData) {
-    return <div>Failed to load user data. Please try again.</div>;
+    return (
+      <div className="flex items-center justify-center h-screen text-red-500">Error: {error}</div>
+    );
   }
 
   return (
-    <main>
-      <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} />
+    <main className="min-h-screen">
+      {userData ? (
+        <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} />
+      ) : (
+        <div className="flex items-center justify-center h-screen">
+          Failed to load user data. Please try again.
+        </div>
+      )}
     </main>
   );
 }
