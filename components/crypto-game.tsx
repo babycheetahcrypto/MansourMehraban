@@ -413,8 +413,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     }
   );
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
