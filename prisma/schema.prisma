@@ -11,7 +11,6 @@ model User {
   id                String            @id @default(auto()) @map("_id") @db.ObjectId
   telegramId        Int               @unique
   username          String
-  name              String
   coins             Float             @default(0)
   level             Int               @default(1)
   exp               Float             @default(0)

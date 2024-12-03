@@ -34,10 +34,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(200).json(user);
     } else if (req.method === 'POST') {
-      const { telegramId, username, name, profilePhoto } = req.body;
+      const { telegramId, username, profilePhoto } = req.body;
 
-      if (!telegramId || !username || !name) {
-        return res.status(400).json({ error: 'Telegram ID, username, and name are required' });
+      if (!telegramId || !username) {
+        return res.status(400).json({ error: 'Telegram ID and username are required' });
       }
 
       const existingUser = await prisma.user.findUnique({
@@ -52,7 +52,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           telegramId: parseInt(telegramId),
           username,
-          name,
           profilePhoto: profilePhoto || '',
           coins: 0,
           level: 1,
@@ -116,6 +115,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (error) {
     console.error('Error in user API route:', error);
-    res.status(500).json({ error: 'Internal server error', details: error.message });
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error occurred',
+    });
   }
 }
