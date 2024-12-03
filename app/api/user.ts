@@ -116,6 +116,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (error) {
     console.error('Error in user API route:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 }

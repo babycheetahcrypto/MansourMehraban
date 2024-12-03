@@ -17,6 +17,9 @@ export async function testPrismaConnection() {
   try {
     await prisma.$connect();
     console.log('Successfully connected to the database via Prisma');
+    // Test query
+    const userCount = await prisma.user.count();
+    console.log(`Current user count: ${userCount}`);
     await prisma.$disconnect();
   } catch (error) {
     console.error('Failed to connect to the database via Prisma:', error);
