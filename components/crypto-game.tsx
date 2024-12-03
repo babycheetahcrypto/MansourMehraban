@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 interface GameUser {
-  id: string;
+  id: string; // Changed from number to string
   telegramId: string;
   username: string;
   name: string;
@@ -375,43 +375,74 @@ const playHeaderFooterSound = () => {
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
-  const [user, setUser] = useState<GameUser>(
-    userData || {
-      id: '',
-      telegramId: '',
-      username: '',
-      name: '',
-      coins: 0,
-      level: 1,
-      exp: 0,
-      profilePhoto: '',
-      shopItems: [],
-      premiumShopItems: [],
-      tasks: [],
-      dailyReward: {
-        lastClaimed: null,
-        streak: 0,
-        day: 1,
-        completed: false,
-      },
-      unlockedLevels: [1],
-      clickPower: 1,
-      friendsCoins: {},
-      energy: 500,
-      pphAccumulated: 0,
-      multiplier: 1,
-      multiplierEndTime: null,
-      boosterCooldown: null,
-      selectedCoinImage: levelImages[0],
-      settings: {
-        vibration: true,
-        backgroundMusic: false,
-        soundEffect: true,
-        backgroundMusicAudio: null,
-      },
-      profitPerHour: 0,
+  const [user, setUser] = useState<GameUser>(() => {
+    if (userData) {
+      return {
+        ...userData,
+        shopItems: [],
+        premiumShopItems: [],
+        tasks: [],
+        dailyReward: {
+          lastClaimed: null,
+          streak: 0,
+          day: 1,
+          completed: false,
+        },
+        unlockedLevels: [1],
+        clickPower: 1,
+        friendsCoins: {},
+        energy: 500,
+        pphAccumulated: 0,
+        multiplier: 1,
+        multiplierEndTime: null,
+        boosterCooldown: null,
+        selectedCoinImage: levelImages[0],
+        settings: {
+          vibration: true,
+          backgroundMusic: false,
+          soundEffect: true,
+          backgroundMusicAudio: null,
+        },
+        profitPerHour: 0,
+      };
+    } else {
+      return {
+        id: '',
+        telegramId: '',
+        username: '',
+        name: '',
+        coins: 0,
+        level: 1,
+        exp: 0,
+        profilePhoto: '',
+        shopItems: [],
+        premiumShopItems: [],
+        tasks: [],
+        dailyReward: {
+          lastClaimed: null,
+          streak: 0,
+          day: 1,
+          completed: false,
+        },
+        unlockedLevels: [1],
+        clickPower: 1,
+        friendsCoins: {},
+        energy: 500,
+        pphAccumulated: 0,
+        multiplier: 1,
+        multiplierEndTime: null,
+        boosterCooldown: null,
+        selectedCoinImage: levelImages[0],
+        settings: {
+          vibration: true,
+          backgroundMusic: false,
+          soundEffect: true,
+          backgroundMusicAudio: null,
+        },
+        profitPerHour: 0,
+      };
     }
-  );
+  });
 
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
@@ -1206,14 +1237,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   };
 
   const useUserData = () => {
-    const [user, setUser] = useState<User | null>(null);
-
-    const handleCoinChange = async (amount: number) => {
-      if (user) {
-        await onCoinsUpdate(amount);
-        setUser((prevUser) => (prevUser ? { ...prevUser, coins: prevUser.coins + amount } : null));
-      }
-    };
+    const [user, setUser] = useState<GameUser | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const fetchUserData = useCallback(async () => {
       try {
@@ -1250,86 +1275,36 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       }
     }, []);
 
-    // Use this function in the useEffect hook
     useEffect(() => {
-      fetchUserData().catch((error) => {
-        console.error('Error in useEffect:', error);
-        window.Telegram.WebApp.showAlert('Failed to initialize game data. Please try again.');
-      });
-    }, [fetchUserData]);
+      if (userData) {
+        setUser(userData);
+      } else {
+        fetchUserData();
+      }
+    }, [userData, fetchUserData]);
 
     useEffect(() => {
-      setUser(
-        userData || {
-          id: '',
-          telegramId: '',
-          username: '',
-          name: '',
-          coins: 0,
-          level: 1,
-          exp: 0,
-          profilePhoto: '',
-          shopItems: [],
-          premiumShopItems: [],
-          tasks: [],
-          dailyReward: {
-            lastClaimed: null,
-            streak: 0,
-            day: 1,
-            completed: false,
-          },
-          unlockedLevels: [1],
-          clickPower: 1,
-          friendsCoins: {},
-          energy: 500,
-          pphAccumulated: 0,
-          multiplier: 1,
-          multiplierEndTime: null,
-          boosterCooldown: null,
-          selectedCoinImage: levelImages[0],
-          settings: {
-            vibration: true,
-            backgroundMusic: false,
-            soundEffect: true,
-            backgroundMusicAudio: null,
-          },
-          profitPerHour: 0,
-        }
-      );
-    }, [userData]);
-
-    useEffect(() => {
-      console.log('Initializing game...');
       fetchUserData();
     }, [fetchUserData]);
 
-    useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-          const response = await fetch('/api/user');
-          if (!response.ok) {
-            throw new Error('Failed to fetch user data');
-          }
-          const userData = await response.json();
-          setUser(userData);
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      };
+    const handleCoinChange = (amount: number) => {
+      if (user) {
+        const updatedUser: GameUser = { ...user, coins: user.coins + amount };
+        saveUserData(updatedUser);
+        onCoinsUpdate(updatedUser.coins);
+      }
+    };
 
-      fetchUserData();
-    }, []);
-
-    const saveUserData = useCallback(async () => {
-      if (!user) return;
+    const saveUserData = useCallback(async (updatedUser: GameUser) => {
+      if (!updatedUser) return;
       try {
-        console.log('Saving user data:', user);
+        console.log('Saving user data:', updatedUser);
         const response = await fetch('/api/user', {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(user),
+          body: JSON.stringify(updatedUser),
         });
 
         if (!response.ok) {
@@ -1342,8 +1317,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
       } catch (error) {
         console.error('Error saving user data:', error);
       }
-    }, [user]);
-    return { user, setUser, saveUserData };
+    }, []);
+
+    return { user, setUser, saveUserData, isLoading, fetchUserData };
   };
 
   const fetchUserData = useCallback(async () => {
