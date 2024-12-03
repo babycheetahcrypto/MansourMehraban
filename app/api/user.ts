@@ -36,8 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else if (req.method === 'POST') {
       const { telegramId, username, name, profilePhoto } = req.body;
 
-      if (!telegramId || !username) {
-        return res.status(400).json({ error: 'Telegram ID and username are required' });
+      if (!telegramId || !username || !name) {
+        return res.status(400).json({ error: 'Telegram ID, username, and name are required' });
       }
 
       const existingUser = await prisma.user.findUnique({
@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           telegramId: parseInt(telegramId),
           username,
-          name: name || username,
+          name,
           profilePhoto: profilePhoto || '',
           coins: 0,
           level: 1,
