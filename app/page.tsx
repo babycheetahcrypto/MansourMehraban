@@ -53,6 +53,23 @@ export default function Home() {
               }),
             });
 
+            // First register the user
+            await fetch('/api/auth/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                user: {
+                  telegramId: telegramUser.id,
+                  username: telegramUser.username || `user${telegramUser.id}`,
+                  firstName: telegramUser.first_name,
+                  lastName: telegramUser.last_name,
+                  coins: 0,
+                },
+              }),
+            });
+
             if (newUserResponse.ok) {
               const newUser = await newUserResponse.json();
               console.log('Created new user:', newUser);
