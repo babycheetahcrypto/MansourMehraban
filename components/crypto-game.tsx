@@ -23,7 +23,7 @@ import {
   Eye,
 } from 'lucide-react';
 
-interface GameUser {
+interface UserData {
   id: string; // Changed from number to string
   telegramId: string;
   username: string;
@@ -375,7 +375,7 @@ const playHeaderFooterSound = () => {
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
-  const [user, setUser] = useState<GameUser>(() => {
+  const [user, setUser] = useState<UserData>(() => {
     if (userData) {
       return {
         ...userData,
@@ -1237,7 +1237,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
   };
 
   const useUserData = () => {
-    const [user, setUser] = useState<GameUser | null>(null);
+    const [user, setUser] = useState<UserData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchUserData = useCallback(async () => {
@@ -1289,13 +1289,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
 
     const handleCoinChange = (amount: number) => {
       if (user) {
-        const updatedUser: GameUser = { ...user, coins: user.coins + amount };
+        const updatedUser: UserData = { ...user, coins: user.coins + amount };
         saveUserData(updatedUser);
         onCoinsUpdate(updatedUser.coins);
       }
     };
 
-    const saveUserData = useCallback(async (updatedUser: GameUser) => {
+    const saveUserData = useCallback(async (updatedUser: UserData) => {
       if (!updatedUser) return;
       try {
         console.log('Saving user data:', updatedUser);
