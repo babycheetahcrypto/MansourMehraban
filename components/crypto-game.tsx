@@ -1392,76 +1392,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
           // Get user data from Telegram
           const telegramUser = webApp.initDataUnsafe.user;
           if (telegramUser) {
-            try {
-              const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
-              let userData;
-
-              if (response.ok) {
-                userData = await response.json();
-              } else if (response.status === 404) {
-                // User not found, create a new user
-                const newUser = {
-                  telegramId: telegramUser.id,
-                  username: telegramUser.username || `user${telegramUser.id}`,
-                  profilePhoto: telegramUser.photo_url || '',
-                  coins: 0,
-                  level: 1,
-                  exp: 0,
-                  shopItems: [],
-                  premiumShopItems: [],
-                  tasks: [],
-                  dailyReward: {
-                    lastClaimed: null,
-                    streak: 0,
-                    day: 1,
-                    completed: false,
-                  },
-                  unlockedLevels: [1],
-                  clickPower: 1,
-                  friendsCoins: {},
-                  energy: 500,
-                  pphAccumulated: 0,
-                  multiplier: 1,
-                  multiplierEndTime: null,
-                  boosterCooldown: null,
-                  selectedCoinImage: levelImages[0],
-                  settings: {
-                    vibration: true,
-                    backgroundMusic: false,
-                    soundEffect: true,
-                  },
-                  profitPerHour: 0,
-                };
-
-                const createResponse = await fetch('/api/user', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(newUser),
-                });
-
-                if (createResponse.ok) {
-                  userData = await createResponse.json();
-                } else {
-                  throw new Error('Failed to create new user');
-                }
-              } else {
-                throw new Error('Failed to fetch user data');
-              }
-
-              setUser({
-                ...userData,
-                name:
-                  telegramUser.username ||
-                  `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-                telegramId: telegramUser.id.toString(),
-                profilePhoto: telegramUser.photo_url || '',
-              });
-            } catch (error) {
-              console.error('Error fetching/creating user:', error);
-              throw error;
-            }
+            setUser((prevUser) => ({
+              ...prevUser,
+              name:
+                telegramUser.username ||
+                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+              telegramId: telegramUser.id.toString(),
+              profilePhoto: telegramUser.photo_url || '',
+            }));
           }
 
           // Apply Telegram theme
