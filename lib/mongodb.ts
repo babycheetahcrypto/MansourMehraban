@@ -1,17 +1,17 @@
 import { MongoClient } from 'mongodb';
 
-if (!process.env.MONGODB_URI) {
+if (!process.env.DATABASE_URL) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
 
-const uri = process.env.MONGODB_URI;
+const url = process.env.DATABASE_URL;
 const options = {};
 
 let client;
 let clientPromise: Promise<MongoClient>;
 
 try {
-  client = new MongoClient(uri, options);
+  client = new MongoClient(url, options);
   clientPromise = client.connect();
 } catch (error) {
   console.error('Failed to connect to MongoDB:', error);

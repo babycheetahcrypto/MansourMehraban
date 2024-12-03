@@ -54,8 +54,6 @@ export async function POST(request: NextRequest) {
       },
       update: {
         username,
-        firstName,
-        lastName,
         coins: coins !== undefined ? coins : undefined,
         level: level !== undefined ? level : undefined,
         exp: exp !== undefined ? exp : undefined,
@@ -64,8 +62,6 @@ export async function POST(request: NextRequest) {
       create: {
         telegramId: parseInt(telegramId),
         username,
-        firstName,
-        lastName,
         coins: coins || 0,
         level: level || 1,
         exp: exp || 0,
