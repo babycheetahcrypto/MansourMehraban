@@ -6,7 +6,6 @@ import type { User } from '@/types/user';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
-  loading: () => <div>Loading game...</div>,
 }) as React.ComponentType<{
   userData: User | null;
   onCoinsUpdate: (amount: number) => Promise<void>;
@@ -15,7 +14,6 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 export default function Home() {
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const initializeUser = async () => {
@@ -27,7 +25,9 @@ export default function Home() {
 
           const telegramUser = tg.initDataUnsafe.user;
           if (!telegramUser) {
-            throw new Error('No Telegram user data available');
+            console.error('No Telegram user data available');
+            setLoading(false);
+            return;
           }
 
           console.log('Telegram user data:', telegramUser);
@@ -47,6 +47,8 @@ export default function Home() {
               body: JSON.stringify({
                 telegramId: telegramUser.id,
                 username: telegramUser.username || `user${telegramUser.id}`,
+                firstName: telegramUser.first_name,
+                lastName: telegramUser.last_name,
                 profilePhoto: telegramUser.photo_url || '',
               }),
             });
@@ -56,17 +58,16 @@ export default function Home() {
               console.log('Created new user:', newUser);
               setUserData(newUser);
             } else {
-              throw new Error('Failed to create new user');
+              console.error('Failed to create new user:', await newUserResponse.text());
             }
           } else {
-            throw new Error('Failed to fetch user data');
+            console.error('Failed to fetch user data:', await response.text());
           }
         } else {
-          throw new Error('Telegram WebApp not available');
+          console.error('Telegram WebApp not available');
         }
       } catch (error) {
         console.error('Error initializing user:', error);
-        setError(error instanceof Error ? error.message : 'An unknown error occurred');
       } finally {
         setLoading(false);
       }
@@ -92,33 +93,16 @@ export default function Home() {
         const updatedUser = await response.json();
         setUserData(updatedUser);
       } else {
-        throw new Error('Failed to update coins');
+        console.error('Failed to update coins');
       }
     } catch (error) {
       console.error('Error updating coins:', error);
-      setError(error instanceof Error ? error.message : 'Failed to update coins');
     }
   };
 
-  if (loading) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen text-red-500">Error: {error}</div>
-    );
-  }
-
   return (
-    <main className="min-h-screen">
-      {userData ? (
-        <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} />
-      ) : (
-        <div className="flex items-center justify-center h-screen">
-          Failed to load user data. Please try again.
-        </div>
-      )}
+    <main>
+      <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} />
     </main>
   );
 }
