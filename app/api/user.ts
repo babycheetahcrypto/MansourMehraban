@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import clientPromise from '@/lib/mongodb';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -10,9 +12,21 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const client = await clientPromise;
-    const db = client.db('cryptoGame');
-    const user = await db.collection('users').findOne({ telegramId: telegramId });
+    const user = await prisma.user.findUnique({
+      where: {
+        telegramId: parseInt(telegramId),
+      },
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+        trophies: true,
+        referralRewards: true,
+        sentInvites: true,
+        receivedInvites: true,
+      },
+    });
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -28,25 +42,41 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { telegramId, name, coins, level, exp } = body;
+    const { telegramId, username, firstName, lastName, coins, level, exp } = body;
 
     if (!telegramId) {
       return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
     }
 
-    const client = await clientPromise;
-    const db = client.db('cryptoGame');
-    const result = await db
-      .collection('users')
-      .updateOne(
-        { telegramId: telegramId },
-        { $set: { name, coins, level, exp } },
-        { upsert: true }
-      );
+    const user = await prisma.user.upsert({
+      where: {
+        telegramId: parseInt(telegramId),
+      },
+      update: {
+        username,
+        firstName,
+        lastName,
+        coins: coins !== undefined ? coins : undefined,
+        level: level !== undefined ? level : undefined,
+        exp: exp !== undefined ? exp : undefined,
+        updatedAt: new Date(),
+      },
+      create: {
+        telegramId: parseInt(telegramId),
+        username,
+        firstName,
+        lastName,
+        coins: coins || 0,
+        level: level || 1,
+        exp: exp || 0,
+      },
+    });
 
-    return NextResponse.json({ success: true, result });
+    return NextResponse.json({ success: true, user });
   } catch (error) {
     console.error('Database error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 }
