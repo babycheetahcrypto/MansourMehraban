@@ -1238,20 +1238,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
             console.log('Fetch response status:', response.status);
 
             if (response.ok) {
-              const data = await response.json();
-              console.log('Fetched user data:', data);
-              setUser(data);
+              const userData = await response.json();
+              console.log('Fetched user data:', userData);
+              setUser(userData);
             } else {
               console.error('Failed to fetch user data:', await response.text());
+              throw new Error('Failed to fetch user data');
             }
           } else {
             console.error('No Telegram user data available');
+            throw new Error('No Telegram user data available');
           }
         } else {
           console.error('Telegram WebApp not available');
+          throw new Error('Telegram WebApp not available');
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -1259,7 +1263,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
 
     // Use this function in the useEffect hook
     useEffect(() => {
-      fetchUserData();
+      fetchUserData().catch((error) => {
+        console.error('Error in useEffect:', error);
+        window.Telegram.WebApp.showAlert('Failed to initialize game data. Please try again.');
+      });
     }, [fetchUserData]);
 
     useEffect(() => {
