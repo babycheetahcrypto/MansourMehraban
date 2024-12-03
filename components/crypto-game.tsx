@@ -27,6 +27,8 @@ interface UserData {
   id: string;
   telegramId: string;
   username: string;
+  firstName?: string;
+  lastName?: string;
   name: string;
   coins: number;
   level: number;
@@ -1231,6 +1233,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
     id: string;
     telegramId: string;
     name: string;
+    username: true;
     coins: number;
     profitPerHour: number;
     rank: number;

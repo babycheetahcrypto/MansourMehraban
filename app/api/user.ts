@@ -52,6 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           telegramId: parseInt(telegramId),
           username,
+          name: `${firstName} ${lastName || ''}`.trim(),
           profilePhoto: profilePhoto || '',
           coins: 0,
           level: 1,
