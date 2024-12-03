@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Telegram ID is required' });
       }
 
-      const user = await prisma.user.findUnique({
+      let user = await prisma.user.findUnique({
         where: { telegramId: parseInt(telegramId as string) },
         include: {
           shopItems: true,
@@ -23,11 +23,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           dailyReward: true,
           trophies: true,
           referralRewards: true,
+          sentInvites: true,
+          receivedInvites: true,
         },
       });
 
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        // Create a new user if not found
+        user = await prisma.user.create({
+          data: {
+            telegramId: parseInt(telegramId as string),
+            username: `user${telegramId}`,
+            coins: 0,
+            level: 1,
+            exp: 0,
+            unlockedLevels: [1],
+            clickPower: 1,
+            friendsCoins: {},
+            energy: 500,
+            pphAccumulated: 0,
+            multiplier: 1,
+            settings: { vibration: true, backgroundMusic: false, soundEffect: true },
+            profitPerHour: 0,
+            dailyReward: {
+              create: {
+                lastClaimed: null,
+                streak: 0,
+                day: 1,
+                completed: false,
+              },
+            },
+          },
+          include: {
+            shopItems: true,
+            premiumShopItems: true,
+            tasks: true,
+            dailyReward: true,
+            trophies: true,
+            referralRewards: true,
+            sentInvites: true,
+            receivedInvites: true,
+          },
+        });
       }
 
       res.status(200).json(user);
@@ -35,7 +72,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const {
         telegramId,
         username,
-        name,
         profilePhoto,
         coins = 0,
         level = 1,
@@ -48,7 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         multiplier = 1,
         multiplierEndTime = null,
         boosterCooldown = null,
-        selectedCoinImage = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png',
+        selectedCoinImage = '',
         settings = { vibration: true, backgroundMusic: false, soundEffect: true },
         profitPerHour = 0,
       } = req.body;
@@ -111,12 +147,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           dailyReward: true,
           trophies: true,
           referralRewards: true,
+          sentInvites: true,
+          receivedInvites: true,
         },
       });
 
       res.status(200).json(user);
+    } else if (req.method === 'PATCH') {
+      const { telegramId, ...updateData } = req.body;
+
+      if (!telegramId) {
+        return res.status(400).json({ error: 'Telegram ID is required' });
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: { telegramId: parseInt(telegramId) },
+        data: updateData,
+        include: {
+          shopItems: true,
+          premiumShopItems: true,
+          tasks: true,
+          dailyReward: true,
+          trophies: true,
+          referralRewards: true,
+          sentInvites: true,
+          receivedInvites: true,
+        },
+      });
+
+      res.status(200).json(updatedUser);
     } else {
-      res.setHeader('Allow', ['GET', 'POST']);
+      res.setHeader('Allow', ['GET', 'POST', 'PATCH']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {
