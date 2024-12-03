@@ -94,15 +94,6 @@ type Task = {
   action: () => void;
 };
 
-type LeaderboardEntry = {
-  id: string;
-  telegramId: string;
-  name: string;
-  coins: number;
-  profitPerHour: number;
-  rank: number;
-};
-
 // Keyframe animation
 const styles = `
   @keyframes pulse {

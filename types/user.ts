@@ -34,13 +34,9 @@ export interface User {
   profitPerHour: number;
 }
 
-export interface UserData extends Omit<User, 'id'> {
-  id: number;
-  lastUpdated: Date;
-}
-
 export interface ShopItem {
   id: string;
+  userId: string;
   name: string;
   image: string;
   basePrice: number;
@@ -51,12 +47,65 @@ export interface ShopItem {
 
 export interface PremiumShopItem {
   id: string;
+  userId: string;
   name: string;
   image: string;
   basePrice: number;
   effect: string;
   level: number;
   duration?: number;
+}
+
+export interface Task {
+  id: string;
+  userId: string;
+  type: string;
+  description: string;
+  progress: number;
+  maxProgress: number;
+  reward: number;
+  completed: boolean;
+  claimed: boolean;
+  expiresAt: Date | null;
+}
+
+export interface Trophy {
+  id: string;
+  userId: string;
+  name: string;
+  description: string;
+  image: string;
+  requirement: number;
+  reward: number;
+  claimed: boolean;
+  unlockedAt: Date | null;
+}
+
+export interface DailyReward {
+  id: string;
+  userId: string;
+  lastClaimed: Date | null;
+  streak: number;
+  day: number;
+  completed: boolean;
+}
+
+export interface ReferralReward {
+  id: string;
+  userId: string;
+  referredId: string;
+  amount: number;
+  claimed: boolean;
+  claimedAt: Date | null;
+}
+
+export interface FriendInvite {
+  id: string;
+  inviterId: string;
+  inviteeId: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface LeaderboardEntry {
@@ -71,27 +120,4 @@ export interface Wallet {
   userId: string;
   address: string;
   balance: number;
-}
-
-export interface FriendInvite {
-  id: string;
-  inviterId: string;
-  inviteeId: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  inviter: {
-    username: string;
-    profilePhoto: string | null;
-  };
-  invitee: {
-    username: string;
-    profilePhoto: string | null;
-  };
-}
-
-export interface Task {
-  id: string;
-  name: string;
-  description: string;
-  reward: number;
-  completed: boolean;
 }
