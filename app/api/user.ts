@@ -1,27 +1,92 @@
-// pages/api/user.ts
-import clientPromise from '@/lib/mongodb'; // Adjust the path as necessary
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const client = await clientPromise;
-  const db = client.db('your_database_name'); // Replace with your database name
+// Best practice: Create a single PrismaClient instance
+const prisma = new PrismaClient();
 
-  if (req.method === 'GET') {
-    const { telegramId } = req.query;
-    const user = await db.collection('users').findOne({ telegramId });
-    if (user) {
-      return res.status(200).json(user);
-    } else {
-      return res.status(404).json({ message: 'User  not found' });
+// GET endpoint to fetch user data
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const telegramId = searchParams.get('telegramId');
+
+  // Validate input
+  if (!telegramId) {
+    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+  }
+
+  try {
+    // Find user with all related data
+    const user = await prisma.user.findUnique({
+      where: {
+        telegramId: parseInt(telegramId),
+      },
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+        trophies: true,
+        referralRewards: true,
+        sentInvites: true,
+        receivedInvites: true,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
-  }
 
-  if (req.method === 'POST') {
-    const newUser = req.body;
-    await db.collection('users').insertOne(newUser);
-    return res.status(201).json(newUser);
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } finally {
+    // Good practice to disconnect after operation
+    await prisma.$disconnect();
   }
+}
 
-  res.setHeader('Allow', ['GET', 'POST']);
-  res.status(405).end(`Method ${req.method} Not Allowed`);
+// POST endpoint to create or update user
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { telegramId, username, firstName, lastName, coins, level, exp } = body;
+
+    // Validate required fields
+    if (!telegramId) {
+      return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+    }
+
+    // Create or update user
+    const user = await prisma.user.upsert({
+      where: {
+        telegramId: parseInt(telegramId),
+      },
+      update: {
+        username,
+        firstName, // Added firstName
+        lastName, // Added lastName
+        coins: coins !== undefined ? coins : undefined,
+        level: level !== undefined ? level : undefined,
+        exp: exp !== undefined ? exp : undefined,
+        updatedAt: new Date(),
+      },
+      create: {
+        telegramId: parseInt(telegramId),
+        username,
+        firstName: firstName || '', // Added firstName with default
+        lastName: lastName || '', // Added lastName with default
+        coins: coins || 0,
+        level: level || 1,
+        exp: exp || 0,
+      },
+    });
+
+    return NextResponse.json({ success: true, user });
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
 }
