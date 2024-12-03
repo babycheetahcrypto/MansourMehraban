@@ -40,6 +40,22 @@ export default function Home() {
             console.log('Fetched user data:', data);
             setUserData(data);
           } else if (response.status === 404) {
+            // First register the user
+            await fetch('/api/auth/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                user: {
+                  telegramId: telegramUser.id,
+                  username: telegramUser.username || `user${telegramUser.id}`,
+                  firstName: telegramUser.first_name,
+                  lastName: telegramUser.last_name,
+                  coins: 0,
+                },
+              }),
+            });
             // User not found, create a new user
             const newUserResponse = await fetch('/api/user', {
               method: 'POST',
