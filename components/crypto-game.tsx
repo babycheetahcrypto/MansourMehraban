@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 interface UserData {
-  id: string; // Changed from number to string
+  id: string;
   telegramId: string;
   username: string;
   name: string;
