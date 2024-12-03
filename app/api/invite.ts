@@ -1,9 +1,14 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { inviterId, inviteeId } = req.body;
+
+    if (!inviterId || !inviteeId) {
+      return res.status(400).json({ error: 'Inviter ID and Invitee ID are required' });
+    }
+
     try {
       const invite = await prisma.friendInvite.create({
         data: {
@@ -12,13 +17,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           status: 'pending',
         },
       });
+
       res.status(201).json(invite);
     } catch (error) {
       console.error('Error creating invite:', error);
-      res.status(400).json({ error: 'Failed to create invite' });
+      res.status(500).json({ error: 'Internal server error' });
     }
   } else if (req.method === 'GET') {
     const { userId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
     try {
       const invites = await prisma.friendInvite.findMany({
         where: {
@@ -33,12 +44,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         },
       });
+
       res.status(200).json(invites);
     } catch (error) {
       console.error('Error fetching invites:', error);
-      res.status(400).json({ error: 'Failed to fetch invites' });
+      res.status(500).json({ error: 'Internal server error' });
     }
   } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
