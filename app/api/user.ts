@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
   } else if (req.method === 'POST') {
-    const { telegramId, username, firstName, lastName, profilePhoto } = req.body;
+    const { telegramId, username, name, profilePhoto } = req.body;
 
     if (!telegramId || isNaN(Number(telegramId))) {
       return res.status(400).json({ error: 'Valid Telegram ID is required' });
@@ -40,8 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           telegramId: telegramIdNumber,
           username: username || `user${telegramId}`,
-          firstName: firstName || '',
-          lastName: lastName || '',
+          name: name || 'Anonymous',
           profilePhoto: profilePhoto || '',
           coins: 0,
           level: 1,
