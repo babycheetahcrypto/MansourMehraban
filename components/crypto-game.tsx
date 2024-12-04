@@ -64,6 +64,7 @@ interface UserData {
 interface CryptoGameProps {
   userData: User | null;
   onCoinsUpdate: (amount: number) => Promise<void>;
+  saveUserData: (userData: Partial<User>) => Promise<void>;
 }
 
 type ShopItem = {
@@ -376,7 +377,7 @@ const playHeaderFooterSound = () => {
   audio.play();
 };
 
-const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
+const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
   const [user, setUser] = useState<UserData>(() => {
     if (userData) {
       return {
@@ -889,6 +890,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
             }
           ).onfinish = () => document.body.removeChild(numberShow);
 
+          // Save the updated user data
+          saveUserData(updatedUser);
+
           return updatedUser;
         });
         setEnergy((prev) => Math.max(prev - 1, 0));
@@ -916,7 +920,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
         }
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect]
+    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect, saveUserData]
   );
 
   const buyItem = useCallback(
@@ -941,10 +945,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
 
           if (response.ok) {
             const result = await response.json();
-            setUser((prevUser) => ({
-              ...prevUser,
+            const updatedUser = {
+              ...user,
               coins: result.updatedCoins,
-            }));
+            };
+            setUser(updatedUser);
+            saveUserData(updatedUser);
 
             if (isPremium) {
               setPremiumShopItems((prevItems) =>
@@ -1001,7 +1007,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate }) => {
         }
       }
     },
-    [user.coins, user.telegramId, popupShown.congratulation]
+    [user, saveUserData]
   );
 
   const connectWallet = async () => {

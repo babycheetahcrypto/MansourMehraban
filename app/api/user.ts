@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
         username,
         firstName,
         lastName,
+        profilePhoto,
         coins: 0,
         level: 1,
         exp: 0,
@@ -65,7 +66,7 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const user = await prisma.user.update({
-      where: { telegramId: parseInt(telegramId, 10) }, // Convert string to number
+      where: { telegramId: parseInt(telegramId, 10) },
       data: updateData,
     });
 
