@@ -30,7 +30,7 @@ export default function GameClient() {
           if (response.ok) {
             const userData = await response.json();
             console.log('Fetched user data:', userData);
-            return userData;
+            setUserData(userData);
           } else if (response.status === 404) {
             // User not found, create a new user
             const createResponse = await fetch('/api/user', {
@@ -47,7 +47,7 @@ export default function GameClient() {
             if (createResponse.ok) {
               const newUser = await createResponse.json();
               console.log('Created new user:', newUser);
-              return newUser.user;
+              setUserData(newUser.user);
             } else {
               throw new Error('Failed to create new user');
             }
@@ -63,6 +63,8 @@ export default function GameClient() {
     } catch (error) {
       console.error('Error fetching user data:', error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -93,22 +95,7 @@ export default function GameClient() {
   );
 
   useEffect(() => {
-    const initializeUser = async () => {
-      try {
-        setIsLoading(true);
-        const user = await fetchUserData();
-        setUserData(user);
-      } catch (error) {
-        console.error('Error initializing user:', error);
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeUser();
+    fetchUserData();
   }, [fetchUserData]);
 
   const handleCoinsUpdate = async (amount: number) => {
