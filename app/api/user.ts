@@ -1,90 +1,78 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    const { telegramId } = req.query;
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const telegramId = searchParams.get('telegramId');
 
-    if (!telegramId || isNaN(Number(telegramId))) {
-      return res.status(400).json({ error: 'Valid Telegram ID is required' });
+  if (!telegramId) {
+    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        telegramId: parseInt(telegramId, 10), // Convert string to number
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
-    const telegramIdNumber = Number(telegramId);
 
-    try {
-      const user = await prisma.user.findUnique({
-        where: { telegramId: telegramIdNumber },
-      });
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
 
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { telegramId, username, firstName, lastName, profilePhoto } = body;
 
-      return res.status(200).json(user);
-    } catch (error) {
-      console.error('Database error:', error);
-      return res.status(500).json({
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      });
-    }
-  } else if (req.method === 'POST') {
-    const { telegramId, username, name, profilePhoto } = req.body;
+  if (!telegramId) {
+    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+  }
 
-    if (!telegramId || isNaN(Number(telegramId))) {
-      return res.status(400).json({ error: 'Valid Telegram ID is required' });
-    }
-    const telegramIdNumber = Number(telegramId);
+  try {
+    const user = await prisma.user.create({
+      data: {
+        telegramId,
+        username,
+        firstName,
+        lastName,
+        profilePhoto,
+        coins: 0,
+        level: 1,
+        exp: 0,
+      },
+    });
 
-    try {
-      const user = await prisma.user.create({
-        data: {
-          telegramId: telegramIdNumber,
-          username: username || `user${telegramId}`,
-          name: name || 'Anonymous',
-          profilePhoto: profilePhoto || '',
-          coins: 0,
-          level: 1,
-          exp: 0,
-          unlockedLevels: [1],
-          clickPower: 1,
-          energy: 500,
-          multiplier: 1,
-          settings: { vibration: true, backgroundMusic: false, soundEffect: true },
-        },
-      });
+    return NextResponse.json({ user }, { status: 201 });
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
 
-      return res.status(201).json({ user });
-    } catch (error) {
-      console.error('Database error:', error);
-      return res.status(500).json({
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      });
-    }
-  } else if (req.method === 'PATCH') {
-    const { telegramId, ...updateData } = req.body;
+export async function PATCH(request: NextRequest) {
+  const body = await request.json();
+  const { telegramId, ...updateData } = body;
 
-    if (!telegramId || isNaN(Number(telegramId))) {
-      return res.status(400).json({ error: 'Valid Telegram ID is required' });
-    }
-    const telegramIdNumber = Number(telegramId);
+  if (!telegramId) {
+    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+  }
 
-    try {
-      const user = await prisma.user.update({
-        where: { telegramId: telegramIdNumber },
-        data: updateData,
-      });
+  try {
+    const user = await prisma.user.update({
+      where: { telegramId },
+      data: updateData,
+    });
 
-      return res.status(200).json({ user });
-    } catch (error) {
-      console.error('Database error:', error);
-      return res.status(500).json({
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      });
-    }
-  } else {
-    res.setHeader('Allow', ['GET', 'POST', 'PATCH']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return NextResponse.json({ user });
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
