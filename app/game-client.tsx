@@ -14,24 +14,7 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchUserData = useCallback(async (telegramId: string) => {
-    try {
-      const response = await fetch(`/api/user?telegramId=${telegramId}`);
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else if (response.status === 404) {
-        return null;
-      } else {
-        throw new Error('Failed to fetch user data');
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      throw error;
-    }
-  }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   const createUser = useCallback(async (userData: Partial<User>) => {
     try {
@@ -52,6 +35,49 @@ export default function GameClient() {
     }
   }, []);
 
+  const fetchUserData = useCallback(async () => {
+    try {
+      if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+        const webApp = window.Telegram.WebApp;
+        const telegramUser = webApp.initDataUnsafe.user;
+        console.log('Telegram user data:', telegramUser);
+
+        if (telegramUser) {
+          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+          console.log('Fetch response status:', response.status);
+
+          if (response.ok) {
+            const userData = await response.json();
+            console.log('Fetched user data:', userData);
+            return userData;
+          } else if (response.status === 404) {
+            // User not found, create a new user
+            const newUser = await createUser({
+              telegramId: telegramUser.id.toString(),
+              username: telegramUser.username || `user${telegramUser.id}`,
+              profilePhoto: telegramUser.photo_url || '',
+              name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+            });
+            console.log('Created new user:', newUser);
+            return newUser;
+          } else {
+            console.error('Failed to fetch user data:', await response.text());
+            throw new Error('Failed to fetch user data');
+          }
+        } else {
+          console.error('No Telegram user data available');
+          throw new Error('No Telegram user data available');
+        }
+      } else {
+        console.error('Telegram WebApp not available');
+        throw new Error('Telegram WebApp not available');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      throw error;
+    }
+  }, [createUser]);
+
   const saveUserData = useCallback(
     async (updatedUserData: Partial<User>) => {
       if (!userData) return;
@@ -67,6 +93,7 @@ export default function GameClient() {
         if (response.ok) {
           const updatedUser = await response.json();
           setUserData(updatedUser.user);
+          console.log('User data saved successfully:', updatedUser.user);
         } else {
           throw new Error('Failed to update user data');
         }
@@ -80,38 +107,21 @@ export default function GameClient() {
   useEffect(() => {
     const initializeUser = async () => {
       try {
-        if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
-          const tg = window.Telegram.WebApp;
-          const telegramUser = tg.initDataUnsafe.user;
-          if (!telegramUser) {
-            console.error('No Telegram user data available');
-            setLoading(false);
-            return;
-          }
-
-          console.log('Telegram user data:', telegramUser);
-
-          let user = await fetchUserData(telegramUser.id.toString());
-          if (!user) {
-            user = await createUser({
-              telegramId: telegramUser.id.toString(),
-              username: telegramUser.username || `user${telegramUser.id}`,
-              profilePhoto: telegramUser.photo_url || '',
-            });
-          }
-          setUserData(user);
-        } else {
-          console.error('Telegram WebApp not available');
-        }
+        setIsLoading(true);
+        const user = await fetchUserData();
+        setUserData(user);
       } catch (error) {
         console.error('Error initializing user:', error);
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+        }
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     initializeUser();
-  }, [fetchUserData, createUser]);
+  }, [fetchUserData]);
 
   const handleCoinsUpdate = async (amount: number) => {
     if (!userData) return;
@@ -119,7 +129,7 @@ export default function GameClient() {
     await saveUserData({ coins: updatedCoins });
   };
 
-  if (loading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
