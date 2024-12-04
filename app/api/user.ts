@@ -42,7 +42,6 @@ export async function POST(request: NextRequest) {
         username,
         firstName,
         lastName,
-        profilePhoto,
         coins: 0,
         level: 1,
         exp: 0,
