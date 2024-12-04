@@ -39,7 +39,8 @@ export default function GameClient() {
               body: JSON.stringify({
                 telegramId: telegramUser.id.toString(),
                 username: telegramUser.username || `user${telegramUser.id}`,
-                name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+                firstName: telegramUser.first_name,
+                lastName: telegramUser.last_name || '',
                 profilePhoto: telegramUser.photo_url || '',
               }),
             });
