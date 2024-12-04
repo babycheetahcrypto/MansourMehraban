@@ -5,13 +5,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { telegramId } = req.query;
 
-    if (!telegramId || typeof telegramId !== 'string') {
+    if (!telegramId || isNaN(Number(telegramId))) {
       return res.status(400).json({ error: 'Valid Telegram ID is required' });
     }
+    const telegramIdNumber = Number(telegramId);
 
     try {
       const user = await prisma.user.findUnique({
-        where: { telegramId },
+        where: { telegramId: telegramIdNumber },
       });
 
       if (!user) {
@@ -29,14 +30,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { telegramId, username, firstName, lastName, profilePhoto } = req.body;
 
-    if (!telegramId || typeof telegramId !== 'string') {
+    if (!telegramId || isNaN(Number(telegramId))) {
       return res.status(400).json({ error: 'Valid Telegram ID is required' });
     }
+    const telegramIdNumber = Number(telegramId);
 
     try {
       const user = await prisma.user.create({
         data: {
-          telegramId,
+          telegramId: telegramIdNumber,
           username: username || `user${telegramId}`,
           firstName: firstName || '',
           lastName: lastName || '',
@@ -63,13 +65,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'PATCH') {
     const { telegramId, ...updateData } = req.body;
 
-    if (!telegramId || typeof telegramId !== 'string') {
+    if (!telegramId || isNaN(Number(telegramId))) {
       return res.status(400).json({ error: 'Valid Telegram ID is required' });
     }
+    const telegramIdNumber = Number(telegramId);
 
     try {
       const user = await prisma.user.update({
-        where: { telegramId },
+        where: { telegramId: telegramIdNumber },
         data: updateData,
       });
 
