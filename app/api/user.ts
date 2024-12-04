@@ -5,13 +5,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { telegramId } = req.query;
 
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
+    if (!telegramId || typeof telegramId !== 'string') {
+      return res.status(400).json({ error: 'Valid Telegram ID is required' });
     }
 
     try {
       const user = await prisma.user.findUnique({
-        where: { telegramId: telegramId.toString() },
+        where: { telegramId },
       });
 
       if (!user) {
@@ -26,20 +26,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     const { telegramId, username, name, profilePhoto } = req.body;
 
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
+    if (!telegramId || typeof telegramId !== 'string') {
+      return res.status(400).json({ error: 'Valid Telegram ID is required' });
     }
 
     try {
       const user = await prisma.user.create({
         data: {
-          telegramId: telegramId.toString(),
-          username,
-          name,
-          profilePhoto,
+          telegramId,
+          username: username || `user${telegramId}`,
+          name: name || 'Anonymous',
+          profilePhoto: profilePhoto || '',
           coins: 0,
           level: 1,
           exp: 0,
+          unlockedLevels: [1],
+          clickPower: 1,
+          energy: 500,
+          multiplier: 1,
+          settings: { vibration: true, backgroundMusic: false, soundEffect: true },
         },
       });
 
@@ -51,13 +56,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'PATCH') {
     const { telegramId, ...updateData } = req.body;
 
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
+    if (!telegramId || typeof telegramId !== 'string') {
+      return res.status(400).json({ error: 'Valid Telegram ID is required' });
     }
 
     try {
       const user = await prisma.user.update({
-        where: { telegramId: telegramId.toString() },
+        where: { telegramId },
         data: updateData,
       });
 
