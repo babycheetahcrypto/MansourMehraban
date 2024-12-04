@@ -15,6 +15,7 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -39,7 +40,8 @@ export default function GameClient() {
               body: JSON.stringify({
                 telegramId: telegramUser.id.toString(),
                 username: telegramUser.username || `user${telegramUser.id}`,
-                name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+                firstName: telegramUser.first_name,
+                lastName: telegramUser.last_name || '',
                 profilePhoto: telegramUser.photo_url || '',
               }),
             });
@@ -48,10 +50,12 @@ export default function GameClient() {
               console.log('Created new user:', newUser);
               return newUser.user;
             } else {
-              throw new Error('Failed to create new user');
+              const errorData = await createResponse.json();
+              throw new Error(`Failed to create new user: ${errorData.error || 'Unknown error'}`);
             }
           } else {
-            throw new Error('Failed to fetch user data');
+            const errorData = await response.json();
+            throw new Error(`Failed to fetch user data: ${errorData.error || 'Unknown error'}`);
           }
         } else {
           throw new Error('No Telegram user data available');
@@ -82,10 +86,15 @@ export default function GameClient() {
           setUserData(updatedUser.user);
           console.log('User data saved successfully:', updatedUser.user);
         } else {
-          throw new Error('Failed to update user data');
+          const errorData = await response.json();
+          throw new Error(`Failed to update user data: ${errorData.error}`);
         }
       } catch (error) {
-        console.error('Error saving user data:', error);
+        console.error(
+          'Error saving user data:',
+          error instanceof Error ? error.message : 'Unknown error'
+        );
+        setError(error instanceof Error ? error.message : 'Unknown error');
       }
     },
     [userData]
@@ -98,9 +107,15 @@ export default function GameClient() {
         const user = await fetchUserData();
         setUserData(user);
       } catch (error) {
-        console.error('Error initializing user:', error);
+        console.error(
+          'Error initializing user:',
+          error instanceof Error ? error.message : 'Unknown error'
+        );
+        setError(error instanceof Error ? error.message : 'Unknown error');
         if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+          window.Telegram.WebApp.showAlert(
+            `Failed to load game data: ${error instanceof Error ? error.message : 'Unknown error'}`
+          );
         }
       } finally {
         setIsLoading(false);
@@ -118,6 +133,10 @@ export default function GameClient() {
 
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
