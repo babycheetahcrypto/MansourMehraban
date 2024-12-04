@@ -1,26 +1,21 @@
-// mongodb.ts (Revised)
 import { MongoClient } from 'mongodb';
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('Invalid/Missing environment variable: "DATABASE_URL"');
+if (!process.env.MONGODB_URI) {
+  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
 
-const url = process.env.DATABASE_URL;
-const options = {}; // Add your connection options here if needed
+const uri = process.env.MONGODB_URI;
+const options = {};
 
 let client;
 let clientPromise: Promise<MongoClient>;
 
-async function connectToDatabase() {
-  try {
-    client = new MongoClient(url, options);
-    await client.connect(); // Connect within the try block
-    console.log('Connected to MongoDB successfully!');
-    return client;
-  } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
-    throw new Error(`Unable to connect to MongoDB at URL: ${url}`); // More specific error message
-  }
+try {
+  client = new MongoClient(uri, options);
+  clientPromise = client.connect();
+} catch (error) {
+  console.error('Failed to connect to MongoDB:', error);
+  throw new Error('Unable to connect to MongoDB');
 }
 
-export default clientPromise = connectToDatabase(); // Initialize clientPromise
+export default clientPromise;
