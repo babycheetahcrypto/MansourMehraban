@@ -852,49 +852,46 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       const { x, y } = getCoordinates(event);
 
       if (energy > 0) {
-        setUser((prevUser) => {
-          const clickValue = clickPower * multiplier;
-          const newCoins = prevUser.coins + clickValue;
-          const newExp = prevUser.exp + 1;
-          const newLevel = newExp >= 100 ? prevUser.level + 1 : prevUser.level;
+        const clickValue = clickPower * multiplier;
+        const newCoins = user.coins + clickValue;
+        const newExp = user.exp + 1;
+        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
-          const updatedUser = {
-            ...prevUser,
-            coins: newCoins,
-            exp: newExp % 100,
-            level: newLevel,
-          };
+        const updatedUser = {
+          ...user,
+          coins: newCoins,
+          exp: newExp % 100,
+          level: newLevel,
+        };
 
-          // Visual number show with animation
-          const numberShow = document.createElement('div');
-          numberShow.textContent = `+${formatNumber(clickValue)}`;
-          numberShow.style.position = 'absolute';
-          numberShow.style.left = `${x}px`;
-          numberShow.style.top = `${y}px`;
-          numberShow.style.color = 'white';
-          numberShow.style.fontSize = '24px';
-          numberShow.style.fontWeight = 'bold';
-          numberShow.style.pointerEvents = 'none';
-          numberShow.style.zIndex = '9999';
-          numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
-          document.body.appendChild(numberShow);
+        setUser(updatedUser);
+        saveUserData(updatedUser);
 
-          numberShow.animate(
-            [
-              { opacity: 1, transform: 'translateY(0) scale(1)' },
-              { opacity: 0, transform: 'translateY(-50px) scale(1.5)' },
-            ],
-            {
-              duration: 1000,
-              easing: 'ease-out',
-            }
-          ).onfinish = () => document.body.removeChild(numberShow);
+        // Visual number show with animation
+        const numberShow = document.createElement('div');
+        numberShow.textContent = `+${formatNumber(clickValue)}`;
+        numberShow.style.position = 'absolute';
+        numberShow.style.left = `${x}px`;
+        numberShow.style.top = `${y}px`;
+        numberShow.style.color = 'white';
+        numberShow.style.fontSize = '24px';
+        numberShow.style.fontWeight = 'bold';
+        numberShow.style.pointerEvents = 'none';
+        numberShow.style.zIndex = '9999';
+        numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
+        document.body.appendChild(numberShow);
 
-          // Save the updated user data
-          saveUserData(updatedUser);
+        numberShow.animate(
+          [
+            { opacity: 1, transform: 'translateY(0) scale(1)' },
+            { opacity: 0, transform: 'translateY(-50px) scale(1.5)' },
+          ],
+          {
+            duration: 1000,
+            easing: 'ease-out',
+          }
+        ).onfinish = () => document.body.removeChild(numberShow);
 
-          return updatedUser;
-        });
         setEnergy((prev) => Math.max(prev - 1, 0));
 
         // Trigger haptic feedback
@@ -920,7 +917,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect, saveUserData]
+    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect, saveUserData, user]
   );
 
   const buyItem = useCallback(

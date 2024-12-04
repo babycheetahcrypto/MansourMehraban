@@ -96,6 +96,8 @@ export default function GameClient() {
             user = await createUser({
               telegramId: telegramUser.id.toString(),
               username: telegramUser.username || `user${telegramUser.id}`,
+              firstName: telegramUser.first_name,
+              lastName: telegramUser.last_name,
               profilePhoto: telegramUser.photo_url || '',
             });
           }
