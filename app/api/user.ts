@@ -49,7 +49,6 @@ export async function POST(request: NextRequest) {
         firstName,
         lastName,
         profilePhoto,
-        name: `${firstName} ${lastName || ''}`.trim(),
         coins: 0,
         level: 1,
         exp: 0,
