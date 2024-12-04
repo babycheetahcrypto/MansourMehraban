@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  telegramId  Int      @unique
+  telegramId  String   @unique
   username    String
   firstName   String?
   lastName    String?
@@ -121,3 +121,4 @@ model FriendInvite {
   inviter   User     @relation("SentInvites", fields: [inviterId], references: [id])
   invitee   User     @relation("ReceivedInvites", fields: [inviteeId], references: [id])
 }
+
