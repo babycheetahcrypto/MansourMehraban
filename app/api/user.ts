@@ -1,78 +1,73 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/prisma';
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const telegramId = searchParams.get('telegramId');
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'GET') {
+    const { telegramId } = req.query;
 
-  if (!telegramId) {
-    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
-  }
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        telegramId: telegramId, // Use telegramId as a string directly
-      },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (!telegramId) {
+      return res.status(400).json({ error: 'Telegram ID is required' });
     }
 
-    return NextResponse.json(user);
-  } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
+    try {
+      const user = await prisma.user.findUnique({
+        where: { telegramId: telegramId.toString() },
+      });
 
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const { telegramId, username, firstName, lastName, profilePhoto } = body;
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
-  if (!telegramId) {
-    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
-  }
+      return res.status(200).json(user);
+    } catch (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  } else if (req.method === 'POST') {
+    const { telegramId, username, name, profilePhoto } = req.body;
 
-  try {
-    const user = await prisma.user.create({
-      data: {
-        telegramId,
-        username,
-        firstName,
-        lastName,
-        profilePhoto,
-        coins: 0,
-        level: 1,
-        exp: 0,
-      },
-    });
+    if (!telegramId) {
+      return res.status(400).json({ error: 'Telegram ID is required' });
+    }
 
-    return NextResponse.json({ user }, { status: 201 });
-  } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
+    try {
+      const user = await prisma.user.create({
+        data: {
+          telegramId: telegramId.toString(),
+          username,
+          name,
+          profilePhoto,
+          coins: 0,
+          level: 1,
+          exp: 0,
+        },
+      });
 
-export async function PATCH(request: NextRequest) {
-  const body = await request.json();
-  const { telegramId, ...updateData } = body;
+      return res.status(201).json({ user });
+    } catch (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  } else if (req.method === 'PATCH') {
+    const { telegramId, ...updateData } = req.body;
 
-  if (!telegramId) {
-    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
-  }
+    if (!telegramId) {
+      return res.status(400).json({ error: 'Telegram ID is required' });
+    }
 
-  try {
-    const user = await prisma.user.update({
-      where: { telegramId },
-      data: updateData,
-    });
+    try {
+      const user = await prisma.user.update({
+        where: { telegramId: telegramId.toString() },
+        data: updateData,
+      });
 
-    return NextResponse.json({ user });
-  } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+      return res.status(200).json({ user });
+    } catch (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'POST', 'PATCH']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
