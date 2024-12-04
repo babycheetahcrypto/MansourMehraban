@@ -55,8 +55,8 @@ export default function GameClient() {
             const newUser = await createUser({
               telegramId: telegramUser.id.toString(),
               username: telegramUser.username || `user${telegramUser.id}`,
-              profilePhoto: telegramUser.photo_url || '',
               name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+              profilePhoto: telegramUser.photo_url || '',
             });
             console.log('Created new user:', newUser);
             return newUser;
