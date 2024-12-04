@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        telegramId: parseInt(telegramId, 10), // Convert string to number
+        telegramId: telegramId, // Use telegramId as a string directly
       },
     });
 
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await prisma.user.create({
       data: {
-        telegramId,
+        telegramId: telegramId.toString(), // Ensure telegramId is a string
         username,
         firstName,
         lastName,
@@ -66,7 +66,7 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const user = await prisma.user.update({
-      where: { telegramId },
+      where: { telegramId: telegramId.toString() }, // Ensure telegramId is a string
       data: updateData,
     });
 
