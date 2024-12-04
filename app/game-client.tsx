@@ -11,11 +11,7 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   onCoinsUpdate: (amount: number) => Promise<void>;
 }>;
 
-interface GameClientProps {
-  getUserData: (telegramId: string) => Promise<User | null>;
-}
-
-export default function GameClient({ getUserData }: GameClientProps) {
+export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,11 +30,12 @@ export default function GameClient({ getUserData }: GameClientProps) {
           console.log('Telegram user data:', telegramUser);
 
           try {
-            const data = await getUserData(telegramUser.id.toString());
-            if (data) {
+            const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+            if (response.ok) {
+              const data = await response.json();
               console.log('Fetched user data:', data);
               setUserData(data);
-            } else {
+            } else if (response.status === 404) {
               // User not found, create a new user
               const newUserResponse = await fetch('/api/user', {
                 method: 'POST',
@@ -59,6 +56,8 @@ export default function GameClient({ getUserData }: GameClientProps) {
               } else {
                 console.error('Failed to create new user:', await newUserResponse.text());
               }
+            } else {
+              console.error('Failed to fetch user data:', await response.text());
             }
           } catch (error) {
             console.error('Failed to fetch or create user data:', error);
@@ -74,7 +73,7 @@ export default function GameClient({ getUserData }: GameClientProps) {
     };
 
     initializeUser();
-  }, [getUserData]);
+  }, []);
 
   const handleCoinsUpdate = async (amount: number) => {
     if (!userData) return;
