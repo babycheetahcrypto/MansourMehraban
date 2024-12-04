@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        telegramId: telegramId,
+        telegramId: parseInt(telegramId, 10), // Convert string to number
       },
     });
 
