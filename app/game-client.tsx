@@ -65,7 +65,7 @@ export default function GameClient() {
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      throw error;
+      throw error instanceof Error ? error : new Error('Unknown error');
     }
   }, []);
 
@@ -90,10 +90,7 @@ export default function GameClient() {
           throw new Error(`Failed to update user data: ${errorData.error}`);
         }
       } catch (error) {
-        console.error(
-          'Error saving user data:',
-          error instanceof Error ? error.message : 'Unknown error'
-        );
+        console.error('Error saving user data:', error);
         setError(error instanceof Error ? error.message : 'Unknown error');
       }
     },
@@ -107,10 +104,7 @@ export default function GameClient() {
         const user = await fetchUserData();
         setUserData(user);
       } catch (error) {
-        console.error(
-          'Error initializing user:',
-          error instanceof Error ? error.message : 'Unknown error'
-        );
+        console.error('Error initializing user:', error);
         setError(error instanceof Error ? error.message : 'Unknown error');
         if (window.Telegram && window.Telegram.WebApp) {
           window.Telegram.WebApp.showAlert(
