@@ -14,6 +14,12 @@ export async function GET(request: NextRequest) {
       where: {
         telegramId: telegramId,
       },
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+      },
     });
 
     if (!user) {
@@ -46,6 +52,28 @@ export async function POST(request: NextRequest) {
         coins: 0,
         level: 1,
         exp: 0,
+        unlockedLevels: [1],
+        clickPower: 1,
+        friendsCoins: {},
+        energy: 500,
+        pphAccumulated: 0,
+        multiplier: 1,
+        settings: { vibration: true, backgroundMusic: false, soundEffect: true },
+        profitPerHour: 0,
+        dailyReward: {
+          create: {
+            lastClaimed: null,
+            streak: 0,
+            day: 1,
+            completed: false,
+          },
+        },
+      },
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
       },
     });
 
@@ -68,6 +96,12 @@ export async function PATCH(request: NextRequest) {
     const user = await prisma.user.update({
       where: { telegramId },
       data: updateData,
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+      },
     });
 
     return NextResponse.json({ user });

@@ -7,7 +7,7 @@ import { User } from '@/types/user';
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
 }) as React.ComponentType<{
-  userData: User;
+  userData: User | null;
   onCoinsUpdate: (amount: number) => Promise<void>;
   saveUserData: (userData: Partial<User>) => Promise<void>;
 }>;
