@@ -27,9 +27,8 @@ interface UserData extends User {
   id: string;
   telegramId: string;
   username: string;
-  firstName: string;
-  lastName: string;
-  name: string;
+  firstName?: string;
+  lastName?: string;
   coins: number;
   level: number;
   exp: number;
@@ -56,7 +55,6 @@ interface UserData extends User {
     vibration: boolean;
     backgroundMusic: boolean;
     soundEffect: boolean;
-    backgroundMusicAudio: HTMLAudioElement | null;
   };
   profitPerHour: number;
 }
@@ -392,7 +390,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      name: '',
       coins: 0,
       level: 1,
       exp: 0,
@@ -419,7 +416,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         vibration: true,
         backgroundMusic: false,
         soundEffect: true,
-        backgroundMusicAudio: null,
       },
       profitPerHour: 0,
     }
@@ -1043,7 +1039,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div>
             <p>User ID: {user.telegramId}</p>
             <p>Username: {user.username}</p>
-            <p>Name: {user.name}</p>
             <p>Coins: {user.coins}</p>
           </div>
         )}
@@ -1463,14 +1458,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <div className="w-10 h-10 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden">
               <Image
                 src={user.profilePhoto}
-                alt={user.name}
+                alt={user.username}
                 width={40}
                 height={40}
                 className="rounded-full"
               />
             </div>
             <div>
-              <h2 className="font-bold text-sm text-white">{user.name}</h2>
+              <h2 className="font-bold text-sm text-white">{user.username}</h2>
               <div className="text-xs text-white flex items-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-iTiljsrx8N2IGIdjozA2tXBHhaCi8x.png"

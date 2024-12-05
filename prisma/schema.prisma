@@ -11,12 +11,12 @@ model User {
   id               String            @id @default(auto()) @map("_id") @db.ObjectId
   telegramId       String            @unique
   username         String
-  firstName        String
+  firstName        String?
   lastName         String?
   coins            Int               @default(0)
   level            Int               @default(1)
   exp              Float             @default(0)
-  profilePhoto     String?
+  profilePhoto     String
   shopItems        ShopItem[]
   premiumShopItems PremiumShopItem[]
   tasks            Task[]

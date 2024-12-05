@@ -2,9 +2,8 @@ export interface User {
   id: string;
   telegramId: string;
   username: string;
-  firstName: string;
-  lastName: string;
-  name: string;
+  firstName?: string;
+  lastName?: string;
   coins: number;
   level: number;
   exp: number;
@@ -31,7 +30,6 @@ export interface User {
     vibration: boolean;
     backgroundMusic: boolean;
     soundEffect: boolean;
-    backgroundMusicAudio: HTMLAudioElement | null;
   };
   profitPerHour: number;
 }
