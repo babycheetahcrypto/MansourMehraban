@@ -39,7 +39,7 @@ Remember, this is a fun game and does not involve real cryptocurrency or money. 
           username: telegramUser.username || `user${telegramUser.id}`,
           firstName: telegramUser.first_name,
           lastName: telegramUser.last_name,
-          profilePhoto: telegramUser.photo_url || '',
+          profilePhoto: '',
           coins: 0,
           level: 1,
           exp: 0,
