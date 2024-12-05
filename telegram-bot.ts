@@ -26,13 +26,13 @@ Here’s what makes Baby Cheetah your ultimate crypto game:
 
 🎯 Daily Quests & Challenges: Complete fun, engaging tasks to unlock massive rewards. Every day brings new opportunities to grow your collection of $BBCH!
 
-🛍️ Spend & Upgrade: Visit the exclusive Baby Cheetah Shop to trade your coins for amazing power-ups, unique items, and special perks.
+🛍️ Spend & Upgrade: Visit the exclusive $BBCH Shop to trade your coins for amazing power-ups, unique items, and special perks.
 
-🎁 Airdrop Soon!: Be ready! A big Baby Cheetah Airdrop is on its way, loaded with rewards you don’t want to miss. Earn BCC now to prepare for the ultimate bonus drop!
+🎁 Airdrop Soon!: Be ready! A big Baby Cheetah Airdrop is on its way, loaded with rewards you don’t want to miss. Earn $BBCH now to prepare for the ultimate bonus drop!
 
 Get ready to run faster, earn smarter, and dominate the crypto world. 🐆✨ Baby Cheetah is here to make every tap count!
 
-Start your journey today and be part of the most exciting crypto revolution. Unleash the Baby Cheetah in you! 🌟 
+Start your journey today and be part of the most exciting crypto revolution. Unleash the Baby Cheetah in you! 🌟
   `;
 
   try {
