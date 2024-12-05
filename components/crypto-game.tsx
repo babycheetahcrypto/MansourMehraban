@@ -2082,7 +2082,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   navigator.vibrate([100, 30, 100, 30, 100]);
                 }
               }}
-              className="data-[state=checked]:bg-primary"
             />
           </div>
           <div className="flex items-center justify-between">
@@ -2105,7 +2104,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   settings.backgroundMusicAudio.currentTime = 0;
                 }
               }}
-              className="data-[state=checked]:bg-primary"
             />
           </div>
           <div className="flex items-center justify-between">
@@ -2121,7 +2119,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               onCheckedChange={(checked) =>
                 setSettings((prev) => ({ ...prev, soundEffect: checked }))
               }
-              className="data-[state=checked]:bg-primary"
             />
           </div>
         </CardContent>

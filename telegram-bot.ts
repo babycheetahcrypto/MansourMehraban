@@ -79,7 +79,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
           Markup.button.webApp('Play 🚀', gameUrl),
-          Markup.button.url('Join Our Channel', 'https://t.me/babycheetahcrypto'),
+          Markup.button.url('Join community', 'https://t.me/babycheetahcrypto'),
         ]),
       }
     );
