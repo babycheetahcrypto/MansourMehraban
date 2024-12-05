@@ -1981,7 +1981,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md flex items-center justify-center"
               >
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tonkeeper-logo-Rl9Uy5Zy7Ue5Ue5Ue5Ue5Ue5Ue5Ue5Ue5.png"
+                  src="https://tonkeeper.com/images/og-image.png"
                   alt="Tonkeeper"
                   width={24}
                   height={24}
