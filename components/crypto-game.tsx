@@ -1039,6 +1039,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div>
             <p>User ID: {user.telegramId}</p>
             <p>Username: {user.username}</p>
+            <p>Name: {user.username}</p>
             <p>Coins: {user.coins}</p>
           </div>
         )}
