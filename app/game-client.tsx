@@ -15,6 +15,7 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -62,7 +63,7 @@ export default function GameClient() {
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      throw error;
+      setError('Failed to load user data. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -89,6 +90,7 @@ export default function GameClient() {
         }
       } catch (error) {
         console.error('Error saving user data:', error);
+        setError('Failed to save user data. Please try again.');
       }
     },
     [userData]
@@ -106,6 +108,17 @@ export default function GameClient() {
 
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="text-red-500 text-xl mb-4">{error}</p>
+        <button onClick={fetchUserData} className="bg-primary text-white px-4 py-2 rounded-full">
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (

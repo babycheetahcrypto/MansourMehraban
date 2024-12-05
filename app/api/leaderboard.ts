@@ -1,15 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
+export async function GET(request: NextRequest) {
   try {
-    const leaderboard = await prisma.user.findMany({
+    const users = await prisma.user.findMany({
       select: {
         id: true,
+        telegramId: true,
         username: true,
         coins: true,
         profitPerHour: true,
@@ -17,12 +14,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       orderBy: {
         coins: 'desc',
       },
-      take: 100, // Limit to top 100 players
+      take: 100,
     });
 
-    res.status(200).json(leaderboard);
-  } catch (error) {
+    const leaderboard = users.map((user, index) => ({
+      id: user.id,
+      telegramId: user.telegramId,
+      name: user.username,
+      coins: user.coins,
+      profitPerHour: user.profitPerHour,
+      rank: index + 1,
+    }));
+
+    return NextResponse.json(leaderboard);
+  } catch (error: unknown) {
     console.error('Error fetching leaderboard:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return NextResponse.json(
+      { error: 'Failed to fetch leaderboard', details: errorMessage },
+      { status: 500 }
+    );
   }
 }
