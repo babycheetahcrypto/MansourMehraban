@@ -31,8 +31,9 @@ and earn more $BBCH with every friend who
 🎯 Complete Daily Quests: Take on challenges
  to boost your earnings and unlock special bonuses.
 
-Start earning Baby Cheetah Coins today, and get ready 
-for amazing rewards that are just around the corner! 🐆
+Start earning Baby Cheetah Coins today, and
+get ready for amazing rewards that are just 
+around the corner! 🐆
 
 Stay fast, stay fierce, stay Baby Cheetah! 🌟
   `;
