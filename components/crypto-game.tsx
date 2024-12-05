@@ -27,8 +27,8 @@ interface UserData extends User {
   id: string;
   telegramId: string;
   username: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   coins: number;
   level: number;
   exp: number;
@@ -151,7 +151,7 @@ declare global {
           user?: {
             id: number;
             first_name: string;
-            last_name?: string;
+            last_name: string;
             username?: string;
             language_code?: string;
             photo_url?: string;
@@ -1267,12 +1267,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }, []);
 
     useEffect(() => {
-      if (userData) {
-        setUser(userData);
-      }
-    }, [userData]);
-
-    useEffect(() => {
       fetchUserData();
     }, [fetchUserData]);
 
@@ -1359,9 +1353,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           if (telegramUser) {
             setUser((prevUser) => ({
               ...prevUser,
-              name:
-                telegramUser.username ||
-                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+              firstName: telegramUser.first_name || '',
+              lastName: telegramUser.last_name || '',
               telegramId: telegramUser.id.toString(),
               profilePhoto: telegramUser.photo_url || '',
             }));
@@ -1466,7 +1459,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
             </div>
             <div>
-              <h2 className="font-bold text-sm text-white">{user.username}</h2>
+              <h2 className="font-bold text-sm text-white">
+                {((user.firstName || '') + ' ' + (user.lastName || '')).trim().slice(0, 12)}
+              </h2>
               <div className="text-xs text-white flex items-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-iTiljsrx8N2IGIdjozA2tXBHhaCi8x.png"
