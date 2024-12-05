@@ -1981,13 +1981,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md flex items-center justify-center"
               >
                 <Image
-                  src="https://tonkeeper.com/images/og-image.png"
+                  src="https://iili.io/2EDWzGe.png"
                   alt="Tonkeeper"
-                  width={24}
-                  height={24}
+                  width={28}
+                  height={28}
                   className="mr-2"
                 />
-                <span className="text-base">Connect Tonkeeper</span>
+                <span className="text-base">Connect Wallet</span>
               </Button>
             ) : (
               <div className="space-y-4">
