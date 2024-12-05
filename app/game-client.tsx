@@ -16,29 +16,6 @@ export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const createUser = useCallback(async (userData: Partial<User>) => {
-    try {
-      console.log('Creating new user with data:', userData);
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
-      if (response.ok) {
-        const newUser = await response.json();
-        console.log('New user created:', newUser);
-        return newUser.user;
-      } else {
-        const errorData = await response.json();
-        console.error('Failed to create new user:', errorData);
-        throw new Error('Failed to create new user');
-      }
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw error;
-    }
-  }, []);
-
   const fetchUserData = useCallback(async () => {
     try {
       if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
@@ -56,19 +33,27 @@ export default function GameClient() {
             return userData;
           } else if (response.status === 404) {
             // User not found, create a new user
-            const newUserData = {
-              telegramId: telegramUser.id.toString(),
-              username: telegramUser.username || `user${telegramUser.id}`,
-              firstName: telegramUser.first_name,
-              lastName: telegramUser.last_name || '',
-              profilePhoto: telegramUser.photo_url || '',
-            };
-            const newUser = await createUser(newUserData);
-            console.log('Created new user:', newUser);
-            return newUser;
+            const createResponse = await fetch('/api/user', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                telegramId: telegramUser.id.toString(),
+                username: telegramUser.username || `user${telegramUser.id}`,
+                firstName: telegramUser.first_name,
+                lastName: telegramUser.last_name,
+                profilePhoto: telegramUser.photo_url || '',
+              }),
+            });
+            if (createResponse.ok) {
+              const newUser = await createResponse.json();
+              console.log('Created new user:', newUser);
+              return newUser.user;
+            } else {
+              console.error('Failed to create user:', await createResponse.text());
+              throw new Error('Failed to create user');
+            }
           } else {
-            const errorData = await response.json();
-            console.error('Failed to fetch user data:', errorData);
+            console.error('Failed to fetch user data:', await response.text());
             throw new Error('Failed to fetch user data');
           }
         } else {
@@ -86,7 +71,7 @@ export default function GameClient() {
       }
       return null;
     }
-  }, [createUser]);
+  }, []);
 
   const saveUserData = useCallback(
     async (updatedUserData: Partial<User>) => {
