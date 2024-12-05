@@ -1392,6 +1392,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         } else {
           alert('Failed to load game data. Please try again.');
         }
+      } finally {
         setIsLoading(false);
       }
     };
