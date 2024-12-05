@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!user) {
+      console.log(`User not found for telegramId: ${telegramId}`);
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
@@ -81,6 +82,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log('User created:', user);
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
     console.error('Database error:', error);
@@ -110,6 +112,7 @@ export async function PATCH(request: NextRequest) {
       },
     });
 
+    console.log('User updated:', user);
     return NextResponse.json({ user });
   } catch (error) {
     console.error('Database error:', error);
