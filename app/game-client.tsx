@@ -16,6 +16,25 @@ export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const createUser = useCallback(async (userData: Partial<User>) => {
+    try {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+      if (response.ok) {
+        const newUser = await response.json();
+        return newUser.user;
+      } else {
+        throw new Error('Failed to create new user');
+      }
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
+  }, []);
+
   const fetchUserData = useCallback(async () => {
     try {
       if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
@@ -77,7 +96,6 @@ export default function GameClient() {
     async (updatedUserData: Partial<User>) => {
       if (!userData) return;
       try {
-        console.log('Saving user data:', updatedUserData);
         const response = await fetch('/api/user', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
