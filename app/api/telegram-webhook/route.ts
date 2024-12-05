@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bot from '../../telegram-bot';
+import bot from '../../../telegram-bot';
 
 export async function POST(req: NextRequest) {
   try {
