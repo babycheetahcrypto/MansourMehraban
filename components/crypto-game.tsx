@@ -2065,92 +2065,46 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center space-x-2">
-              <Vibrate className="w-5 h-5 text-primary" />
-              <Label
-                htmlFor="vibration"
-                className={`text-white text-sm transition-colors duration-200 ${settings.vibration ? 'text-primary' : 'text-gray-400'}`}
+        <CardContent className="space-y-6">
+          {[
+            { id: 'vibration', icon: Vibrate, label: 'Vibration' },
+            { id: 'background-music', icon: Music, label: 'Background Music' },
+            { id: 'sound-effect', icon: Volume2, label: 'Sound Effect' },
+          ].map(({ id, icon: Icon, label }) => (
+            <div key={id} className="flex items-center justify-between py-2">
+              <div className="flex items-center space-x-2">
+                <Icon className="w-5 h-5 text-primary" />
+                <Label htmlFor={id} className="text-white text-sm">
+                  {label}
+                </Label>
+              </div>
+              <div
+                className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer ${
+                  settings[id as keyof typeof settings] ? 'bg-green-400' : 'bg-gray-300'
+                }`}
+                onClick={() => {
+                  setSettings((prev) => ({ ...prev, [id]: !prev[id as keyof typeof settings] }));
+                  if (id === 'vibration' && !settings.vibration && navigator.vibrate) {
+                    navigator.vibrate([100, 30, 100, 30, 100]);
+                  } else if (id === 'background-music') {
+                    if (!settings.backgroundMusic && settings.backgroundMusicAudio) {
+                      settings.backgroundMusicAudio.play();
+                      settings.backgroundMusicAudio.loop = true;
+                    } else if (settings.backgroundMusicAudio) {
+                      settings.backgroundMusicAudio.pause();
+                      settings.backgroundMusicAudio.currentTime = 0;
+                    }
+                  }
+                }}
               >
-                Vibration
-              </Label>
+                <div
+                  className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
+                    settings[id as keyof typeof settings] ? 'translate-x-6' : 'translate-x-0'
+                  }`}
+                ></div>
+              </div>
             </div>
-            <Switch
-              id="vibration"
-              checked={settings.vibration}
-              onCheckedChange={(checked) => {
-                setSettings((prev) => ({ ...prev, vibration: checked }));
-                if (checked && navigator.vibrate) {
-                  navigator.vibrate([100, 30, 100, 30, 100]);
-                }
-              }}
-              className="relative inline-flex h-7 w-14 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black"
-            >
-              <span
-                className={`${
-                  settings.vibration ? 'translate-x-8 bg-primary' : 'translate-x-1 bg-white'
-                } inline-block h-5 w-5 transform rounded-full transition-transform duration-200 ease-in-out`}
-              />
-            </Switch>
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center space-x-2">
-              <Music className="w-5 h-5 text-primary" />
-              <Label
-                htmlFor="background-music"
-                className={`text-white text-sm transition-colors duration-200 ${settings.backgroundMusic ? 'text-primary' : 'text-gray-400'}`}
-              >
-                Background Music
-              </Label>
-            </div>
-            <Switch
-              id="background-music"
-              checked={settings.backgroundMusic}
-              onCheckedChange={(checked) => {
-                setSettings((prev) => ({ ...prev, backgroundMusic: checked }));
-                if (checked && settings.backgroundMusicAudio) {
-                  settings.backgroundMusicAudio.play();
-                  settings.backgroundMusicAudio.loop = true;
-                } else if (settings.backgroundMusicAudio) {
-                  settings.backgroundMusicAudio.pause();
-                  settings.backgroundMusicAudio.currentTime = 0;
-                }
-              }}
-              className="relative inline-flex h-7 w-14 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black"
-            >
-              <span
-                className={`${
-                  settings.backgroundMusic ? 'translate-x-8 bg-primary' : 'translate-x-1 bg-white'
-                } inline-block h-5 w-5 transform rounded-full transition-transform duration-200 ease-in-out`}
-              />
-            </Switch>
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center space-x-2">
-              <Volume2 className="w-5 h-5 text-primary" />
-              <Label
-                htmlFor="sound-effect"
-                className={`text-white text-sm transition-colors duration-200 ${settings.soundEffect ? 'text-primary' : 'text-gray-400'}`}
-              >
-                Sound Effect
-              </Label>
-            </div>
-            <Switch
-              id="sound-effect"
-              checked={settings.soundEffect}
-              onCheckedChange={(checked) =>
-                setSettings((prev) => ({ ...prev, soundEffect: checked }))
-              }
-              className="relative inline-flex h-7 w-14 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black"
-            >
-              <span
-                className={`${
-                  settings.soundEffect ? 'translate-x-8 bg-primary' : 'translate-x-1 bg-white'
-                } inline-block h-5 w-5 transform rounded-full transition-transform duration-200 ease-in-out`}
-              />
-            </Switch>
-          </div>
+          ))}
         </CardContent>
       </NeonGradientCard>
     </div>
