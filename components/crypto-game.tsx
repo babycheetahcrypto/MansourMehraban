@@ -2060,7 +2060,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderSettings = () => (
     <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
@@ -2069,7 +2069,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center space-x-2">
               <Vibrate className="w-5 h-5 text-primary" />
-              <Label htmlFor="vibration" className="text-white text-sm">
+              <Label
+                htmlFor="vibration"
+                className={`text-white text-sm transition-colors duration-200 ${settings.vibration ? 'text-primary' : 'text-gray-400'}`}
+              >
                 Vibration
               </Label>
             </div>
@@ -2082,20 +2085,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   navigator.vibrate([100, 30, 100, 30, 100]);
                 }
               }}
-              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600"
+              className="relative inline-flex h-7 w-14 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black"
             >
-              <span className="sr-only">Toggle vibration</span>
               <span
                 className={`${
-                  settings.vibration ? 'translate-x-6 bg-primary' : 'translate-x-1 bg-white'
-                } inline-block h-4 w-4 transform rounded-full transition`}
+                  settings.vibration ? 'translate-x-8 bg-primary' : 'translate-x-1 bg-white'
+                } inline-block h-5 w-5 transform rounded-full transition-transform duration-200 ease-in-out`}
               />
             </Switch>
           </div>
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center space-x-2">
               <Music className="w-5 h-5 text-primary" />
-              <Label htmlFor="background-music" className="text-white text-sm">
+              <Label
+                htmlFor="background-music"
+                className={`text-white text-sm transition-colors duration-200 ${settings.backgroundMusic ? 'text-primary' : 'text-gray-400'}`}
+              >
                 Background Music
               </Label>
             </div>
@@ -2112,20 +2117,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   settings.backgroundMusicAudio.currentTime = 0;
                 }
               }}
-              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600"
+              className="relative inline-flex h-7 w-14 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black"
             >
-              <span className="sr-only">Toggle background music</span>
               <span
                 className={`${
-                  settings.backgroundMusic ? 'translate-x-6 bg-primary' : 'translate-x-1 bg-white'
-                } inline-block h-4 w-4 transform rounded-full transition`}
+                  settings.backgroundMusic ? 'translate-x-8 bg-primary' : 'translate-x-1 bg-white'
+                } inline-block h-5 w-5 transform rounded-full transition-transform duration-200 ease-in-out`}
               />
             </Switch>
           </div>
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center space-x-2">
               <Volume2 className="w-5 h-5 text-primary" />
-              <Label htmlFor="sound-effect" className="text-white text-sm">
+              <Label
+                htmlFor="sound-effect"
+                className={`text-white text-sm transition-colors duration-200 ${settings.soundEffect ? 'text-primary' : 'text-gray-400'}`}
+              >
                 Sound Effect
               </Label>
             </div>
@@ -2135,13 +2142,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               onCheckedChange={(checked) =>
                 setSettings((prev) => ({ ...prev, soundEffect: checked }))
               }
-              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600"
+              className="relative inline-flex h-7 w-14 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black"
             >
-              <span className="sr-only">Toggle sound effect</span>
               <span
                 className={`${
-                  settings.soundEffect ? 'translate-x-6 bg-primary' : 'translate-x-1 bg-white'
-                } inline-block h-4 w-4 transform rounded-full transition`}
+                  settings.soundEffect ? 'translate-x-8 bg-primary' : 'translate-x-1 bg-white'
+                } inline-block h-5 w-5 transform rounded-full transition-transform duration-200 ease-in-out`}
               />
             </Switch>
           </div>
