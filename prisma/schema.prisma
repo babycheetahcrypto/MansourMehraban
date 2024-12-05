@@ -23,7 +23,7 @@ model User {
   dailyReward      DailyReward?
   unlockedLevels   Int[]             @default([1])
   clickPower       Int               @default(1)
-  friendsCoins     Json?             @default("{}")
+  friendsCoins     Json              @default("{}")
   energy           Int               @default(500)
   pphAccumulated   Float             @default(0)
   multiplier       Float             @default(1)

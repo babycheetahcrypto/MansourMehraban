@@ -2,8 +2,8 @@
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { User } from '@/types/user';
-import Image from 'next/image';
 import TonConnect from '@tonconnect/sdk';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -23,7 +23,7 @@ import {
   Eye,
 } from 'lucide-react';
 
-interface UserData {
+interface UserData extends User {
   id: string;
   telegramId: string;
   username: string;
@@ -378,74 +378,43 @@ const playHeaderFooterSound = () => {
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
-  const [user, setUser] = useState<UserData>(() => {
-    if (userData) {
-      return {
-        ...userData,
-        shopItems: [],
-        premiumShopItems: [],
-        tasks: [],
-        dailyReward: {
-          lastClaimed: null,
-          streak: 0,
-          day: 1,
-          completed: false,
-        },
-        unlockedLevels: [1],
-        clickPower: 1,
-        friendsCoins: {},
-        energy: 500,
-        pphAccumulated: 0,
-        multiplier: 1,
-        multiplierEndTime: null,
-        boosterCooldown: null,
-        selectedCoinImage: levelImages[0],
-        settings: {
-          vibration: true,
-          backgroundMusic: false,
-          soundEffect: true,
-          backgroundMusicAudio: null,
-        },
-        profitPerHour: 0,
-      };
-    } else {
-      return {
-        id: '',
-        telegramId: '',
-        username: '',
-        name: '',
-        coins: 0,
-        level: 1,
-        exp: 0,
-        profilePhoto: '',
-        shopItems: [],
-        premiumShopItems: [],
-        tasks: [],
-        dailyReward: {
-          lastClaimed: null,
-          streak: 0,
-          day: 1,
-          completed: false,
-        },
-        unlockedLevels: [1],
-        clickPower: 1,
-        friendsCoins: {},
-        energy: 500,
-        pphAccumulated: 0,
-        multiplier: 1,
-        multiplierEndTime: null,
-        boosterCooldown: null,
-        selectedCoinImage: levelImages[0],
-        settings: {
-          vibration: true,
-          backgroundMusic: false,
-          soundEffect: true,
-          backgroundMusicAudio: null,
-        },
-        profitPerHour: 0,
-      };
+  const [user, setUser] = useState<User>(
+    userData || {
+      id: '',
+      telegramId: '',
+      username: '',
+      name: '',
+      coins: 0,
+      level: 1,
+      exp: 0,
+      profilePhoto: '',
+      shopItems: [],
+      premiumShopItems: [],
+      tasks: [],
+      dailyReward: {
+        lastClaimed: null,
+        streak: 0,
+        day: 1,
+        completed: false,
+      },
+      unlockedLevels: [1],
+      clickPower: 1,
+      friendsCoins: {},
+      energy: 500,
+      pphAccumulated: 0,
+      multiplier: 1,
+      multiplierEndTime: null,
+      boosterCooldown: null,
+      selectedCoinImage: levelImages[0],
+      settings: {
+        vibration: true,
+        backgroundMusic: false,
+        soundEffect: true,
+        backgroundMusicAudio: null,
+      },
+      profitPerHour: 0,
     }
-  });
+  );
 
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
@@ -933,7 +902,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              telegramId: user.telegramId,
+              userId: user.id,
               itemId: item.id,
               isPremium,
               price,
@@ -944,26 +913,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             const result = await response.json();
             const updatedUser = {
               ...user,
-              coins: result.updatedCoins,
+              coins: user.coins - price,
+              shopItems: isPremium
+                ? user.shopItems
+                : user.shopItems.map((i) => (i.id === item.id ? result.updatedItem : i)),
+              premiumShopItems: isPremium
+                ? user.premiumShopItems.map((i) => (i.id === item.id ? result.updatedItem : i))
+                : user.premiumShopItems,
             };
             setUser(updatedUser);
             saveUserData(updatedUser);
 
             if (isPremium) {
-              setPremiumShopItems((prevItems) =>
-                prevItems.map((i) => (i.id === item.id ? result.updatedItem : i))
-              );
               setClickPower((prev) => prev * 2);
             } else {
-              setShopItems((prevItems) =>
-                prevItems.map((i) => {
-                  if (i.id === item.id) {
-                    const newProfit = result.updatedItem.baseProfit * result.updatedItem.level;
-                    setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
-                    return result.updatedItem;
-                  }
-                  return i;
-                })
+              setProfitPerHour(
+                (prev) => prev + result.updatedItem.baseProfit * result.updatedItem.level
               );
             }
 
@@ -1102,45 +1067,36 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     setPopupShown((prev) => ({ ...prev, levelUp: true }));
   }, [newLevel]);
 
-  const claimDailyReward = useCallback(() => {
-    const now = new Date();
-    const lastClaimed = dailyReward.lastClaimed ? new Date(dailyReward.lastClaimed) : null;
-
-    if (
-      !dailyReward.completed &&
-      (!lastClaimed ||
-        now.getDate() !== lastClaimed.getDate() ||
-        now.getMonth() !== lastClaimed.getMonth() ||
-        now.getFullYear() !== lastClaimed.getFullYear())
-    ) {
-      const newStreak =
-        lastClaimed && now.getDate() - lastClaimed.getDate() === 1 ? dailyReward.streak + 1 : 1;
-      const reward = getDailyReward(newStreak);
-
-      setUser((prevUser) => ({
-        ...prevUser,
-        coins: prevUser.coins + reward,
-      }));
-
-      const newDay = (dailyReward.day % 30) + 1;
-      const completed = newDay === 1;
-
-      setDailyReward({
-        lastClaimed: now.toISOString(),
-        streak: newStreak,
-        day: newDay,
-        completed: completed,
+  const claimDailyReward = useCallback(async () => {
+    try {
+      const response = await fetch('/api/daily-reward', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: user.id }),
       });
 
-      window.Telegram.WebApp.showAlert(
-        `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`
-      );
-    } else if (dailyReward.completed) {
-      window.Telegram.WebApp.showAlert('You have completed the 30-day reward cycle!');
-    } else {
-      window.Telegram.WebApp.showAlert('You have already claimed your daily reward today!');
+      if (response.ok) {
+        const result = await response.json();
+        const updatedUser = {
+          ...user,
+          coins: user.coins + result.reward,
+          dailyReward: result.dailyReward,
+        };
+        setUser(updatedUser);
+        saveUserData(updatedUser);
+        window.Telegram.WebApp.showAlert(
+          `Claimed daily reward: ${formatNumber(result.reward)} coins!`
+        );
+      } else {
+        throw new Error('Failed to claim daily reward');
+      }
+    } catch (error) {
+      console.error('Error claiming daily reward:', error);
+      window.Telegram.WebApp.showAlert('Failed to claim daily reward. Please try again.');
     }
-  }, [dailyReward]);
+  }, [user, saveUserData]);
 
   const getDailyReward = (day: number) => {
     const rewards = [
@@ -1151,30 +1107,35 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return rewards[day % rewards.length];
   };
 
-  const activateMultiplier = useCallback(() => {
+  const activateMultiplier = useCallback(async () => {
     if (!multiplierEndTime && !boosterCooldown) {
-      setMultiplier(2);
-      const endTime = Date.now() + 1 * 60 * 1000;
-      setMultiplierEndTime(endTime);
-      window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 1 minutes!`);
+      try {
+        const response = await fetch('/api/activate-multiplier', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId: user.id }),
+        });
 
-      const cooldownTimer = setTimeout(
-        () => {
-          setMultiplier(1);
-          setMultiplierEndTime(null);
-          setBoosterCooldown(Date.now() + 100 * 60 * 1000);
-          const unlockTimer = setTimeout(
-            () => {
-              setBoosterCooldown(null);
-            },
-            100 * 60 * 1000
-          );
-          return () => clearTimeout(unlockTimer);
-        },
-        1 * 60 * 1000
-      );
+        if (response.ok) {
+          const result = await response.json();
+          setMultiplier(2);
+          setMultiplierEndTime(result.endTime);
+          window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 1 minute!`);
 
-      return () => clearTimeout(cooldownTimer);
+          setTimeout(() => {
+            setMultiplier(1);
+            setMultiplierEndTime(null);
+            setBoosterCooldown(Date.now() + 100 * 60 * 1000);
+          }, 60000);
+        } else {
+          throw new Error('Failed to activate multiplier');
+        }
+      } catch (error) {
+        console.error('Error activating multiplier:', error);
+        window.Telegram.WebApp.showAlert('Failed to activate multiplier. Please try again.');
+      }
     } else if (boosterCooldown) {
       const remainingCooldown = Math.ceil((boosterCooldown - Date.now()) / 1000);
       window.Telegram.WebApp.showAlert(
@@ -1186,7 +1147,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         `Multiplier active for ${remainingMultiplier} more seconds.`
       );
     }
-  }, [multiplierEndTime, boosterCooldown]);
+  }, [multiplierEndTime, boosterCooldown, user.id]);
 
   const shareToSocialMedia = useCallback((platform: string) => {
     const message =

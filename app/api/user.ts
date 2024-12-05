@@ -19,6 +19,8 @@ export async function GET(request: NextRequest) {
         premiumShopItems: true,
         tasks: true,
         dailyReward: true,
+        trophies: true,
+        referralRewards: true,
       },
     });
 
@@ -74,6 +76,8 @@ export async function POST(request: NextRequest) {
         premiumShopItems: true,
         tasks: true,
         dailyReward: true,
+        trophies: true,
+        referralRewards: true,
       },
     });
 
@@ -101,6 +105,8 @@ export async function PATCH(request: NextRequest) {
         premiumShopItems: true,
         tasks: true,
         dailyReward: true,
+        trophies: true,
+        referralRewards: true,
       },
     });
 
