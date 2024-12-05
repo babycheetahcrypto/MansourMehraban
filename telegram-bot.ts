@@ -14,11 +14,12 @@ bot.command('start', async (ctx: Context) => {
   const welcomeMessage = `
 Welcome to Baby Cheetah! 🎉🎉🎉
 
-At Baby Cheetah, we’re redefining crypto gaming with 
-exciting tap-to-earn mechanics, social engagement, and 
-exclusive rewards. Collect Baby Cheetah Coins $BBCH, 
-complete tasks, and prepare for something big—
-an airdrop is coming soon! 🚀💸
+At Baby Cheetah, we’re redefining 
+crypto gaming with exciting tap-to-earn
+ mechanics, social engagement, and 
+exclusive rewards. Collect Baby Cheetah 
+Coins $BBCH, complete tasks, and prepare
+for something big—an airdrop is coming soon! 🚀💸
 
 Here’s what you can do with Baby Cheetah now:
 💰 Earn Baby Cheetah Coins: Tap, play, and collect 
