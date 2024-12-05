@@ -125,8 +125,6 @@ bot.on('web_app_data', async (ctx) => {
   }
 });
 
-// Add more command handlers as needed
-
 // API connection functions
 async function updateUserData(telegramId: string, data: Partial<User>) {
   try {
