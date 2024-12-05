@@ -22,7 +22,7 @@ an airdrop is coming soon! 🚀💸
 
 Here’s what you can do with Baby Cheetah now:
 💰 Earn Baby Cheetah Coins: Tap, play, and collect 
-BCC in our fun and addictive clicker game.
+$BBCH in our fun and Mining game.
 👥 Invite Friends: Share the game and earn more $BBCH 
 with every friend who joins! More friends = more rewards.
 🎯 Complete Daily Quests: Take on challenges to boost 
