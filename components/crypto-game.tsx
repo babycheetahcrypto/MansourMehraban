@@ -2065,11 +2065,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Vibrate className="w-6 h-6 text-primary" />
-              <Label htmlFor="vibration" className="text-white">
+            <div className="flex items-center space-x-2">
+              <Vibrate className="w-5 h-5 text-primary" />
+              <Label htmlFor="vibration" className="text-white text-sm">
                 Vibration
               </Label>
             </div>
@@ -2082,12 +2082,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   navigator.vibrate([100, 30, 100, 30, 100]);
                 }
               }}
+              className="scale-75"
             />
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Music className="w-6 h-6 text-primary" />
-              <Label htmlFor="background-music" className="text-white">
+            <div className="flex items-center space-x-2">
+              <Music className="w-5 h-5 text-primary" />
+              <Label htmlFor="background-music" className="text-white text-sm">
                 Background Music
               </Label>
             </div>
@@ -2104,12 +2105,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   settings.backgroundMusicAudio.currentTime = 0;
                 }
               }}
+              className="scale-75"
             />
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Volume2 className="w-6 h-6 text-primary" />
-              <Label htmlFor="sound-effect" className="text-white">
+            <div className="flex items-center space-x-2">
+              <Volume2 className="w-5 h-5 text-primary" />
+              <Label htmlFor="sound-effect" className="text-white text-sm">
                 Sound Effect
               </Label>
             </div>
@@ -2119,6 +2121,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               onCheckedChange={(checked) =>
                 setSettings((prev) => ({ ...prev, soundEffect: checked }))
               }
+              className="scale-75"
             />
           </div>
         </CardContent>
