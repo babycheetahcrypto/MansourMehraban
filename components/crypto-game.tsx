@@ -1892,19 +1892,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderRating = () => {
     const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
       const fetchLeaderboard = async () => {
         try {
+          setIsLoading(true);
+          setError(null);
           const response = await fetch('/api/leaderboard');
-          if (response.ok) {
-            const data = await response.json();
-            setLeaderboardData(data);
-          } else {
-            console.error('Failed to fetch leaderboard data');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
+          const data = await response.json();
+          setLeaderboardData(data);
         } catch (error) {
           console.error('Error fetching leaderboard:', error);
+          setError('Failed to load leaderboard. Please try again later.');
         } finally {
           setIsLoading(false);
         }
@@ -1914,7 +1917,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }, []);
 
     if (isLoading) {
-      return <div>Loading leaderboard...</div>;
+      return <div className="text-center p-4">Loading leaderboard...</div>;
+    }
+
+    if (error) {
+      return <div className="text-center p-4 text-red-500">{error}</div>;
     }
 
     return (
