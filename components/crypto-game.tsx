@@ -1604,7 +1604,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 }}
               />
             </div>
-            <div className="text-xs text-white flex justify-between">
+            <div className="text-xstext-white flex justify-between">
               <span>{formatNumber(user.coins - levelRequirements[level - 1])}</span>
               <span>{formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins</span>
             </div>
@@ -2065,9 +2065,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-1">
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between py-2">
+            <div className="flex items-center space-x-2">
               <Vibrate className="w-5 h-5 text-primary" />
               <Label htmlFor="vibration" className="text-white text-sm">
                 Vibration
@@ -2082,11 +2082,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   navigator.vibrate([100, 30, 100, 30, 100]);
                 }
               }}
-              className="scale-75"
-            />
+              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600"
+            >
+              <span className="sr-only">Toggle vibration</span>
+              <span
+                className={`${
+                  settings.vibration ? 'translate-x-6 bg-primary' : 'translate-x-1 bg-white'
+                } inline-block h-4 w-4 transform rounded-full transition`}
+              />
+            </Switch>
           </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-1">
+          <div className="flex items-center justify-between py-2">
+            <div className="flex items-center space-x-2">
               <Music className="w-5 h-5 text-primary" />
               <Label htmlFor="background-music" className="text-white text-sm">
                 Background Music
@@ -2105,11 +2112,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   settings.backgroundMusicAudio.currentTime = 0;
                 }
               }}
-              className="scale-75"
-            />
+              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600"
+            >
+              <span className="sr-only">Toggle background music</span>
+              <span
+                className={`${
+                  settings.backgroundMusic ? 'translate-x-6 bg-primary' : 'translate-x-1 bg-white'
+                } inline-block h-4 w-4 transform rounded-full transition`}
+              />
+            </Switch>
           </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-1">
+          <div className="flex items-center justify-between py-2">
+            <div className="flex items-center space-x-2">
               <Volume2 className="w-5 h-5 text-primary" />
               <Label htmlFor="sound-effect" className="text-white text-sm">
                 Sound Effect
@@ -2121,8 +2135,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               onCheckedChange={(checked) =>
                 setSettings((prev) => ({ ...prev, soundEffect: checked }))
               }
-              className="scale-75"
-            />
+              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600"
+            >
+              <span className="sr-only">Toggle sound effect</span>
+              <span
+                className={`${
+                  settings.soundEffect ? 'translate-x-6 bg-primary' : 'translate-x-1 bg-white'
+                } inline-block h-4 w-4 transform rounded-full transition`}
+              />
+            </Switch>
           </div>
         </CardContent>
       </NeonGradientCard>
