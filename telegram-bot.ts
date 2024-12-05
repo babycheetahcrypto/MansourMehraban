@@ -12,27 +12,19 @@ bot.command('start', async (ctx: Context) => {
   }
 
   const welcomeMessage = `
-Welcome to Baby Cheetah! 🐾✨🎉
+🎉 Welcome to Baby Cheetah Crypto Game! 🐆💰
 
-Step into the thrilling world of crypto gaming, where fun meets rewards! With Baby Cheetah, you’ll tap, play, and earn your way to exciting treasures. And here’s the big news: Airdrop Coming Soon! 🚀💸
+Get ready for an exciting adventure in the world of crypto mining! Here's what you can expect:
 
-Here’s what makes Baby Cheetah your ultimate crypto game:
+🔹 Mine virtual coins by tapping
+🔹 Upgrade your mining equipment
+🔹 Complete tasks for extra rewards
+🔹 Compete with friends on the leaderboard
+🔹 Earn daily rewards and special bonuses
 
-💰 Tap-to-Earn: Collect Baby Cheetah Coins $BBCH by playing our addictive clicker game. The faster you play, the more you earn—easy and rewarding!
+Are you ready to become a crypto tycoon? Click the "Play" button below to start your journey!
 
-👥 Invite Friends & Earn More: Bring your squad along for the ride! For every friend you invite, you earn bonus rewards. Build your pack, dominate the game, and share the fun!
-
-🏆 Climb the Ranks: Compete on the global leaderboard, showcase your skills, and prove you’re the ultimate Baby Cheetah player.
-
-🎯 Daily Quests & Challenges: Complete fun, engaging tasks to unlock massive rewards. Every day brings new opportunities to grow your collection of $BBCH!
-
-🛍️ Spend & Upgrade: Visit the exclusive $BBCH Shop to trade your coins for amazing power-ups, unique items, and special perks.
-
-🎁 Airdrop Soon!: Be ready! A big Baby Cheetah Airdrop is on its way, loaded with rewards you don’t want to miss. Earn $BBCH now to prepare for the ultimate bonus drop!
-
-Get ready to run faster, earn smarter, and dominate the crypto world. 🐆✨ Baby Cheetah is here to make every tap count!
-
-Start your journey today and be part of the most exciting crypto revolution. Unleash the Baby Cheetah in you! 🌟
+Remember, this is a fun game and does not involve real cryptocurrency or money. Enjoy and happy mining! 🚀
   `;
 
   try {
@@ -75,7 +67,7 @@ Start your journey today and be part of the most exciting crypto revolution. Unl
         caption: welcomeMessage,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
-          Markup.button.webApp('Play 🚀', gameUrl),
+          Markup.button.webApp('Play Baby Cheetah', gameUrl),
           Markup.button.url('Join Our Channel', 'https://t.me/babycheetahcrypto'),
         ]),
       }
