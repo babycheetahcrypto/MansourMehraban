@@ -12,19 +12,26 @@ bot.command('start', async (ctx: Context) => {
   }
 
   const welcomeMessage = `
-🎉 Welcome to Baby Cheetah Crypto Game! 🐆💰
+Welcome to Baby Cheetah! 🎉🎉🎉
 
-Get ready for an exciting adventure in the world of crypto mining! Here's what you can expect:
+At Baby Cheetah, we’re redefining crypto gaming with 
+exciting tap-to-earn mechanics, social engagement, and 
+exclusive rewards. Collect Baby Cheetah Coins $BBCH, 
+complete tasks, and prepare for something big—
+an airdrop is coming soon! 🚀💸
 
-🔹 Mine virtual coins by tapping
-🔹 Upgrade your mining equipment
-🔹 Complete tasks for extra rewards
-🔹 Compete with friends on the leaderboard
-🔹 Earn daily rewards and special bonuses
+Here’s what you can do with Baby Cheetah now:
+💰 Earn Baby Cheetah Coins: Tap, play, and collect 
+BCC in our fun and addictive clicker game.
+👥 Invite Friends: Share the game and earn more $BBCH 
+with every friend who joins! More friends = more rewards.
+🎯 Complete Daily Quests: Take on challenges to boost 
+your earnings and unlock special bonuses.
 
-Are you ready to become a crypto tycoon? Click the "Play" button below to start your journey!
+Start earning Baby Cheetah Coins today, and get ready 
+for amazing rewards that are just around the corner! 🐆
 
-Remember, this is a fun game and does not involve real cryptocurrency or money. Enjoy and happy mining! 🚀
+Stay fast, stay fierce, stay Baby Cheetah! 🌟
   `;
 
   try {
@@ -67,7 +74,7 @@ Remember, this is a fun game and does not involve real cryptocurrency or money. 
         caption: welcomeMessage,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
-          Markup.button.webApp('Play Baby Cheetah', gameUrl),
+          Markup.button.webApp('Play 🚀', gameUrl),
           Markup.button.url('Join Our Channel', 'https://t.me/babycheetahcrypto'),
         ]),
       }
