@@ -97,6 +97,13 @@ type Task = {
   action: () => void;
 };
 
+interface LeaderboardEntry {
+  id: string;
+  name: string;
+  coins: number;
+  profitPerHour: number;
+}
+
 // Keyframe animation
 const styles = `
   @keyframes pulse {
@@ -1883,10 +1890,37 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderRating = () => {
+    const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchLeaderboard = async () => {
+        try {
+          const response = await fetch('/api/leaderboard');
+          if (response.ok) {
+            const data = await response.json();
+            setLeaderboardData(data);
+          } else {
+            console.error('Failed to fetch leaderboard data');
+          }
+        } catch (error) {
+          console.error('Error fetching leaderboard:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchLeaderboard();
+    }, []);
+
+    if (isLoading) {
+      return <div>Loading leaderboard...</div>;
+    }
+
     return (
       <div className="flex flex-col items-center justify-start p-6 min-h-screen">
         <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
-          {leaderboardData.slice(0, 200).map((player, index) => (
+          {leaderboardData.map((player, index) => (
             <div
               key={player.id}
               className={`flex items-center justify-between p-4 ${
@@ -1901,7 +1935,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   : index % 2 === 0
                     ? 'bg-gray-800/30'
                     : 'bg-gray-900/30'
-              } ${player.rank === currentUserRank ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
+              } ${player.id === user.id ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
             >
               <div className="flex items-center space-x-4">
                 <div
@@ -1929,10 +1963,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           ))}
         </div>
-        {currentUserRank > 0 && (
+        {leaderboardData.find((player) => player.id === user.id) && (
           <div className="mt-8 p-4 bg-gradient-to-r from-primary/30 to-primary-foreground/30 rounded-lg shadow-lg backdrop-blur-md">
             <p className="text-white text-xl">
-              Your current rank: <span className="font-bold text-white">{currentUserRank}</span>
+              Your current rank:{' '}
+              <span className="font-bold text-white">
+                {leaderboardData.findIndex((player) => player.id === user.id) + 1}
+              </span>
             </p>
           </div>
         )}
