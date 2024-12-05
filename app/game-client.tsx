@@ -18,6 +18,7 @@ export default function GameClient() {
 
   const createUser = useCallback(async (userData: Partial<User>) => {
     try {
+      console.log('Creating new user with data:', userData);
       const response = await fetch('/api/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -25,8 +26,11 @@ export default function GameClient() {
       });
       if (response.ok) {
         const newUser = await response.json();
+        console.log('New user created:', newUser);
         return newUser.user;
       } else {
+        const errorData = await response.json();
+        console.error('Failed to create new user:', errorData);
         throw new Error('Failed to create new user');
       }
     } catch (error) {
@@ -52,26 +56,19 @@ export default function GameClient() {
             return userData;
           } else if (response.status === 404) {
             // User not found, create a new user
-            const createResponse = await fetch('/api/user', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                telegramId: telegramUser.id.toString(),
-                username: telegramUser.username || `user${telegramUser.id}`,
-                profilePhoto: telegramUser.photo_url || '',
-                name: `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
-              }),
-            });
-            if (createResponse.ok) {
-              const newUser = await createResponse.json();
-              console.log('Created new user:', newUser);
-              return newUser.user;
-            } else {
-              console.error('Failed to create user:', await createResponse.text());
-              throw new Error('Failed to create user');
-            }
+            const newUserData = {
+              telegramId: telegramUser.id.toString(),
+              username: telegramUser.username || `user${telegramUser.id}`,
+              firstName: telegramUser.first_name,
+              lastName: telegramUser.last_name || '',
+              profilePhoto: telegramUser.photo_url || '',
+            };
+            const newUser = await createUser(newUserData);
+            console.log('Created new user:', newUser);
+            return newUser;
           } else {
-            console.error('Failed to fetch user data:', await response.text());
+            const errorData = await response.json();
+            console.error('Failed to fetch user data:', errorData);
             throw new Error('Failed to fetch user data');
           }
         } else {
@@ -95,6 +92,7 @@ export default function GameClient() {
     async (updatedUserData: Partial<User>) => {
       if (!userData) return;
       try {
+        console.log('Saving user data:', updatedUserData);
         const response = await fetch('/api/user', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -121,11 +119,10 @@ export default function GameClient() {
     const initializeUser = async () => {
       try {
         setIsLoading(true);
-        fetchUserData().then((user) => {
-          if (user) {
-            setUserData(user);
-          }
-        });
+        const user = await fetchUserData();
+        if (user) {
+          setUserData(user);
+        }
       } catch (error) {
         console.error('Error initializing user:', error);
         if (window.Telegram && window.Telegram.WebApp) {

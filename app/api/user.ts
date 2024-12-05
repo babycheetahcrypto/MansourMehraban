@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    console.log('User found:', user); // Added log
+    console.log('User found:', user);
     return NextResponse.json(user);
   } catch (error) {
     console.error('Database error:', error);
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
   }
 
-  console.log('Creating new user with data:', body); // Added log
+  console.log('Creating new user with data:', body);
 
   try {
     const user = await prisma.user.create({
@@ -101,7 +101,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
   }
 
-  console.log('Updating user with data:', updateData); // Added log
+  console.log('Updating user with data:', updateData);
 
   try {
     const user = await prisma.user.update({

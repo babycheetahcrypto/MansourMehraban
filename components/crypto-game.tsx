@@ -23,12 +23,12 @@ import {
   Eye,
 } from 'lucide-react';
 
-interface UserData {
+interface UserData extends User {
   id: string;
   telegramId: string;
   username: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   name: string;
   coins: number;
   level: number;
@@ -390,6 +390,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       id: '',
       telegramId: '',
       username: '',
+      firstName: '',
+      lastName: '',
       name: '',
       coins: 0,
       level: 1,
@@ -1271,10 +1273,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     useEffect(() => {
       if (userData) {
         setUser(userData);
-      } else {
-        fetchUserData();
       }
-    }, [userData, fetchUserData]);
+    }, [userData]);
 
     useEffect(() => {
       fetchUserData();
