@@ -1918,11 +1918,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }, []);
 
     if (isLoading) {
-      return <div className="text-center p-4">Loading leaderboard...</div>;
+      return (
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      );
     }
 
     if (error) {
-      return <div className="text-center p-4 text-red-500">{error}</div>;
+      return (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <p className="text-red-500 text-xl mb-4">{error}</p>
+          <Button
+            onClick={() => setCurrentPage('home')}
+            className="bg-primary text-white px-4 py-2 rounded-full"
+          >
+            Return to Home
+          </Button>
+        </div>
+      );
     }
 
     return (
