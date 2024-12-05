@@ -113,9 +113,12 @@ bot.on('web_app_data', async (ctx) => {
         data: { coins: user.coins + parsedData.amount },
       });
     } else if (parsedData.action === 'purchase') {
-      // Handle item purchase logic
     } else if (parsedData.action === 'claim') {
       // Handle reward claim logic
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { coins: user.coins + parsedData.amount },
+      });
     }
 
     ctx.answerCbQuery('Game data updated successfully!');
