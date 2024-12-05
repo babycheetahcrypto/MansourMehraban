@@ -22,12 +22,13 @@ Coins $BBCH, complete tasks, and prepare
 for something big—an airdrop is coming soon! 🚀💸
 
 Here’s what you can do with Baby Cheetah now:
-💰 Earn Baby Cheetah Coins: Tap, play, and collect 
-$BBCH in our fun and Mining game.
-👥 Invite Friends: Share the game and earn more $BBCH 
-with every friend who joins! More friends = more rewards.
-🎯 Complete Daily Quests: Take on challenges to boost 
-your earnings and unlock special bonuses.
+💰 Earn Baby Cheetah Coins: Tap, play, and 
+collect $BBCH in our fun and Mining game.
+👥 Invite Friends: Share the game 
+and earn more $BBCH with every friend who
+ joins! More friends = more rewards.
+🎯 Complete Daily Quests: Take on challenges
+ to boost your earnings and unlock special bonuses.
 
 Start earning Baby Cheetah Coins today, and get ready 
 for amazing rewards that are just around the corner! 🐆
