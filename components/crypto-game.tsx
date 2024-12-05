@@ -2068,8 +2068,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <CardContent className="space-y-6">
           {[
             { id: 'vibration', icon: Vibrate, label: 'Vibration' },
-            { id: 'background-music', icon: Music, label: 'Background Music' },
-            { id: 'sound-effect', icon: Volume2, label: 'Sound Effect' },
+            { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
+            { id: 'soundEffect', icon: Volume2, label: 'Sound Effect' },
           ].map(({ id, icon: Icon, label }) => (
             <div key={id} className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-2">
@@ -2079,22 +2079,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 </Label>
               </div>
               <div
-                className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer ${
+                className={`w-12 h-6 flex items-center ${
                   settings[id as keyof typeof settings] ? 'bg-green-400' : 'bg-gray-300'
-                }`}
+                } rounded-full p-1 duration-300 ease-in-out cursor-pointer`}
                 onClick={() => {
-                  setSettings((prev) => ({ ...prev, [id]: !prev[id as keyof typeof settings] }));
-                  if (id === 'vibration' && !settings.vibration && navigator.vibrate) {
-                    navigator.vibrate([100, 30, 100, 30, 100]);
-                  } else if (id === 'background-music') {
-                    if (!settings.backgroundMusic && settings.backgroundMusicAudio) {
-                      settings.backgroundMusicAudio.play();
-                      settings.backgroundMusicAudio.loop = true;
-                    } else if (settings.backgroundMusicAudio) {
-                      settings.backgroundMusicAudio.pause();
-                      settings.backgroundMusicAudio.currentTime = 0;
+                  setSettings((prev) => {
+                    const newSettings = { ...prev, [id]: !prev[id as keyof typeof settings] };
+                    if (id === 'vibration' && newSettings.vibration && navigator.vibrate) {
+                      navigator.vibrate([100, 30, 100, 30, 100]);
+                    } else if (id === 'backgroundMusic') {
+                      if (newSettings.backgroundMusic && settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio.play();
+                        settings.backgroundMusicAudio.loop = true;
+                      } else if (settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio.pause();
+                        settings.backgroundMusicAudio.currentTime = 0;
+                      }
                     }
-                  }
+                    return newSettings;
+                  });
                 }}
               >
                 <div
