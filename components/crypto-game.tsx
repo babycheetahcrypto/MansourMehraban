@@ -1075,10 +1075,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const claimPPH = useCallback(() => {
     if (pphAccumulated > 0) {
-      setUser((prevUser) => ({
-        ...prevUser,
-        coins: prevUser.coins + pphAccumulated,
-      }));
+      const updatedUser = {
+        ...user,
+        coins: user.coins + pphAccumulated,
+      };
+      setUser(updatedUser);
+      saveUserData(updatedUser);
       setPphAccumulated(0);
       setShowPPHPopup(false);
       window.Telegram.WebApp.showAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
@@ -1087,7 +1089,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     } else {
       window.Telegram.WebApp.showAlert('No profits to claim yet!');
     }
-  }, [pphAccumulated]);
+  }, [pphAccumulated, user, saveUserData]);
 
   const claimNewLevel = useCallback(() => {
     window.Telegram.WebApp.showAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
