@@ -1,6 +1,5 @@
 import { Telegraf, Markup, Context } from 'telegraf';
 import { prisma } from './lib/prisma';
-import { User } from '@/types/user';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
@@ -135,47 +134,4 @@ bot.on('web_app_data', async (ctx) => {
     ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
-
-// API connection functions
-async function updateUserData(telegramId: string, data: Partial<User>) {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId, ...data }),
-    });
-    if (!response.ok) throw new Error('Failed to update user data');
-    return await response.json();
-  } catch (error) {
-    console.error('Error updating user data:', error);
-    throw error;
-  }
-}
-
-async function getLeaderboard() {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/leaderboard`);
-    if (!response.ok) throw new Error('Failed to fetch leaderboard');
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching leaderboard:', error);
-    throw error;
-  }
-}
-
-async function getDailyReward(userId: string) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/daily-reward?userId=${userId}`
-    );
-    if (!response.ok) throw new Error('Failed to fetch daily reward');
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching daily reward:', error);
-    throw error;
-  }
-}
-
-// Add more API connection functions for other endpoints as needed
-
 export default bot;
