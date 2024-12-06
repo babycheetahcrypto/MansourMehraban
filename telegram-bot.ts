@@ -14,20 +14,17 @@ bot.command('start', async (ctx: Context) => {
   const welcomeMessage = `
 Welcome to Baby Cheetah! 🎉🎉🎉
 
-At Baby Cheetah, we’re redefining crypto 
-gaming with exciting tap-to-earn mechanics,
-social engagement, and exclusive rewards. 
-Collect Baby Cheetah Coins $BBCH, complete 
-tasks, and preparefor something big—an 
+At Baby Cheetah, we’re redefining crypto gaming with
+exciting tap-to-earn mechanics,social engagement, and
+exclusive rewards. Collect Baby Cheetah Coins $BBCH,
+complete tasks, and preparefor something big—an 
 airdrop is coming soon! 🚀💸
 
-🥊 Here’s what you can do with Baby
-Cheetah 🐾 now:
-💰 Earn Baby Cheetah Coins: Tap, play, and 
-collect $BBCH in our fun and Mining game.
-👥 Invite Friends: Share the game 
-and earn more $BBCH with every friend who
- joins! More friends = more rewards.
+🥊 Here’s what you can do with BabyCheetah 🐾 now:
+💰 Earn Baby Cheetah Coins: Tap, play, and collect 
+$BBCH in our fun and Mining game.
+👥 Invite Friends: Share the game and earn more $BBCH
+with every friend who joins! More friends = more rewards.
 🎯 Complete Daily Quests: Take on challenges
  to boost your earnings and unlock special bonuses.
 
