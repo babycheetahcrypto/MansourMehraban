@@ -1651,7 +1651,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               alt={`Level ${level} Cheetah`}
               layout="fill"
               objectFit="contain"
-              className="relative z-10"
+              className="relative z-8"
               priority
             />
           </button>
