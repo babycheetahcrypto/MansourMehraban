@@ -1649,8 +1649,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <Image
               src={selectedCoinImage}
               alt={`Level ${level} Cheetah`}
-              layout="fit"
-              objectFit="contain"
+              layout="fill"
+              objectFit="cover"
               className="relative z-10"
               priority
             />
