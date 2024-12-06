@@ -1341,7 +1341,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, []);
 
   useEffect(() => {
-    console.log('Initializing game...');
     fetchUserData();
   }, [fetchUserData]);
 

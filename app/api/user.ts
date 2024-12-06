@@ -1,49 +1,39 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from '../../lib/mongodb';
-import { User } from '@/types/user';
+import { NextRequest, NextResponse } from 'next/server';
+import { clientPromise } from '../../lib/mongodb';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { db } = await connectToDatabase();
+export async function GET(req: NextRequest) {
+  const client = await clientPromise;
+  const db = client.db('babycheetah');
 
-  if (req.method === 'GET') {
-    const { telegramId } = req.query;
+  const { searchParams } = new URL(req.url);
+  const telegramId = searchParams.get('telegramId');
 
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
+  if (!telegramId) {
+    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+  }
+
+  try {
+    const user = await db.collection('users').findOne({ telegramId: telegramId });
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
+    return NextResponse.json(user);
+  } catch (error) {
+    return NextResponse.json({ error: 'Error fetching user data' }, { status: 500 });
+  }
+}
 
-    try {
-      const user = await db.collection('users').findOne({ telegramId: telegramId as string });
+export async function PATCH(req: NextRequest) {
+  const client = await clientPromise;
+  const db = client.db('babycheetah');
 
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ error: 'User not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch user data' });
-    }
-  } else if (req.method === 'PATCH') {
-    const { telegramId, ...updateData } = req.body;
-
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
-    }
-
-    try {
-      const result = await db.collection('users').updateOne({ telegramId }, { $set: updateData });
-
-      if (result.modifiedCount === 1) {
-        const updatedUser = await db.collection('users').findOne({ telegramId });
-        res.status(200).json(updatedUser);
-      } else {
-        res.status(404).json({ error: 'User not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to update user data' });
-    }
-  } else {
-    res.setHeader('Allow', ['GET', 'PATCH']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  try {
+    const updatedUser = await req.json();
+    const result = await db
+      .collection('users')
+      .updateOne({ telegramId: updatedUser.telegramId }, { $set: updatedUser }, { upsert: true });
+    return NextResponse.json(result);
+  } catch (error) {
+    return NextResponse.json({ error: 'Error updating user data' }, { status: 500 });
   }
 }
