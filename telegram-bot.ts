@@ -13,25 +13,29 @@ bot.command('start', async (ctx: Context) => {
   const welcomeMessage = `
 Welcome to Baby Cheetah! 🎉🎉🎉
 
-At Baby Cheetah, we’re redefining crypto gaming with
-exciting tap-to-earn mechanics,social engagement, and
-exclusive rewards. Collect Baby Cheetah Coins $BBCH,
-complete tasks, and preparefor something big—an 
-airdrop is coming soon! 🚀💸
+At Baby Cheetah, we’re redefining crypto 
+gaming with exciting tap-to-earn 
+mechanics,social engagement, and 
+exclusive rewards. Collect Baby 
+Cheetah Coins $BBCH,complete tasks, and 
+preparefor something big—an airdrop is 
+coming soon! 🚀💸
 
-🥊 Here’s what you can do with BabyCheetah 🐾 now:
-💰 Earn Baby Cheetah Coins: Tap, play, and collect 
-$BBCH in our fun and Mining game.
-👥 Invite Friends: Share the game and earn more $BBCH
-with every friend who joins! More friends = more rewards.
-🎯 Complete Daily Quests: Take on challenges
- to boost your earnings and unlock special bonuses.
+🥊 Here’s what you can do with Baby
+Cheetah 🐾 now:
+💰 Earn Baby Cheetah Coins: Tap, play, 
+and collect $BBCH in our fun and 
+Mining game.
+👥 Invite Friends: Share the game and 
+earn more $BBCHwith every friend who 
+joins! More friends = more rewards.
+🎯 Complete Daily Quests: Take on 
+challenges to boost your earnings and 
+unlock special bonuses.
 
-Start earning Baby Cheetah Coins today, and
-get ready for amazing rewards that are just 
-around the corner! 🐆
-
-Stay fast, stay fierce, stay Baby Cheetah! 🌟
+Start earning Baby Cheetah Coins today,
+and get ready for the airdrop!
+Stay fast, stay fierce, stay Baby Cheetah!🌟
   `;
 
   try {
@@ -56,7 +60,13 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           energy: 500,
           pphAccumulated: 0,
           multiplier: 1,
-          settings: { vibration: true, backgroundMusic: false, soundEffect: true },
+          multiplierEndTime: null,
+          boosterCooldown: null,
+          settings: {
+            vibration: true,
+            backgroundMusic: false,
+            soundEffect: true,
+          },
           profitPerHour: 0,
         },
       });
