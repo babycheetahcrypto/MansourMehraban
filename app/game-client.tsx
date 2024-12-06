@@ -47,7 +47,7 @@ export default function GameClient() {
             if (createResponse.ok) {
               const newUser = await createResponse.json();
               console.log('Created new user:', newUser);
-              setUserData(newUser);
+              setUserData(newUser.user);
             } else {
               console.error('Failed to create user:', await createResponse.text());
               throw new Error('Failed to create user');
