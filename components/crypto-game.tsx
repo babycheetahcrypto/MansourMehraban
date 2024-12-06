@@ -1228,9 +1228,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   const useUserData = () => {
-    const [user, setUser] = useState<UserData | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-
     const fetchUserData = useCallback(async () => {
       try {
         if (window.Telegram && window.Telegram.WebApp) {

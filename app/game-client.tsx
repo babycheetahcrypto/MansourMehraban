@@ -14,7 +14,6 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -81,7 +80,6 @@ export default function GameClient() {
         window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
       }
     } finally {
-      setIsLoading(false);
     }
   }, []);
 
@@ -120,10 +118,6 @@ export default function GameClient() {
     const updatedCoins = userData.coins + amount;
     await saveUserData({ coins: updatedCoins });
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} saveUserData={saveUserData} />
