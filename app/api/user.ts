@@ -1,59 +1,126 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { clientPromise } from '../../lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const client = await clientPromise;
-  const db = client.db('babycheetah');
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const telegramId = searchParams.get('telegramId');
 
-  switch (req.method) {
-    case 'GET':
-      try {
-        const { telegramId } = req.query;
-        const user = await db.collection('users').findOne({ telegramId: telegramId });
-        if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-        }
-        res.status(200).json(user);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        res.status(500).json({ error: 'Error fetching user data' });
-      }
-      break;
+  if (!telegramId) {
+    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+  }
 
-    case 'POST':
-      try {
-        const newUser = req.body;
-        const result = await db.collection('users').insertOne(newUser);
-        res.status(201).json({ user: { ...newUser, _id: result.insertedId } });
-      } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).json({ error: 'Error creating user' });
-      }
-      break;
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        telegramId: telegramId,
+      },
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+        trophies: true,
+        referralRewards: true,
+      },
+    });
 
-    case 'PATCH':
-      try {
-        const { telegramId, ...updatedData } = req.body;
-        const result = await db
-          .collection('users')
-          .findOneAndUpdate(
-            { telegramId: telegramId },
-            { $set: updatedData },
-            { returnDocument: 'after' }
-          );
-        if (!result.value) {
-          return res.status(404).json({ error: 'User not found' });
-        }
-        res.status(200).json(result.value);
-      } catch (error) {
-        console.error('Error updating user data:', error);
-        res.status(500).json({ error: 'Error updating user data' });
-      }
-      break;
+    if (!user) {
+      console.log(`User not found for telegramId: ${telegramId}`);
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
 
-    default:
-      res.setHeader('Allow', ['GET', 'POST', 'PATCH']);
-      res.status(405).end(`Method ${req.method} Not Allowed`);
+    console.log('User found:', user);
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { telegramId, username, firstName, lastName, profilePhoto } = body;
+
+  if (!telegramId) {
+    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+  }
+
+  console.log('Creating new user with data:', body);
+
+  try {
+    const user = await prisma.user.create({
+      data: {
+        telegramId,
+        username,
+        firstName,
+        lastName,
+        profilePhoto,
+        coins: 0,
+        level: 1,
+        exp: 0,
+        unlockedLevels: [1],
+        clickPower: 1,
+        friendsCoins: {},
+        energy: 500,
+        pphAccumulated: 0,
+        multiplier: 1,
+        settings: { vibration: true, backgroundMusic: false, soundEffect: true },
+        profitPerHour: 0,
+        dailyReward: {
+          create: {
+            lastClaimed: null,
+            streak: 0,
+            day: 1,
+            completed: false,
+          },
+        },
+      },
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+        trophies: true,
+        referralRewards: true,
+      },
+    });
+
+    console.log('User created:', user);
+    return NextResponse.json({ user }, { status: 201 });
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const body = await request.json();
+  const { telegramId, ...updateData } = body;
+
+  if (!telegramId) {
+    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+  }
+
+  console.log('Updating user with data:', updateData);
+
+  try {
+    const user = await prisma.user.update({
+      where: { telegramId },
+      data: updateData,
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+        trophies: true,
+        referralRewards: true,
+      },
+    });
+
+    console.log('User updated:', user);
+    return NextResponse.json({ user });
+  } catch (error) {
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

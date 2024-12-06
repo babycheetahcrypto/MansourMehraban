@@ -1,11 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { clientPromise } from '../../lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { prisma } from '@/lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const client = await clientPromise;
-  const db = client.db('babycheetah');
-
   if (req.method === 'GET') {
     const { userId } = req.query;
 
@@ -14,9 +10,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const dailyReward = await db
-        .collection('dailyRewards')
-        .findOne({ userId: new ObjectId(userId) });
+      const dailyReward = await prisma.dailyReward.findUnique({
+        where: { userId },
+      });
       res.status(200).json(dailyReward);
     } catch (error) {
       console.error('Database error:', error);
@@ -30,16 +26,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const updatedDailyReward = await db.collection('dailyRewards').findOneAndUpdate(
-        { userId: new ObjectId(userId) },
-        {
-          $set: { lastClaimed: new Date() },
-          $inc: { streak: 1, day: 1 },
+      const updatedDailyReward = await prisma.dailyReward.upsert({
+        where: { userId },
+        update: {
+          lastClaimed: new Date(),
+          streak: { increment: 1 },
+          day: { increment: 1 },
         },
-        { upsert: true, returnDocument: 'after' }
-      );
+        create: {
+          userId,
+          lastClaimed: new Date(),
+          streak: 1,
+          day: 1,
+        },
+      });
 
-      res.status(200).json(updatedDailyReward.value);
+      res.status(200).json(updatedDailyReward);
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Internal server error' });
