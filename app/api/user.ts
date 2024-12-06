@@ -1,39 +1,55 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { clientPromise } from '../../lib/mongodb';
 
-export async function GET(req: NextRequest) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const client = await clientPromise;
   const db = client.db('babycheetah');
 
-  const { searchParams } = new URL(req.url);
-  const telegramId = searchParams.get('telegramId');
+  switch (req.method) {
+    case 'GET':
+      try {
+        const { telegramId } = req.query;
+        const user = await db.collection('users').findOne({ telegramId: telegramId });
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json(user);
+      } catch (error) {
+        res.status(500).json({ error: 'Error fetching user data' });
+      }
+      break;
 
-  if (!telegramId) {
-    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
-  }
+    case 'POST':
+      try {
+        const newUser = req.body;
+        const result = await db.collection('users').insertOne(newUser);
+        res.status(201).json({ user: { ...newUser, _id: result.insertedId } });
+      } catch (error) {
+        res.status(500).json({ error: 'Error creating user' });
+      }
+      break;
 
-  try {
-    const user = await db.collection('users').findOne({ telegramId: telegramId });
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-    return NextResponse.json(user);
-  } catch (error) {
-    return NextResponse.json({ error: 'Error fetching user data' }, { status: 500 });
-  }
-}
+    case 'PATCH':
+      try {
+        const { telegramId, ...updatedData } = req.body;
+        const result = await db
+          .collection('users')
+          .findOneAndUpdate(
+            { telegramId: telegramId },
+            { $set: updatedData },
+            { returnDocument: 'after' }
+          );
+        if (!result.value) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json(result.value);
+      } catch (error) {
+        res.status(500).json({ error: 'Error updating user data' });
+      }
+      break;
 
-export async function PATCH(req: NextRequest) {
-  const client = await clientPromise;
-  const db = client.db('babycheetah');
-
-  try {
-    const updatedUser = await req.json();
-    const result = await db
-      .collection('users')
-      .updateOne({ telegramId: updatedUser.telegramId }, { $set: updatedUser }, { upsert: true });
-    return NextResponse.json(result);
-  } catch (error) {
-    return NextResponse.json({ error: 'Error updating user data' }, { status: 500 });
+    default:
+      res.setHeader('Allow', ['GET', 'POST', 'PATCH']);
+      res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

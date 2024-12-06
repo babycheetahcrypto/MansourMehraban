@@ -16,25 +16,6 @@ export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const createUser = useCallback(async (userData: Partial<User>) => {
-    try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
-      if (response.ok) {
-        const newUser = await response.json();
-        return newUser.user;
-      } else {
-        throw new Error('Failed to create new user');
-      }
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw error;
-    }
-  }, []);
-
   const fetchUserData = useCallback(async () => {
     try {
       if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
@@ -49,7 +30,7 @@ export default function GameClient() {
           if (response.ok) {
             const userData = await response.json();
             console.log('Fetched user data:', userData);
-            return userData;
+            setUserData(userData);
           } else if (response.status === 404) {
             // User not found, create a new user
             const createResponse = await fetch('/api/user', {
@@ -66,7 +47,7 @@ export default function GameClient() {
             if (createResponse.ok) {
               const newUser = await createResponse.json();
               console.log('Created new user:', newUser);
-              return newUser.user;
+              setUserData(newUser);
             } else {
               console.error('Failed to create user:', await createResponse.text());
               throw new Error('Failed to create user');
@@ -88,9 +69,14 @@ export default function GameClient() {
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
       }
-      return null;
+    } finally {
+      setIsLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
 
   const saveUserData = useCallback(
     async (updatedUserData: Partial<User>) => {
@@ -106,8 +92,8 @@ export default function GameClient() {
         });
         if (response.ok) {
           const updatedUser = await response.json();
-          setUserData(updatedUser.user);
-          console.log('User data saved successfully:', updatedUser.user);
+          setUserData(updatedUser);
+          console.log('User data saved successfully:', updatedUser);
         } else {
           throw new Error('Failed to update user data');
         }
@@ -117,27 +103,6 @@ export default function GameClient() {
     },
     [userData]
   );
-
-  useEffect(() => {
-    const initializeUser = async () => {
-      try {
-        setIsLoading(true);
-        const user = await fetchUserData();
-        if (user) {
-          setUserData(user);
-        }
-      } catch (error) {
-        console.error('Error initializing user:', error);
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeUser();
-  }, [fetchUserData]);
 
   const handleCoinsUpdate = async (amount: number) => {
     if (!userData) return;
