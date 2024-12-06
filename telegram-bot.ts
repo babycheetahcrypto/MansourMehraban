@@ -1,6 +1,6 @@
 import { Telegraf, Markup, Context } from 'telegraf';
 import { prisma } from './lib/prisma';
-import { User } from '@/types/user';
+import { User, Prisma } from '@prisma/client';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
@@ -117,19 +117,37 @@ bot.on('web_app_data', async (ctx) => {
       return;
     }
 
-    // Update user data based on game actions
-    if (parsedData.action === 'tap') {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
-      });
-    } else if (parsedData.action === 'purchase') {
-    } else if (parsedData.action === 'claim') {
-      // Handle reward claim logic
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
-      });
+    switch (parsedData.action) {
+      case 'tap':
+        await updateUserData(user.telegramId, { coins: { increment: parsedData.amount } });
+        break;
+      case 'purchase':
+        // Handle purchase logic
+        break;
+      case 'claim':
+        await updateUserData(user.telegramId, { coins: { increment: parsedData.amount } });
+        break;
+      case 'updateLevel':
+        await updateUserData(user.telegramId, {
+          level: parsedData.level,
+          exp: parsedData.exp,
+          unlockedLevels: parsedData.unlockedLevels,
+        });
+        break;
+      case 'completeTask':
+        await prisma.task.update({
+          where: { id: parsedData.taskId },
+          data: { progress: parsedData.progress, completed: parsedData.completed },
+        });
+        break;
+      case 'claimTrophy':
+        await prisma.trophy.update({
+          where: { id: parsedData.trophyId },
+          data: { claimed: true, unlockedAt: new Date() },
+        });
+        break;
+      default:
+        console.log('Unknown action:', parsedData.action);
     }
 
     ctx.answerCbQuery('Game data updated successfully!');
@@ -140,15 +158,25 @@ bot.on('web_app_data', async (ctx) => {
 });
 
 // API connection functions
-async function updateUserData(telegramId: string, data: Partial<User>) {
+async function updateUserData(telegramId: string, data: Prisma.UserUpdateInput) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId, ...data }),
+    const updatedUser = await prisma.user.update({
+      where: { telegramId },
+      data: {
+        ...data,
+        friendsCoins: data.friendsCoins ? JSON.parse(JSON.stringify(data.friendsCoins)) : undefined,
+        settings: data.settings ? JSON.parse(JSON.stringify(data.settings)) : undefined,
+      },
+      include: {
+        shopItems: true,
+        premiumShopItems: true,
+        tasks: true,
+        dailyReward: true,
+        trophies: true,
+        referralRewards: true,
+      },
     });
-    if (!response.ok) throw new Error('Failed to update user data');
-    return await response.json();
+    return updatedUser;
   } catch (error) {
     console.error('Error updating user data:', error);
     throw error;
@@ -157,9 +185,23 @@ async function updateUserData(telegramId: string, data: Partial<User>) {
 
 async function getLeaderboard() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/leaderboard`);
-    if (!response.ok) throw new Error('Failed to fetch leaderboard');
-    return await response.json();
+    const leaderboard = await prisma.user.findMany({
+      select: {
+        id: true,
+        telegramId: true,
+        username: true,
+        coins: true,
+        profitPerHour: true,
+      },
+      orderBy: {
+        coins: 'desc',
+      },
+      take: 100,
+    });
+    return leaderboard.map((user, index) => ({
+      ...user,
+      rank: index + 1,
+    }));
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     throw error;
@@ -168,13 +210,101 @@ async function getLeaderboard() {
 
 async function getDailyReward(userId: string) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/daily-reward?userId=${userId}`
-    );
-    if (!response.ok) throw new Error('Failed to fetch daily reward');
-    return await response.json();
+    const dailyReward = await prisma.dailyReward.findUnique({
+      where: { userId },
+    });
+    return dailyReward;
   } catch (error) {
     console.error('Error fetching daily reward:', error);
+    throw error;
+  }
+}
+
+async function getFriendsActivity(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { friendsCoins: true },
+    });
+    return user?.friendsCoins || {};
+  } catch (error) {
+    console.error('Error fetching friends activity:', error);
+    throw error;
+  }
+}
+
+async function getReferralRewards(userId: string) {
+  try {
+    const referralRewards = await prisma.referralReward.findMany({
+      where: { userId },
+    });
+    return referralRewards;
+  } catch (error) {
+    console.error('Error fetching referral rewards:', error);
+    throw error;
+  }
+}
+
+async function createInvite(inviterId: string, inviteeId: string) {
+  try {
+    const invite = await prisma.friendInvite.create({
+      data: {
+        inviterId,
+        inviteeId,
+        status: 'pending',
+      },
+    });
+    return invite;
+  } catch (error) {
+    console.error('Error creating invite:', error);
+    throw error;
+  }
+}
+
+async function getShopItems() {
+  try {
+    const shopItems = await prisma.shopItem.findMany();
+    const premiumShopItems = await prisma.premiumShopItem.findMany();
+    return { shopItems, premiumShopItems };
+  } catch (error) {
+    console.error('Error fetching shop items:', error);
+    throw error;
+  }
+}
+
+async function getTrophies(userId: string) {
+  try {
+    const trophies = await prisma.trophy.findMany({
+      where: { userId },
+    });
+    return trophies;
+  } catch (error) {
+    console.error('Error fetching trophies:', error);
+    throw error;
+  }
+}
+
+async function getUserLevel(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { level: true, exp: true, unlockedLevels: true },
+    });
+    return user;
+  } catch (error) {
+    console.error('Error fetching user level:', error);
+    throw error;
+  }
+}
+
+async function getTasks(userId: string) {
+  try {
+    const tasks = await prisma.task.findMany({
+      where: { userId },
+    });
+    return tasks;
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
     throw error;
   }
 }

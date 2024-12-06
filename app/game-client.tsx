@@ -113,6 +113,9 @@ export default function GameClient() {
         }
       } catch (error) {
         console.error('Error saving user data:', error);
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Failed to save game data. Please try again.');
+        }
       }
     },
     [userData]
