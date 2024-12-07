@@ -1239,14 +1239,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, []);
 
   const inviteFriends = useCallback(() => {
+    const referralLink = `https://t.me/BabyCheetah_Bot/?start=${user.telegramId}`;
     window.Telegram.WebApp.showConfirm(
-      `Share your invite code: ${inviteCode}`,
+      `Share your referral link: ${referralLink}`,
       (confirmed: boolean) => {
         if (confirmed) {
+          navigator.clipboard.writeText(referralLink);
+          window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
         }
       }
     );
-  }, [inviteCode]);
+  }, [user.telegramId]);
 
   const followX = useCallback(() => {
     window.Telegram.WebApp.openLink('https://x.com/BabyCheetahTeam');
