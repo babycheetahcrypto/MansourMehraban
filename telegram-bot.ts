@@ -20,7 +20,7 @@ What You Can Do Now:
 👥 Invite Friends: Share the game and earn bonus $BBCH for every friend who joins. More friends, more rewards!
 🎯 Complete Quests: Take on daily challenges to boost your earnings and unlock exclusive bonuses.
 
-Start earning today and be part of the next big thing in crypto gaming.
+Start earning today and be part of the next big upcoming airdrop. ✨
 Stay fast, stay fierce, stay Baby Cheetah! 🌟
   `;
 
