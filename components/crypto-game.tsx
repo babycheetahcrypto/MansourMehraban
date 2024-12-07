@@ -320,7 +320,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 };
 
 const levelRequirements = [
-  0, 5000, 50000, 100000, 500000, 800000, 1000000, 5000000, 7000000, 10000000,
+  0, 5000, 50000, 100000, 500000, 800000, 1000000, 5000000, 8000000, 10000000,
 ];
 
 const levelImages = [
@@ -529,7 +529,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'Cosmic Shipyard',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cosmic%20Shipyard.jpg-g0folteuEnRzE2ke1wVnCVMyxpoRC2.jpeg',
-      basePrice: 1000,
+      basePrice: 500,
       baseProfit: 50,
       level: 1,
     },
@@ -538,7 +538,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'Galactic WarpCrafts',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Galactic%20WarpCrafts.jpg-Ebh93DdGRcffZMhpLKm5dOqpN7c7Y4.jpeg',
-      basePrice: 2000,
+      basePrice: 1000,
       baseProfit: 100,
       level: 1,
     },
@@ -547,8 +547,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'Galaxy Gear Crypto',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Galaxy%20Gear%20Crypto.jpg-FE1Ait4Pr0hgjoQXxY4aACXxtHrSIa.jpeg',
-      basePrice: 4000,
-      baseProfit: 1000,
+      basePrice: 2000,
+      baseProfit: 500,
       level: 1,
     },
     {
@@ -556,8 +556,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'RocketCoin Speedway',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/RocketCoin%20Speedway.jpg-C7c29Ra1Lo9GWgsb5knfynlR1c4e4h.jpeg',
-      basePrice: 8000,
-      baseProfit: 2000,
+      basePrice: 4000,
+      baseProfit: 1000,
       level: 1,
     },
     {
@@ -565,8 +565,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'Stellar Speed Vault',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Stellar%20Speed%20Vault.jpg-vQAbuozzA2Bh7op7dd2Xw6hl2wmMwh.jpeg',
-      basePrice: 16000,
-      baseProfit: 4000,
+      basePrice: 8000,
+      baseProfit: 2000,
       level: 1,
     },
     {
@@ -574,8 +574,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'Speedy Coin Shop',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Speedy%20Coin%20Shop-4Pjy8KKoF4mPmJqSCKaeBmVjjOeDmG.jpg',
-      basePrice: 32000,
-      baseProfit: 8000,
+      basePrice: 15000,
+      baseProfit: 4000,
       level: 1,
     },
     {
@@ -583,8 +583,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'SpaceXcelerate Crypto',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SpaceXcelerate%20Crypto-tRNfj0y3wKPzkeompo47K0INGZ8RzP.jpg',
-      basePrice: 64000,
-      baseProfit: 12000,
+      basePrice: 35000,
+      baseProfit: 8000,
       level: 1,
     },
     {
@@ -592,8 +592,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'Lunar Cruiser Exchange',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lunar%20Cruiser%20Exchange-l3lp6JnCc43BWBNbDAmfoTDRfgVIPr.jpg',
-      basePrice: 128000,
-      baseProfit: 20000,
+      basePrice: 50000,
+      baseProfit: 12000,
       level: 1,
     },
     {
@@ -601,8 +601,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'Hyperdrive Coin Garage',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Hyperdrive%20Coin%20Garage-p3lGkiS6WCbCuwUBxy75HFwCkRjbJU.jpg',
-      basePrice: 256000,
-      baseProfit: 50000,
+      basePrice: 70000,
+      baseProfit: 35000,
       level: 1,
     },
     {
@@ -610,8 +610,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'MoonShip Hangar',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/MoonShip%20Hangar-A3Pne3hTeraZk7TTZDnekdMmnVytf3.jpg',
-      basePrice: 1000000,
-      baseProfit: 100000,
+      basePrice: 100000,
+      baseProfit: 50000,
       level: 1,
     },
   ]);
@@ -622,7 +622,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       name: 'Cheetah Coin Corner',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg',
-      basePrice: 10000,
+      basePrice: 7000,
       effect: 'Doubles coin button taps',
       level: 1,
     },
