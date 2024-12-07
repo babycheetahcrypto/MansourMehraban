@@ -2222,103 +2222,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div>
-            <p className="text-2xl mb-6 text-center text-white">Share via:</p>
-            <div className="flex flex-wrap justify-center gap-4 mb-6">
-              {[
-                {
-                  name: 'Youtube',
-                  icon: (
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20icon-6rol1Ge421KShZTlo6utbgTE8fsxm8.png"
-                      alt="YouTube"
-                      width={48}
-                      height={48}
-                    />
-                  ),
-                },
-                {
-                  name: 'X',
-                  icon: (
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/X%203D%20icon-BKGCBNiG3sECcTXzWnsCIQKt2C7s2q.png"
-                      alt="X"
-                      width={48}
-                      height={48}
-                    />
-                  ),
-                },
-                {
-                  name: 'Facebook',
-                  icon: (
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Facebook%20icon-6GoJtap21nyoiQnYLSpB6IJtMTN02p.png"
-                      alt="Facebook"
-                      width={48}
-                      height={48}
-                    />
-                  ),
-                },
-                {
-                  name: 'Instagram',
-                  icon: (
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20icon-oGuCqwnySi2zDrS8HlS44YDNgGaCuH.png"
-                      alt="Instagram"
-                      width={48}
-                      height={48}
-                    />
-                  ),
-                },
-                {
-                  name: 'Telegram',
-                  icon: (
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Telegram%203D%20icon-0mE8I8odV0mcJBqfO91vdaj6mxrgGS.png"
-                      alt="Telegram"
-                      width={48}
-                      height={48}
-                    />
-                  ),
-                },
-                {
-                  name: 'WhatsApp',
-                  icon: (
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Whatsapp%203D%20icon-zQ7YPZyXLWhIzlUUDOv03O3EE8qWSI.png"
-                      alt="WhatsApp"
-                      width={48}
-                      height={48}
-                    />
-                  ),
-                },
-              ].map((platform) => (
-                <Button
-                  key={platform.name}
-                  className="w-20 h-20 bg-transparent rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md flex items-center justify-center"
-                  onClick={() => {
-                    shareToSocialMedia(platform.name.toLowerCase());
-                    playHeaderFooterSound();
-                  }}
-                >
-                  {React.cloneElement(platform.icon, { width: 48, height: 48 })}
-                </Button>
-              ))}
-            </div>
-            <p className="text-sm text-left text-white">
-              Rewards: 1,000 coins for each friend who joins!
-            </p>
-          </div>
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
             <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
               <span className="text-sm text-white truncate mr-2">
-                https://t.me/BabyCheetah_Bot/invite/{inviteCode}
+                https://t.me/BabyCheetah_Bot?start={user.telegramId}
               </span>
               <Button
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `https://t.me/BabyCheetah_Bot/invite/${inviteCode}`
+                    `https://t.me/BabyCheetah_Bot?start=${user.telegramId}`
                   );
                   window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
                 }}
@@ -2328,7 +2241,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
-              Share this link to earn extra rewards!
+              Share this link to earn 1000 coins for each friend who joins!
             </p>
           </div>
           <Button
