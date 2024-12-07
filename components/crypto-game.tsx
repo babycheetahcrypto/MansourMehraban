@@ -1822,7 +1822,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="p-6 min-h-screen relative z-0">
       <StarryBackground />
       <div className="max-w-7xl mx-auto">
-        <h3 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h3>
+        <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {shopItems.map((item, index) => (
             <div
@@ -1860,7 +1860,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           ))}
         </div>
 
-        <h3 className="text-3xl font-bold my-8 text-center text-white">Booster Shop</h3>
+        <h4 className="text-3xl font-bold my-8 text-center text-white">Booster Shop</h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {premiumShopItems.map((item) => (
             <div
