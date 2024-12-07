@@ -464,6 +464,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   );
 
+  const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -829,6 +830,41 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       action: () => followWhatsApp(),
     },
   ]);
+
+  const inviteFriend = useCallback(
+    async (friendId: string) => {
+      if (!invitedFriends.includes(friendId)) {
+        try {
+          const response = await fetch('/api/invite', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: user.telegramId,
+              friendId: friendId,
+            }),
+          });
+
+          if (response.ok) {
+            setInvitedFriends((prev) => [...prev, friendId]);
+            setUser((prevUser) => ({
+              ...prevUser,
+              coins: prevUser.coins + 1000,
+            }));
+            saveUserData({ ...user, coins: user.coins + 1000 });
+            window.Telegram.WebApp.showAlert('You earned 1000 coins for inviting a friend!');
+          } else {
+            throw new Error('Failed to process invitation');
+          }
+        } catch (error) {
+          console.error('Error inviting friend:', error);
+          window.Telegram.WebApp.showAlert('Failed to process invitation. Please try again.');
+        }
+      }
+    },
+    [invitedFriends, user, saveUserData]
+  );
 
   const level = useMemo(() => {
     const maxPredefinedLevel = levelRequirements.length - 1;
@@ -2263,18 +2299,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          {Object.entries(friendsCoins).map(([friend, coins]) => (
+          {invitedFriends.map((friendId) => (
             <div
-              key={friend}
+              key={friendId}
               className="flex justify-between items-center bg-gray-700 bg-opacity-50 p-4 rounded-lg backdrop-blur-md"
             >
-              <span className="font-bold text-white">{friend}</span>
-              <span className="text-white">{formatNumber(coins)} coins</span>
+              <span className="font-bold text-white">Friend {friendId}</span>
+              <span className="text-white">Invited</span>
             </div>
           ))}
-          {Object.keys(friendsCoins).length === 0 && (
+          {invitedFriends.length === 0 && (
             <p className="text-center text-white">
-              No friend activity yet. Invite some friends to get started!
+              No friends invited yet. Share your referral link to get started!
             </p>
           )}
         </CardContent>
