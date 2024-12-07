@@ -619,9 +619,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [premiumShopItems, setPremiumShopItems] = useState<PremiumShopItem[]>([
     {
       id: 6,
-      name: 'RocketFleet Station',
+      name: 'Cheetah Coin Corner',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/RocketFleet%20Station.jpg-zO3eZhonzf53SZoVqYLpWMkISFwMNG.jpeg',
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg',
       basePrice: 10000,
       effect: 'Doubles coin button taps',
       level: 1,
