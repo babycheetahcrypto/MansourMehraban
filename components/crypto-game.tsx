@@ -1845,6 +1845,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <p className="text-xs text-cyan-300 mb-2">
                   Profit: {formatNumber(item.baseProfit * item.level)}/h
                 </p>
+                <p className="text-xs text-yellow-300 mb-2">Level: {item.level}</p>
                 <Button
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-md text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
                   onClick={() => {
@@ -1853,7 +1854,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   }}
                 >
                   <ShoppingBag className="w-3 h-3 mr-1" />
-                  Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
+                  Upgrade {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
                 </Button>
               </div>
             </div>
@@ -1881,6 +1882,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   />
                 </div>
                 <p className="text-sm text-yellow-300 mb-3">Effect: {item.effect}</p>
+                <p className="text-sm text-yellow-300 mb-3">Level: {item.level}</p>
                 <Button
                   className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center"
                   onClick={() => {
@@ -2272,7 +2274,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max<continuation_point>w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
