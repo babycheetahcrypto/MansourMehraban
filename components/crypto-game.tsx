@@ -2026,7 +2026,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={28}
                   className="mr-2"
                 />
-                <span className="text-base">Connect Wallet</span>
+                <span className="text-base">Connect Tonkeeper</span>
               </Button>
             ) : (
               <div className="space-y-4">
