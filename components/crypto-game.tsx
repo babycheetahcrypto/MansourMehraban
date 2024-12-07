@@ -320,7 +320,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 };
 
 const levelRequirements = [
-  0, 5000, 50000, 100000, 500000, 1000000, 100000000, 500000000, 700000000, 1000000000,
+  0, 5000, 50000, 100000, 500000, 800000, 1000000, 5000000, 7000000, 10000000,
 ];
 
 const levelImages = [
