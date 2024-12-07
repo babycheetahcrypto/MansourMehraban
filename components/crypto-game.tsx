@@ -489,7 +489,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     vibration: true,
     backgroundMusic: false,
     soundEffect: true,
-    backgroundMusicAudio: null as HTMLAudioElement | null,
+    backgroundMusicAudio:
+      typeof Audio !== 'undefined'
+        ? new Audio(
+            'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3'
+          )
+        : null,
   });
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
@@ -953,7 +958,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         if (
           settings.vibration &&
           window.Telegram &&
-          window.Telegram &&
           window.Telegram.WebApp &&
           window.Telegram.WebApp.HapticFeedback
         ) {
@@ -1357,36 +1361,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     useEffect(() => {
       fetchUserData();
     }, [fetchUserData]);
-
-    useEffect(() => {
-      // Initialize the audio element
-      const audio = new Audio(
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3'
-      );
-      audio.loop = true;
-      setSettings((prev) => ({ ...prev, backgroundMusicAudio: audio }));
-
-      // Clean up function
-      return () => {
-        if (audio) {
-          audio.pause();
-          audio.currentTime = 0;
-        }
-      };
-    }, []);
-
-    useEffect(() => {
-      if (settings.backgroundMusicAudio) {
-        if (settings.backgroundMusic) {
-          settings.backgroundMusicAudio
-            .play()
-            .catch((error) => console.error('Error playing audio:', error));
-        } else {
-          settings.backgroundMusicAudio.pause();
-          settings.backgroundMusicAudio.currentTime = 0;
-        }
-      }
-    }, [settings.backgroundMusic, settings.backgroundMusicAudio]);
 
     const handleCoinChange = (amount: number) => {
       if (user) {
@@ -2201,26 +2175,41 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   {label}
                 </Label>
               </div>
-              <Switch
-                id={id}
-                checked={settings[id as keyof typeof settings] as boolean}
-                onCheckedChange={(checked) => {
+              <div
+                className={`w-12 h-6 flex items-center ${
+                  settings[id as keyof typeof settings] ? 'bg-green-400' : 'bg-gray-300'
+                } rounded-full p-1 duration-300 ease-in-out cursor-pointer`}
+                onClick={() => {
                   setSettings((prev) => {
-                    const newSettings = { ...prev, [id]: checked };
-                    if (id === 'backgroundMusic') {
-                      if (checked && newSettings.backgroundMusicAudio) {
-                        newSettings.backgroundMusicAudio
-                          .play()
-                          .catch((error) => console.error('Error playing audio:', error));
-                      } else if (newSettings.backgroundMusicAudio) {
-                        newSettings.backgroundMusicAudio.pause();
-                        newSettings.backgroundMusicAudio.currentTime = 0;
+                    const newSettings = { ...prev, [id]: !prev[id as keyof typeof settings] };
+                    if (id === 'vibration' && newSettings.vibration && navigator.vibrate) {
+                      navigator.vibrate([
+                        100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
+                      ]);
+                    } else if (
+                      window.Telegram &&
+                      window.Telegram.WebApp &&
+                      window.Telegram.WebApp.HapticFeedback
+                    ) {
+                    } else if (id === 'backgroundMusic') {
+                      if (newSettings.backgroundMusic && settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio.play();
+                        settings.backgroundMusicAudio.loop = true;
+                      } else if (settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio.pause();
+                        settings.backgroundMusicAudio.currentTime = 0;
                       }
                     }
                     return newSettings;
                   });
                 }}
-              />
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
+                    settings[id as keyof typeof settings] ? 'translate-x-6' : 'translate-x-0'
+                  }`}
+                ></div>
+              </div>
             </div>
           ))}
         </CardContent>
