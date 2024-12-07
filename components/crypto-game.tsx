@@ -1663,9 +1663,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-400 to-primary">
-            {formatNumber(user.coins)}
-          </h1>
+          <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
           <div className="w-12 h-12">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png"
