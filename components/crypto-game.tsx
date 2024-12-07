@@ -209,7 +209,7 @@ const StarryBackground: React.FC = () => {
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 1.5,
+        radius: Math.random() * 2.5,
         speed: Math.random() * 0.5,
       });
     }
