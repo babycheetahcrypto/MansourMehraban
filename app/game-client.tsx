@@ -41,17 +41,6 @@ export default function GameClient() {
                 firstName: telegramUser.first_name,
                 lastName: telegramUser.last_name,
                 profilePhoto: telegramUser.photo_url || '',
-                coins: 0,
-                level: 1,
-                exp: 0,
-                unlockedLevels: [1],
-                clickPower: 1,
-                friendsCoins: {},
-                energy: 500,
-                pphAccumulated: 0,
-                multiplier: 1,
-                settings: { vibration: true, backgroundMusic: false, soundEffect: true },
-                profitPerHour: 0,
               }),
             });
             if (createResponse.ok) {
@@ -79,7 +68,6 @@ export default function GameClient() {
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
       }
-    } finally {
     }
   }, []);
 
@@ -101,8 +89,8 @@ export default function GameClient() {
         });
         if (response.ok) {
           const updatedUser = await response.json();
-          setUserData(updatedUser);
-          console.log('User data saved successfully:', updatedUser);
+          setUserData(updatedUser.user);
+          console.log('User data saved successfully:', updatedUser.user);
         } else {
           throw new Error('Failed to update user data');
         }

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import { User } from '@/types/user';
 import TonConnect from '@tonconnect/sdk';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +22,7 @@ import {
   Eye,
 } from 'lucide-react';
 
-interface UserData extends User {
+interface User {
   id: string;
   telegramId: string;
   username: string;
@@ -99,7 +98,16 @@ interface LeaderboardEntry {
   id: string;
   name: string;
   coins: number;
-  profitPerHour: number;
+  rank: number;
+}
+
+interface UserData extends Omit<User, 'dailyReward'> {
+  dailyReward: {
+    lastClaimed: Date | null;
+    streak: number;
+    day: number;
+    completed: boolean;
+  };
 }
 
 // Keyframe animation
@@ -2053,7 +2061,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             ) : !wallet ? (
               <Button
                 onClick={() => {
-                  connectWallet();
+                  connectWallet()
+                    .then((address) => {
+                      setWallet(address);
+                      window.Telegram.WebApp.showAlert(
+                        'Wallet connected successfully with Tonkeeper!'
+                      );
+                    })
+                    .catch((error) => {
+                      console.error('Failed to connect wallet:', error);
+                      window.Telegram.WebApp.showAlert(
+                        'Failed to connect wallet. Please try again.'
+                      );
+                    });
                   playHeaderFooterSound();
                 }}
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md flex items-center justify-center"

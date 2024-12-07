@@ -13,7 +13,7 @@ model User {
   username         String
   firstName        String?
   lastName         String?
-  coins            Int               @default(0)
+  coins            Float             @default(0)
   level            Int               @default(1)
   exp              Float             @default(0)
   profilePhoto     String?
@@ -24,7 +24,7 @@ model User {
   unlockedLevels   Int[]             @default([1])
   clickPower       Int               @default(1)
   friendsCoins     Json              @default("{}")
-  energy           Int               @default(500)
+  energy           Float             @default(500)
   pphAccumulated   Float             @default(0)
   multiplier       Float             @default(1)
   multiplierEndTime DateTime?
@@ -36,8 +36,7 @@ model User {
   updatedAt        DateTime          @updatedAt
   trophies         Trophy[]
   referralRewards  ReferralReward[]
-  sentInvites      FriendInvite[]    @relation("SentInvites")
-  receivedInvites  FriendInvite[]    @relation("ReceivedInvites")
+  invitedFriends   String[]
 }
 
 model ShopItem {
@@ -48,7 +47,6 @@ model ShopItem {
   basePrice   Float
   baseProfit  Float
   level       Int    @default(1)
-  quantity    Int    @default(0)
   user        User   @relation(fields: [userId], references: [id])
 }
 
@@ -60,7 +58,6 @@ model PremiumShopItem {
   basePrice   Float
   effect      String
   level       Int     @default(1)
-  duration    Int?
   user        User    @relation(fields: [userId], references: [id])
 }
 
@@ -109,16 +106,5 @@ model ReferralReward {
   claimed     Boolean   @default(false)
   claimedAt   DateTime?
   user        User      @relation(fields: [userId], references: [id])
-}
-
-model FriendInvite {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  inviterId String   @db.ObjectId
-  inviteeId String   @db.ObjectId
-  status    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  inviter   User     @relation("SentInvites", fields: [inviterId], references: [id])
-  invitee   User     @relation("ReceivedInvites", fields: [inviteeId], references: [id])
 }
 

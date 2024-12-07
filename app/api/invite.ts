@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -45,12 +43,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-    // Create a friend invite record
-    await prisma.friendInvite.create({
+    // Update the inviter's invitedFriends array
+    await prisma.user.update({
+      where: { telegramId: userId },
       data: {
-        inviterId: userId,
-        inviteeId: newFriend.id,
-        status: 'ACCEPTED', // Since the new user is created, we can set the status as accepted
+        invitedFriends: {
+          push: friendId,
+        },
       },
     });
 

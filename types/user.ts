@@ -8,15 +8,10 @@ export interface User {
   level: number;
   exp: number;
   profilePhoto: string;
-  shopItems: any[];
-  premiumShopItems: any[];
-  tasks: any[];
-  dailyReward: {
-    lastClaimed: Date | null;
-    streak: number;
-    day: number;
-    completed: boolean;
-  };
+  shopItems: ShopItem[];
+  premiumShopItems: PremiumShopItem[];
+  tasks: Task[];
+  dailyReward: DailyReward;
   unlockedLevels: number[];
   clickPower: number;
   friendsCoins: { [key: string]: number };
@@ -32,6 +27,7 @@ export interface User {
     soundEffect: boolean;
   };
   profitPerHour: number;
+  invitedFriends: string[];
 }
 
 export interface ShopItem {
@@ -42,7 +38,6 @@ export interface ShopItem {
   basePrice: number;
   baseProfit: number;
   level: number;
-  quantity: number;
 }
 
 export interface PremiumShopItem {
@@ -53,7 +48,6 @@ export interface PremiumShopItem {
   basePrice: number;
   effect: string;
   level: number;
-  duration?: number;
 }
 
 export interface Task {

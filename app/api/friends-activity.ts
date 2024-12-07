@@ -10,6 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: { id: userId as string },
         select: {
           friendsCoins: true,
+          invitedFriends: true,
         },
       });
 
@@ -17,7 +18,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ error: 'User not found' });
       }
 
-      res.status(200).json(user.friendsCoins);
+      res.status(200).json({
+        friendsCoins: user.friendsCoins,
+        invitedFriends: user.invitedFriends,
+      });
     } catch (error) {
       console.error('Error fetching friends activity:', error);
       res.status(500).json({ error: 'Failed to fetch friends activity' });

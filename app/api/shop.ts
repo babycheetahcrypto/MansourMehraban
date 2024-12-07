@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(500).json({ error: 'Internal server error' });
     }
   } else if (req.method === 'POST') {
-    const { userId, itemId, isPremium } = req.body;
+    const { userId, itemId, isPremium, price } = req.body;
 
     if (!userId || !itemId || typeof userId !== 'string' || typeof itemId !== 'string') {
       return res.status(400).json({ error: 'Valid User ID and Item ID are required' });
@@ -24,6 +24,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ error: 'User not found' });
       }
 
+      if (user.coins < price) {
+        return res.status(400).json({ error: 'Not enough coins' });
+      }
+
       let updatedItem;
       if (isPremium) {
         updatedItem = await prisma.premiumShopItem.update({
@@ -33,11 +37,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } else {
         updatedItem = await prisma.shopItem.update({
           where: { id: itemId },
-          data: { quantity: { increment: 1 } },
+          data: { level: { increment: 1 } },
         });
       }
 
-      res.status(200).json(updatedItem);
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { coins: { decrement: price } },
+      });
+
+      res.status(200).json({ updatedItem, updatedCoins: updatedUser.coins });
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Internal server error' });
