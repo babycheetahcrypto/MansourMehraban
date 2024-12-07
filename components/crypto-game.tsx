@@ -958,6 +958,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         if (
           settings.vibration &&
           window.Telegram &&
+          window.Telegram &&
           window.Telegram.WebApp &&
           window.Telegram.WebApp.HapticFeedback
         ) {
