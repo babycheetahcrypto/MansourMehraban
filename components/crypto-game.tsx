@@ -1819,7 +1819,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderShop = () => (
-    <div className="p-6 min-h-screen relative z-10">
+    <div className="p-6 min-h-screen relative z-0">
       <StarryBackground />
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h2>
@@ -2272,7 +2272,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max<continuation_point>w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
