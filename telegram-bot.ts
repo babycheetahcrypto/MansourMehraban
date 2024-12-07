@@ -11,23 +11,17 @@ bot.command('start', async (ctx: Context) => {
   }
 
   const welcomeMessage = `
-Welcome to Baby Cheetah! 🎉🐾
+Welcome to Baby Cheetah! 🐾🎉
 
-Step into the exciting world of Baby Cheetah, where we’re revolutionizing crypto gaming with fun tap-to-earn mechanics, social interactions, and exclusive rewards. 🕹️💎
+Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins ($BBCH), complete tasks, and get ready for an upcoming airdrop you won’t to miss! 💸
 
-Get ready to collect $BBCH Coins, complete tasks, and prepare for something BIG—a massive airdrop is just around the corner! 🚀💸
+What You Can Do Now:
+💰 Earn $BBCH: Play our fun tap-to-earn mining game and start stacking coins.
+👥 Invite Friends: Share the game and earn bonus $BBCH for every friend who joins. More friends, more rewards!
+🎯 Complete Quests: Take on daily challenges to boost your earnings and unlock exclusive bonuses.
 
-Here’s what you can do with Baby Cheetah NOW:
-🐾 Earn Baby Cheetah Coins ($BBCH): Tap, play, and collect rewards in our thrilling mining game. 💰
-🐾 Invite Your Friends: Share the fun! Earn even more $BBCH for every friend who joins the adventure. More friends = bigger rewards. 👥✨
-🐾 Complete Daily Quests: Take on challenges, boost your earnings, and unlock exclusive bonuses to maximize your rewards. 🎯🎁
-
-Why wait? Start earning today!
-🟡 Tap. Play. Earn.
-🟡 Prepare for the airdrop.
-🟡 Stay fast. Stay fierce. Stay Baby Cheetah! 🌟
-
-Join the movement and start your Baby Cheetah journey today! 🐆🔥
+Start earning today and be part of the next big thing in crypto gaming.
+Stay fast, stay fierce, stay Baby Cheetah! 🌟
   `;
 
   try {
