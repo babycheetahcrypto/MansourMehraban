@@ -2192,7 +2192,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       window.Telegram.WebApp &&
                       window.Telegram.WebApp.HapticFeedback
                     ) {
-                      window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
                     } else if (id === 'backgroundMusic') {
                       if (newSettings.backgroundMusic && settings.backgroundMusicAudio) {
                         settings.backgroundMusicAudio.play();
