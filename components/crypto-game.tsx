@@ -699,10 +699,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     },
     {
       id: 5,
-      description: 'Watch YouTube videos',
+      description: 'Watch video',
       reward: 1000,
       progress: 0,
-      maxProgress: 10,
       completed: false,
       claimed: false,
       icon: (
@@ -735,7 +734,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     {
       id: 7,
       description: 'Invite 10 friends',
-      reward: 2000,
+      reward: 20000,
       progress: 0,
       maxProgress: 10,
       completed: false,
