@@ -1842,10 +1842,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
                   />
                 </div>
-                <p className="text-xs text-cyan-300 mb-2">
+                <p className="text-xs text-white mb-1">Level: {item.level}</p>
+                <p className="text-xs text-white mb-2">
                   Profit: {formatNumber(item.baseProfit * item.level)}/h
                 </p>
-                <p className="text-xs text-yellow-300 mb-2">Level: {item.level}</p>
                 <Button
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-md text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
                   onClick={() => {
@@ -1853,8 +1853,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     playHeaderFooterSound();
                   }}
                 >
-                  <ShoppingBag className="w-3 h-3 mr-1" />
-                  Upgrade {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
+                  Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
                 </Button>
               </div>
             </div>
@@ -1881,8 +1880,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     className="group-hover:opacity-80 transition-opacity duration-300"
                   />
                 </div>
-                <p className="text-sm text-yellow-300 mb-3">Effect: {item.effect}</p>
-                <p className="text-sm text-yellow-300 mb-3">Level: {item.level}</p>
+                <p className="text-sm text-white mb-1">Level: {item.level}</p>
+                <p className="text-sm text-white mb-3">Effect: {item.effect}</p>
                 <Button
                   className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center"
                   onClick={() => {
@@ -1890,7 +1889,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     playHeaderFooterSound();
                   }}
                 >
-                  <ShoppingBag className="w-4 h-4 mr-2" />
                   Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1))}
                 </Button>
               </div>
