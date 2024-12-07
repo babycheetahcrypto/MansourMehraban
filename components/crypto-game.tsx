@@ -1506,10 +1506,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div>
               <h2 className="font-bold text-sm text-white">
-                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 12) +
-                  (`${user.firstName || ''} ${user.lastName || ''}`.trim().length > 12
-                    ? '...'
-                    : '')}
+                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 9) + '...'}
               </h2>
               <div className="text-xs text-white flex items-center">
                 <Image
@@ -1692,6 +1689,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <Image
               src={selectedCoinImage}
               alt={`Level ${level} Cheetah`}
+              layout="fill"
+              objectFit="contain"
               className="relative z-10"
               priority
             />
