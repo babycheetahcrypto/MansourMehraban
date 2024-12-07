@@ -2184,7 +2184,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   setSettings((prev) => {
                     const newSettings = { ...prev, [id]: !prev[id as keyof typeof settings] };
                     if (id === 'vibration' && newSettings.vibration && navigator.vibrate) {
-                      navigator.vibrate([100, 30, 100, 30, 100]);
+                      navigator.vibrate([
+                        100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
+                      ]);
+                    } else if (
+                      window.Telegram &&
+                      window.Telegram.WebApp &&
+                      window.Telegram.WebApp.HapticFeedback
+                    ) {
+                      window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
                     } else if (id === 'backgroundMusic') {
                       if (newSettings.backgroundMusic && settings.backgroundMusicAudio) {
                         settings.backgroundMusicAudio.play();
