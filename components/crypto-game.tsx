@@ -292,7 +292,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 }) => {
   const playHeaderFooterSound = () => {
     const audio = new Audio(
-      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Button%20Sound-vLxAEYrnFJ4W4ZNzInbVnZpsMhwZLa.mp3'
+      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
     );
     return audio.play();
   };
@@ -428,9 +428,9 @@ const playCoinSound = () => {
 
 const playHeaderFooterSound = () => {
   const audio = new Audio(
-    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Button%20Sound-vLxAEYrnFJ4W4ZNzInbVnZpsMhwZLa.mp3'
+    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
   );
-  audio.play();
+  return audio.play();
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
