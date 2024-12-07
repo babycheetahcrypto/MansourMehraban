@@ -526,45 +526,45 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
       id: 1,
-      name: "Cheetah's Crypto Cave",
+      name: 'Cosmic Shipyard',
       image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah's%20Crypto%20Cave-eB3Jjfhp3OKWoHzZkYofYq2JvIoFte.jpg",
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cosmic%20Shipyard.jpg-g0folteuEnRzE2ke1wVnCVMyxpoRC2.jpeg',
       basePrice: 1000,
       baseProfit: 50,
       level: 1,
     },
     {
       id: 2,
-      name: 'Baby Cheetah Vault',
+      name: 'Galactic WarpCrafts',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Baby%20Cheetah%20Vault-onkCfliqq8Zkv4EH70q1RjevRwpSrS.jpg',
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Galactic%20WarpCrafts.jpg-Ebh93DdGRcffZMhpLKm5dOqpN7c7Y4.jpeg',
       basePrice: 2000,
       baseProfit: 100,
       level: 1,
     },
     {
       id: 3,
-      name: 'Cheetah Coin Corner',
+      name: 'Galaxy Gear Crypto',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner-nMIyFzaXX5TkKWs2rtuCgEe3f7xNT4.jpg',
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Galaxy%20Gear%20Crypto.jpg-FE1Ait4Pr0hgjoQXxY4aACXxtHrSIa.jpeg',
       basePrice: 4000,
       baseProfit: 1000,
       level: 1,
     },
     {
       id: 4,
-      name: "Cheetah's Stellar Fleet",
+      name: 'RocketCoin Speedway',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%E2%80%99s%20Stellar%20Fleet-RpIrYyUw2ijaNvNOC29XpaAl538qgI.jpg',
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/RocketCoin%20Speedway.jpg-C7c29Ra1Lo9GWgsb5knfynlR1c4e4h.jpeg',
       basePrice: 8000,
       baseProfit: 2000,
       level: 1,
     },
     {
       id: 5,
-      name: 'Bugatti  Crypto Orbit',
+      name: 'Stellar Speed Vault',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bugatti%20Crypto%20Orbit-mKpzDd9UUkgWF8vXui59EjtC2O49E0.jpg',
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Stellar%20Speed%20Vault.jpg-vQAbuozzA2Bh7op7dd2Xw6hl2wmMwh.jpeg',
       basePrice: 16000,
       baseProfit: 4000,
       level: 1,
