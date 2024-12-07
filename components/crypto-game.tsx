@@ -191,24 +191,67 @@ declare global {
 }
 
 // Component definitions
-const StarryBackground: React.FC = () => (
-  <div className="fixed inset-0 z-0">
-    <div className="absolute inset-0 bg-black opacity-70"></div>
-    {[...Array(100)].map((_, i) => (
-      <div
-        key={i}
-        className="absolute rounded-full bg-white"
-        style={{
-          top: `${Math.random() * 100}%`,
-          left: `${Math.random() * 100}%`,
-          width: `${Math.random() * 2 + 1}px`,
-          height: `${Math.random() * 2 + 1}px`,
-          animation: `twinkle ${Math.random() * 5 + 3}s infinite`,
-        }}
-      />
-    ))}
-  </div>
-);
+const StarryBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const stars: { x: number; y: number; radius: number; speed: number }[] = [];
+    for (let i = 0; i < 100; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5,
+        speed: Math.random() * 0.5,
+      });
+    }
+
+    const animate = () => {
+      if (!ctx || !canvas) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.beginPath();
+
+      stars.forEach((star) => {
+        ctx.moveTo(star.x, star.y);
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+        }
+      });
+
+      ctx.fill();
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    const handleResize = () => {
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0" />;
+};
 
 const NeonGradientCard: React.FC<React.ComponentProps<'div'>> = ({
   children,
