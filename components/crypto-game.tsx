@@ -619,9 +619,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [premiumShopItems, setPremiumShopItems] = useState<PremiumShopItem[]>([
     {
       id: 6,
-      name: 'Quantum Coin Accelerator',
+      name: 'RocketFleet Station',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SpaceXcelerate%20Crypto-0HG6KC5mE8P28FwqDdoyPDRv978heW.jpg',
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/RocketFleet%20Station.jpg-zO3eZhonzf53SZoVqYLpWMkISFwMNG.jpeg',
       basePrice: 10000,
       effect: 'Doubles coin button taps',
       level: 1,
