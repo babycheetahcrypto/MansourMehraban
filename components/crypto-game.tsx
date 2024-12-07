@@ -500,7 +500,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [multiplierEndTime, setMultiplierEndTime] = useState<number | null>(null);
   const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
   const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[0]);
-  const [inviteCode] = useState('');
   const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
   const [congratulationPopup, setCongratulationPopup] = useState({
     show: false,
