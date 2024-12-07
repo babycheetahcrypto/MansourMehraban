@@ -2081,8 +2081,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
                   alt="Tonkeeper"
-                  width={28}
-                  height={28}
+                  width={24}
+                  height={24}
                   className="mr-2"
                 />
                 <span className="text-base">Connect Tonkeeper</span>
