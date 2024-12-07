@@ -1557,7 +1557,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </h2>
               <div className="text-xs text-white flex items-center">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-iTiljsrx8N2IGIdjozA2tXBHhaCi8x.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Coin"
                   width={16}
                   height={16}
@@ -1713,7 +1713,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
           <div className="w-12 h-12">
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-18dhTdsht8Pjj7dxXNDrLPOBpBWapH.png"
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
               alt="Crypto Coin"
               width={48}
               height={48}
@@ -2041,7 +2041,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </span>
               <div className="relative">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-IH750zXIMPEENVMc6NcJbWLwCif9xJ.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-qTW5KRopM7teMBA6gpKYTnjNQ8mnTw.png"
                   alt="Airdrop"
                   width={128}
                   height={128}
@@ -2079,7 +2079,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md flex items-center justify-center"
               >
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Untitled%20design%20(1)-sURmRczRv0fPGmPQA4cNw7X9iKNaiW.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
                   alt="Tonkeeper"
                   width={28}
                   height={28}
