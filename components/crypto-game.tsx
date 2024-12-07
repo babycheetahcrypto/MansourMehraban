@@ -682,7 +682,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     },
     {
       id: 4,
-      description: 'Subscribe to YouTube',
+      description: 'Subscribe Channel',
       reward: 2000,
       progress: 0,
       completed: false,
