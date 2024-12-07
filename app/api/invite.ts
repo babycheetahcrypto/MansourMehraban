@@ -1,57 +1,81 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { inviterId, inviteeId } = req.body;
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
-    if (!inviterId || !inviteeId) {
-      return res.status(400).json({ error: 'Inviter ID and Invitee ID are required' });
+  try {
+    const { userId, friendId } = req.body;
+
+    if (!userId || !friendId) {
+      return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    try {
-      const invite = await prisma.friendInvite.create({
-        data: {
-          inviterId,
-          inviteeId,
-          status: 'pending',
-        },
-      });
+    // Check if the friend is a new user
+    const friend = await prisma.user.findUnique({
+      where: { telegramId: friendId },
+    });
 
-      res.status(201).json(invite);
-    } catch (error) {
-      console.error('Error creating invite:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else if (req.method === 'GET') {
-    const { userId } = req.query;
-
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (friend) {
+      return res.status(400).json({ message: 'User has already joined the game' });
     }
 
-    try {
-      const invites = await prisma.friendInvite.findMany({
-        where: {
-          OR: [{ inviterId: userId as string }, { inviteeId: userId as string }],
-        },
-        include: {
-          inviter: {
-            select: { username: true, profilePhoto: true },
-          },
-          invitee: {
-            select: { username: true, profilePhoto: true },
-          },
-        },
-      });
+    // Create a new user account for the invited friend
+    const newFriend = await prisma.user.create({
+      data: {
+        telegramId: friendId,
+        username: `user_${friendId}`, // Generate a default username
+        coins: 0,
+        level: 1,
+        exp: 0,
+        profilePhoto: '', // Add an empty string for profilePhoto
+        clickPower: 1,
+        energy: 500,
+        multiplier: 1,
+        profitPerHour: 0,
+        settings: JSON.stringify({
+          vibration: true,
+          backgroundMusic: false,
+          soundEffect: true,
+        }),
+      },
+    });
 
-      res.status(200).json(invites);
-    } catch (error) {
-      console.error('Error fetching invites:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    // Create a friend invite record
+    await prisma.friendInvite.create({
+      data: {
+        inviterId: userId,
+        inviteeId: newFriend.id,
+        status: 'ACCEPTED', // Since the new user is created, we can set the status as accepted
+      },
+    });
+
+    // Award coins to the inviter
+    await prisma.user.update({
+      where: { telegramId: userId },
+      data: {
+        coins: { increment: 1000 },
+      },
+    });
+
+    // Create a referral reward for the inviter
+    await prisma.referralReward.create({
+      data: {
+        userId: userId,
+        referredId: newFriend.id,
+        amount: 1000,
+        claimed: true,
+        claimedAt: new Date(),
+      },
+    });
+
+    return res.status(200).json({ message: 'Invitation processed successfully' });
+  } catch (error) {
+    console.error('Error processing invitation:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 }

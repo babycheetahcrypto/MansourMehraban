@@ -855,7 +855,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             saveUserData({ ...user, coins: user.coins + 1000 });
             window.Telegram.WebApp.showAlert('You earned 1000 coins for inviting a friend!');
           } else {
-            throw new Error('Failed to process invitation');
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to process invitation');
           }
         } catch (error) {
           console.error('Error inviting friend:', error);
