@@ -126,17 +126,6 @@ const styles = `
       box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
     }
   }
-  .shake {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-    transform: translate3d(0, 0, 0);
-  }
-
-  @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
-  }
 `;
 
 // Telegram WebApp type definition
@@ -771,7 +760,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       icon: (
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/FIRE%203D%20ICON-2WjFYZbZ4SZ1BggDxdY0b4Zqxkk3lA.png"
-          alt="ReachLevel 10"
+          alt="Reach Level 10"
           width={48}
           height={48}
         />
@@ -1548,10 +1537,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level, user.level, popupShown.levelUp]);
 
   const renderHeader = () => (
-    <div
-      className="sticky top-0 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full"
-      style={{ height: '60px' }}
-    >
+    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full">
       <Card className="bg-transparent border-0 overflow-hidden">
         <CardContent className="p-2 flex items-center justify-between relative flex-wrap">
           <div className="flex items-center space-x-2">
@@ -1633,10 +1619,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFooter = () => (
-    <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-2 rounded-t-3xl z-50"
-      style={{ height: '60px' }}
-    >
+    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-2 rounded-t-3xl z-50">
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
@@ -1693,10 +1676,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div
-      className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative"
-      style={{ height: 'calc(100% - 120px)' }}
-    >
+    <div className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative">
       <div className="text-center mb-4 w-full max-w-md">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
@@ -1743,16 +1723,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
           <button
             className="w-[320px] h-[320px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 transform transition-all duration-100 active:scale-95 hover:shadow-2xl hover:scale-105 relative"
-            onClick={(e) => {
-              e.currentTarget.classList.add('shake');
-              clickCoin(e);
-              setTimeout(() => e.currentTarget.classList.remove('shake'), 500);
-            }}
+            onClick={clickCoin}
             onTouchStart={(e) => {
               e.preventDefault();
-              e.currentTarget.classList.add('shake');
               clickCoin(e);
-              setTimeout(() => e.currentTarget.classList.remove('shake'), 500);
             }}
             onTouchEnd={(e) => e.preventDefault()}
           >
@@ -2523,16 +2497,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   return (
-    <div
-      className="telegram-mini-app"
-      style={{
-        width: '100%',
-        height: '100vh',
-        maxWidth: '100%',
-        maxHeight: '100%',
-        overflow: 'hidden',
-      }}
-    >
+    <div className="min-h-screen bg-black text-white overflow-hidden relative">
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
