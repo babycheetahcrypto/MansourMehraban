@@ -124,6 +124,9 @@ const styles = `
   .coin-button {
     transform-origin: center center;
   }
+  .coin-button img {
+    transform-origin: center center;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -2273,7 +2276,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderInvite = () => (
-    <div className="flex-grow flex items-center justify-center p-6">
+    <div className="flex-growflex items-center justify-center p-6">
       <NeonGradientCard className="bg-gradient-to-br from-gray900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
