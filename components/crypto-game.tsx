@@ -118,11 +118,11 @@ const styles = `
     30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
-  .coin-button:active {
-    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
-  }
   .coin-button {
     transform-origin: center center;
+  }
+  .coin-button:active {
+    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
   }
 `;
 
@@ -1728,7 +1728,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }}
             onTouchEnd={(e) => e.preventDefault()}
           >
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none coin-button">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Image
                 src={selectedCoinImage}
                 alt={`Level ${level} Cheetah`}
