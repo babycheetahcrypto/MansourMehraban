@@ -1730,14 +1730,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }}
             onTouchEnd={(e) => e.preventDefault()}
           >
-            <Image
-              src={selectedCoinImage}
-              alt={`Level ${level} Cheetah`}
-              width={340}
-              height={340}
-              className="relative z-10"
-              priority
-            />
+            <div className="w-[340px] h-[340px] flex items-center justify-center">
+              <Image
+                src={selectedCoinImage}
+                alt={`Level ${level} Cheetah`}
+                width={340}
+                height={340}
+                className="relative z-10"
+                priority
+              />
+            </div>
           </button>
 
           <div className="w-full space-y-4">
