@@ -2275,7 +2275,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderInvite = () => (
     <div className="flex-grow flex items-center justify-center p-6">
       <NeonGradientCard
-        className="bg-gradient-to-br<continuation_point>
+        className="bg-gradient-tobr<continuation_point>
 from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl"
       >
         <CardHeader className="relative">
