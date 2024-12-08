@@ -124,7 +124,7 @@ const styles = `
   .coin-button {
     transform-origin: center center;
   }
-`;
+  `;
 
 // Telegram WebApp type definition
 declare global {
@@ -775,7 +775,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.publicblob.vercel-storage.com/Trophy%20Task%203D%20icon-TiL6cVCcwg5sxAGaMTNfFUmCFypzv1.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Trophy%20Task%203D%20icon-TiL6cVCcwg5sxAGaMTNfFUmCFypzv1.png"
           alt="Trophy's Level"
           width={48}
           height={48}
@@ -1732,8 +1732,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={selectedCoinImage}
                 alt={`Level ${level} Cheetah`}
-                width={340}
-                height={340}
+                width={320}
+                height={320}
                 objectFit="contain"
                 className="relative z-10"
                 priority
@@ -2274,7 +2274,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br fromgray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
