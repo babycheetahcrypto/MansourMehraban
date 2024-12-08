@@ -118,7 +118,7 @@ const styles = `
     30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
-  .coin-button:active {
+  .coin-button:active img {
     animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
@@ -1728,14 +1728,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }}
             onTouchEnd={(e) => e.preventDefault()}
           >
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none coin-button">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Image
                 src={selectedCoinImage}
                 alt={`Level ${level} Cheetah`}
                 width={340}
                 height={340}
                 objectFit="contain"
-                className="relative z-10 coin-button"
+                className="relative z-10"
                 priority
               />
             </div>
@@ -2118,7 +2118,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-2">
-              <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
                 <Image
                   src={image}
                   alt={`Level ${index + 1}`}
@@ -2275,7 +2275,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderInvite = () => (
     <div className="flex-grow flex items-center justify-center p-6">
       <NeonGradientCard
-        className="bg-gradient-tobr<continuation_point>
+        className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md<continuation_point>
 from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl"
       >
         <CardHeader className="relative">
@@ -2498,7 +2498,7 @@ from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform tran
   );
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden relative">
+    <div className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col">
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
