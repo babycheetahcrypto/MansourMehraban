@@ -113,26 +113,16 @@ interface UserData extends Omit<User, 'dailyReward'> {
 // Keyframe animation
 const styles = `
   @keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg); }
-    20% { transform: translate(-3px, 0px) rotate(1deg); }
-    30% { transform: translate(3px, 2px) rotate(0deg); }
-    40% { transform: translate(1px, -1px) rotate(1deg); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    70% { transform: translate(3px, 1px) rotate(-1deg); }
-    80% { transform: translate(-1px, -1px) rotate(1deg); }
-    90% { transform: translate(1px, 2px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
   }
-  .coin-button:active,
-  .coin-button:active img,
-  .levels-image:active {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  .coin-button:active {
+    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
-    transition: transform 0.1s;
   }
 `;
 
@@ -1745,7 +1735,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 width={340}
                 height={340}
                 objectFit="contain"
-                className="relative z-10 coin-button"
+                className="relative z-10"
                 priority
               />
             </div>
@@ -2128,7 +2118,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-2">
-              <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button levels-image">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
                 <Image
                   src={image}
                   alt={`Level ${index + 1}`}
@@ -2284,7 +2274,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard
+        className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md<continuation_point>
+from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl"
+      >
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
@@ -2509,7 +2502,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
-      <div className="flex-grow overflow-y-auto pb-20 relative">
+      <div className="flex-grow overflow-y-auto pb-20">
         {currentPage === 'home' && renderHome()}
         {currentPage === 'shop' && renderShop()}
         {currentPage === 'tasks' && renderTasks()}
