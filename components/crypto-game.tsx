@@ -124,7 +124,7 @@ const styles = `
   .coin-button {
     transform-origin: center center;
   }
-  `;
+`;
 
 // Telegram WebApp type definition
 declare global {
@@ -775,7 +775,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Trophy%20Task%203D%20icon-TiL6cVCcwg5sxAGaMTNfFUmCFypzv1.png"
+          src="https://hebbkx1anhila5yf.publicblob.vercel-storage.com/Trophy%20Task%203D%20icon-TiL6cVCcwg5sxAGaMTNfFUmCFypzv1.png"
           alt="Trophy's Level"
           width={48}
           height={48}
@@ -2495,7 +2495,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col">
+    <div
+      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
+      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+    >
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
