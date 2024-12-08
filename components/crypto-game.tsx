@@ -1674,7 +1674,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative">
+    <div
+      className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative"
+      style={{ height: 'calc(100vh - 120px)' }}
+    >
       <div className="text-center mb-4 w-full max-w-md">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
@@ -2496,8 +2499,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   return (
     <div
-      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
-      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+      className="h-screen bg-black text-white overflow-hidden relative flex flex-col"
+      style={{ maxWidth: '100vw' }}
     >
       <style>{styles}</style>
       <StarryBackground />
