@@ -325,15 +325,15 @@ const levelRequirements = [
 
 const levelImages = [
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-pZJ2aUjvx5OQNVKP5jfNIBh9qDFVSd.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Mr%20Cheetah-jshDTOdPbnMs3X9l2CfUstx6cwvru5.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sparrow%20Cheetah-UuqPycvFOq1rkira8AC9PN5X1dPN3j.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vikings%20Cheetah-P6y9skXfIb9Wf4zGk266CKrgkPjnn3.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Samurai%20Cheetah-4nDMYbxrXu9jGVSMZj4NAy43wweimH.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Alien%20Cheetah-2nXw7kegMKYCHkVUlUvFPagBOUZCBi.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Robot%20Cheetah-aVHThrvuE0yPKmKkWPN1otCRsYKye6.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Space%20Cheetah-Bi8hZibJ6TsEp2leQZxo4JNpXGXMAz.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Pop%20Star%20Cheetah-N5Lci9F0a84afJeAs6Y10utQmYRMCQ.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Super%20Hero%20Cheetah-StyjPnTOMnsKsJhmveei4RCToBegvb.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Mr%20Cheetah-zNboNDDvI5meIrZuD8OlOqfuow4BK9.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sparrow%20Cheetah-na8Hpm3FsqQZv4JctkPOprLDTeCXXs.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vikings%20Cheetah-5V5mUP17Likg5b0uc9Dkn8fs5AxJS2.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Samurai%20Cheetah-XIq9QRNfGqMQO8JSM2BuW4DkUFQLWa.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Alien%20Cheetah-EgVPsC1VYxIS56kCfN9XBkxVxoPV26.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Robot%20Cheetah-QMuyW27ybeXMN7gfkL0GKS2DjGNV6r.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Space%20Cheetah-DQa6FGcwSeKYKxLqU7NZrkxUspXxGN.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Pop%20Star%20Cheetah-B1MP0HSxg4Ej38rDjJIGMR7w9auwxf.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Super%20Hero%20Cheetah-Ja0KaW8LPfG0wBkpPGktH0h027wmWq.png',
 ];
 
 const trophies = [
@@ -1722,7 +1722,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto mb-16">
           <button
-            className="w-[calc(100vw-8px)] max-w-[300px] aspect-square rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 transform transition-all duration-100 active:scale-95 hover:shadow-2xl hover:scale-105"
+            className="w-[calc(100vw-8px)] max-w-[400px] aspect-square rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 transform transition-all duration-100 active:scale-95 hover:shadow-2xl hover:scale-105"
             onClick={clickCoin}
             onTouchStart={(e) => {
               e.preventDefault();
