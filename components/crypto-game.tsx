@@ -112,15 +112,14 @@ interface UserData extends Omit<User, 'dailyReward'> {
 
 // Keyframe animation
 const styles = `
-  @keyframes coinShake {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(-5deg); }
-    50% { transform: rotate(0deg); }
-    75% { transform: rotate(5deg); }
-    100% { transform: rotate(0deg); }
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
   }
-  .coin-button:active .coin-image {
-    animation: coinShake 0.2s ease-in-out;
+  .coin-button:active {
+    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
@@ -894,11 +893,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level]);
 
   const clickCoin = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    (event: React.TouchEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
       const getCoordinates = (
-        e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>
+        e: React.TouchEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>
       ): { x: number; y: number } => {
         if ('clientX' in e) {
           return { x: e.clientX, y: e.clientY };
@@ -1721,7 +1720,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
           <button
-            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
+            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
             onClick={clickCoin}
             onTouchStart={(e) => {
               e.preventDefault();
@@ -1733,10 +1732,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={selectedCoinImage}
                 alt={`Level ${level} Cheetah`}
-                width={340}
-                height={340}
+                width={350}
+                height={350}
                 objectFit="contain"
-                className="relative z-10 coin-image"
+                className="relative z-10"
                 priority
               />
             </div>
