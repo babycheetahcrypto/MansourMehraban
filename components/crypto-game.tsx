@@ -1852,6 +1852,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     buyItem(item);
                     playHeaderFooterSound();
                   }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    buyItem(item);
+                    playHeaderFooterSound();
+                  }}
                 >
                   Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
                 </Button>
@@ -1885,6 +1890,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Button
                   className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center"
                   onClick={() => {
+                    buyItem(item, true);
+                    playHeaderFooterSound();
+                  }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
                     buyItem(item, true);
                     playHeaderFooterSound();
                   }}
@@ -1948,6 +1958,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       );
                       window.Telegram.WebApp.showAlert(`Claimed ${task.reward} coins!`);
                     }}
+                    onTouchStart={(e) => {
+                      e.preventDefault();
+                      setUser((prevUser) => ({
+                        ...prevUser,
+                        coins: prevUser.coins + task.reward,
+                      }));
+                      setTasks((prevTasks) =>
+                        prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
+                      );
+                      window.Telegram.WebApp.showAlert(`Claimed ${task.reward} coins!`);
+                    }}
                   >
                     <Star className="w-4 h-4 mr-1" />
                     <span>Claim</span>
@@ -1957,6 +1978,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Button
                   className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
                   onClick={() => {
+                    task.action();
+                    playHeaderFooterSound();
+                  }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
                     task.action();
                     playHeaderFooterSound();
                   }}
@@ -2076,6 +2102,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     });
                   playHeaderFooterSound();
                 }}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  connectWallet()
+                    .then((address) => {
+                      setWallet(address);
+                      window.Telegram.WebApp.showAlert(
+                        'Wallet connected successfully with Tonkeeper!'
+                      );
+                    })
+                    .catch((error) => {
+                      console.error('Failed to connect wallet:', error);
+                      window.Telegram.WebApp.showAlert(
+                        'Failed to connect wallet. Please try again.'
+                      );
+                    });
+                  playHeaderFooterSound();
+                }}
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md flex items-center justify-center"
               >
                 <Image
@@ -2144,6 +2187,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     setCurrentPage('home');
                     playHeaderFooterSound();
                   }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    setSelectedCoinImage(image);
+                    setCurrentPage('home');
+                    playHeaderFooterSound();
+                  }}
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
                 >
                   Use
@@ -2181,6 +2230,26 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   settings[id as keyof typeof settings] ? 'bg-green-400' : 'bg-gray-300'
                 } rounded-full p-1 duration-300 ease-in-out cursor-pointer`}
                 onClick={() => {
+                  setSettings((prev) => {
+                    const newSettings = { ...prev, [id]: !prev[id as keyof typeof settings] };
+                    if (id === 'vibration' && newSettings.vibration && navigator.vibrate) {
+                      navigator.vibrate([
+                        100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
+                      ]);
+                    } else if (id === 'backgroundMusic') {
+                      if (newSettings.backgroundMusic && settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio.play();
+                        settings.backgroundMusicAudio.loop = true;
+                      } else if (settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio.pause();
+                        settings.backgroundMusicAudio.currentTime = 0;
+                      }
+                    }
+                    return newSettings;
+                  });
+                }}
+                onTouchStart={(e) => {
+                  e.preventDefault();
                   setSettings((prev) => {
                     const newSettings = { ...prev, [id]: !prev[id as keyof typeof settings] };
                     if (id === 'vibration' && newSettings.vibration && navigator.vibrate) {
@@ -2260,6 +2329,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 claimDailyReward();
                 playHeaderFooterSound();
               }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                claimDailyReward();
+                playHeaderFooterSound();
+              }}
               className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md text-white"
               disabled={dailyReward.completed}
             >
@@ -2293,6 +2367,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   );
                   window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
                 }}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  navigator.clipboard.writeText(
+                    `https://t.me/BabyCheetah_Bot?start=${user.telegramId}`
+                  );
+                  window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
+                }}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"
               >
                 <Copy className="w-4 h-4" />
@@ -2304,6 +2385,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
+            onTouchStart={(e) => {
+              e.preventDefault();
+              setCurrentPage('friendsActivity');
+            }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
           >
             <Users className="w-5 h-5 mr-2" />
@@ -2377,6 +2462,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Button
                   className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white mt-4"
                   onClick={() => {
+                    setUser((prev) => ({ ...prev, coins: prev.coins + trophy.prize }));
+                    window.Telegram.WebApp.showAlert(
+                      `Congratulations! You've claimed the ${trophy.name} trophy and earned ${formatNumber(trophy.prize)} coins!`
+                    );
+                    playHeaderFooterSound();
+                  }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
                     setUser((prev) => ({ ...prev, coins: prev.coins + trophy.prize }));
                     window.Telegram.WebApp.showAlert(
                       `Congratulations! You've claimed the ${trophy.name} trophy and earned ${formatNumber(trophy.prize)} coins!`
@@ -2486,6 +2579,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           setCongratulationPopup({ show: false, item: null });
           showPopup('congratulation');
         }}
+        onTouchStart={(e) => {
+          e.preventDefault();
+          setCongratulationPopup({ show: false, item: null });
+          showPopup('congratulation');
+        }}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
         <CheckCircle className="w-6 h-6 mr-2" />
@@ -2535,6 +2633,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               claimPPH();
               showPopup('pph');
             }}
+            onTouchStart={(e) => {
+              e.preventDefault();
+              claimPPH();
+              showPopup('pph');
+            }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
             <Coins className="w-5 h-5 mr-2" />
@@ -2556,6 +2659,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </p>
           <Button
             onClick={() => {
+              claimNewLevel();
+              showPopup('levelUp');
+            }}
+            onTouchStart={(e) => {
+              e.preventDefault();
               claimNewLevel();
               showPopup('levelUp');
             }}
