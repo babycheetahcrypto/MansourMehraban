@@ -126,6 +126,16 @@ const styles = `
       box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
     }
   }
+  .coin-button:active {
+    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
+  }
+
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+  }
 `;
 
 // Telegram WebApp type definition
@@ -898,19 +908,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      const getCoordinates = (
-        e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>
-      ): { x: number; y: number } => {
-        if ('clientX' in e) {
-          return { x: e.clientX, y: e.clientY };
-        } else if (e.touches && e.touches.length > 0) {
-          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        }
-        return { x: 0, y: 0 };
-      };
-
-      const { x, y } = getCoordinates(event);
-
       if (energy > 0) {
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
@@ -926,31 +923,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setUser(updatedUser);
         saveUserData(updatedUser);
-
-        // Visual number show with animation
-        const numberShow = document.createElement('div');
-        numberShow.textContent = `+${formatNumber(clickValue)}`;
-        numberShow.style.position = 'absolute';
-        numberShow.style.left = `${x}px`;
-        numberShow.style.top = `${y}px`;
-        numberShow.style.color = 'white';
-        numberShow.style.fontSize = '24px';
-        numberShow.style.fontWeight = 'bold';
-        numberShow.style.pointerEvents = 'none';
-        numberShow.style.zIndex = '9999';
-        numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
-        document.body.appendChild(numberShow);
-
-        numberShow.animate(
-          [
-            { opacity: 1, transform: 'translateY(0) scale(1)' },
-            { opacity: 0, transform: 'translateY(-50px) scale(1.5)' },
-          ],
-          {
-            duration: 1000,
-            easing: 'ease-out',
-          }
-        ).onfinish = () => document.body.removeChild(numberShow);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1722,7 +1694,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
           <button
-            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 transform transition-all duration-100 active:scale-95 hover:shadow-2xl hover:scale-105 relative"
+            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
             onClick={clickCoin}
             onTouchStart={(e) => {
               e.preventDefault();
@@ -2301,7 +2273,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
-              Share this link to earn 1000 coins for each friend who joins!
+              Share this link to earn 1000 coins for each friend whojoins!
             </p>
           </div>
           <Button
