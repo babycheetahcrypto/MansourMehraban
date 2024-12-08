@@ -112,29 +112,24 @@ interface UserData extends Omit<User, 'dailyReward'> {
 
 // Keyframe animation
 const styles = `
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
-    }
-    70% {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 20px rgba(0, 255, 0, 0);
-    }
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
-    }
-  }
-  .coin-button:active {
-    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
-  }
-
   @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+      }
+  .shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
   }
 `;
 
@@ -985,6 +980,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
           );
         }
+
+        // Add shake effect to the coin button
+        const coinButton = event.currentTarget;
+        coinButton.classList.add('shake');
+        setTimeout(() => {
+          coinButton.classList.remove('shake');
+        }, 500);
       }
     },
     [clickPower, multiplier, energy, settings.vibration, settings.soundEffect, saveUserData, user]
@@ -1751,6 +1753,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 priority
               />
             </div>
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 px-2 py-1 rounded-full">
+              <span className="text-white text-sm font-bold">{formatNumber(user.coins)}</span>
+            </div>
           </button>
 
           <div className="w-full space-y-4">
@@ -2292,7 +2297,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
+          <div
+            className="mt-6 p<continuation_point>
+4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md"
+          >
             <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
               <span className="text-sm text-white truncate mr-2">
@@ -2311,7 +2319,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
-              Share this link to earn 1000 coins for each friend whojoins!
+              Share this link to earn 1000 coins for each friend who joins!
             </p>
           </div>
           <Button
