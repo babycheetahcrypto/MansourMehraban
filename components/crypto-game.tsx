@@ -126,15 +126,18 @@ const styles = `
       box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
     }
   }
-  .coin-button:active {
-    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
-  }
-
   @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
 `;
 
@@ -937,6 +940,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setUser(updatedUser);
         saveUserData(updatedUser);
 
+        // Apply shake effect
+        const coinButton = event.currentTarget;
+        coinButton.classList.add('shake');
+        setTimeout(() => coinButton.classList.remove('shake'), 500);
+
         // Visual number show with animation
         const numberShow = document.createElement('div');
         numberShow.textContent = `+${formatNumber(clickValue)}`;
@@ -967,6 +975,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         // Trigger haptic feedback
         if (
           settings.vibration &&
+          window.Telegram &&
           window.Telegram &&
           window.Telegram.WebApp &&
           window.Telegram.WebApp.HapticFeedback
