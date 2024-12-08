@@ -118,8 +118,8 @@ const styles = `
     30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
-  .coin-button:active img {
-    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
+  .shake-animation {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
@@ -895,6 +895,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const clickCoin = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
+      const isTouchEvent = event.type.startsWith('touch');
 
       const getCoordinates = (
         e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>
@@ -973,6 +974,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
           );
         }
+      }
+      if (!isTouchEvent) {
+        // Apply shake animation only for mouse clicks
+        const coinButton = event.currentTarget as HTMLButtonElement;
+        coinButton.classList.add('shake-animation');
+        setTimeout(() => coinButton.classList.remove('shake-animation'), 500);
       }
     },
     [clickPower, multiplier, energy, settings.vibration, settings.soundEffect, saveUserData, user]
@@ -1722,11 +1729,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <button
             className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
             onClick={clickCoin}
-            onTouchStart={(e) => {
-              e.preventDefault();
-              clickCoin(e);
-            }}
-            onTouchEnd={(e) => e.preventDefault()}
+            onTouchStart={clickCoin}
           >
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Image
@@ -2274,10 +2277,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard
-        className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md<continuation_point>
-from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl"
-      >
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
@@ -2302,7 +2302,7 @@ from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform tran
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
-              Share this link to earn 1000 coins for each friend whojoins!
+              Share this link to earn 1000 coins for each friend who joins!
             </p>
           </div>
           <Button
@@ -2498,7 +2498,10 @@ from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform tran
   );
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col">
+    <div
+      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col prevent-scroll"
+      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+    >
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
