@@ -324,7 +324,7 @@ const levelRequirements = [
 ];
 
 const levelImages = [
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-5xnye2Fld0XGECo8sGCE5iUOqMeu9L.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-pZJ2aUjvx5OQNVKP5jfNIBh9qDFVSd.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Mr%20Cheetah-jshDTOdPbnMs3X9l2CfUstx6cwvru5.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sparrow%20Cheetah-UuqPycvFOq1rkira8AC9PN5X1dPN3j.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vikings%20Cheetah-P6y9skXfIb9Wf4zGk266CKrgkPjnn3.png',
