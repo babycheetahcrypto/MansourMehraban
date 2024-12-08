@@ -1535,7 +1535,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level, user.level, popupShown.levelUp]);
 
   const renderHeader = () => (
-    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-md p-2">
+    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full">
       <Card className="bg-transparent border-0 overflow-hidden">
         <CardContent className="p-2 flex items-center justify-between relative flex-wrap">
           <div className="flex items-center space-x-2">
@@ -1617,7 +1617,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFooter = () => (
-    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-2 z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-2 rounded-t-3xl z-50">
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
@@ -1675,7 +1675,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderHome = () => (
     <div
-      className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative overflow-y-auto"
+      className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative"
       style={{ height: 'calc(100vh - 120px)' }}
     >
       <div className="text-center mb-4 w-full max-w-md">
@@ -2500,20 +2500,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   return (
     <div
       className="h-screen bg-black text-white overflow-hidden relative flex flex-col"
-      style={{
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      }}
+      style={{ maxWidth: '100vw' }}
     >
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
-      <div className="flex-grow overflow-y-auto pb-20" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="flex-grow overflow-y-auto pb-20">
         {currentPage === 'home' && renderHome()}
         {currentPage === 'shop' && renderShop()}
         {currentPage === 'tasks' && renderTasks()}
