@@ -927,31 +927,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setUser(updatedUser);
         saveUserData(updatedUser);
 
-        // Visual number show with animation
-        const numberShow = document.createElement('div');
-        numberShow.textContent = `+${formatNumber(clickValue)}`;
-        numberShow.style.position = 'absolute';
-        numberShow.style.left = `${x}px`;
-        numberShow.style.top = `${y}px`;
-        numberShow.style.color = 'white';
-        numberShow.style.fontSize = '24px';
-        numberShow.style.fontWeight = 'bold';
-        numberShow.style.pointerEvents = 'none';
-        numberShow.style.zIndex = '9999';
-        numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
-        document.body.appendChild(numberShow);
-
-        numberShow.animate(
-          [
-            { opacity: 1, transform: 'translateY(0) scale(1)' },
-            { opacity: 0, transform: 'translateY(-50px) scale(1.5)' },
-          ],
-          {
-            duration: 1000,
-            easing: 'ease-out',
-          }
-        ).onfinish = () => document.body.removeChild(numberShow);
-
         setEnergy((prev) => Math.max(prev - 1, 0));
 
         // Trigger haptic feedback
@@ -968,6 +943,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         if (settings.soundEffect) {
           playCoinSound();
         }
+
+        // Add shake effect
+        const coinButton = event.currentTarget;
+        coinButton.style.animation = 'shake 0.5s';
+        coinButton.addEventListener(
+          'animationend',
+          () => {
+            coinButton.style.animation = '';
+          },
+          { once: true }
+        );
 
         // Send tap data to Telegram Mini App
         if (window.Telegram && window.Telegram.WebApp) {
@@ -2497,7 +2483,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden relative">
+    <div className="h-screen w-screen bg-black text-white overflow-hidden relative">
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
