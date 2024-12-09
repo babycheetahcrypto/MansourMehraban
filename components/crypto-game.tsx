@@ -916,26 +916,27 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const numberShow = document.createElement('div');
         numberShow.textContent = `+${formatNumber(clickValue)}`;
         numberShow.style.position = 'absolute';
-        numberShow.style.left = `${event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2}px`;
-        numberShow.style.top = `${event.currentTarget.offsetTop}px`;
+        numberShow.style.left = '50%';
+        numberShow.style.top = '50%';
+        numberShow.style.transform = 'translate(-50%, -50%)';
         numberShow.style.color = 'white';
         numberShow.style.fontSize = '24px';
         numberShow.style.fontWeight = 'bold';
         numberShow.style.pointerEvents = 'none';
         numberShow.style.zIndex = '9999';
-        numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
-        document.body.appendChild(numberShow);
+        numberShow.style.textShadow = '0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff';
+        event.currentTarget.appendChild(numberShow);
 
         numberShow.animate(
           [
-            { opacity: 1, transform: 'translateY(0) scale(1)' },
-            { opacity: 0, transform: 'translateY(-50px) scale(1.5)' },
+            { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+            { opacity: 0, transform: 'translate(-50%, -150%) scale(1.5)' },
           ],
           {
             duration: 1000,
             easing: 'ease-out',
           }
-        ).onfinish = () => document.body.removeChild(numberShow);
+        ).onfinish = () => event.currentTarget.removeChild(numberShow);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1661,8 +1662,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative">
-      <div className="text-center mb-4 w-full max-w-md">
+    <div className="flex-grow flex flex-col items-center justify-between p-4 pb-16 relative">
+      <div className="text-center w-full max-w-md">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
             <div className="flex justify-between items-center mb-1">
@@ -1676,7 +1677,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 }}
               />
             </div>
-            <div className="text-xstext-white flex justify-between">
+            <div className="text-xs text-white flex justify-between">
               <span>{formatNumber(user.coins - levelRequirements[level - 1])}</span>
               <span>{formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins</span>
             </div>
@@ -1704,103 +1705,91 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             />
           </div>
         </div>
+      </div>
 
-        <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
-          <button
-            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
-            onClick={clickCoin}
-            onTouchStart={(e) => {
-              e.preventDefault();
-              clickCoin(e);
-            }}
-            onTouchEnd={(e) => e.preventDefault()}
-          >
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Image
-                src={selectedCoinImage}
-                alt={`Level ${level} Cheetah`}
-                width={340}
-                height={340}
-                objectFit="contain"
-                className="relative z-10"
-                priority
+      <div className="flex flex-col items-center justify-center w-full mx-auto mb-4">
+        <button
+          className="w-64 h-64 rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
+          onClick={clickCoin}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            clickCoin(e);
+          }}
+          onTouchEnd={(e) => e.preventDefault()}
+        >
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Image
+              src={selectedCoinImage}
+              alt={`Level ${level} Cheetah`}
+              layout="fill"
+              objectFit="contain"
+              className="relative z-10"
+              priority
+            />
+          </div>
+        </button>
+
+        <div className="w-full space-y-4 max-w-md">
+          <div>
+            <div className="flex justify-between text-sm mb-2 text-white">
+              <span className="font-semibold">Energy</span>
+              <span>
+                {energy.toFixed(1)}/{maxEnergy}
+              </span>
+            </div>
+            <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-green-500 to-blue-500"
+                ref={energyRef}
+                style={{
+                  width: `${(energy / maxEnergy) * 100}%`,
+                }}
               />
             </div>
-          </button>
+          </div>
 
-          <div className="w-full space-y-4">
-            <div>
-              <div className="flex justify-between text-sm mb-2 text-white">
-                <span className="font-semibold">Energy</span>
-                <span>
-                  {energy.toFixed(1)}/{maxEnergy}
-                </span>
-              </div>
-              <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-green-500 to-blue-500"
-                  ref={energyRef}
-                  style={{
-                    width: `${(energy / maxEnergy) * 100}%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="flex space-x-4">
-              <Button
-                onClick={() => {
-                  setCurrentPage('dailyReward');
-                  playHeaderFooterSound();
-                }}
-                className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
-              >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
-                  alt="Daily Reward"
-                  width={24}
-                  height={24}
-                  className="mr-2"
-                />
-                <span>Daily Reward</span>
-              </Button>
-              <Button
-                onClick={() => {
-                  activateMultiplier();
-                  playHeaderFooterSound();
-                }}
-                className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
-                disabled={!!multiplierEndTime || !!boosterCooldown}
-              >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
-                  alt="2x Multiplier"
-                  width={24}
-                  height={24}
-                  className="mr-2"
-                />
-                <span>
-                  {boosterCooldown
-                    ? `Cooldown (${Math.ceil((boosterCooldown - Date.now()) / 1000)}s)`
-                    : multiplierEndTime
-                      ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
-                      : 'Booster'}
-                </span>
-              </Button>
-            </div>
+          <div className="flex space-x-4">
+            <Button
+              onClick={() => {
+                setCurrentPage('dailyReward');
+                playHeaderFooterSound();
+              }}
+              className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
+                alt="Daily Reward"
+                width={24}
+                height={24}
+                className="mr-2"
+              />
+              <span>Daily Reward</span>
+            </Button>
+            <Button
+              onClick={() => {
+                activateMultiplier();
+                playHeaderFooterSound();
+              }}
+              className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
+              disabled={!!multiplierEndTime || !!boosterCooldown}
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
+                alt="2x Multiplier"
+                width={24}
+                height={24}
+                className="mr-2"
+              />
+              <span>
+                {boosterCooldown
+                  ? `Cooldown (${Math.ceil((boosterCooldown - Date.now()) / 1000)}s)`
+                  : multiplierEndTime
+                    ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                    : 'Booster'}
+              </span>
+            </Button>
           </div>
         </div>
-
-        {clickEffects.map((effect) => (
-          <div
-            key={effect.id}
-            className="absolute pointer-events-none text-white text-2xl font-bold"
-            style={{ left: effect.x, top: effect.y }}
-            onAnimationEnd={() => setClickEffects((prev) => prev.filter((e) => e.id !== effect.id))}
-          >
-            +{formatNumber(effect.value)}
-          </div>
-        ))}
       </div>
     </div>
   );
