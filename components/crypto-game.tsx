@@ -1742,6 +1742,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 priority
               />
             </div>
+            {clickEffects.map((effect) => (
+              <div
+                key={effect.id}
+                className="click-effect"
+                style={{
+                  left: `${effect.x}px`,
+                  top: `${effect.y}px`,
+                }}
+              >
+                +{formatNumber(effect.value)}
+              </div>
+            ))}
           </button>
           <div className="w-full space-y-4">
             <div>
@@ -2267,7 +2279,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 claimDailyReward();
                 playHeaderFooterSound();
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md text-white"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all<continuation_point>
+duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md text-white"
               disabled={dailyReward.completed}
             >
               <Gift className="w-6 h-6 mr-2" />
