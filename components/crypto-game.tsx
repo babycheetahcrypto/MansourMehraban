@@ -1646,9 +1646,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 pb-16 relative overflow-hidden">
-      {' '}
-      {/* Update 2 */}
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-hidden">
       <div className="text-center mb-4 w-full max-w-md">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
@@ -1692,9 +1690,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full mx-auto">
-          {' '}
-          {/* Update 3 */}
+        <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
           <button
             className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
             onClick={clickCoin}
@@ -1713,6 +1709,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
             </div>
           </button>
+
           <div className="w-full space-y-4">
             <div>
               <div className="flex justify-between text-sm mb-2 text-white">
@@ -1732,9 +1729,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
 
-            <div className="flex space-x-4 mt-auto">
-              {' '}
-              {/* Update 1 */}
+            <div className="flex space-x-4">
               <Button
                 onClick={() => {
                   setCurrentPage('dailyReward');
