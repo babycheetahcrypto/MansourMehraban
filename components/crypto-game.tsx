@@ -1742,18 +1742,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 priority
               />
             </div>
-            {clickEffects.map((effect) => (
-              <div
-                key={effect.id}
-                className="click-effect"
-                style={{
-                  left: `${effect.x}px`,
-                  top: `${effect.y}px`,
-                }}
-              >
-                +{formatNumber(effect.value)}
-              </div>
-            ))}
           </button>
           <div className="w-full space-y-4">
             <div>
@@ -1816,6 +1804,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
             </div>
           </div>
+          {clickEffects.map((effect) => (
+            <div
+              key={effect.id}
+              className="click-effect"
+              style={{
+                left: `${effect.x}px`,
+                top: `${effect.y}px`,
+              }}
+            >
+              +{formatNumber(effect.value)}
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -2500,11 +2500,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </Button>
     </Popup>
   );
-
-  useEffect(() => {
-    // Clear click effects when changing pages
-    setClickEffects([]);
-  }, [currentPage]);
 
   return (
     <div
