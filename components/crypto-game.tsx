@@ -1500,7 +1500,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level, user.level, popupShown.levelUp]);
 
   const renderHeader = () => (
-    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full">
+    <div className="fixed top-0 left-0 right-0 z-10 bg-black/30 backdrop-blur-md p-2">
+      {' '}
+      {/* Updated header */}
       <Card className="bg-transparent border-0 overflow-hidden">
         <CardContent className="p-2 flex items-center justify-between relative flex-wrap">
           <div className="flex items-center space-x-2">
@@ -1582,7 +1584,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFooter = () => (
-    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 z-50">
+      {' '}
+      {/* Updated footer */}
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
@@ -2456,6 +2460,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </Popup>
   );
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   return (
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
@@ -2480,7 +2491,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
-      <div className="flex-grow pb-20">
+      <div className="fixed inset-0 pt-16 pb-20 overflow-y-auto">
+        {' '}
+        {/* Updated content container */}
         {currentPage === 'home' && renderHome()}
         {currentPage === 'shop' && renderShop()}
         {currentPage === 'tasks' && renderTasks()}
