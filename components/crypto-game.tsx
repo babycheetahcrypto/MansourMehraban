@@ -130,11 +130,11 @@ const styles = `
   @keyframes fadeOutUp {
     from {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
+      transform: translate(-50%, -50%) translateY(0);
     }
     to {
       opacity: 0;
-      transform: translate3d(0, -100%, 0);
+      transform: translate(-50%, -50%) translateY(-20px);
     }
   }
   .click-effect {
@@ -932,8 +932,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
-        // Add click effect
-        const rect = event.currentTarget.getBoundingClientRect();
+        // Calculate position relative to the button
+        const button = event.currentTarget;
+        const rect = button.getBoundingClientRect();
         let clientX, clientY;
         if ('touches' in event) {
           clientX = event.touches[0].clientX;
@@ -944,6 +945,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         const x = clientX - rect.left;
         const y = clientY - rect.top;
+
+        // Add click effect
         setClickEffects((prev) => [...prev, { id: Date.now(), x, y, value: clickValue }]);
 
         // Trigger haptic feedback
@@ -1802,8 +1805,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {clickEffects.map((effect) => (
             <div
               key={effect.id}
-              className="click-effect text-white text-2xl font-bold"
-              style={{ left: effect.x, top: effect.y }}
+              className="click-effect text-white text-2xl font-bold absolute pointer-events-none"
+              style={{
+                left: `${effect.x}px`,
+                top: `${effect.y}px`,
+                transform: 'translate(-50%, -50%)',
+              }}
               onAnimationEnd={() =>
                 setClickEffects((prev) => prev.filter((e) => e.id !== effect.id))
               }
@@ -2275,11 +2282,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderInvite = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard
-        className="bg-gradient-to-br from-gray-900 to-black text-white<continuation_point>
-w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl"
-      >
+    <div
+      className="flex-grow flex flex-col items-center justify-start<continuation_point>
+p-4 pb-16 relative overflow-y-auto"
+    >
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
@@ -2303,8 +2310,8 @@ w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shad
                 <Copy className="w-4 h-4" />
               </Button>
             </div>
-            <p className="text-xs text-center mt2 text-white">
-              Share this link to earn 1000 coins for each friend whojoins!
+            <p className="text-xs text-center mt-2 text-white">
+              Share this link to earn 1000 coins for each friend who joins!
             </p>
           </div>
           <Button
