@@ -896,19 +896,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      const getCoordinates = (
-        e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>
-      ): { x: number; y: number } => {
-        if ('clientX' in e) {
-          return { x: e.clientX, y: e.clientY };
-        } else if (e.touches && e.touches.length > 0) {
-          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        }
-        return { x: 0, y: 0 };
-      };
-
-      const { x, y } = getCoordinates(event);
-
       if (energy > 0) {
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
@@ -929,8 +916,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const numberShow = document.createElement('div');
         numberShow.textContent = `+${formatNumber(clickValue)}`;
         numberShow.style.position = 'absolute';
-        numberShow.style.left = `${x}px`;
-        numberShow.style.top = `${y}px`;
+        numberShow.style.left = `${event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2}px`;
+        numberShow.style.top = `${event.currentTarget.offsetTop}px`;
         numberShow.style.color = 'white';
         numberShow.style.fontSize = '24px';
         numberShow.style.fontWeight = 'bold';
