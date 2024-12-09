@@ -2460,12 +2460,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
       style={{
-        width: '100vw',
-        height: '100vh',
-        maxWidth: '100%',
-        maxHeight: '100%',
-        overflow: 'hidden',
-        touchAction: 'none',
+        width: '100%',
+        height: '100%',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        touchAction: 'pan-y',
+        WebkitOverflowScrolling: 'touch',
         userSelect: 'none',
         WebkitTouchCallout: 'none',
         WebkitUserSelect: 'none',
@@ -2473,10 +2473,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         msUserSelect: 'none',
       }}
     >
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-      />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
