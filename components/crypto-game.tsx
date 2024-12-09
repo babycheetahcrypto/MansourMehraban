@@ -1674,10 +1674,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div
-      className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative"
-      style={{ height: 'calc(100vh - 120px)' }}
-    >
+    <div className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative">
       <div className="text-center mb-4 w-full max-w-md">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
@@ -2277,7 +2274,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
@@ -2499,8 +2496,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   return (
     <div
-      className="h-screen bg-black text-white overflow-hidden relative flex flex-col"
-      style={{ maxWidth: '100vw' }}
+      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
+      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
     >
       <style>{styles}</style>
       <StarryBackground />
