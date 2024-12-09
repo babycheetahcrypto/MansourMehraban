@@ -143,7 +143,9 @@ const styles = `
     animation: fadeOutUp 0.5s ease-out forwards;
     color: white;
     font-weight: bold;
+    font-size: 1.5rem; /* Increased font size */
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    transform: translate(-50%, -50%); /* Center the effect on the click point */
   }
 `;
 
