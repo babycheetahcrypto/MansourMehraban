@@ -146,6 +146,7 @@ const styles = `
     font-size: 1.5rem; /* Increased font size */
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%); /* Center the effect on the click point */
+    z-index: 30; /* Ensure it appears above the coin image */
   }
 `;
 
@@ -1749,6 +1750,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 priority
               />
             </div>
+            {clickEffects.map((effect) => (
+              <div
+                key={effect.id}
+                className="click-effect"
+                style={{
+                  left: `${effect.x}px`,
+                  top: `${effect.y}px`,
+                }}
+              >
+                +{effect.value}
+              </div>
+            ))}
           </button>
           <div className="w-full space-y-4">
             <div>
