@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import Head from 'next/head';
 import TonConnect from '@tonconnect/sdk';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -916,15 +917,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const numberShow = document.createElement('div');
         numberShow.textContent = `+${formatNumber(clickValue)}`;
         numberShow.style.position = 'absolute';
-        numberShow.style.left = `${event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2}px`;
-        numberShow.style.top = `${event.currentTarget.offsetTop}px`;
+        numberShow.style.left = `${Math.random() * 80 + 10}%`;
+        numberShow.style.top = `${Math.random() * 80 + 10}%`;
         numberShow.style.color = 'white';
         numberShow.style.fontSize = '24px';
         numberShow.style.fontWeight = 'bold';
         numberShow.style.pointerEvents = 'none';
         numberShow.style.zIndex = '9999';
-        numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
-        document.body.appendChild(numberShow);
+        numberShow.style.textShadow = '0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff';
+
+        const coinButton = event.currentTarget;
+        coinButton.appendChild(numberShow);
 
         numberShow.animate(
           [
@@ -935,7 +938,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             duration: 1000,
             easing: 'ease-out',
           }
-        ).onfinish = () => document.body.removeChild(numberShow);
+        ).onfinish = () => coinButton.removeChild(numberShow);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1626,7 +1629,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {
             page: 'rating',
             text: 'Rating',
-            icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
+            icon: 'RATING%203DICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
           },
           {
             page: 'wallet',
@@ -1707,7 +1710,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
           <button
-            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
+            className="w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
             onClick={clickCoin}
             onTouchStart={(e) => {
               e.preventDefault();
@@ -2264,7 +2267,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+          <div className="absolute inset-0 bg-gradient-tobr from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
@@ -2484,8 +2487,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   return (
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
-      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+      style={{ maxWidth: '100vw', maxHeight: '100vh', touchAction: 'manipulation' }}
     >
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </Head>
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
