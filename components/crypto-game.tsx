@@ -137,18 +137,11 @@ const styles = `
       transform: translateY(-20px);
     }
   }
-  @keyframes scale {
-    from {
-      transform: scale(0.5);
-    }
-    to {
-      transform: scale(1.2);
-    }
-  }
   .click-effect {
     position: absolute;
     pointer-events: none;
-    animation: fadeOutUp 0.5s ease-out forwards, scale 0.5s ease-out forwards;
+    animation: fadeOutUp 0.5s ease-out forwards;
+    color: white;
     font-weight: bold;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
   }
@@ -1812,11 +1805,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {clickEffects.map((effect) => (
             <div
               key={effect.id}
-              className="click-effect text-yellow-300 text-xl"
+              className="click-effect"
               style={{
                 left: `${effect.x}px`,
                 top: `${effect.y}px`,
-                textShadow: '0 0 5px rgba(255, 215, 0, 0.7)',
               }}
             >
               +{formatNumber(effect.value)}
