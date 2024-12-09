@@ -1682,7 +1682,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
           <button
-            className="w-[280px] h-[280px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
+            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
             onClick={clickCoin}
             onTouchStart={clickCoin}
             onTouchEnd={(e) => e.preventDefault()}
@@ -1691,8 +1691,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={selectedCoinImage}
                 alt={`Level ${level} Cheetah`}
-                width={280}
-                height={280}
+                width={340}
+                height={340}
                 objectFit="contain"
                 className="relative z-10"
                 priority
