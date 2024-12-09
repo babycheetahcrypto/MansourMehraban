@@ -1639,7 +1639,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-hidden">
       <div className="text-center mb-4 w-full max-w-md">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
@@ -1781,7 +1781,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderShop = () => (
-    <div className="p-6 min-h-screen relative z-0">
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <StarryBackground />
       <div className="max-w-7xl mx-auto">
         <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
@@ -1862,81 +1862,83 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderTasks = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4">
-      {tasks.map((task) => (
-        <NeonGradientCard
-          key={task.id}
-          className="bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl text-sm"
-        >
-          <CardHeader className="relative p-3">
-            <CardTitle className="flex items-center justify-between z-10 text-base">
-              <span className="flex items-center">
-                {task.icon}
-                <span className="ml-2 text-white">{task.description}</span>
-              </span>
-              <span className="text-white font-bold">{formatNumber(task.reward)} coins</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-3">
-            <div className="h-3 bg-gray-700 rounded-full overflow-hidden mb-3">
-              <div
-                className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
-                style={{ width: `${(task.progress / (task.maxProgress || 1)) * 100}%` }}
-              />
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-white">
-                {task.progress}/{task.maxProgress || 1} complete
-              </span>
-              {task.completed ? (
-                task.claimed ? (
-                  <Button
-                    className="bg-green-600 text-white px-4 py-2 rounded-full text-xs"
-                    disabled
-                  >
-                    <CheckCircle className="w-4 h-4 mr-1" />
-                    <span>Claimed</span>
-                  </Button>
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4">
+        {tasks.map((task) => (
+          <NeonGradientCard
+            key={task.id}
+            className="bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl text-sm"
+          >
+            <CardHeader className="relative p-3">
+              <CardTitle className="flex items-center justify-between z-10 text-base">
+                <span className="flex items-center">
+                  {task.icon}
+                  <span className="ml-2 text-white">{task.description}</span>
+                </span>
+                <span className="text-white font-bold">{formatNumber(task.reward)} coins</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-3">
+              <div className="h-3 bg-gray-700 rounded-full overflow-hidden mb-3">
+                <div
+                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                  style={{ width: `${(task.progress / (task.maxProgress || 1)) * 100}%` }}
+                />
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white">
+                  {task.progress}/{task.maxProgress || 1} complete
+                </span>
+                {task.completed ? (
+                  task.claimed ? (
+                    <Button
+                      className="bg-green-600 text-white px-4 py-2 rounded-full text-xs"
+                      disabled
+                    >
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      <span>Claimed</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                      onClick={() => {
+                        setUser((prevUser) => ({
+                          ...prevUser,
+                          coins: prevUser.coins + task.reward,
+                        }));
+                        setTasks((prevTasks) =>
+                          prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
+                        );
+                        window.Telegram.WebApp.showAlert(`Claimed ${task.reward} coins!`);
+                      }}
+                    >
+                      <Star className="w-4 h-4 mr-1" />
+                      <span>Claim</span>
+                    </Button>
+                  )
                 ) : (
                   <Button
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                    className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
                     onClick={() => {
-                      setUser((prevUser) => ({
-                        ...prevUser,
-                        coins: prevUser.coins + task.reward,
-                      }));
-                      setTasks((prevTasks) =>
-                        prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
-                      );
-                      window.Telegram.WebApp.showAlert(`Claimed ${task.reward} coins!`);
+                      task.action();
+                      playHeaderFooterSound();
                     }}
                   >
-                    <Star className="w-4 h-4 mr-1" />
-                    <span>Claim</span>
+                    <ArrowRight className=" w-4 h-4 mr-1" />
+                    <span>Start</span>
                   </Button>
-                )
-              ) : (
-                <Button
-                  className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
-                  onClick={() => {
-                    task.action();
-                    playHeaderFooterSound();
-                  }}
-                >
-                  <ArrowRight className=" w-4 h-4 mr-1" />
-                  <span>Start</span>
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </NeonGradientCard>
-      ))}
+                )}
+              </div>
+            </CardContent>
+          </NeonGradientCard>
+        ))}
+      </div>
     </div>
   );
 
   const renderRating = () => {
     return (
-      <div className="flex flex-col items-center justify-start p-6 min-h-screen">
+      <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
         <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
           {leaderboardData.slice(0, 200).map((player, index) => (
             <div
@@ -2068,58 +2070,60 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderLevels = () => (
-    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 p-4">
-      {levelImages.map((image, index) => (
-        <div key={index}>
-          <NeonGradientCard
-            className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${unlockedLevels.includes(index + 1) ? 'border-2 border-primary' : ''}`}
-          >
-            <CardHeader className="relative p-2">
-              <CardTitle className="z-10 text-center text-xs text-white">
-                Level {index + 1}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center p-2">
-              <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
-                <Image
-                  src={image}
-                  alt={`Level ${index + 1}`}
-                  layout="fill"
-                  objectFit="contain"
-                  className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'opacity-50 grayscale' : ''}`}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src =
-                      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
-                  }}
-                />
-              </div>
-              <p className="text-xs text-center text-white mb-2">
-                {unlockedLevels.includes(index + 1)
-                  ? 'Unlocked'
-                  : `Unlock at ${formatNumber(levelRequirements[index])} coins`}
-              </p>
-              {unlockedLevels.includes(index + 1) && (
-                <Button
-                  onClick={() => {
-                    setSelectedCoinImage(image);
-                    setCurrentPage('home');
-                    playHeaderFooterSound();
-                  }}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
-                >
-                  Use
-                </Button>
-              )}
-            </CardContent>
-          </NeonGradientCard>
-        </div>
-      ))}
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 p-4">
+        {levelImages.map((image, index) => (
+          <div key={index}>
+            <NeonGradientCard
+              className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${unlockedLevels.includes(index + 1) ? 'border-2 border-primary' : ''}`}
+            >
+              <CardHeader className="relative p-2">
+                <CardTitle className="z-10 text-center text-xs text-white">
+                  Level {index + 1}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center justify-center p-2">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
+                  <Image
+                    src={image}
+                    alt={`Level ${index + 1}`}
+                    layout="fill"
+                    objectFit="contain"
+                    className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'opacity-50 grayscale' : ''}`}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src =
+                        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
+                    }}
+                  />
+                </div>
+                <p className="text-xs text-center text-white mb-2">
+                  {unlockedLevels.includes(index + 1)
+                    ? 'Unlocked'
+                    : `Unlock at ${formatNumber(levelRequirements[index])} coins`}
+                </p>
+                {unlockedLevels.includes(index + 1) && (
+                  <Button
+                    onClick={() => {
+                      setSelectedCoinImage(image);
+                      setCurrentPage('home');
+                      playHeaderFooterSound();
+                    }}
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
+                  >
+                    Use
+                  </Button>
+                )}
+              </CardContent>
+            </NeonGradientCard>
+          </div>
+        ))}
+      </div>
     </div>
   );
 
   const renderSettings = () => (
-    <div className="flex-grow flex items-center justify-center p-6">
+    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
@@ -2176,7 +2180,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderDailyReward = () => (
-    <div className="flex-grow flex flex-col items-center justify-center p-6">
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Daily Rewards</CardTitle>
@@ -2235,7 +2239,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderInvite = () => (
-    <div className="flex-grow flex items-center justify-center p-6">
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
@@ -2277,7 +2281,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFriendsActivity = () => (
-    <div className="flex-grow flex items-center justify-center p-6">
+    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Friends Activity</CardTitle>
@@ -2473,7 +2477,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         msUserSelect: 'none',
       }}
     >
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      />
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
