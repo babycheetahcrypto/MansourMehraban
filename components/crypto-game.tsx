@@ -299,13 +299,13 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div>
       <Button
         variant="ghost"
-        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''} bg-black/30 backdrop-blur-md text-white hover:bg-gray-800/50 transition-all duration-300 hover:text-white active:text-white`}
+        className={`relative w-14 h-14 bg-transparent flex flex-col items-center justify-center ${isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''} bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
         onClick={() => {
           setCurrentPage(href);
           playHeaderFooterSound();
         }}
       >
-        <Icon className={`w-8 h-8 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
           className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
@@ -911,31 +911,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setUser(updatedUser);
         saveUserData(updatedUser);
-
-        // Visual number show with animation
-        const numberShow = document.createElement('div');
-        numberShow.textContent = `+${formatNumber(clickValue)}`;
-        numberShow.style.position = 'absolute';
-        numberShow.style.left = `${event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2}px`;
-        numberShow.style.top = `${event.currentTarget.offsetTop}px`;
-        numberShow.style.color = 'white';
-        numberShow.style.fontSize = '24px';
-        numberShow.style.fontWeight = 'bold';
-        numberShow.style.pointerEvents = 'none';
-        numberShow.style.zIndex = '9999';
-        numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
-        document.body.appendChild(numberShow);
-
-        numberShow.animate(
-          [
-            { opacity: 1, transform: 'translateY(0) scale(1)' },
-            { opacity: 0, transform: 'translateY(-50px) scale(1.5)' },
-          ],
-          {
-            duration: 1000,
-            easing: 'ease-out',
-          }
-        ).onfinish = () => document.body.removeChild(numberShow);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1604,7 +1579,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFooter = () => (
-    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-2 rounded-t-3xl z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50">
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
@@ -1661,7 +1636,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-center p-4 pb-16 relative">
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <div className="text-center mb-4 w-full max-w-md">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
@@ -1707,20 +1682,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
           <button
-            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
+            className="w-[280px] h-[280px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
             onClick={clickCoin}
-            onTouchStart={(e) => {
-              e.preventDefault();
-              clickCoin(e);
-            }}
+            onTouchStart={clickCoin}
             onTouchEnd={(e) => e.preventDefault()}
           >
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Image
                 src={selectedCoinImage}
                 alt={`Level ${level} Cheetah`}
-                width={340}
-                height={340}
+                width={280}
+                height={280}
                 objectFit="contain"
                 className="relative z-10"
                 priority
@@ -2484,7 +2456,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   return (
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
-      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+      style={{ maxWidth: '100vw', maxHeight: '100vh', touchAction: 'manipulation' }}
     >
       <style>{styles}</style>
       <StarryBackground />
