@@ -3,7 +3,6 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import TonConnect from '@tonconnect/sdk';
 import Image from 'next/image';
-import Head from 'next/head';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -913,26 +912,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setUser(updatedUser);
         saveUserData(updatedUser);
 
-        // Get click coordinates
-        const rect = event.currentTarget.getBoundingClientRect();
-        const x =
-          (event as React.MouseEvent).clientX || (event as React.TouchEvent).touches[0].clientX;
-        const y =
-          (event as React.MouseEvent).clientY || (event as React.TouchEvent).touches[0].clientY;
-
-        // Create and position the number show element
+        // Visual number show with animation
         const numberShow = document.createElement('div');
         numberShow.textContent = `+${formatNumber(clickValue)}`;
-        numberShow.style.position = 'fixed';
-        numberShow.style.left = `${x - rect.left}px`;
-        numberShow.style.top = `${y - rect.top}px`;
+        numberShow.style.position = 'absolute';
+        numberShow.style.left = `${event.currentTarget.offsetLeft + event.currentTarget.offsetWidth / 2}px`;
+        numberShow.style.top = `${event.currentTarget.offsetTop}px`;
         numberShow.style.color = 'white';
         numberShow.style.fontSize = '24px';
         numberShow.style.fontWeight = 'bold';
         numberShow.style.pointerEvents = 'none';
         numberShow.style.zIndex = '9999';
-        numberShow.style.textShadow = '0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff';
-        event.currentTarget.appendChild(numberShow);
+        numberShow.style.textShadow = '0 0 10px #ffffff,  0 0 20px #ffffff, 0 0 30px #ffffff';
+        document.body.appendChild(numberShow);
 
         numberShow.animate(
           [
@@ -943,7 +935,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             duration: 1000,
             easing: 'ease-out',
           }
-        ).onfinish = () => event.currentTarget.removeChild(numberShow);
+        ).onfinish = () => document.body.removeChild(numberShow);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1715,7 +1707,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full mx-auto mb-16">
           <button
-            className="w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
+            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
             onClick={clickCoin}
             onTouchStart={(e) => {
               e.preventDefault();
@@ -2490,88 +2482,80 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   return (
-    <>
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-        />
-      </Head>
-      <div
-        className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
-        style={{ maxWidth: '100vw', maxHeight: '100vh', touchAction: 'manipulation' }}
-      >
-        <style>{styles}</style>
-        <StarryBackground />
-        {renderHeader()}
-        <div className="flex-grow overflow-y-auto pb-20">
-          {currentPage === 'home' && renderHome()}
-          {currentPage === 'shop' && renderShop()}
-          {currentPage === 'tasks' && renderTasks()}
-          {currentPage === 'rating' && renderRating()}
-          {currentPage === 'wallet' && renderWallet()}
-          {currentPage === 'invite' && renderInvite()}
-          {currentPage === 'friendsActivity' && renderFriendsActivity()}
-          {currentPage === 'levels' && renderLevels()}
-          {currentPage === 'settings' && renderSettings()}
-          {currentPage === 'dailyReward' && renderDailyReward()}
-          {currentPage === 'trophies' && renderTrophies()}
-        </div>
-        {renderFooter()}
+    <div
+      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
+      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+    >
+      <style>{styles}</style>
+      <StarryBackground />
+      {renderHeader()}
+      <div className="flex-grow overflow-y-auto pb-20">
+        {currentPage === 'home' && renderHome()}
+        {currentPage === 'shop' && renderShop()}
+        {currentPage === 'tasks' && renderTasks()}
+        {currentPage === 'rating' && renderRating()}
+        {currentPage === 'wallet' && renderWallet()}
+        {currentPage === 'invite' && renderInvite()}
+        {currentPage === 'friendsActivity' && renderFriendsActivity()}
+        {currentPage === 'levels' && renderLevels()}
+        {currentPage === 'settings' && renderSettings()}
+        {currentPage === 'dailyReward' && renderDailyReward()}
+        {currentPage === 'trophies' && renderTrophies()}
+      </div>
+      {renderFooter()}
 
-        {/* Popup logic */}
-        {!shownPopups.has('pph') && showPPHPopup && (
-          <Popup
-            title="Profit Accumulated!"
-            onClose={() => {
-              setShowPPHPopup(false);
+      {/* Popup logic */}
+      {!shownPopups.has('pph') && showPPHPopup && (
+        <Popup
+          title="Profit Accumulated!"
+          onClose={() => {
+            setShowPPHPopup(false);
+            showPopup('pph');
+          }}
+        >
+          <p className="mb-6 text-xl text-center text-white">
+            You've accumulated <span className="font-bold">{formatNumber(pphAccumulated)}</span>{' '}
+            coins!
+          </p>
+          <Button
+            onClick={() => {
+              claimPPH();
               showPopup('pph');
             }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
-            <p className="mb-6 text-xl text-center text-white">
-              You've accumulated <span className="font-bold">{formatNumber(pphAccumulated)}</span>{' '}
-              coins!
-            </p>
-            <Button
-              onClick={() => {
-                claimPPH();
-                showPopup('pph');
-              }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-            >
-              <Coins className="w-5 h-5 mr-2" />
-              Claim Profits
-            </Button>
-          </Popup>
-        )}
+            <Coins className="w-5 h-5 mr-2" />
+            Claim Profits
+          </Button>
+        </Popup>
+      )}
 
-        {!shownPopups.has('levelUp') && showLevelUpPopup && (
-          <Popup
-            title="Level Up!"
-            onClose={() => {
-              setShowLevelUpPopup(false);
+      {!shownPopups.has('levelUp') && showLevelUpPopup && (
+        <Popup
+          title="Level Up!"
+          onClose={() => {
+            setShowLevelUpPopup(false);
+            showPopup('levelUp');
+          }}
+        >
+          <p className="mb-6 text-xl text-center text-white">
+            Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
+          </p>
+          <Button
+            onClick={() => {
+              claimNewLevel();
               showPopup('levelUp');
             }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
-            <p className="mb-6 text-xl text-center text-white">
-              Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
-            </p>
-            <Button
-              onClick={() => {
-                claimNewLevel();
-                showPopup('levelUp');
-              }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-            >
-              <Star className="w-5 h-5 mr-2" />
-              Claim Rewards
-            </Button>
-          </Popup>
-        )}
+            <Star className="w-5 h-5 mr-2" />
+            Claim Rewards
+          </Button>
+        </Popup>
+      )}
 
-        {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
-      </div>
-    </>
+      {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
+    </div>
   );
 };
 
