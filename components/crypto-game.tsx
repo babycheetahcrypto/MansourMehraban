@@ -1679,147 +1679,157 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
-  const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
-      <div className="text-center w-full max-w-md flex flex-col justify-end h-full">
-        <div className="flex space-x-2 mb-4 w-full">
-          <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-sm font-bold text-white">Level {level}</span>
-            </div>
-            <div className="w-full bg-gray-700 h-2 rounded-full overflow-hidden mb-1">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
-                style={{
-                  width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
-                }}
-              />
-            </div>
-            <div className="text-xstext-white flex justify-between">
-              <span>{formatNumber(user.coins - levelRequirements[level - 1])}</span>
-              <span>{formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins</span>
-            </div>
-          </div>
-          <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-BOmbm8gpqO0AMx6vImTMvMohF71biw.png"
-              alt="Profit Per Hour"
-              width={16}
-              height={16}
-              className="mb-1"
-            />
-            <span className="text-xs text-white">{formatNumber(profitPerHour)}/h</span>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
-          <div className="w-12 h-12">
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
-              alt="Crypto Coin"
-              width={48}
-              height={48}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center justify-center w-full mx-auto">
-          <button
-            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
-            onClick={clickCoin}
-            onTouchStart={clickCoin}
-            onTouchEnd={(e) => e.preventDefault()}
-          >
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Image
-                src={selectedCoinImage}
-                alt={`Level ${level} Cheetah`}
-                width={340}
-                height={340}
-                objectFit="contain"
-                className="relative z-10"
-                priority
-              />
-            </div>
-          </button>
-          <div className="w-full space-y-4">
-            <div>
-              <div className="flex justify-between text-sm mb-2 text-white">
-                <span className="font-semibold">Energy</span>
-                <span>
-                  {energy.toFixed(1)}/{maxEnergy}
-                </span>
+  const renderHome = () => {
+    useEffect(() => {
+      // Clear click effects when navigating away from the home page
+      if (currentPage !== 'home') {
+        setClickEffects([]);
+      }
+    }, [currentPage]);
+    return (
+      <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
+        <div className="text-center w-full max-w-md flex flex-col justify-end h-full">
+          <div className="flex space-x-2 mb-4 w-full">
+            <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm font-bold text-white">Level {level}</span>
               </div>
-              <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
+              <div className="w-full bg-gray-700 h-2 rounded-full overflow-hidden mb-1">
                 <div
-                  className="h-full bg-gradient-to-r from-green-500 to-blue-500"
-                  ref={energyRef}
+                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
                   style={{
-                    width: `${(energy / maxEnergy) * 100}%`,
+                    width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
                   }}
                 />
               </div>
-            </div>
-
-            <div className="flex space-x-4 mt-auto">
-              <Button
-                onClick={() => {
-                  setCurrentPage('dailyReward');
-                  playHeaderFooterSound();
-                }}
-                className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
-              >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
-                  alt="Daily Reward"
-                  width={24}
-                  height={24}
-                  className="mr-2"
-                />
-                <span>Daily Reward</span>
-              </Button>
-              <Button
-                onClick={() => {
-                  activateMultiplier();
-                  playHeaderFooterSound();
-                }}
-                className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
-                disabled={!!multiplierEndTime || !!boosterCooldown}
-              >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
-                  alt="2x Multiplier"
-                  width={24}
-                  height={24}
-                  className="mr-2"
-                />
+              <div className="text-xstext-white flex justify-between">
+                <span>{formatNumber(user.coins - levelRequirements[level - 1])}</span>
                 <span>
-                  {boosterCooldown
-                    ? `Cooldown (${Math.ceil((boosterCooldown - Date.now()) / 1000)}s)`
-                    : multiplierEndTime
-                      ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
-                      : 'Booster'}
+                  {formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins
                 </span>
-              </Button>
+              </div>
+            </div>
+            <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-BOmbm8gpqO0AMx6vImTMvMohF71biw.png"
+                alt="Profit Per Hour"
+                width={16}
+                height={16}
+                className="mb-1"
+              />
+              <span className="text-xs text-white">{formatNumber(profitPerHour)}/h</span>
             </div>
           </div>
-          {clickEffects.map((effect) => (
-            <div
-              key={effect.id}
-              className="click-effect"
-              style={{
-                left: `${effect.x}px`,
-                top: `${effect.y}px`,
-              }}
-            >
-              +{formatNumber(effect.value)}
+
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
+            <div className="w-12 h-12">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
+                alt="Crypto Coin"
+                width={48}
+                height={48}
+              />
             </div>
-          ))}
+          </div>
+
+          <div className="flex flex-col items-center justify-center w-full mx-auto">
+            <button
+              className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative"
+              onClick={clickCoin}
+              onTouchStart={clickCoin}
+              onTouchEnd={(e) => e.preventDefault()}
+            >
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <Image
+                  src={selectedCoinImage}
+                  alt={`Level ${level} Cheetah`}
+                  width={340}
+                  height={340}
+                  objectFit="contain"
+                  className="relative z-10"
+                  priority
+                />
+              </div>
+            </button>
+            <div className="w-full space-y-4">
+              <div>
+                <div className="flex justify-between text-sm mb-2 text-white">
+                  <span className="font-semibold">Energy</span>
+                  <span>
+                    {energy.toFixed(1)}/{maxEnergy}
+                  </span>
+                </div>
+                <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-green-500 to-blue-500"
+                    ref={energyRef}
+                    style={{
+                      width: `${(energy / maxEnergy) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex space-x-4 mt-auto">
+                <Button
+                  onClick={() => {
+                    setCurrentPage('dailyReward');
+                    playHeaderFooterSound();
+                  }}
+                  className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
+                >
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
+                    alt="Daily Reward"
+                    width={24}
+                    height={24}
+                    className="mr-2"
+                  />
+                  <span>Daily Reward</span>
+                </Button>
+                <Button
+                  onClick={() => {
+                    activateMultiplier();
+                    playHeaderFooterSound();
+                  }}
+                  className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
+                  disabled={!!multiplierEndTime || !!boosterCooldown}
+                >
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
+                    alt="2x Multiplier"
+                    width={24}
+                    height={24}
+                    className="mr-2"
+                  />
+                  <span>
+                    {boosterCooldown
+                      ? `Cooldown (${Math.ceil((boosterCooldown - Date.now()) / 1000)}s)`
+                      : multiplierEndTime
+                        ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                        : 'Booster'}
+                  </span>
+                </Button>
+              </div>
+            </div>
+            {clickEffects.map((effect) => (
+              <div
+                key={effect.id}
+                className="click-effect"
+                style={{
+                  left: `${effect.x}px`,
+                  top: `${effect.y}px`,
+                }}
+              >
+                +{formatNumber(effect.value)}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderShop = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
@@ -2267,7 +2277,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 claimDailyReward();
                 playHeaderFooterSound();
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md text-white"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blurmd text-white"
               disabled={dailyReward.completed}
             >
               <Gift className="w-6 h-6 mr-2" />
