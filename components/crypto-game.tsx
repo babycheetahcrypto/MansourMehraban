@@ -2466,9 +2466,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       style={{
         width: '100%',
         height: '100%',
-        overflowY: currentPage === 'home' ? 'hidden' : 'auto',
+        overflowY: 'auto',
         overflowX: 'hidden',
-        touchAction: currentPage === 'home' ? 'none' : 'pan-y',
+        touchAction: 'pan-y',
         WebkitOverflowScrolling: 'touch',
         userSelect: 'none',
         WebkitTouchCallout: 'none',
