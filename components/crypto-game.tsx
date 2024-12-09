@@ -124,6 +124,9 @@ const styles = `
   .coin-button {
     transform-origin: center center;
   }
+  html, body {
+    scroll-behavior: smooth;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -2257,7 +2260,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Copy className="w-4 h-4" />
               </Button>
             </div>
-            <p className="text-xs text-center mt-2 text-white">
+            <p className="text-xs text-center mt2 text-white">
               Share this link to earn 1000 coins for each friend whojoins!
             </p>
           </div>
@@ -2455,13 +2458,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   return (
     <div
-      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
-      style={{ maxWidth: '100vw', maxHeight: '100vh', touchAction: 'manipulation' }}
+      className="min-h-screen bg-black text-white overflow-y-auto relative flex flex-col"
+      style={{
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        touchAction: 'manipulation',
+        WebkitOverflowScrolling: 'touch',
+      }}
     >
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
-      <div className="flex-grow overflow-y-auto pb-20">
+      <div className="flex-grow pb-20">
         {currentPage === 'home' && renderHome()}
         {currentPage === 'shop' && renderShop()}
         {currentPage === 'tasks' && renderTasks()}
