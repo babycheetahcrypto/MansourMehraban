@@ -118,7 +118,7 @@ const styles = `
     30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
-  .coin-button:active {
+  .coin-button:active, .coin-button.shake {
     animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
@@ -937,6 +937,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           window.Telegram.WebApp.sendData(
             JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
           );
+        }
+
+        // Add shake effect for touch events
+        if (event.type === 'touchstart') {
+          const button = event.currentTarget;
+          button.classList.add('shake');
+          setTimeout(() => button.classList.remove('shake'), 200);
         }
       }
     },
