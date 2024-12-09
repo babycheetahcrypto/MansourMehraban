@@ -1824,18 +1824,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
             </div>
           </div>
-          {clickEffects.map((effect) => (
-            <div
-              key={effect.id}
-              className="click-effect"
-              style={{
-                left: `${effect.x}px`,
-                top: `${effect.y}px`,
-              }}
-            >
-              +{effect.value}
-            </div>
-          ))}
         </div>
       </div>
     </div>
