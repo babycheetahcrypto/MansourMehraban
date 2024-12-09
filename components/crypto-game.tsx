@@ -130,17 +130,27 @@ const styles = `
   @keyframes fadeOutUp {
     from {
       opacity: 1;
-      transform: translate(-50%, -50%) translateY(0);
+      transform: translateY(0);
     }
     to {
       opacity: 0;
-      transform: translate(-50%, -50%) translateY(-20px);
+      transform: translateY(-20px);
+    }
+  }
+  @keyframes scale {
+    from {
+      transform: scale(0.5);
+    }
+    to {
+      transform: scale(1.2);
     }
   }
   .click-effect {
     position: absolute;
     pointer-events: none;
-    animation: fadeOutUp 0.5s ease-out forwards;
+    animation: fadeOutUp 0.5s ease-out forwards, scale 0.5s ease-out forwards;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
   }
 `;
 
@@ -932,9 +942,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
-        // Calculate position relative to the button
-        const button = event.currentTarget;
-        const rect = button.getBoundingClientRect();
+        // Add click effect at the exact tap position
+        const rect = event.currentTarget.getBoundingClientRect();
         let clientX, clientY;
         if ('touches' in event) {
           clientX = event.touches[0].clientX;
@@ -945,8 +954,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         const x = clientX - rect.left;
         const y = clientY - rect.top;
-
-        // Add click effect
         setClickEffects((prev) => [...prev, { id: Date.now(), x, y, value: clickValue }]);
 
         // Trigger haptic feedback
@@ -1805,15 +1812,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {clickEffects.map((effect) => (
             <div
               key={effect.id}
-              className="click-effect text-white text-2xl font-bold absolute pointer-events-none"
+              className="click-effect text-yellow-300 text-xl"
               style={{
                 left: `${effect.x}px`,
                 top: `${effect.y}px`,
-                transform: 'translate(-50%, -50%)',
+                textShadow: '0 0 5px rgba(255, 215, 0, 0.7)',
               }}
-              onAnimationEnd={() =>
-                setClickEffects((prev) => prev.filter((e) => e.id !== effect.id))
-              }
             >
               +{formatNumber(effect.value)}
             </div>
@@ -2273,7 +2277,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               disabled={dailyReward.completed}
             >
               <Gift className="w-6 h-6 mr-2" />
-              Claim Reward
+              Claim Reward{' '}
             </Button>
           </div>
         </CardContent>
@@ -2282,10 +2286,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderInvite = () => (
-    <div
-      className="flex-grow flex flex-col items-center justify-start<continuation_point>
-p-4 pb-16 relative overflow-y-auto"
-    >
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z10 text-3xl text-center text-white">Invite Friends</CardTitle>
