@@ -127,6 +127,21 @@ const styles = `
   html, body {
     scroll-behavior: smooth;
   }
+  @keyframes fadeOutUp {
+    from {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      opacity: 0;
+      transform: translate3d(0, -100%, 0);
+    }
+  }
+  .click-effect {
+    position: absolute;
+    pointer-events: none;
+    animation: fadeOutUp 0.5s ease-out forwards;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -917,6 +932,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
+        // Add click effect
+        const rect = event.currentTarget.getBoundingClientRect();
+        let clientX, clientY;
+        if ('touches' in event) {
+          clientX = event.touches[0].clientX;
+          clientY = event.touches[0].clientY;
+        } else {
+          clientX = event.clientX;
+          clientY = event.clientY;
+        }
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        setClickEffects((prev) => [...prev, { id: Date.now(), x, y, value: clickValue }]);
+
         // Trigger haptic feedback
         if (
           settings.vibration &&
@@ -940,7 +969,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
 
         // Add shake effect for touch events
-        if (event.type === 'touchstart') {
+        if ('touches' in event) {
           const button = event.currentTarget;
           button.classList.add('shake');
           setTimeout(() => button.classList.remove('shake'), 200);
@@ -1770,18 +1799,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
             </div>
           </div>
+          {clickEffects.map((effect) => (
+            <div
+              key={effect.id}
+              className="click-effect text-white text-2xl font-bold"
+              style={{ left: effect.x, top: effect.y }}
+              onAnimationEnd={() =>
+                setClickEffects((prev) => prev.filter((e) => e.id !== effect.id))
+              }
+            >
+              +{formatNumber(effect.value)}
+            </div>
+          ))}
         </div>
-
-        {clickEffects.map((effect) => (
-          <div
-            key={effect.id}
-            className="absolute pointer-events-none text-white text-2xl font-bold"
-            style={{ left: effect.x, top: effect.y }}
-            onAnimationEnd={() => setClickEffects((prev) => prev.filter((e) => e.id !== effect.id))}
-          >
-            +{formatNumber(effect.value)}
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -2246,9 +2276,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard
+        className="bg-gradient-to-br from-gray-900 to-black text-white<continuation_point>
+w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl"
+      >
         <CardHeader className="relative">
-          <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
+          <CardTitle className="z10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
