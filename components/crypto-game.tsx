@@ -146,6 +146,7 @@ const styles = `
     font-size: 1.5rem; /* Increased font size */
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%); /* Center the effect on the click point */
+    z-index: 10; /* Ensure it's above the coin button */
   }
 `;
 
