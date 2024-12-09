@@ -937,21 +937,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
-        // Add click effect at the exact tap position only for coin button
-        if (event.currentTarget.classList.contains('coin-button')) {
-          const rect = event.currentTarget.getBoundingClientRect();
-          let clientX, clientY;
-          if ('touches' in event) {
-            clientX = event.touches[0].clientX;
-            clientY = event.touches[0].clientY;
-          } else {
-            clientX = event.clientX;
-            clientY = event.clientY;
-          }
-          const x = clientX - rect.left;
-          const y = clientY - rect.top;
-          setClickEffects((prev) => [...prev, { id: Date.now(), x, y, value: clickValue }]);
+        // Add click effect at the exact tap position
+        const rect = event.currentTarget.getBoundingClientRect();
+        let clientX, clientY;
+        if ('touches' in event) {
+          clientX = event.touches[0].clientX;
+          clientY = event.touches[0].clientY;
+        } else {
+          clientX = event.clientX;
+          clientY = event.clientY;
         }
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        setClickEffects((prev) => [...prev, { id: Date.now(), x, y, value: clickValue }]);
 
         // Trigger haptic feedback
         if (
@@ -2274,7 +2272,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 claimDailyReward();
                 playHeaderFooterSound();
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active<continuation_point>
+rotate-0 backdrop-blur-md textwhite"
               disabled={dailyReward.completed}
             >
               <Gift className="w-6 h-6 mr-2" />
