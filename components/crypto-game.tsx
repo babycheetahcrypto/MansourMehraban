@@ -546,6 +546,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     congratulation: false,
   });
   const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
+
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
       id: 1,
@@ -2266,7 +2267,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
-          <CardTitle className="z10 text-3xl text-center text-white">Invite Friends</CardTitle>
+          <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
@@ -2481,8 +2482,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     onClose: () => void;
   }) => (
     <div className="fixed inset-0 flex items-center justify-center z-[60]">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose}></div>
-      <div className="bg-gradient-to-br from-gray-900/70 to-black/70 text-white p-8 rounded-3xl shadow-2xl z-10 max-w-md w-full mx-4 border border-gray-700/50 backdrop-blur-lg">
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-lg" onClick={onClose}></div>
+      <div className="bg-gradient-to-br from-gray-900/50 to-black/50 text-white p-8 rounded-3xl shadow-2xl z-10 max-w-md w-full mx-4 border border-gray-700/30 backdrop-blur-xl">
         <h2 className="text-3xl font-bold mb-6 text-center text-white">{title}</h2>
         <div className="space-y-4">{children}</div>
       </div>
@@ -2508,7 +2509,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
-        <CheckCircle className="w-6 h-6 mr-2" />
+        <Image
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Awesome%203D%20icon-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png"
+          alt="Awesome"
+          width={28}
+          height={28}
+          className="mr-2"
+        />
         Awesome!
       </Button>
     </Popup>
@@ -2573,7 +2580,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
-            <Coins className="w-5 h-5 mr-2" />
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%20Profits%203D%20icon-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png"
+              alt="Claim Profits"
+              width={24}
+              height={24}
+              className="mr-2"
+            />
             Claim Profits
           </Button>
         </Popup>
@@ -2597,7 +2610,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
-            <Star className="w-5 h-5 mr-2" />
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%20Rewards%203D%20icon-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png"
+              alt="Claim Rewards"
+              width={24}
+              height={24}
+              className="mr-2"
+            />
             Claim Rewards
           </Button>
         </Popup>
