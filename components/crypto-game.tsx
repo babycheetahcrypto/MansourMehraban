@@ -328,7 +328,9 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div>
       <Button
         variant="ghost"
-        className={`relative w-14 h-14 bg-transparent flex flex-col items-center justify-center ${isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''} bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
+        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
+          isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
+        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
         onClick={() => {
           setCurrentPage(href);
           playHeaderFooterSound();
@@ -1612,7 +1614,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFooter = () => (
-    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50">
+    <div
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
@@ -2523,7 +2528,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
       style={{
         width: '100%',
-        height: '100%',
+        height: '100vh',
         overflowY: 'auto',
         overflowX: 'hidden',
         touchAction: 'pan-y',
@@ -2533,16 +2538,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         WebkitUserSelect: 'none',
         MozUserSelect: 'none',
         msUserSelect: 'none',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+        paddingTop: 'env(safe-area-inset-top)',
       }}
     >
       <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
       />
       <style>{styles}</style>
       <StarryBackground />
       {renderHeader()}
-      <div className="flex-grow pb-20">
+      <div
+        className="flex-grow pb-20"
+        style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))' }}
+      >
         {currentPage === 'home' && renderHome()}
         {currentPage === 'shop' && renderShop()}
         {currentPage === 'tasks' && renderTasks()}
