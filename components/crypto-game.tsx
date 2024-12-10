@@ -882,14 +882,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               coins: prevUser.coins + 1000,
             }));
             saveUserData({ ...user, coins: user.coins + 1000 });
-            window.Telegram.WebApp.showAlert('You earned 1000 coins for inviting a friend!');
+            showGameAlert('You earned 1000 coins for inviting a friend!');
           } else {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Failed to process invitation');
           }
         } catch (error) {
           console.error('Error inviting friend:', error);
-          window.Telegram.WebApp.showAlert('Failed to process invitation. Please try again.');
+          showGameAlert('Failed to process invitation. Please try again.');
         }
       }
     },
@@ -1038,25 +1038,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
 
           // Show success message
-          if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
-          } else {
-            alert(`Successfully purchased ${item.name}!`);
-          }
+          showGameAlert(`Successfully purchased ${item.name}!`);
         } catch (error) {
           console.error('Error purchasing item:', error);
-          if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.showAlert('Failed to purchase item. Please try again.');
-          } else {
-            alert('Failed to purchase item. Please try again.');
-          }
+          showGameAlert('Failed to purchase item. Please try again.');
         }
       } else {
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.showAlert('Not enough coins!');
-        } else {
-          alert('Not enough coins!');
-        }
+        showGameAlert('Not enough coins!');
       }
     },
     [
@@ -1110,10 +1098,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(true);
         const address = await connectWallet();
         setWallet(address);
-        window.Telegram.WebApp.showAlert('Wallet connected successfully with Tonkeeper!');
+        showGameAlert('Wallet connected successfully with Tonkeeper!');
       } catch (error) {
         console.error('Failed to connect wallet:', error);
-        window.Telegram.WebApp.showAlert('Failed to connect wallet. Please try again.');
+        showGameAlert('Failed to connect wallet. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -1139,6 +1127,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     );
   };
 
+  const showGameAlert = (message: string) => {
+    // Implementation of game-style alert will be added here
+    console.log('Game Alert:', message);
+  };
+
+  const showGameConfirm = (message: string, onConfirm: () => void) => {
+    // Implementation of game-style confirm dialog will be added here
+    console.log('Game Confirm:', message);
+    onConfirm();
+  };
+
   const claimPPH = useCallback(() => {
     if (pphAccumulated > 0) {
       const updatedUser = {
@@ -1149,16 +1148,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       saveUserData(updatedUser);
       setPphAccumulated(0);
       setShowPPHPopup(false);
-      window.Telegram.WebApp.showAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
+      showGameAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
 
       window.Telegram.WebApp.sendData(JSON.stringify({ action: 'claim', amount: pphAccumulated }));
     } else {
-      window.Telegram.WebApp.showAlert('No profits to claim yet!');
+      showGameAlert('No profits to claim yet!');
     }
   }, [pphAccumulated, user, saveUserData]);
 
   const claimNewLevel = useCallback(() => {
-    window.Telegram.WebApp.showAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
+    showGameAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
     setUser((prevUser) => ({
       ...prevUser,
       level: newLevel,
@@ -1198,13 +1197,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         completed: completed,
       });
 
-      window.Telegram.WebApp.showAlert(
+      showGameAlert(
         `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`
       );
     } else if (dailyReward.completed) {
-      window.Telegram.WebApp.showAlert('You have completed the 30-day reward cycle!');
+      showGameAlert('You have completed the 30-day reward cycle!');
     } else {
-      window.Telegram.WebApp.showAlert('You have already claimed your daily reward today!');
+      showGameAlert('You have already claimed your daily reward today!');
     }
   }, [dailyReward, user, saveUserData]);
 
@@ -1222,7 +1221,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setMultiplier(2);
       const endTime = Date.now() + 1 * 60 * 1000;
       setMultiplierEndTime(endTime);
-      window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 1 minutes!`);
+      showGameAlert(`Activated 2x multiplier for 1 minutes!`);
 
       const cooldownTimer = setTimeout(
         () => {
@@ -1243,14 +1242,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       return () => clearTimeout(cooldownTimer);
     } else if (boosterCooldown) {
       const remainingCooldown = Math.ceil((boosterCooldown - Date.now()) / 1000);
-      window.Telegram.WebApp.showAlert(
-        `Booster on cooldown. Available in ${remainingCooldown} seconds.`
-      );
+      showGameAlert(`Booster on cooldown. Available in ${remainingCooldown} seconds.`);
     } else if (multiplierEndTime) {
       const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
-      window.Telegram.WebApp.showAlert(
-        `Multiplier active for ${remainingMultiplier} more seconds.`
-      );
+      showGameAlert(`Multiplier active for ${remainingMultiplier} more seconds.`);
     }
   }, [multiplierEndTime, boosterCooldown, user.id]);
 
@@ -1267,7 +1262,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       );
     } else if (platform === 'instagram') {
       window.Telegram.WebApp.openLink(`https://www.instagram.com/`);
-      window.Telegram.WebApp.showAlert('Copy and paste the message to your Instagram post!');
+      showGameAlert('Copy and paste the message to your Instagram post!');
     } else if (platform === 'whatsapp') {
       window.Telegram.WebApp.openLink(
         `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`
@@ -1289,15 +1284,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const inviteFriends = useCallback(() => {
     const referralLink = `https://t.me/BabyCheetah_Bot/?start=${user.telegramId}`;
-    window.Telegram.WebApp.showConfirm(
-      `Share your referral link: ${referralLink}`,
-      (confirmed: boolean) => {
-        if (confirmed) {
-          navigator.clipboard.writeText(referralLink);
-          window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
-        }
-      }
-    );
+    showGameConfirm(`Share your referral link: ${referralLink}`, () => {
+      navigator.clipboard.writeText(referralLink);
+      showGameAlert('Referral link copied to clipboard!');
+    });
   }, [user.telegramId]);
 
   const followX = useCallback(() => {
@@ -1352,7 +1342,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+        showGameAlert('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -1474,11 +1464,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
-        } else {
-          alert('Failed to load game data. Please try again.');
-        }
+        showGameAlert('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
