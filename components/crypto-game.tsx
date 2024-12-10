@@ -1677,11 +1677,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
       <div className="text-center w-full max-w-md flex flex-col justify-end h-full">
         <div className="flex space-x-2 mb-4 w-full">
-          <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md">
+          <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm font-bold text-white">Level {level}</span>
             </div>
-            <div className="w-full bg-gray-700 h-2 rounded-full overflow-hidden mb-1">
+            <div className="w-full bg-gray-700 h-1 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
                 style={{
@@ -1689,7 +1689,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 }}
               />
             </div>
-            <div className="text-xstext-white flex justify-between">
+            <div className="text-xs text-white flex justify-between mt-1">
               <span>{formatNumber(user.coins - levelRequirements[level - 1])}</span>
               <span>{formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins</span>
             </div>
@@ -2551,7 +2551,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       {renderHeader()}
       <div
         className="flex-grow pb-20"
-        style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))' }}
+        style={{
+          paddingBottom: 'calc(5rem + env(safe-area-inset-bottom) + 16px)',
+          marginBottom: '16px',
+        }}
       >
         {currentPage === 'home' && renderHome()}
         {currentPage === 'shop' && renderShop()}
