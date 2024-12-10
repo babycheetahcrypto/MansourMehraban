@@ -1618,9 +1618,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderFooter = () => (
     <div
-      className="fixed bottom-2 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
+      className="fixed bottom-2.50 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
       style={{
-        paddingBottom: 'max(env(safe-area-inset-bottom), 2rem)',
+        paddingBottom: 'max(env(safe-area-inset-bottom), 2.50rem)',
         height: 'calc(4rem + env(safe-area-inset-bottom))',
       }}
     >
