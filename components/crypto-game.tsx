@@ -1033,8 +1033,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
           if (!popupShown.congratulation) {
             setCongratulationPopup({ show: true, item: item });
-            setShowPPHPopup(false);
-            setShowLevelUpPopup(false);
+            setPopupShown((prev) => ({ ...prev, congratulation: true }));
           }
 
           // Send purchase data to Telegram Mini App
@@ -1508,8 +1507,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     if (!popupShown.levelUp && level > user.level) {
       setNewLevel(level);
       setShowLevelUpPopup(true);
-      setShowPPHPopup(false);
-      setCongratulationPopup({ show: false, item: null });
+      setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
 
     setTasks((prevTasks) =>
@@ -2271,7 +2269,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-mdoverflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
@@ -2496,6 +2494,31 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
+  const CongratulationPopup = () => (
+    <Popup
+      title="Congratulations!"
+      onClose={() => {
+        setCongratulationPopup({ show: false, item: null });
+        showPopup('congratulation');
+      }}
+    >
+      <p className="mb-6 text-xl text-center text-white">
+        You've purchased <span className="font-bold">{congratulationPopup.item?.name}</span>!
+      </p>
+      <p className="mb-6 text-center text-white">This will boost your crypto earnings!</p>
+      <Button
+        onClick={() => {
+          setCongratulationPopup({ show: false, item: null });
+          showPopup('congratulation');
+        }}
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+      >
+        <Award className="w-6 h-6 mr-2" />
+        Awesome!
+      </Button>
+    </Popup>
+  );
+
   return (
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
@@ -2536,76 +2559,56 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       {renderFooter()}
 
       {/* Popup logic */}
-      {(showPPHPopup || showLevelUpPopup || congratulationPopup.show) && (
+      {!shownPopups.has('pph') && showPPHPopup && (
         <Popup
-          title={
-            showPPHPopup
-              ? 'Profit Accumulated!'
-              : showLevelUpPopup
-                ? 'Level Up!'
-                : 'Congratulations!'
-          }
+          title="Profit Accumulated!"
           onClose={() => {
             setShowPPHPopup(false);
-            setShowLevelUpPopup(false);
-            setCongratulationPopup({ show: false, item: null });
+            showPopup('pph');
           }}
         >
-          {showPPHPopup && (
-            <>
-              <p className="mb-6 text-xl text-center text-white">
-                You've accumulated <span className="font-bold">{formatNumber(pphAccumulated)}</span>{' '}
-                coins!
-              </p>
-              <Button
-                onClick={() => {
-                  claimPPH();
-                  setShowPPHPopup(false);
-                }}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-              >
-                <Coins className="w-5 h-5 mr-2" />
-                Claim Profits
-              </Button>
-            </>
-          )}
-          {showLevelUpPopup && (
-            <>
-              <p className="mb-6 text-xl text-center text-white">
-                Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
-              </p>
-              <Button
-                onClick={() => {
-                  claimNewLevel();
-                  setShowLevelUpPopup(false);
-                }}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-              >
-                <Zap className="w-5 h-5 mr-2" />
-                Claim Rewards
-              </Button>
-            </>
-          )}
-          {congratulationPopup.show && (
-            <>
-              <p className="mb-6 text-xl text-center text-white">
-                You've purchased <span className="font-bold">{congratulationPopup.item?.name}</span>
-                !
-              </p>
-              <p className="mb-6 text-center text-white">This will boost your crypto earnings!</p>
-              <Button
-                onClick={() => {
-                  setCongratulationPopup({ show: false, item: null });
-                }}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-              >
-                <Award className="w-6 h-6 mr-2" />
-                Awesome!
-              </Button>
-            </>
-          )}
+          <p className="mb-6 text-xl text-center text-white">
+            You've accumulated <span className="font-bold">{formatNumber(pphAccumulated)}</span>{' '}
+            coins!
+          </p>
+          <Button
+            onClick={() => {
+              claimPPH();
+              showPopup('pph');
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+          >
+            <Coins className="w-5 h-5 mr-2" />
+            Claim Profits
+          </Button>
         </Popup>
       )}
+
+      {!shownPopups.has('levelUp') && showLevelUpPopup && (
+        <Popup
+          title="Level Up!"
+          onClose={() => {
+            setShowLevelUpPopup(false);
+            showPopup('levelUp');
+          }}
+        >
+          <p className="mb-6 text-xl text-center text-white">
+            Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
+          </p>
+          <Button
+            onClick={() => {
+              claimNewLevel();
+              showPopup('levelUp');
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+          >
+            <Zap className="w-5 h-5 mr-2" />
+            Claim Rewards
+          </Button>
+        </Popup>
+      )}
+
+      {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
       {gamePopup.show && (
         <GamePopup
           message={gamePopup.message}
