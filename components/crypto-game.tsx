@@ -1496,15 +1496,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   // Show PPH popup
   useEffect(() => {
-    if (pphAccumulated > 0 && !popupShown.pph) {
+    if (!popupShown.pph && pphAccumulated > 0) {
       setShowPPHPopup(true);
       setPopupShown((prev) => ({ ...prev, pph: true }));
-    } else if (level > user.level && !popupShown.levelUp) {
-      setNewLevel(level);
-      setShowLevelUpPopup(true);
-      setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
-  }, [pphAccumulated, level, user.level, popupShown]);
+  }, [pphAccumulated, popupShown.pph]);
 
   // Level up and task progress
   useEffect(() => {
@@ -2563,12 +2559,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       {renderFooter()}
 
       {/* Popup logic */}
-      {showPPHPopup && (
+      {!shownPopups.has('pph') && showPPHPopup && (
         <Popup
           title="Profit Accumulated!"
           onClose={() => {
             setShowPPHPopup(false);
-            claimPPH();
+            showPopup('pph');
           }}
         >
           <p className="mb-6 text-xl text-center text-white">
@@ -2578,7 +2574,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <Button
             onClick={() => {
               claimPPH();
-              setShowPPHPopup(false);
+              showPopup('pph');
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
@@ -2588,12 +2584,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </Popup>
       )}
 
-      {showLevelUpPopup && (
+      {!shownPopups.has('levelUp') && showLevelUpPopup && (
         <Popup
           title="Level Up!"
           onClose={() => {
             setShowLevelUpPopup(false);
-            claimNewLevel();
+            showPopup('levelUp');
           }}
         >
           <p className="mb-6 text-xl text-center text-white">
@@ -2602,7 +2598,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <Button
             onClick={() => {
               claimNewLevel();
-              setShowLevelUpPopup(false);
+              showPopup('levelUp');
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
@@ -2612,7 +2608,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </Popup>
       )}
 
-      {congratulationPopup.show && <CongratulationPopup />}
+      {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
       {gamePopup.show && (
         <GamePopup
           message={gamePopup.message}
