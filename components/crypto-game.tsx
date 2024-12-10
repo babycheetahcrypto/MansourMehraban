@@ -2552,57 +2552,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         {currentPage === 'trophies' && renderTrophies()}
       </div>
       {renderFooter()}
-
-      {/* Popup logic */}
-      {!shownPopups.has('pph') && showPPHPopup && (
-        <Popup
-          title="Profit Accumulated!"
-          onClose={() => {
-            setShowPPHPopup(false);
-            showPopup('pph');
-          }}
-        >
-          <p className="mb-6 text-xl text-center text-white">
-            You've accumulated <span className="font-bold">{formatNumber(pphAccumulated)}</span>{' '}
-            coins!
-          </p>
-          <Button
-            onClick={() => {
-              claimPPH();
-              showPopup('pph');
-            }}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-          >
-            <Coins className="w-5 h-5 mr-2" />
-            Claim Profits
-          </Button>
-        </Popup>
-      )}
-
-      {!shownPopups.has('levelUp') && showLevelUpPopup && (
-        <Popup
-          title="Level Up!"
-          onClose={() => {
-            setShowLevelUpPopup(false);
-            showPopup('levelUp');
-          }}
-        >
-          <p className="mb-6 text-xl text-center text-white">
-            Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
-          </p>
-          <Button
-            onClick={() => {
-              claimNewLevel();
-              showPopup('levelUp');
-            }}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-          >
-            <Star className="w-5 h-5 mr-2" />
-            Claim Rewards
-          </Button>
-        </Popup>
-      )}
-
       {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
       {gamePopup.show && (
         <GamePopup
