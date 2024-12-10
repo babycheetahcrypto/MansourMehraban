@@ -1044,7 +1044,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
 
           // Show success message
-          showGameAlert(`Successfully purchased ${item.name}!`);
         } catch (error) {
           console.error('Error purchasing item:', error);
           showGameAlert('Failed to purchase item. Please try again.');
@@ -1144,15 +1143,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setPphAccumulated(0);
       setShowPPHPopup(false);
       showGameAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
-
-      window.Telegram.WebApp.sendData(JSON.stringify({ action: 'claim', amount: pphAccumulated }));
     } else {
       showGameAlert('No profits to claim yet!');
     }
   }, [pphAccumulated, user, saveUserData]);
 
   const claimNewLevel = useCallback(() => {
-    showGameAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
     setUser((prevUser) => ({
       ...prevUser,
       level: newLevel,
