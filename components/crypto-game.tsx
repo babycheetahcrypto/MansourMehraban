@@ -2264,7 +2264,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover<continuation_point>xl">
         <CardHeader className="relative">
           <CardTitle className="z10 text-3xl text-center text-white">Invite Friends</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
@@ -2481,7 +2481,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     onClose: () => void;
   }) => (
     <div className="fixed inset-0 flex items-center justify-center z-[60]">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-m" onClick={onClose}></div>
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-md" onClick={onClose}></div>
       <div className="bg-gradient-to-br from-gray-900/90 to-black/90 text-white p-8 rounded-3xl shadow-2xl z-10 max-w-md w-full mx-4 border border-gray-700/50 backdrop-blur-xl">
         <h2 className="text-3xl font-bold mb-6 text-center text-white">{title}</h2>
         <div className="space-y-4">{children}</div>
