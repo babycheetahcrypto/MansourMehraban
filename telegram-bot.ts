@@ -1,6 +1,7 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import { prisma } from './lib/prisma';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
 bot.command('start', async (ctx: Context) => {
@@ -12,14 +13,11 @@ bot.command('start', async (ctx: Context) => {
 
   const welcomeMessage = `
 Welcome to Baby Cheetah! 🐾🎉
-
 Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins ($BBCH), complete tasks, and get ready for an upcoming airdrop you won’t to miss! 💸
-
 What You Can Do Now:
 💰 Earn $BBCH: Play our fun tap-to-earn mining game and start stacking coins.
 👥 Invite Friends: Share the game and earn bonus $BBCH for every friend who joins. More friends, more rewards!
 🎯 Complete Quests: Take on daily challenges to boost your earnings and unlock exclusive bonuses.
-
 Start earning today and be part of the next big upcoming airdrop. ✨
 Stay fast, stay fierce, stay Baby Cheetah! 🌟
   `;
@@ -42,18 +40,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           exp: 0,
           unlockedLevels: [1],
           clickPower: 1,
-          friendsCoins: {},
           energy: 500,
-          pphAccumulated: 0,
-          multiplier: 1,
-          multiplierEndTime: null,
-          boosterCooldown: null,
-          settings: {
-            vibration: true,
-            backgroundMusic: false,
-            soundEffect: true,
-          },
-          profitPerHour: 0,
         },
       });
       console.log('New user created:', user);
@@ -61,7 +48,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
 
-    // Send welcome message with photo
     await ctx.replyWithPhoto(
       {
         url: 'https://i.postimg.cc/dv4DjYdW/Albedo-Base-XL-make-a-baby-cheetah-cheetah-with-wears-cloths-ho-3.jpg',
@@ -77,7 +63,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
     );
   } catch (error) {
     console.error('Error in /start command:', error);
-    ctx.reply('An error occurred while setting up your game. Please try again later.');
+    ctx.reply('An error occurred while setting up your account. Please try again later.');
   }
 });
 
