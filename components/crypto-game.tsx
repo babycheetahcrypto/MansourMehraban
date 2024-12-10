@@ -2440,6 +2440,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     });
   };
 
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href =
+      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3';
+    ('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3');
+    ('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Button%20Sound-vLxAEYrnFJ4W4ZNzInbVnZpsMhwZLa.mp3');
+    link.as = 'audio';
+    document.head.appendChild(link);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
@@ -2528,7 +2539,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
       style={{
         width: '100%',
-        height: '100vh',
+        height: '100dvh',
         overflowY: 'auto',
         overflowX: 'hidden',
         touchAction: 'pan-y',
