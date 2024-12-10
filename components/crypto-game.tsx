@@ -215,11 +215,6 @@ declare global {
         showConfirm: (message: string, callback: (confirmed: boolean) => void) => void;
         openLink: (url: string) => void;
         openTelegramLink: (url: string) => void;
-        showPopup: (options: {
-          title: string;
-          message: string;
-          buttons: { id?: string; type: string; text: string }[];
-        }) => void;
       };
     };
   }
@@ -511,6 +506,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [maxEnergy] = useState(500);
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
+  const [showPPHPopup, setShowPPHPopup] = useState(false);
   const [settings, setSettings] = useState({
     vibration: true,
     backgroundMusic: false,
@@ -522,6 +518,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           )
         : null,
   });
+  const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
+  const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
   const [dailyReward, setDailyReward] = useState({
     lastClaimed: null as string | null,
@@ -534,9 +532,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
   const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[0]);
   const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
+  const [congratulationPopup, setCongratulationPopup] = useState({
+    show: false,
+    item: null as ShopItem | PremiumShopItem | null,
+  });
   const [clickEffects, setClickEffects] = useState<
     { id: number; x: number; y: number; value: number; color: string }[]
   >([]);
+  const [popupShown, setPopupShown] = useState({
+    pph: false,
+    levelUp: false,
+    congratulation: false,
+  });
+  const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
       id: 1,
@@ -908,8 +916,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [level]);
 
-  const [newLevel, setNewLevel] = useState(1);
-
   const clickCoin = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
@@ -918,18 +924,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
         const newExp = user.exp + 1;
-        const newLevelValue = newExp >= 100 ? user.level + 1 : user.level;
+        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
         const updatedUser = {
           ...user,
           coins: newCoins,
           exp: newExp % 100,
-          level: newLevelValue,
+          level: newLevel,
         };
 
         setUser(updatedUser);
         saveUserData(updatedUser);
-        setNewLevel(newLevelValue); // Update newLevel state
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1020,6 +1025,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             );
           }
 
+          if (!popupShown.congratulation) {
+            setCongratulationPopup({ show: true, item: item });
+            setPopupShown((prev) => ({ ...prev, congratulation: true }));
+          }
+
           // Send purchase data to Telegram Mini App
           if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.sendData(
@@ -1027,54 +1037,39 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             );
           }
 
-          // Show success message with custom styling
+          // Show success message
           if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.showPopup({
-              title: '<span style="font-size: 24px; font-weight: bold;">Congratulations!</span>',
-              message: `<div style="text-align: center;">
-                <p style="font-size: 18px; margin-bottom: 10px;">You've purchased <strong>${item.name}</strong>!</p>
-                <p style="font-size: 16px;">This will boost your crypto earnings!</p>
-              </div>`,
-              buttons: [
-                {
-                  id: 'awesome',
-                  type: 'ok',
-                  text: 'Awesome!',
-                },
-              ],
-            });
+            window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
+          } else {
+            alert(`Successfully purchased ${item.name}!`);
           }
         } catch (error) {
           console.error('Error purchasing item:', error);
           if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.showPopup({
-              title:
-                '<span style="color: #ff4d4f; font-size: 20px; font-weight: bold;">Error</span>',
-              message: '<p style="font-size: 16px;">Failed to purchase item. Please try again.</p>',
-              buttons: [{ type: 'ok', text: 'OK' }],
-            });
+            window.Telegram.WebApp.showAlert('Failed to purchase item. Please try again.');
+          } else {
+            alert('Failed to purchase item. Please try again.');
           }
         }
       } else {
         if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.showPopup({
-            title:
-              '<span style="color: #ff4d4f; font-size: 20px; font-weight: bold;">Insufficient Coins</span>',
-            message:
-              '<p style="font-size: 16px;">You don\'t have enough coins to make this purchase.</p>',
-            buttons: [{ type: 'ok', text: 'OK' }],
-          });
+          window.Telegram.WebApp.showAlert('Not enough coins!');
+        } else {
+          alert('Not enough coins!');
         }
       }
     },
     [
       user,
       saveUserData,
+      popupShown.congratulation,
       setUser,
       setPremiumShopItems,
       setShopItems,
       setProfitPerHour,
       setClickPower,
+      setCongratulationPopup,
+      setPopupShown,
     ]
   );
 
@@ -1153,45 +1148,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setUser(updatedUser);
       saveUserData(updatedUser);
       setPphAccumulated(0);
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.showPopup({
-          title: '<span style="font-size: 24px; font-weight: bold;">Profit Claimed!</span>',
-          message: `<p style="font-size: 18px; text-align: center;">You've claimed <strong>${formatNumber(pphAccumulated)}</strong> coins!</p>`,
-          buttons: [{ type: 'ok', text: 'OK' }],
-        });
-      }
+      setShowPPHPopup(false);
+      window.Telegram.WebApp.showAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
 
       window.Telegram.WebApp.sendData(JSON.stringify({ action: 'claim', amount: pphAccumulated }));
     } else {
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.showPopup({
-          title: '<span style="font-size: 20px; font-weight: bold;">No Profits</span>',
-          message: '<p style="font-size: 16px; text-align: center;">No profits to claim yet!</p>',
-          buttons: [{ type: 'ok', text: 'OK' }],
-        });
-      }
+      window.Telegram.WebApp.showAlert('No profits to claim yet!');
     }
   }, [pphAccumulated, user, saveUserData]);
 
   const claimNewLevel = useCallback(() => {
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.showPopup({
-        title: '<span style="font-size: 24px; font-weight: bold;">Level Up!</span>',
-        message: `<p style="font-size: 18px; text-align: center;">Congratulations! You've advanced to <strong>Level ${newLevel}</strong>!</p>`,
-        buttons: [
-          {
-            id: 'claim',
-            type: 'ok',
-            text: 'Claim Rewards',
-          },
-        ],
-      });
-    }
+    window.Telegram.WebApp.showAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
     setUser((prevUser) => ({
       ...prevUser,
       level: newLevel,
     }));
     setUnlockedLevels((prev) => [...new Set([...prev, newLevel])]);
+    setShowLevelUpPopup(false);
+    setPopupShown((prev) => ({ ...prev, levelUp: true }));
   }, [newLevel]);
 
   const claimDailyReward = useCallback(() => {
@@ -1537,8 +1511,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
 
+  // Show PPH popup
+  useEffect(() => {
+    if (!popupShown.pph && pphAccumulated > 0) {
+      setShowPPHPopup(true);
+      setPopupShown((prev) => ({ ...prev, pph: true }));
+    }
+  }, [pphAccumulated, popupShown.pph]);
+
   // Level up and task progress
   useEffect(() => {
+    if (!popupShown.levelUp && level > user.level) {
+      setNewLevel(level);
+      setShowLevelUpPopup(true);
+      setPopupShown((prev) => ({ ...prev, levelUp: true }));
+    }
+
     setTasks((prevTasks) =>
       prevTasks.map((task) => {
         if (task.id === 8) {
@@ -1552,7 +1540,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return task;
       })
     );
-  }, [level]);
+  }, [level, user.level, popupShown.levelUp]);
 
   useEffect(() => {
     // Clear click effects when changing pages
@@ -2288,7 +2276,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 claimDailyReward();
                 playHeaderFooterSound();
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md text-white"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
               disabled={dailyReward.completed}
             >
               <Gift className="w-6 h-6 mr-2" />
@@ -2433,6 +2421,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
+  const showPopup = (popupType: string) => {
+    if (!shownPopups.has(popupType)) {
+      setShownPopups((prev) => new Set(prev).add(popupType));
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
@@ -2473,6 +2467,49 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     );
   }
 
+  const Popup = ({
+    title,
+    children,
+    onClose,
+  }: {
+    title: string;
+    children: React.ReactNode;
+    onClose: () => void;
+  }) => (
+    <div className="fixed inset-0 flex items-center justify-center z-[60]">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-m" onClick={onClose}></div>
+      <div className="bg-gradient-to-br from-gray-900/90 to-black/90 text-white p-8 rounded-3xl shadow-2xl z-10 max-w-md w-full mx-4 border border-gray-700/50 backdrop-blur-xl">
+        <h2 className="text-3xl font-bold mb-6 text-center text-white">{title}</h2>
+        <div className="space-y-4">{children}</div>
+      </div>
+    </div>
+  );
+
+  const CongratulationPopup = () => (
+    <Popup
+      title="Congratulations!"
+      onClose={() => {
+        setCongratulationPopup({ show: false, item: null });
+        showPopup('congratulation');
+      }}
+    >
+      <p className="mb-6 text-xl text-center text-white">
+        You've purchased <span className="font-bold">{congratulationPopup.item?.name}</span>!
+      </p>
+      <p className="mb-6 text-center text-white">This will boost your crypto earnings!</p>
+      <Button
+        onClick={() => {
+          setCongratulationPopup({ show: false, item: null });
+          showPopup('congratulation');
+        }}
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+      >
+        <CheckCircle className="w-6 h-6 mr-2" />
+        Awesome!
+      </Button>
+    </Popup>
+  );
+
   return (
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
@@ -2511,6 +2548,58 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         {currentPage === 'trophies' && renderTrophies()}
       </div>
       {renderFooter()}
+
+      {/* Popup logic */}
+      {!shownPopups.has('pph') && showPPHPopup && (
+        <Popup
+          title="Profit Accumulated!"
+          onClose={() => {
+            setShowPPHPopup(false);
+            showPopup('pph');
+          }}
+        >
+          <p className="mb-6 text-xl text-center text-white">
+            You've accumulated <span className="font-bold">{formatNumber(pphAccumulated)}</span>{' '}
+            coins!
+          </p>
+          <Button
+            onClick={() => {
+              claimPPH();
+              showPopup('pph');
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+          >
+            <Coins className="w-5 h-5 mr-2" />
+            Claim Profits
+          </Button>
+        </Popup>
+      )}
+
+      {!shownPopups.has('levelUp') && showLevelUpPopup && (
+        <Popup
+          title="Level Up!"
+          onClose={() => {
+            setShowLevelUpPopup(false);
+            showPopup('levelUp');
+          }}
+        >
+          <p className="mb-6 text-xl text-center text-white">
+            Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
+          </p>
+          <Button
+            onClick={() => {
+              claimNewLevel();
+              showPopup('levelUp');
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+          >
+            <Star className="w-5 h-5 mr-2" />
+            Claim Rewards
+          </Button>
+        </Popup>
+      )}
+
+      {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
     </div>
   );
 };
