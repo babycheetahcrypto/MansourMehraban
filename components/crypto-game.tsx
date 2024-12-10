@@ -1142,7 +1142,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       saveUserData(updatedUser);
       setPphAccumulated(0);
       setShowPPHPopup(false);
-      showGameAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
     } else {
       showGameAlert('No profits to claim yet!');
     }
