@@ -882,24 +882,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               coins: prevUser.coins + 1000,
             }));
             saveUserData({ ...user, coins: user.coins + 1000 });
-            setPopup({
-              show: true,
-              title: 'Friend Invited!',
-              message: 'You earned 1000 coins for inviting a friend!',
-              onConfirm: () => setPopup(null),
-            });
+            window.Telegram.WebApp.showAlert('You earned 1000 coins for inviting a friend!');
           } else {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Failed to process invitation');
           }
         } catch (error) {
           console.error('Error inviting friend:', error);
-          setPopup({
-            show: true,
-            title: 'Error',
-            message: 'Failed to process invitation. Please try again.',
-            onConfirm: () => setPopup(null),
-          });
+          window.Telegram.WebApp.showAlert('Failed to process invitation. Please try again.');
         }
       }
     },
@@ -1047,28 +1037,26 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             );
           }
 
-          setPopup({
-            show: true,
-            title: 'Purchase Successful!',
-            message: `Successfully purchased ${item.name}!`,
-            onConfirm: () => setPopup(null),
-          });
+          // Show success message
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
+          } else {
+            alert(`Successfully purchased ${item.name}!`);
+          }
         } catch (error) {
           console.error('Error purchasing item:', error);
-          setPopup({
-            show: true,
-            title: 'Error',
-            message: 'Failed to purchase item. Please try again.',
-            onConfirm: () => setPopup(null),
-          });
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.showAlert('Failed to purchase item. Please try again.');
+          } else {
+            alert('Failed to purchase item. Please try again.');
+          }
         }
       } else {
-        setPopup({
-          show: true,
-          title: 'Insufficient Coins',
-          message: 'Not enough coins!',
-          onConfirm: () => setPopup(null),
-        });
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Not enough coins!');
+        } else {
+          alert('Not enough coins!');
+        }
       }
     },
     [
@@ -1122,20 +1110,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(true);
         const address = await connectWallet();
         setWallet(address);
-        setPopup({
-          show: true,
-          title: 'Wallet Connected!',
-          message: 'Wallet connected successfully with Tonkeeper!',
-          onConfirm: () => setPopup(null),
-        });
+        window.Telegram.WebApp.showAlert('Wallet connected successfully with Tonkeeper!');
       } catch (error) {
         console.error('Failed to connect wallet:', error);
-        setPopup({
-          show: true,
-          title: 'Error',
-          message: 'Failed to connect wallet. Please try again.',
-          onConfirm: () => setPopup(null),
-        });
+        window.Telegram.WebApp.showAlert('Failed to connect wallet. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -1171,31 +1149,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       saveUserData(updatedUser);
       setPphAccumulated(0);
       setShowPPHPopup(false);
-      setPopup({
-        show: true,
-        title: 'Coins Claimed',
-        message: `Claimed ${formatNumber(pphAccumulated)} coins!`,
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
 
       window.Telegram.WebApp.sendData(JSON.stringify({ action: 'claim', amount: pphAccumulated }));
     } else {
-      setPopup({
-        show: true,
-        title: 'No Profits',
-        message: 'No profits to claim yet!',
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert('No profits to claim yet!');
     }
   }, [pphAccumulated, user, saveUserData]);
 
   const claimNewLevel = useCallback(() => {
-    setPopup({
-      show: true,
-      title: 'Level Up!',
-      message: `Congratulations! You've advanced to Level ${newLevel}!`,
-      onConfirm: () => setPopup(null),
-    });
+    window.Telegram.WebApp.showAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
     setUser((prevUser) => ({
       ...prevUser,
       level: newLevel,
@@ -1235,26 +1198,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         completed: completed,
       });
 
-      setPopup({
-        show: true,
-        title: 'Daily Reward Claimed!',
-        message: `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`,
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert(
+        `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`
+      );
     } else if (dailyReward.completed) {
-      setPopup({
-        show: true,
-        title: 'Reward Cycle Completed',
-        message: 'You have completed the 30-day reward cycle!',
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert('You have completed the 30-day reward cycle!');
     } else {
-      setPopup({
-        show: true,
-        title: 'Daily Reward',
-        message: 'You have already claimed your daily reward today!',
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert('You have already claimed your daily reward today!');
     }
   }, [dailyReward, user, saveUserData]);
 
@@ -1272,12 +1222,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setMultiplier(2);
       const endTime = Date.now() + 1 * 60 * 1000;
       setMultiplierEndTime(endTime);
-      setPopup({
-        show: true,
-        title: 'Multiplier Activated!',
-        message: `Activated 2x multiplier for 1 minutes!`,
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 1 minutes!`);
 
       const cooldownTimer = setTimeout(
         () => {
@@ -1298,20 +1243,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       return () => clearTimeout(cooldownTimer);
     } else if (boosterCooldown) {
       const remainingCooldown = Math.ceil((boosterCooldown - Date.now()) / 1000);
-      setPopup({
-        show: true,
-        title: 'Booster Cooldown',
-        message: `Booster on cooldown. Available in ${remainingCooldown} seconds.`,
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert(
+        `Booster on cooldown. Available in ${remainingCooldown} seconds.`
+      );
     } else if (multiplierEndTime) {
       const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
-      setPopup({
-        show: true,
-        title: 'Multiplier Active',
-        message: `Multiplier active for ${remainingMultiplier} more seconds.`,
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert(
+        `Multiplier active for ${remainingMultiplier} more seconds.`
+      );
     }
   }, [multiplierEndTime, boosterCooldown, user.id]);
 
@@ -1328,12 +1267,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       );
     } else if (platform === 'instagram') {
       window.Telegram.WebApp.openLink(`https://www.instagram.com/`);
-      setPopup({
-        show: true,
-        title: 'Instagram Share',
-        message: 'Copy and paste the message to your Instagram post!',
-        onConfirm: () => setPopup(null),
-      });
+      window.Telegram.WebApp.showAlert('Copy and paste the message to your Instagram post!');
     } else if (platform === 'whatsapp') {
       window.Telegram.WebApp.openLink(
         `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`
@@ -1355,21 +1289,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const inviteFriends = useCallback(() => {
     const referralLink = `https://t.me/BabyCheetah_Bot/?start=${user.telegramId}`;
-    setPopup({
-      show: true,
-      title: 'Share Referral Link',
-      message: `Share your referral link: ${referralLink}`,
-      onConfirm: () => {
-        navigator.clipboard.writeText(referralLink);
-        setPopup({
-          show: true,
-          title: 'Link Copied',
-          message: 'Referral link copied to clipboard!',
-          onConfirm: () => setPopup(null),
-        });
-      },
-      onCancel: () => setPopup(null),
-    });
+    window.Telegram.WebApp.showConfirm(
+      `Share your referral link: ${referralLink}`,
+      (confirmed: boolean) => {
+        if (confirmed) {
+          navigator.clipboard.writeText(referralLink);
+          window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
+        }
+      }
+    );
   }, [user.telegramId]);
 
   const followX = useCallback(() => {
@@ -1412,39 +1340,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               setUser(userData);
             } else {
               console.error('Failed to fetch user data:', await response.text());
-              setPopup({
-                show: true,
-                title: 'Error',
-                message: 'Failed to fetch user data',
-                onConfirm: () => setPopup(null),
-              });
+              throw new Error('Failed to fetch user data');
             }
           } else {
             console.error('No Telegram user data available');
-            setPopup({
-              show: true,
-              title: 'Error',
-              message: 'No Telegram user data available',
-              onConfirm: () => setPopup(null),
-            });
+            throw new Error('No Telegram user data available');
           }
         } else {
           console.error('Telegram WebApp not available');
-          setPopup({
-            show: true,
-            title: 'Error',
-            message: 'Telegram WebApp not available',
-            onConfirm: () => setPopup(null),
-          });
+          throw new Error('Telegram WebApp not available');
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setPopup({
-          show: true,
-          title: 'Error',
-          message: 'Failed to load game data. Please try again.',
-          onConfirm: () => setPopup(null),
-        });
+        window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -1566,12 +1474,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
-        setPopup({
-          show: true,
-          title: 'Error',
-          message: 'Failed to load game data. Please try again.',
-          onConfirm: () => setPopup(null),
-        });
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+        } else {
+          alert('Failed to load game data. Please try again.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -2052,12 +1959,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         setTasks((prevTasks) =>
                           prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
                         );
-                        setPopup({
-                          show: true,
-                          title: 'Reward Claimed!',
-                          message: `Claimed ${task.reward} coins!`,
-                          onConfirm: () => setPopup(null),
-                        });
+                        window.Telegram.WebApp.showAlert(`Claimed ${task.reward} coins!`);
                       }}
                     >
                       <Star className="w-4 h-4 mr-1" />
@@ -2176,21 +2078,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   connectWallet()
                     .then((address) => {
                       setWallet(address);
-                      setPopup({
-                        show: true,
-                        title: 'Wallet Connected!',
-                        message: 'Wallet connected successfully with Tonkeeper!',
-                        onConfirm: () => setPopup(null),
-                      });
+                      window.Telegram.WebApp.showAlert(
+                        'Wallet connected successfully with Tonkeeper!'
+                      );
                     })
                     .catch((error) => {
                       console.error('Failed to connect wallet:', error);
-                      setPopup({
-                        show: true,
-                        title: 'Error',
-                        message: 'Failed to connect wallet. Please try again.',
-                        onConfirm: () => setPopup(null),
-                      });
+                      window.Telegram.WebApp.showAlert(
+                        'Failed to connect wallet. Please try again.'
+                      );
                     });
                   playHeaderFooterSound();
                 }}
@@ -2411,12 +2307,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   navigator.clipboard.writeText(
                     `https://t.me/BabyCheetah_Bot?start=${user.telegramId}`
                   );
-                  setPopup({
-                    show: true,
-                    title: 'Link Copied!',
-                    message: 'Referral link copied to clipboard!',
-                    onConfirm: () => setPopup(null),
-                  });
+                  window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
                 }}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"
               >
@@ -2503,12 +2394,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white mt-4"
                   onClick={() => {
                     setUser((prev) => ({ ...prev, coins: prev.coins + trophy.prize }));
-                    setPopup({
-                      show: true,
-                      title: 'Trophy Claimed!',
-                      message: `Congratulations! You've claimed the ${trophy.name} trophy and earned ${formatNumber(trophy.prize)} coins!`,
-                      onConfirm: () => setPopup(null),
-                    });
+                    window.Telegram.WebApp.showAlert(
+                      `Congratulations! You've claimed the ${trophy.name} trophy and earned ${formatNumber(trophy.prize)} coins!`
+                    );
                     playHeaderFooterSound();
                   }}
                 >
@@ -2538,14 +2426,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setShownPopups((prev) => new Set(prev).add(popupType));
     }
   };
-
-  const [popup, setPopup] = useState<{
-    show: boolean;
-    title: string;
-    message: string;
-    onConfirm: () => void;
-    onCancel?: () => void;
-  } | null>(null);
 
   if (isLoading) {
     return (
