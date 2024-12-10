@@ -461,8 +461,6 @@ const playHeaderFooterSound = () => {
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [loadingMessage, setLoadingMessage] = useState('Initializing game...');
   const [user, setUser] = useState<User>(
     userData || {
       id: '',
@@ -1424,9 +1422,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const initializeGame = async () => {
       setIsLoading(true);
       try {
-        // Telegram WebApp initialization
-        setLoadingProgress(10);
-        setLoadingMessage('Connecting to Telegram...');
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           webApp.ready();
@@ -1458,37 +1453,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           );
         }
 
-        // Fetch user data
-        setLoadingProgress(30);
-        setLoadingMessage('Fetching user data...');
-        await fetchUserData();
-
-        // Initialize game components
-        setLoadingProgress(50);
-        setLoadingMessage('Initializing game components...');
-        // Simulate loading of various game components
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Load assets
-        setLoadingProgress(70);
-        setLoadingMessage('Loading game assets...');
-        // Simulate loading of game assets
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Final setup
-        setLoadingProgress(90);
-        setLoadingMessage('Finalizing setup...');
-        // Perform any final setup tasks
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        setLoadingProgress(100);
-        setLoadingMessage('Ready to play!');
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
         showGameAlert('Failed to load game data. Please try again.');
+      } finally {
         setIsLoading(false);
       }
     };
@@ -2285,7 +2254,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 claimDailyReward();
                 playHeaderFooterSound();
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
               disabled={dailyReward.completed}
             >
               <Gift className="w-6 h-6 mr-2" />
@@ -2468,11 +2437,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-black opacity-50"></div>
           <div className="absolute inset-0">
-            {[...Array(100)].map((_, i) => (
+            {[...Array(50)].map((_, i) => (
               <div
                 key={i}
                 className="absolute rounded-full bg-white"
@@ -2487,21 +2456,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             ))}
           </div>
         </div>
-        <div className="text-center z-10 space-y-8">
+        <div className="text-center z-10">
           <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-iTiljsrx8N2IGIdjozA2tXBHhaCi8x.png"
             alt="Logo"
-            width={150}
-            height={150}
-            className="mx-auto animate-pulse"
+            width={100}
+            height={100}
+            className="mx-auto mb-8"
           />
-          <div className="w-64 h-4 bg-gray-700 rounded-full overflow-hidden">
+          <div className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-primary via-purple-500 to-pink-500"
-              style={{ width: `${loadingProgress}%`, transition: 'width 0.5s ease-in-out' }}
+              className="h-full bg-gradient-to-r from-primary via-purple-500 to-pink-500 animate-pulse"
+              style={{ width: '100%' }}
             />
           </div>
-          <p className="text-white text-lg font-semibold">{loadingMessage}</p>
         </div>
       </div>
     );
