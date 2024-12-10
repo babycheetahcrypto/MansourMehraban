@@ -2451,6 +2451,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     document.head.appendChild(link);
   }, []);
 
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href =
+      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3';
+    link.as = 'audio';
+    document.head.appendChild(link);
+  }, []);
+
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href =
+      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Button%20Sound-vLxAEYrnFJ4W4ZNzInbVnZpsMhwZLa.mp3';
+    link.as = 'audio';
+    document.head.appendChild(link);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
