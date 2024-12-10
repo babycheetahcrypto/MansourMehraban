@@ -153,6 +153,9 @@ const styles = `
     transform: translate(-50%, -50%);
     z-index: 30;
   }
+  .content-container {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
 `;
 
 // Telegram WebApp type definition
@@ -1615,8 +1618,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderFooter = () => (
     <div
-      className="fixed bottom-1 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
+      style={{
+        paddingBottom: 'max(env(safe-area-inset-bottom), 0.25rem)',
+        height: 'calc(4rem + env(safe-area-inset-bottom))',
+      }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
@@ -1674,7 +1680,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
+    <div className="content-container">
       <div className="text-center w-full max-w-md flex flex-col justify-end h-full">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
@@ -1818,7 +1824,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderShop = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+    <div className="content-container">
       <StarryBackground />
       <div className="max-w-7xl mx-auto">
         <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
@@ -1899,7 +1905,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderTasks = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+    <div className="content-container">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4">
         {tasks.map((task) => (
           <NeonGradientCard
@@ -1975,7 +1981,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderRating = () => {
     return (
-      <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <div className="content-container">
         <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
           {leaderboardData.slice(0, 200).map((player, index) => (
             <div
@@ -2032,7 +2038,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   const renderWallet = () => (
-    <div className="flex-grow flex items-center justify-center p-6">
+    <div className="content-container flex-grow flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
           <CardHeader className="relative">
@@ -2103,7 +2109,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderLevels = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+    <div className="content-container">
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 p-4">
         {levelImages.map((image, index) => (
           <div key={index}>
@@ -2156,7 +2162,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderSettings = () => (
-    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
+    <div className="content-container flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
@@ -2213,7 +2219,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderDailyReward = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+    <div className="content-container flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Daily Rewards</CardTitle>
@@ -2272,7 +2278,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderInvite = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+    <div className="content-container flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
@@ -2314,7 +2320,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFriendsActivity = () => (
-    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
+    <div className="content-container flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Friends Activity</CardTitle>
@@ -2341,7 +2347,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderTrophies = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+    <div className="content-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
       {trophies.map((trophy, index) => (
         <div key={index}>
           <NeonGradientCard
@@ -2529,9 +2535,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       style={{
         width: '100%',
         height: '100vh',
-        overflowY: 'auto',
+        overflowY: 'hidden',
         overflowX: 'hidden',
-        touchAction: 'pan-y',
+        touchAction: 'none',
         WebkitOverflowScrolling: 'touch',
         userSelect: 'none',
         WebkitTouchCallout: 'none',
@@ -2544,7 +2550,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     >
       <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height"
       />
       <style>{styles}</style>
       <StarryBackground />
@@ -2552,8 +2558,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <div
         className="flex-grow pb-20"
         style={{
-          paddingBottom: 'calc(5rem + env(safe-area-inset-bottom) + 16px)',
-          marginBottom: '16px',
+          paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))',
+          marginBottom: '0',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          height: 'calc(100vh - 4rem - env(safe-area-inset-bottom))',
         }}
       >
         {currentPage === 'home' && renderHome()}
