@@ -882,14 +882,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               coins: prevUser.coins + 1000,
             }));
             saveUserData({ ...user, coins: user.coins + 1000 });
-            showCustomAlert('You earned 1000 coins for inviting a friend!');
+            window.Telegram.WebApp.showAlert('You earned 1000 coins for inviting a friend!');
           } else {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Failed to process invitation');
           }
         } catch (error) {
           console.error('Error inviting friend:', error);
-          showCustomAlert('Failed to process invitation. Please try again.');
+          window.Telegram.WebApp.showAlert('Failed to process invitation. Please try again.');
         }
       }
     },
@@ -1038,13 +1038,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
 
           // Show success message
-          showCustomAlert(`Successfully purchased ${item.name}!`);
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
+          } else {
+            alert(`Successfully purchased ${item.name}!`);
+          }
         } catch (error) {
           console.error('Error purchasing item:', error);
-          showCustomAlert('Failed to purchase item. Please try again.');
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.showAlert('Failed to purchase item. Please try again.');
+          } else {
+            alert('Failed to purchase item. Please try again.');
+          }
         }
       } else {
-        showCustomAlert('Not enough coins!');
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Not enough coins!');
+        } else {
+          alert('Not enough coins!');
+        }
       }
     },
     [
@@ -1098,10 +1110,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(true);
         const address = await connectWallet();
         setWallet(address);
-        showCustomAlert('Wallet connected successfully with Tonkeeper!');
+        window.Telegram.WebApp.showAlert('Wallet connected successfully with Tonkeeper!');
       } catch (error) {
         console.error('Failed to connect wallet:', error);
-        showCustomAlert('Failed to connect wallet. Please try again.');
+        window.Telegram.WebApp.showAlert('Failed to connect wallet. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -1137,16 +1149,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       saveUserData(updatedUser);
       setPphAccumulated(0);
       setShowPPHPopup(false);
-      showCustomAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
+      window.Telegram.WebApp.showAlert(`Claimed ${formatNumber(pphAccumulated)} coins!`);
 
       window.Telegram.WebApp.sendData(JSON.stringify({ action: 'claim', amount: pphAccumulated }));
     } else {
-      showCustomAlert('No profits to claim yet!');
+      window.Telegram.WebApp.showAlert('No profits to claim yet!');
     }
   }, [pphAccumulated, user, saveUserData]);
 
   const claimNewLevel = useCallback(() => {
-    showCustomAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
+    window.Telegram.WebApp.showAlert(`Congratulations! You've advanced to Level ${newLevel}!`);
     setUser((prevUser) => ({
       ...prevUser,
       level: newLevel,
@@ -1186,13 +1198,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         completed: completed,
       });
 
-      showCustomAlert(
+      window.Telegram.WebApp.showAlert(
         `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`
       );
     } else if (dailyReward.completed) {
-      showCustomAlert('You have completed the 30-day reward cycle!');
+      window.Telegram.WebApp.showAlert('You have completed the 30-day reward cycle!');
     } else {
-      showCustomAlert('You have already claimed your daily reward today!');
+      window.Telegram.WebApp.showAlert('You have already claimed your daily reward today!');
     }
   }, [dailyReward, user, saveUserData]);
 
@@ -1210,7 +1222,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setMultiplier(2);
       const endTime = Date.now() + 1 * 60 * 1000;
       setMultiplierEndTime(endTime);
-      showCustomAlert(`Activated 2x multiplier for 1 minutes!`);
+      window.Telegram.WebApp.showAlert(`Activated 2x multiplier for 1 minutes!`);
 
       const cooldownTimer = setTimeout(
         () => {
@@ -1231,10 +1243,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       return () => clearTimeout(cooldownTimer);
     } else if (boosterCooldown) {
       const remainingCooldown = Math.ceil((boosterCooldown - Date.now()) / 1000);
-      showCustomAlert(`Booster on cooldown. Available in ${remainingCooldown} seconds.`);
+      window.Telegram.WebApp.showAlert(
+        `Booster on cooldown. Available in ${remainingCooldown} seconds.`
+      );
     } else if (multiplierEndTime) {
       const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
-      showCustomAlert(`Multiplier active for ${remainingMultiplier} more seconds.`);
+      window.Telegram.WebApp.showAlert(
+        `Multiplier active for ${remainingMultiplier} more seconds.`
+      );
     }
   }, [multiplierEndTime, boosterCooldown, user.id]);
 
@@ -1251,7 +1267,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       );
     } else if (platform === 'instagram') {
       window.Telegram.WebApp.openLink(`https://www.instagram.com/`);
-      showCustomAlert('Copy and paste the message to your Instagram post!');
+      window.Telegram.WebApp.showAlert('Copy and paste the message to your Instagram post!');
     } else if (platform === 'whatsapp') {
       window.Telegram.WebApp.openLink(
         `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`
@@ -1273,12 +1289,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const inviteFriends = useCallback(() => {
     const referralLink = `https://t.me/BabyCheetah_Bot/?start=${user.telegramId}`;
-    showCustomConfirm(`Share your referral link: ${referralLink}`, (confirmed: boolean) => {
-      if (confirmed) {
-        navigator.clipboard.writeText(referralLink);
-        showCustomAlert('Referral link copied to clipboard!');
+    window.Telegram.WebApp.showConfirm(
+      `Share your referral link: ${referralLink}`,
+      (confirmed: boolean) => {
+        if (confirmed) {
+          navigator.clipboard.writeText(referralLink);
+          window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
+        }
       }
-    });
+    );
   }, [user.telegramId]);
 
   const followX = useCallback(() => {
@@ -1333,7 +1352,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        showCustomAlert('Failed to load game data. Please try again.');
+        window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -1455,7 +1474,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
-        showCustomAlert('Failed to load game data. Please try again.');
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+        } else {
+          alert('Failed to load game data. Please try again.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -1936,7 +1959,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         setTasks((prevTasks) =>
                           prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
                         );
-                        showCustomAlert(`Claimed ${task.reward} coins!`);
+                        window.Telegram.WebApp.showAlert(`Claimed ${task.reward} coins!`);
                       }}
                     >
                       <Star className="w-4 h-4 mr-1" />
@@ -2055,11 +2078,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   connectWallet()
                     .then((address) => {
                       setWallet(address);
-                      showCustomAlert('Wallet connected successfully with Tonkeeper!');
+                      window.Telegram.WebApp.showAlert(
+                        'Wallet connected successfully with Tonkeeper!'
+                      );
                     })
                     .catch((error) => {
                       console.error('Failed to connect wallet:', error);
-                      showCustomAlert('Failed to connect wallet. Please try again.');
+                      window.Telegram.WebApp.showAlert(
+                        'Failed to connect wallet. Please try again.'
+                      );
                     });
                   playHeaderFooterSound();
                 }}
@@ -2280,7 +2307,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   navigator.clipboard.writeText(
                     `https://t.me/BabyCheetah_Bot?start=${user.telegramId}`
                   );
-                  showCustomAlert('Referral link copied to clipboard!');
+                  window.Telegram.WebApp.showAlert('Referral link copied to clipboard!');
                 }}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"
               >
@@ -2367,7 +2394,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white mt-4"
                   onClick={() => {
                     setUser((prev) => ({ ...prev, coins: prev.coins + trophy.prize }));
-                    showCustomAlert(
+                    window.Telegram.WebApp.showAlert(
                       `Congratulations! You've claimed the ${trophy.name} trophy and earned ${formatNumber(trophy.prize)} coins!`
                     );
                     playHeaderFooterSound();
@@ -2399,59 +2426,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setShownPopups((prev) => new Set(prev).add(popupType));
     }
   };
-
-  const showCustomAlert = (message: string) => {
-    const PopupContent = () => (
-      <Popup title="Alert" onClose={() => setCustomAlert(null)}>
-        <p className="text-center text-white">{message}</p>
-        <Button
-          onClick={() => setCustomAlert(null)}
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-        >
-          OK
-        </Button>
-      </Popup>
-    );
-    setCustomAlert(<PopupContent />);
-  };
-
-  const showCustomConfirm = (message: string, callback: (confirmed: boolean) => void) => {
-    const PopupContent = () => (
-      <Popup
-        title="Confirm"
-        onClose={() => {
-          setCustomConfirm(null);
-          callback(false);
-        }}
-      >
-        <p className="text-center text-white mb-4">{message}</p>
-        <div className="flex justify-between gap-4">
-          <Button
-            onClick={() => {
-              setCustomConfirm(null);
-              callback(false);
-            }}
-            className="flex-1 bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-red-700 hover:to-red-900 transition-all duration-300"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              setCustomConfirm(null);
-              callback(true);
-            }}
-            className="flex-1 bg-gradient-to-r from-green-600 to-green-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-green-700 hover:to-green-900 transition-all duration-300"
-          >
-            Confirm
-          </Button>
-        </div>
-      </Popup>
-    );
-    setCustomConfirm(<PopupContent />);
-  };
-
-  const [customAlert, setCustomAlert] = useState<React.ReactNode | null>(null);
-  const [customConfirm, setCustomConfirm] = useState<React.ReactNode | null>(null);
 
   if (isLoading) {
     return (
@@ -2503,13 +2477,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     onClose: () => void;
   }) => (
     <div className="fixed inset-0 flex items-center justify-center z-[60]">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose}></div>
-      <NeonGradientCard className="z-10 max-w-md w-full mx-4">
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center text-white">{title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">{children}</CardContent>
-      </NeonGradientCard>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-m" onClick={onClose}></div>
+      <div className="bg-gradient-to-br from-gray-900/90 to-black/90 text-white p-8 rounded-3xl shadow-2xl z-10 max-w-md w-full mx-4 border border-gray-700/50 backdrop-blur-xl">
+        <h2 className="text-3xl font-bold mb-6 text-center text-white">{title}</h2>
+        <div className="space-y-4">{children}</div>
+      </div>
     </div>
   );
 
