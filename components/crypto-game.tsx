@@ -130,11 +130,11 @@ const styles = `
   @keyframes fadeOutUp {
     from {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate(-50%, -50%) scale(1);
     }
     to {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translate(-50%, -100%) scale(1.5);
     }
   }
   .click-effect {
@@ -143,10 +143,10 @@ const styles = `
     animation: fadeOutUp 0.5s ease-out forwards;
     color: white;
     font-weight: bold;
-    font-size: 1.5rem; /* Increased font size */
+    font-size: 2rem; /* Increased font size */
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
-    transform: translate(-50%, -50%); /* Center the effect on the click point */
-    z-index: 30; /* Ensure it appears above the coin image */
+    transform: translate(-50%, -50%);
+    z-index: 30;
   }
 `;
 
@@ -537,7 +537,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     item: null as ShopItem | PremiumShopItem | null,
   });
   const [clickEffects, setClickEffects] = useState<
-    { id: number; x: number; y: number; value: number }[]
+    { id: number; x: number; y: number; value: number; color: string }[]
   >([]);
   const [popupShown, setPopupShown] = useState({
     pph: false,
@@ -951,12 +951,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
           const x = clientX - rect.left;
           const y = clientY - rect.top;
-          setClickEffects((prev) => [...prev, { id: Date.now(), x, y, value: clickValue }]);
+          const dynamicColor = `hsl(${Math.random() * 360}, 100%, 80%)`; // Dynamic white-ish color
+          setClickEffects((prev) => [
+            ...prev,
+            { id: Date.now(), x, y, value: clickValue, color: dynamicColor },
+          ]);
         }
 
         // Trigger haptic feedback
         if (
           settings.vibration &&
+          window.Telegram &&
           window.Telegram &&
           window.Telegram.WebApp &&
           window.Telegram.WebApp.HapticFeedback
@@ -1757,6 +1762,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 style={{
                   left: `${effect.x}px`,
                   top: `${effect.y}px`,
+                  color: effect.color, // Use the dynamic color
                 }}
               >
                 +{effect.value}
