@@ -134,17 +134,17 @@ const styles = `
     }
     to {
       opacity: 0;
-      transform: translate(-50%, -100%) scale(1.5);
+      transform: translate(-50%, -150%) scale(1.5);
     }
   }
   .click-effect {
     position: absolute;
     pointer-events: none;
-    animation: fadeOutUp 0.5s ease-out forwards;
+    animation: fadeOutUp 0.7s ease-out forwards;
     color: white;
     font-weight: bold;
-    font-size: 2rem; /* Increased font size */
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    font-size: 2rem; /* Further increased font size */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%);
     z-index: 30;
   }
@@ -951,10 +951,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
           const x = clientX - rect.left;
           const y = clientY - rect.top;
-          const dynamicColor = `hsl(${Math.random() * 360}, 100%, 80%)`; // Dynamic white-ish color
+          const effectColor = 'white'; // Pure white color
           setClickEffects((prev) => [
             ...prev,
-            { id: Date.now(), x, y, value: clickValue, color: dynamicColor },
+            { id: Date.now(), x, y, value: clickValue, color: effectColor },
           ]);
         }
 
@@ -1762,7 +1762,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 style={{
                   left: `${effect.x}px`,
                   top: `${effect.y}px`,
-                  color: effect.color, // Use the dynamic color
+                  color: 'white', // Always white
+                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)', // Add a glow effect
                 }}
               >
                 +{effect.value}
