@@ -2494,6 +2494,31 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
+  const CongratulationPopup = () => (
+    <Popup
+      title="Congratulations!"
+      onClose={() => {
+        setCongratulationPopup({ show: false, item: null });
+        showPopup('congratulation');
+      }}
+    >
+      <p className="mb-6 text-xl text-center text-white">
+        You've purchased <span className="font-bold">{congratulationPopup.item?.name}</span>!
+      </p>
+      <p className="mb-6 text-center text-white">This will boost your crypto earnings!</p>
+      <Button
+        onClick={() => {
+          setCongratulationPopup({ show: false, item: null });
+          showPopup('congratulation');
+        }}
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+      >
+        <Award className="w-6 h-6 mr-2" />
+        Awesome!
+      </Button>
+    </Popup>
+  );
+
   return (
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
@@ -2532,6 +2557,65 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         {currentPage === 'trophies' && renderTrophies()}
       </div>
       {renderFooter()}
+
+      {/* Popup logic */}
+      {!shownPopups.has('pph') && showPPHPopup && (
+        <Popup
+          title="Profit Accumulated!"
+          onClose={() => {
+            setShowPPHPopup(false);
+            showPopup('pph');
+          }}
+        >
+          <p className="mb-6 text-xl text-center text-white">
+            You've accumulated <span className="font-bold">{formatNumber(pphAccumulated)}</span>{' '}
+            coins!
+          </p>
+          <Button
+            onClick={() => {
+              claimPPH();
+              showPopup('pph');
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+          >
+            <Coins className="w-5 h-5 mr-2" />
+            Claim Profits
+          </Button>
+        </Popup>
+      )}
+
+      {!shownPopups.has('levelUp') && showLevelUpPopup && (
+        <Popup
+          title="Level Up!"
+          onClose={() => {
+            setShowLevelUpPopup(false);
+            showPopup('levelUp');
+          }}
+        >
+          <p className="mb-6 text-xl text-center text-white">
+            Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
+          </p>
+          <Button
+            onClick={() => {
+              claimNewLevel();
+              showPopup('levelUp');
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+          >
+            <Zap className="w-5 h-5 mr-2" />
+            Claim Rewards
+          </Button>
+        </Popup>
+      )}
+
+      {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
+      {gamePopup.show && (
+        <GamePopup
+          message={gamePopup.message}
+          onConfirm={gamePopup.onConfirm}
+          onCancel={gamePopup.onCancel}
+        />
+      )}
     </div>
   );
 };
