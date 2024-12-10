@@ -16,6 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           username,
           firstName,
           lastName,
+          profilePhoto: '', // Provide a default value for profilePhoto
           coins: 0,
           level: 1,
           exp: 0,
