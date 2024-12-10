@@ -1,127 +1,49 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+// pages/api/users.ts
+import { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient } from '@prisma/client';
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const telegramId = searchParams.get('telegramId');
+const prisma = new PrismaClient();
 
-  if (!telegramId) {
-    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
-  }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'POST') {
+    // Create a new user
+    const { telegramId, username, firstName, lastName } = req.body;
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        telegramId: telegramId,
-      },
-      include: {
-        shopItems: true,
-        premiumShopItems: true,
-        tasks: true,
-        dailyReward: true,
-        trophies: true,
-        referralRewards: true,
-      },
-    });
-
-    if (!user) {
-      console.log(`User not found for telegramId: ${telegramId}`);
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    console.log('User found:', user);
-    return NextResponse.json(user);
-  } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const { telegramId, username, firstName, lastName, profilePhoto } = body;
-
-  if (!telegramId) {
-    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
-  }
-
-  console.log('Creating new user with data:', body);
-
-  try {
-    const user = await prisma.user.create({
-      data: {
-        telegramId,
-        username,
-        firstName,
-        lastName,
-        profilePhoto,
-        coins: 0,
-        level: 1,
-        exp: 0,
-        unlockedLevels: [1],
-        clickPower: 1,
-        friendsCoins: {},
-        energy: 500,
-        pphAccumulated: 0,
-        multiplier: 1,
-        settings: { vibration: true, backgroundMusic: false, soundEffect: true },
-        profitPerHour: 0,
-        invitedFriends: [],
-        dailyReward: {
-          create: {
-            lastClaimed: null,
-            streak: 0,
-            day: 1,
-            completed: false,
-          },
+    try {
+      const user = await prisma.user.create({
+        data: {
+          telegramId,
+          username,
+          firstName,
+          lastName,
+          coins: 0,
+          level: 1,
+          exp: 0,
+          unlockedLevels: [1],
+          clickPower: 1,
+          energy: 500,
         },
-      },
-      include: {
-        shopItems: true,
-        premiumShopItems: true,
-        tasks: true,
-        dailyReward: true,
-        trophies: true,
-        referralRewards: true,
-      },
-    });
+      });
+      res.status(201).json(user);
+    } catch (error) {
+      console.error('Error creating user:', error);
+      res.status(500).json({ error: 'Error creating user' });
+    }
+  } else if (req.method === 'GET') {
+    // Fetch a user
+    const { telegramId } = req.query;
 
-    console.log('User created:', user);
-    return NextResponse.json({ user }, { status: 201 });
-  } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-export async function PATCH(request: NextRequest) {
-  const body = await request.json();
-  const { telegramId, ...updateData } = body;
-
-  if (!telegramId) {
-    return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
-  }
-
-  console.log('Updating user with data:', updateData);
-
-  try {
-    const user = await prisma.user.update({
-      where: { telegramId },
-      data: updateData,
-      include: {
-        shopItems: true,
-        premiumShopItems: true,
-        tasks: true,
-        dailyReward: true,
-        trophies: true,
-        referralRewards: true,
-      },
-    });
-
-    console.log('User updated:', user);
-    return NextResponse.json({ user });
-  } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    try {
+      const user = await prisma.user.findUnique({
+        where: { telegramId: telegramId as string },
+      });
+      res.status(200).json(user);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      res.status(500).json({ error: 'Error fetching user' });
+    }
+  } else {
+    res.setHeader('Allow', ['POST', 'GET']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
