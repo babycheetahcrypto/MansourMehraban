@@ -8,15 +8,15 @@ generator client {
 }
 
 model User {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  telegramId    String   @unique
-  username      String
-  firstName     String?
-  lastName      String?
-  coins         Int      @default(0)
-  level         Int      @default(1)
-  exp           Int      @default(0)
-  profilePhoto  String
+  id               String            @id @default(auto()) @map("_id") @db.ObjectId
+  telegramId       String            @unique
+  username         String
+  firstName        String?
+  lastName         String?
+  coins            Float             @default(0)
+  level            Int               @default(1)
+  exp              Float             @default(0)
+  profilePhoto     String?
   shopItems        ShopItem[]
   premiumShopItems PremiumShopItem[]
   tasks            Task[]
@@ -24,14 +24,14 @@ model User {
   unlockedLevels   Int[]             @default([1])
   clickPower       Int               @default(1)
   friendsCoins     Json              @default("{}")
-  energy        Int      @default(500)
-  pphAccumulated   Int             @default(0)
-  multiplier       Int             @default(1)
+  energy           Float             @default(500)
+  pphAccumulated   Float             @default(0)
+  multiplier       Float             @default(1)
   multiplierEndTime DateTime?
   boosterCooldown  DateTime?
   selectedCoinImage String?
   settings         Json              @default("{\"vibration\": true, \"backgroundMusic\": false, \"soundEffect\": true}")
-  profitPerHour    Int             @default(0)
+  profitPerHour    Float             @default(0)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   trophies         Trophy[]
@@ -44,8 +44,8 @@ model ShopItem {
   userId      String @db.ObjectId
   name        String
   image       String
-  basePrice   Int
-  baseProfit  Int
+  basePrice   Float
+  baseProfit  Float
   level       Int    @default(1)
   user        User   @relation(fields: [userId], references: [id])
 }
@@ -55,7 +55,7 @@ model PremiumShopItem {
   userId      String  @db.ObjectId
   name        String
   image       String
-  basePrice   Int
+  basePrice   Float
   effect      String
   level       Int     @default(1)
   user        User    @relation(fields: [userId], references: [id])
@@ -68,7 +68,7 @@ model Task {
   description  String
   progress     Int       @default(0)
   maxProgress  Int
-  reward       Int
+  reward       Float
   completed    Boolean   @default(false)
   claimed      Boolean   @default(false)
   expiresAt    DateTime?
@@ -81,8 +81,8 @@ model Trophy {
   name        String
   description String
   image       String
-  requirement Int
-  reward      Int
+  requirement Float
+  reward      Float
   claimed     Boolean   @default(false)
   unlockedAt  DateTime?
   user        User      @relation(fields: [userId], references: [id])
@@ -102,7 +102,7 @@ model ReferralReward {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   userId      String    @db.ObjectId
   referredId  String
-  amount      Int
+  amount      Float
   claimed     Boolean   @default(false)
   claimedAt   DateTime?
   user        User      @relation(fields: [userId], references: [id])
