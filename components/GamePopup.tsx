@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Check, X } from 'lucide-react'; // Import 3D icons
-import Image from 'next/image';
+import { Check, X } from 'lucide-react';
+//import Image from 'next/image'; //Removed as per update
 
 interface GamePopupProps {
   message: string;
@@ -21,13 +21,7 @@ const GamePopup: React.FC<GamePopupProps> = ({ message, onConfirm, onCancel }) =
               variant="outline"
               className="w-full text-white border-white hover:bg-white/10 flex items-center justify-center"
             >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cancel%203D%20icon-kZXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png"
-                alt="Cancel"
-                width={24}
-                height={24}
-                className="mr-2"
-              />{' '}
+              <X className="w-5 h-5 mr-2" />
               Cancel
             </Button>
           )}
@@ -35,13 +29,7 @@ const GamePopup: React.FC<GamePopupProps> = ({ message, onConfirm, onCancel }) =
             onClick={onConfirm}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white flex items-center justify-center"
           >
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/OK%203D%20icon-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png"
-              alt="OK"
-              width={24}
-              height={24}
-              className="mr-2"
-            />{' '}
+            <Check className="w-5 h-5 mr-2" />
             OK
           </Button>
         </div>
