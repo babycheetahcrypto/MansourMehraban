@@ -1614,10 +1614,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFooter = () => (
-    <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-    >
+    <div className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50">
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
@@ -1751,7 +1748,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             ))}
           </button>
-          <div className="w-full space-y-4">
+          <div className="w-full space-y-4 mt-auto">
             <div>
               <div className="flex justify-between text-sm mb-2 text-white">
                 <span className="font-semibold">Energy</span>
@@ -1770,7 +1767,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
 
-            <div className="flex space-x-4 mt-auto">
+            <div className="flex space-x-4">
               <Button
                 onClick={() => {
                   setCurrentPage('dailyReward');
