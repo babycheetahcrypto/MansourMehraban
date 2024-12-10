@@ -153,10 +153,6 @@ const styles = `
     transform: translate(-50%, -50%);
     z-index: 30;
   }
-  @keyframes progressAnimation {
-    0% { width: 0%; }
-    100% { width: 100%; }
-  }
 `;
 
 // Telegram WebApp type definition
@@ -1457,7 +1453,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           );
         }
 
-        await simulateMongoDBLoading();
+        setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize game:', error);
         showGameAlert('Failed to load game data. Please try again.');
@@ -1639,6 +1635,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             page: 'rating',
             text: 'Rating',
             icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
+          },
+          {
+            page: 'wallet',
+            text: 'Wallet',
+            icon: 'WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png',
           },
           {
             page: 'invite',
@@ -2270,7 +2271,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br fromgray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
@@ -2434,35 +2435,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     });
   };
 
-  const simulateMongoDBLoading = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate connection to MongoDB
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log('Connected to MongoDB');
-
-      // Simulate fetching user data
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log('Fetched user data');
-
-      // Simulate fetching game assets
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log('Fetched game assets');
-
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error loading data:', error);
-      setIsLoading(false);
-    }
-  };
-
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-black opacity-50"></div>
           <div className="absolute inset-0">
-            {[...Array(100)].map((_, i) => (
+            {[...Array(50)].map((_, i) => (
               <div
                 key={i}
                 className="absolute rounded-full bg-white"
@@ -2477,22 +2456,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             ))}
           </div>
         </div>
-        <div className="text-center z-10 space-y-8">
+        <div className="text-center z-10">
           <Image
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-iTiljsrx8N2IGIdjozA2tXBHhaCi8x.png"
             alt="Logo"
-            width={150}
-            height={150}
-            className="mx-auto animate-pulse"
+            width={100}
+            height={100}
+            className="mx-auto mb-8"
           />
-          <div className="w-64 h-4 bg-gray-700 rounded-full overflow-hidden">
+          <div className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-primary via-purple-500 to-pink-500"
-              style={{ width: '0%', animation: 'progressAnimation 3s ease-in-out forwards' }}
+              className="h-full bg-gradient-to-r from-primary via-purple-500 to-pink-500 animate-pulse"
+              style={{ width: '100%' }}
             />
           </div>
-          <div className="text-white text-xl font-bold">Loading Game Data...</div>
-          <div className="text-gray-400 text-sm">Connecting to MongoDB...</div>
         </div>
       </div>
     );
