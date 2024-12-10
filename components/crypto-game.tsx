@@ -134,17 +134,17 @@ const styles = `
     }
     to {
       opacity: 0;
-      transform: translate(-50%, -150%) scale(1.5);
+      transform: translate(-50%, -100%) scale(1.5);
     }
   }
   .click-effect {
     position: absolute;
     pointer-events: none;
-    animation: fadeOutUp 0.7s ease-out forwards;
+    animation: fadeOutUp 0.5s ease-out forwards;
     color: white;
     font-weight: bold;
-    font-size: 2.5rem; /* Further increased font size */
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
+    font-size: 2rem; /* Increased font size */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%);
     z-index: 30;
   }
@@ -951,10 +951,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
           const x = clientX - rect.left;
           const y = clientY - rect.top;
-          const effectColor = 'white'; // Pure white color
+          const dynamicColor = `hsl(${Math.random() * 360}, 100%, 80%)`; // Dynamic white-ish color
           setClickEffects((prev) => [
             ...prev,
-            { id: Date.now(), x, y, value: clickValue, color: effectColor },
+            { id: Date.now(), x, y, value: clickValue, color: dynamicColor },
           ]);
         }
 
@@ -1643,7 +1643,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {
             page: 'home',
             text: 'Home',
-            icon: 'HOME%203DICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
+            icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
           },
           {
             page: 'shop',
@@ -1762,8 +1762,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 style={{
                   left: `${effect.x}px`,
                   top: `${effect.y}px`,
-                  color: 'white', // Always white
-                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)', // Add a glow effect
+                  color: effect.color, // Use the dynamic color
                 }}
               >
                 +{effect.value}
