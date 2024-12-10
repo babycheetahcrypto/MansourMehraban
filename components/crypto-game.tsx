@@ -999,66 +999,49 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         : item.basePrice * Math.pow(2, item.level - 1);
       if (user.coins >= price) {
         try {
-          const response = await fetch('/api/shop', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              telegramId: user.telegramId,
-              itemId: item.id,
-              isPremium,
-              price,
-            }),
-          });
+          const updatedUser = {
+            ...user,
+            coins: user.coins - price,
+          };
+          setUser(updatedUser);
+          await saveUserData(updatedUser);
 
-          if (response.ok) {
-            const result = await response.json();
-            const updatedUser = {
-              ...user,
-              coins: result.updatedCoins,
-            };
-            setUser(updatedUser);
-            saveUserData(updatedUser);
-
-            if (isPremium) {
-              setPremiumShopItems((prevItems) =>
-                prevItems.map((i) => (i.id === item.id ? result.updatedItem : i))
-              );
-              setClickPower((prev) => prev * 2);
-            } else {
-              setShopItems((prevItems) =>
-                prevItems.map((i) => {
-                  if (i.id === item.id) {
-                    const newProfit = result.updatedItem.baseProfit * result.updatedItem.level;
-                    setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
-                    return result.updatedItem;
-                  }
-                  return i;
-                })
-              );
-            }
-
-            if (!popupShown.congratulation) {
-              setCongratulationPopup({ show: true, item: result.updatedItem });
-              setPopupShown((prev) => ({ ...prev, congratulation: true }));
-            }
-
-            // Send purchase data to Telegram Mini App
-            if (window.Telegram && window.Telegram.WebApp) {
-              window.Telegram.WebApp.sendData(
-                JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
-              );
-            }
-
-            // Show success message
-            if (window.Telegram && window.Telegram.WebApp) {
-              window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
-            } else {
-              alert(`Successfully purchased ${item.name}!`);
-            }
+          if (isPremium) {
+            setPremiumShopItems((prevItems) =>
+              prevItems.map((i) => (i.id === item.id ? { ...i, level: i.level + 1 } : i))
+            );
+            setClickPower((prev) => prev * 2);
           } else {
-            throw new Error('Failed to purchase item');
+            setShopItems((prevItems) =>
+              prevItems.map((i) => {
+                if (i.id === item.id) {
+                  const newLevel = i.level + 1;
+                  const newProfit = i.baseProfit * newLevel;
+                  setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
+                  return { ...i, level: newLevel };
+                }
+                return i;
+              })
+            );
+          }
+
+          if (!popupShown.congratulation) {
+            setCongratulationPopup({ show: true, item: item });
+            setPopupShown((prev) => ({ ...prev, congratulation: true }));
+          }
+
+          // Send purchase data to Telegram Mini App
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.sendData(
+              JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
+            );
+          }
+
+          // Show success message
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.showAlert(`Successfully purchased ${item.name}!`);
+          } else {
+            alert(`Successfully purchased ${item.name}!`);
           }
         } catch (error) {
           console.error('Error purchasing item:', error);
@@ -1076,7 +1059,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [user, saveUserData]
+    [
+      user,
+      saveUserData,
+      popupShown.congratulation,
+      setUser,
+      setPremiumShopItems,
+      setShopItems,
+      setProfitPerHour,
+      setClickPower,
+      setCongratulationPopup,
+      setPopupShown,
+    ]
   );
 
   const connectWallet = async () => {
