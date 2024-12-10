@@ -20,6 +20,10 @@ import {
   Vibrate,
   Music,
   Eye,
+  Check,
+  X,
+  Award,
+  Zap,
 } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 
@@ -2509,13 +2513,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
-        <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Awesome%203D%20icon-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png"
-          alt="Awesome"
-          width={28}
-          height={28}
-          className="mr-2"
-        />
+        <Award className="w-6 h-6 mr-2" />
         Awesome!
       </Button>
     </Popup>
@@ -2580,13 +2578,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%20Profits%203D%20icon-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png"
-              alt="Claim Profits"
-              width={24}
-              height={24}
-              className="mr-2"
-            />
+            <Coins className="w-5 h-5 mr-2" />
             Claim Profits
           </Button>
         </Popup>
@@ -2610,13 +2602,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%20Rewards%203D%20icon-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png"
-              alt="Claim Rewards"
-              width={24}
-              height={24}
-              className="mr-2"
-            />
+            <Zap className="w-5 h-5 mr-2" />
             Claim Rewards
           </Button>
         </Popup>
