@@ -2502,7 +2502,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
           <div
             className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
-            style={{ animationDuration: '1.5s' }}
+            style={{ animationDuration: '10.5s' }}
           ></div>
         </div>
       </div>
