@@ -2149,7 +2149,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     }}
                     className={`w-full text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
                       selectedCoinImage === image
-                        ? 'bg-green-600 hover:bg-green-700'
+                        ? 'bg-green-500 hover:bg-green-700'
                         : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900'
                     }`}
                   >
