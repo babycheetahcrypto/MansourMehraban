@@ -124,7 +124,7 @@ const styles = `
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
   .coin-button:active, .coin-button.shake {
-    animation: shake 0.0s cubic-bezier(.36,.07,.19,.97) both;
+    animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
