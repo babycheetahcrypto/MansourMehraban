@@ -6,9 +6,7 @@ export default function Home() {
   return (
     <main>
       <TelegramInitializer />
-      <Suspense fallback={<div>Loading...</div>}>
-        <GameClient />
-      </Suspense>
+      <GameClient />
     </main>
   );
 }
