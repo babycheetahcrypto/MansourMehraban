@@ -1340,6 +1340,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        showGameAlert('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -1462,6 +1463,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         await fetchData();
       } catch (error) {
         console.error('Failed to initialize game:', error);
+        showGameAlert('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -2513,8 +2515,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Loading Game...</h2>
-          <p className="text-gray-400">Preparing your crypto adventure</p>
+          <h2 className="text-2xl font-bold text-white mb-4">Loading...</h2>
         </div>
       </div>
     );
