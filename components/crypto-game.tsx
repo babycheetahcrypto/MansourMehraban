@@ -846,7 +846,26 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       ),
       action: () => followWhatsApp(),
     },
+    {
+      id: 13,
+      description: 'Watch YouTube Video',
+      reward: 1500,
+      progress: 0,
+      completed: false,
+      claimed: false,
+      icon: (
+        <Image
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20icon-6rol1Ge421KShZTlo6utbgTE8fsxm8.png"
+          alt="YouTube"
+          width={48}
+          height={48}
+        />
+      ),
+      action: () => watchYouTubeVideo(),
+    },
   ]);
+
+  const [secretCode, setSecretCode] = useState<string | null>(null);
 
   const inviteFriend = useCallback(
     async (friendId: string) => {
@@ -1243,6 +1262,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const watchYouTubeVideos = useCallback(() => {
     window.Telegram.WebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
+  }, []);
+
+  const watchYouTubeVideo = useCallback(() => {
+    window.Telegram.WebApp.openLink('https://www.youtube.com/watch?v=SPECIAL_VIDEO_ID');
+    showGameAlert('Watch the video to find the secret code!');
+  }, []);
+
+  const submitSecretCode = useCallback((code: string) => {
+    if (code === 'CORRECT_SECRET_CODE') {
+      setSecretCode(code);
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === 13 ? { ...task, completed: true } : task))
+      );
+      showGameAlert('Correct code! You can now claim your reward.');
+    } else {
+      showGameAlert('Incorrect code. Please try again.');
+    }
   }, []);
 
   const joinTelegramChannel = useCallback(() => {
@@ -1886,7 +1922,60 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <span className="text-white">
                   {task.progress}/{task.maxProgress || 1} complete
                 </span>
-                {task.completed ? (
+                {task.id === 13 ? (
+                  task.completed ? (
+                    task.claimed ? (
+                      <Button
+                        className="bg-green-600 text-white px-4 py-2 rounded-full text-xs"
+                        disabled
+                      >
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        <span>Claimed</span>
+                      </Button>
+                    ) : (
+                      <Button
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                        onClick={() => {
+                          setUser((prevUser) => ({
+                            ...prevUser,
+                            coins: prevUser.coins + task.reward,
+                          }));
+                          setTasks((prevTasks) =>
+                            prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
+                          );
+                          showGameAlert(`Claimed ${task.reward} coins!`);
+                        }}
+                      >
+                        <Star className="w-4 h-4 mr-1" />
+                        <span>Claim</span>
+                      </Button>
+                    )
+                  ) : secretCode ? (
+                    <Button
+                      className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                      onClick={() => {
+                        const code = prompt('Enter the secret code:');
+                        if (code) {
+                          submitSecretCode(code);
+                        }
+                      }}
+                    >
+                      <Lock className="w-4 h-4 mr-1" />
+                      <span>Enter Code</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                      onClick={() => {
+                        task.action();
+                      }}
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      <span>Watch Video</span>
+                    </Button>
+                  )
+                ) : // Existing button logic for other tasks
+                task.completed ? (
                   task.claimed ? (
                     <Button
                       className="bg-green-600 text-white px-4 py-2 rounded-full text-xs"
