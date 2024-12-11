@@ -1338,8 +1338,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           console.error('Telegram WebApp not available');
           throw new Error('Telegram WebApp not available');
         }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -1457,11 +1455,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             webApp.themeParams.button_text_color
           );
         }
-
-        // Fetch initial game data
-        await fetchData();
-      } catch (error) {
-        console.error('Failed to initialize game:', error);
       } finally {
         setIsLoading(false);
       }
