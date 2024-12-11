@@ -2474,15 +2474,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const fetchData = async () => {
     try {
       const response = await fetch('/api/game-data');
+      if (!response.ok) {
+        throw new Error('Failed to fetch game data');
+      }
       const data = await response.json();
-      // Update state with fetched data
       setUser(data.user);
       setShopItems(data.shopItems);
       setPremiumShopItems(data.premiumShopItems);
       setTasks(data.tasks);
-      // ... update other state variables as needed
+      // Update other state variables as needed
     } catch (error) {
       console.error('Error fetching game data:', error);
+      showGameAlert('Failed to load game data. Please try again.');
     } finally {
       setIsLoading(false);
     }
