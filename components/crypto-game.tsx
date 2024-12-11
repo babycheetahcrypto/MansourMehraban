@@ -24,6 +24,7 @@ import {
   X,
   Award,
   Zap,
+  Lock,
 } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 
@@ -2301,7 +2302,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderTrophies = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+    <div className="grid grid-cols-2 gap-4 p-4">
       {trophies.map((trophy, index) => (
         <div key={index}>
           <NeonGradientCard
@@ -2333,26 +2334,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 Prize: {formatNumber(trophy.prize)} coins
               </p>
               {user.coins >= trophy.requirement ? (
-                <Button
-                  className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white mt-4"
-                  onClick={() => {
-                    setUser((prev) => ({ ...prev, coins: prev.coins + trophy.prize }));
-                    showGameAlert(
-                      `Congratulations! You've claimed the ${trophy.name} trophy and earned ${formatNumber(trophy.prize)} coins!`
-                    );
-                  }}
-                >
-                  <Image
-                    src="/claim-icon.svg"
-                    alt="Claim Prize"
-                    width={16}
-                    height={16}
-                    className="mr-2"
-                  />
-                  Claim
-                </Button>
+                <div className="w-full bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center">
+                  <Check className="w-5 h-5 mr-2" />
+                  Unlocked
+                </div>
               ) : (
-                <div className="mt-4 bg-gray-600 text-white py-2 px-4 rounded-full text-xs font-bold">
+                <div className="w-full bg-gray-600 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center">
+                  <Lock className="w-5 h-5 mr-2" />
                   Locked
                 </div>
               )}
