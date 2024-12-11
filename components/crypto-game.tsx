@@ -1459,7 +1459,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           );
         }
 
-        setIsLoading(false);
+        // Fetch initial game data
+        await fetchData();
       } catch (error) {
         console.error('Failed to initialize game:', error);
         showGameAlert('Failed to load game data. Please try again.');
@@ -2498,12 +2499,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="relative w-32 h-32">
-          <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
-          <div
-            className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
-            style={{ animationDuration: '10.5s' }}
-          ></div>
+        <div className="text-center">
+          <div className="relative w-32 h-32 mx-auto mb-8">
+            <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
+            <div
+              className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
+              style={{ animationDuration: '1.5s' }}
+            ></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                alt="Game Logo"
+                width={64}
+                height={64}
+              />
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-4">Loading Game...</h2>
+          <p className="text-gray-400">Preparing your crypto adventure</p>
         </div>
       </div>
     );
