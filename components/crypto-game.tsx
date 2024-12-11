@@ -2083,8 +2083,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
                   alt="Tonkeeper"
-                  width={24}
-                  height={24}
+                  width={22}
+                  height={22}
                   className="mr-2"
                 />
                 <span className="text-base">Connect Tonkeeper</span>
@@ -2473,6 +2473,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, []);
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch('/api/game-data');
       if (!response.ok) {
