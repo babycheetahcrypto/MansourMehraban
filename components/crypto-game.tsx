@@ -153,6 +153,10 @@ const styles = `
     transform: translate(-50%, -50%);
     z-index: 30;
   }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
 `;
 
 // Telegram WebApp type definition
@@ -2471,9 +2475,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return (
       <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-black opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-black to-blue-900 opacity-50"></div>
           <div className="absolute inset-0">
-            {[...Array(50)].map((_, i) => (
+            {[...Array(100)].map((_, i) => (
               <div
                 key={i}
                 className="absolute rounded-full bg-white"
@@ -2490,18 +2494,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
         <div className="text-center z-10">
           <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo-iTiljsrx8N2IGIdjozA2tXBHhaCi8x.png"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
             alt="Logo"
-            width={100}
-            height={100}
-            className="mx-auto mb-8"
+            width={150}
+            height={150}
+            className="mx-auto mb-8 animate-pulse"
           />
-          <div className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div className="relative w-32 h-32 mx-auto">
+            <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
             <div
-              className="h-full bg-gradient-to-r from-primary via-purple-500 to-pink-500 animate-pulse"
-              style={{ width: '100%' }}
-            />
+              className="absolute inset-0 border-4 border-purple-500 rounded-full animate-spin"
+              style={{ animationDuration: '3s' }}
+            ></div>
+            <div
+              className="absolute inset-0 border-4 border-pink-500 rounded-full animate-spin"
+              style={{ animationDuration: '5s' }}
+            ></div>
           </div>
+          <p className="mt-8 text-2xl font-bold text-white">Loading Crypto Universe...</p>
         </div>
       </div>
     );
