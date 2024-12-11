@@ -124,7 +124,7 @@ const styles = `
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
   .coin-button:active, .coin-button.shake {
-    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
+    animation: shake 0.0s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
@@ -2083,8 +2083,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
                   alt="Tonkeeper"
-                  width={22}
-                  height={22}
+                  width={20}
+                  height={20}
                   className="mr-2"
                 />
                 <span className="text-base">Connect Tonkeeper</span>
