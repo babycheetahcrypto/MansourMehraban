@@ -320,13 +320,6 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   isActive,
   setCurrentPage,
 }) => {
-  const playHeaderFooterSound = () => {
-    const audio = new Audio(
-      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
-    );
-    return audio.play();
-  };
-
   return (
     <div>
       <Button
@@ -336,7 +329,6 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
         onClick={() => {
           setCurrentPage(href);
-          playHeaderFooterSound();
         }}
       >
         <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
