@@ -30,7 +30,7 @@ model User {
   multiplierEndTime DateTime?
   boosterCooldown  DateTime?
   selectedCoinImage String?
-  settings         Json              @default("{\"vibration\": true, \"backgroundMusic\": false, \"soundEffect\": true}")
+  settings         Json              @default("{\"vibration\": true, \"backgroundMusic\": false}")
   profitPerHour    Float             @default(0)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt

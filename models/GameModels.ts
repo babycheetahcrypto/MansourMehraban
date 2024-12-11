@@ -31,7 +31,6 @@ const UserSchema = new mongoose.Schema({
   settings: {
     vibration: { type: Boolean, default: true },
     backgroundMusic: { type: Boolean, default: false },
-    soundEffect: { type: Boolean, default: true },
   },
   profitPerHour: { type: Number, default: 0 },
 });

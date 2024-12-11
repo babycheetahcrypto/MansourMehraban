@@ -24,7 +24,6 @@ export interface User {
   settings: {
     vibration: boolean;
     backgroundMusic: boolean;
-    soundEffect: boolean;
   };
   profitPerHour: number;
   invitedFriends: string[];

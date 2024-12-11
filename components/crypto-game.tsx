@@ -58,7 +58,6 @@ interface User {
   settings: {
     vibration: boolean;
     backgroundMusic: boolean;
-    soundEffect: boolean;
   };
   profitPerHour: number;
 }
@@ -452,20 +451,6 @@ const formatNumber = (num: number) => {
   return num.toFixed(2);
 };
 
-const playCoinSound = () => {
-  const audio = new Audio(
-    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Button%20Sound-vLxAEYrnFJ4W4ZNzInbVnZpsMhwZLa.mp3'
-  );
-  audio.play();
-};
-
-const playHeaderFooterSound = () => {
-  const audio = new Audio(
-    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
-  );
-  return audio.play();
-};
-
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
   const [user, setUser] = useState<User>(
     userData || {
@@ -499,7 +484,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       settings: {
         vibration: true,
         backgroundMusic: false,
-        soundEffect: true,
       },
       profitPerHour: 0,
     }
@@ -521,7 +505,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [settings, setSettings] = useState({
     vibration: true,
     backgroundMusic: false,
-    soundEffect: true,
     backgroundMusicAudio:
       typeof Audio !== 'undefined'
         ? new Audio(
@@ -981,11 +964,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
         }
 
-        // Play sound effect
-        if (settings.soundEffect) {
-          playCoinSound();
-        }
-
         // Send tap data to Telegram Mini App
         if (window.Telegram && window.Telegram.WebApp) {
           window.Telegram.WebApp.sendData(
@@ -1001,7 +979,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, settings.soundEffect, saveUserData, user]
+    [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
   );
 
   const buyItem = useCallback(
@@ -1563,7 +1541,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
               onClick={() => {
                 setCurrentPage('trophies');
-                playHeaderFooterSound();
               }}
             >
               <Image
@@ -1578,7 +1555,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
               onClick={() => {
                 setCurrentPage('levels');
-                playHeaderFooterSound();
               }}
             >
               <Image
@@ -1593,7 +1569,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
               onClick={() => {
                 setCurrentPage('settings');
-                playHeaderFooterSound();
               }}
             >
               <Image
@@ -1770,7 +1745,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Button
                 onClick={() => {
                   setCurrentPage('dailyReward');
-                  playHeaderFooterSound();
                 }}
                 className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
               >
@@ -1786,7 +1760,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Button
                 onClick={() => {
                   activateMultiplier();
-                  playHeaderFooterSound();
                 }}
                 className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
                 disabled={!!multiplierEndTime || !!boosterCooldown}
@@ -1845,7 +1818,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-md text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
                   onClick={() => {
                     buyItem(item);
-                    playHeaderFooterSound();
                   }}
                 >
                   Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
@@ -1881,7 +1853,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center"
                   onClick={() => {
                     buyItem(item, true);
-                    playHeaderFooterSound();
                   }}
                 >
                   Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1))}
@@ -1954,7 +1925,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
                     onClick={() => {
                       task.action();
-                      playHeaderFooterSound();
                     }}
                   >
                     <ArrowRight className=" w-4 h-4 mr-1" />
@@ -2067,7 +2037,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       console.error('Failed to connect wallet:', error);
                       showGameAlert('Failed to connect wallet. Please try again.');
                     });
-                  playHeaderFooterSound();
                 }}
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md flex items-center justify-center"
               >
@@ -2136,7 +2105,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     onClick={() => {
                       setSelectedCoinImage(image);
                       setCurrentPage('home');
-                      playHeaderFooterSound();
                     }}
                     className={`w-full text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
                       selectedCoinImage === image
@@ -2166,7 +2134,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {[
             { id: 'vibration', icon: Vibrate, label: 'Vibration' },
             { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
-            { id: 'soundEffect', icon: Volume2, label: 'Sound Effect' },
           ].map(({ id, icon: Icon, label }) => (
             <div key={id} className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-2">
@@ -2257,7 +2224,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <Button
               onClick={() => {
                 claimDailyReward();
-                playHeaderFooterSound();
               }}
               className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
               disabled={dailyReward.completed}
@@ -2380,7 +2346,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     showGameAlert(
                       `Congratulations! You've claimed the ${trophy.name} trophy and earned ${formatNumber(trophy.prize)} coins!`
                     );
-                    playHeaderFooterSound();
                   }}
                 >
                   <Image
@@ -2445,24 +2410,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     link.rel = 'preload';
     link.href =
       'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3';
-    link.as = 'audio';
-    document.head.appendChild(link);
-  }, []);
-
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href =
-      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3';
-    link.as = 'audio';
-    document.head.appendChild(link);
-  }, []);
-
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href =
-      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Button%20Sound-vLxAEYrnFJ4W4ZNzInbVnZpsMhwZLa.mp3';
     link.as = 'audio';
     document.head.appendChild(link);
   }, []);

@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         energy: 500,
         pphAccumulated: 0,
         multiplier: 1,
-        settings: { vibration: true, backgroundMusic: false, soundEffect: true },
+        settings: { vibration: true, backgroundMusic: false },
         profitPerHour: 0,
         invitedFriends: [],
         dailyReward: {
