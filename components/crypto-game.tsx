@@ -1514,7 +1514,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div>
               <h2 className="font-bold text-sm text-white">
-                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 9) + '...'}
+                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 12) + '...'}
               </h2>
               <div className="text-xs text-white flex items-center">
                 <Image
@@ -1622,8 +1622,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={38}
-                height={38}
+                width={32}
+                height={32}
                 {...props}
               />
             )}
