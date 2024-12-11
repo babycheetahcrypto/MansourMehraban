@@ -2117,10 +2117,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderSettings = () => (
     <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900/70 via-gray-800/70 to-black/70 backdrop-blur-md text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="space-y-6">
           {[
@@ -2147,7 +2147,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       ]);
                     } else if (id === 'backgroundMusic') {
                       if (newSettings.backgroundMusic && settings.backgroundMusicAudio) {
-                        settings.backgroundMusicAudio.play();
+                        settings.backgroundMusicAudio
+                          .play()
+                          .catch((error) => console.error('Error playing audio:', error));
                         settings.backgroundMusicAudio.loop = true;
                       } else if (settings.backgroundMusicAudio) {
                         settings.backgroundMusicAudio.pause();
@@ -2398,12 +2400,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href =
-      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3';
-    link.as = 'audio';
-    document.head.appendChild(link);
+    const audio = new Audio(
+      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3'
+    );
+    audio.preload = 'auto';
+    audio.load();
+    setSettings((prev) => ({ ...prev, backgroundMusicAudio: audio }));
+
+    return () => {
+      if (settings.backgroundMusicAudio) {
+        settings.backgroundMusicAudio.pause();
+        settings.backgroundMusicAudio.currentTime = 0;
+      }
+    };
   }, []);
 
   const fetchData = async () => {
