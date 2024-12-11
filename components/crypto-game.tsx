@@ -318,12 +318,10 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   setCurrentPage,
 }) => {
   const playHeaderFooterSound = () => {
-    if (audioInstances.headerFooterSound) {
-      audioInstances.headerFooterSound.currentTime = 0;
-      audioInstances.headerFooterSound
-        .play()
-        .catch((error) => console.error('Error playing header/footer sound:', error));
-    }
+    const audio = new Audio(
+      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
+    );
+    return audio.play();
   };
 
   return (
@@ -450,43 +448,18 @@ const formatNumber = (num: number) => {
   return num.toFixed(2);
 };
 
-const audioInstances = {
-  coinSound:
-    typeof Audio !== 'undefined'
-      ? new Audio(
-          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Button%20Sound-vLxAEYrnFJ4W4ZNzInbVnZpsMhwZLa.mp3'
-        )
-      : null,
-  headerFooterSound:
-    typeof Audio !== 'undefined'
-      ? new Audio(
-          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
-        )
-      : null,
-  backgroundMusic:
-    typeof Audio !== 'undefined'
-      ? new Audio(
-          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3'
-        )
-      : null,
-};
-
 const playCoinSound = () => {
-  if (audioInstances.coinSound) {
-    audioInstances.coinSound.currentTime = 0;
-    audioInstances.coinSound
-      .play()
-      .catch((error) => console.error('Error playing coin sound:', error));
-  }
+  const audio = new Audio(
+    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Button%20Sound-vLxAEYrnFJ4W4ZNzInbVnZpsMhwZLa.mp3'
+  );
+  audio.play();
 };
 
 const playHeaderFooterSound = () => {
-  if (audioInstances.headerFooterSound) {
-    audioInstances.headerFooterSound.currentTime = 0;
-    audioInstances.headerFooterSound
-      .play()
-      .catch((error) => console.error('Error playing header/footer sound:', error));
-  }
+  const audio = new Audio(
+    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/All%20Button%20Sound-NecLnCIFTmsT5rZXNgDaGNLmKdTxNO.mp3'
+  );
+  return audio.play();
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
@@ -545,7 +518,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     vibration: true,
     backgroundMusic: false,
     soundEffect: true,
-    backgroundMusicAudio: audioInstances.backgroundMusic,
+    backgroundMusicAudio:
+      typeof Audio !== 'undefined'
+        ? new Audio(
+            'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3'
+          )
+        : null,
   });
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
@@ -1641,6 +1619,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
           {
             page: 'home',
