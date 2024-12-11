@@ -2317,8 +2317,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src={trophy.icon}
                   alt={trophy.name}
-                  width={84}
-                  height={84}
+                  width={95}
+                  height={95}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src =
