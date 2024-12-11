@@ -1622,8 +1622,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={34}
-                height={34}
+                width={38}
+                height={38}
                 {...props}
               />
             )}
