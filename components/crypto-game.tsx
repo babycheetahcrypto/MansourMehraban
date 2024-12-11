@@ -2471,48 +2471,38 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     document.head.appendChild(link);
   }, []);
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/game-data');
+      const data = await response.json();
+      // Update state with fetched data
+      setUser(data.user);
+      setShopItems(data.shopItems);
+      setPremiumShopItems(data.premiumShopItems);
+      setTasks(data.tasks);
+      // ... update other state variables as needed
+    } catch (error) {
+      console.error('Error fetching game data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-black to-blue-900 opacity-50"></div>
-          <div className="absolute inset-0">
-            {[...Array(100)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full bg-white"
-                style={{
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                  width: `${Math.random() * 3 + 1}px`,
-                  height: `${Math.random() * 3 + 1}px`,
-                  animation: `twinkle ${Math.random() * 5 + 3}s infinite`,
-                }}
-              ></div>
-            ))}
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="relative w-32 h-32">
+          <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
+          <div
+            className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
+            style={{ animationDuration: '1.5s' }}
+          ></div>
         </div>
-        <div className="text-center z-10">
-          <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-            alt="Logo"
-            width={150}
-            height={150}
-            className="mx-auto mb-8 animate-pulse"
-          />
-          <div className="relative w-32 h-32 mx-auto">
-            <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
-            <div
-              className="absolute inset-0 border-4 border-purple-500 rounded-full animate-spin"
-              style={{ animationDuration: '3s' }}
-            ></div>
-            <div
-              className="absolute inset-0 border-4 border-pink-500 rounded-full animate-spin"
-              style={{ animationDuration: '5s' }}
-            ></div>
-          </div>
-          <p className="mt-8 text-2xl font-bold text-white">Loading Crypto Universe...</p>
-        </div>
+        <p className="mt-4 text-xl font-bold text-white">Loading...</p>
       </div>
     );
   }
