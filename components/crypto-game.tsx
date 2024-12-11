@@ -1463,6 +1463,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         await fetchData();
       } catch (error) {
         console.error('Failed to initialize game:', error);
+        showGameAlert('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -2485,7 +2486,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       // Update other state variables as needed
     } catch (error) {
       console.error('Error fetching game data:', error);
-      showGameAlert('Failed to load game data. Please try again.');
     } finally {
       setIsLoading(false);
     }
