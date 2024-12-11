@@ -7,24 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@radix-ui/react-label';
-import {
-  Users,
-  ShoppingBag,
-  Star,
-  CheckCircle,
-  Gift,
-  Volume2,
-  Coins,
-  ArrowRight,
-  Copy,
-  Vibrate,
-  Music,
-  Eye,
-  Check,
-  X,
-  Award,
-  Zap,
-} from 'lucide-react';
+import { Users, ShoppingBag, Star, CheckCircle, Gift, Volume2, Coins, ArrowRight, Copy, Vibrate, Music, Eye, Check, X, Award, Zap } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 
 interface User {
@@ -2109,7 +2092,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderLevels = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 p-4">
+      <div className="grid grid-cols-2 gap-4 p-4"> {/* Updated grid layout */}
         {levelImages.map((image, index) => (
           <div key={index}>
             <NeonGradientCard
@@ -2147,9 +2130,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       setCurrentPage('home');
                       playHeaderFooterSound();
                     }}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
+                    className={`w-full text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
+                      selectedCoinImage === image
+                        ? 'bg-green-600 hover:bg-green-700'
+                        : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900'
+                    }`} {/* Updated button className */}
                   >
-                    Use
+                    {selectedCoinImage === image ? 'Current' : 'Use'} {/* Updated button text */}
                   </Button>
                 )}
               </CardContent>
@@ -2267,8 +2254,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
               disabled={dailyReward.completed}
             >
-              <Gift className="w-6 h-6 mr-2" />
-              Claim Reward{' '}
+              <Gift className="w-6 h-6 mr-2" />              Claim Reward{' '}
             </Button>
           </div>
         </CardContent>
@@ -2675,3 +2661,4 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 };
 
 export default CryptoGame;
+
