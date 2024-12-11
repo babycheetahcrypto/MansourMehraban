@@ -2505,7 +2505,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             style={{ animationDuration: '1.5s' }}
           ></div>
         </div>
-        <p className="mt-4 text-xl font-bold text-white">Loading...</p>
       </div>
     );
   }
