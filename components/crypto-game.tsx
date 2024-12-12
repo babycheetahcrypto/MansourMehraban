@@ -122,7 +122,7 @@ const styles = `
     100% { transform: scale(1); }
   }
   .coin-button:active, .coin-button.pulse {
-    animation: pulse 0.2s cubic-bezier(.36,.07,.19,.97) both;
+    animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
