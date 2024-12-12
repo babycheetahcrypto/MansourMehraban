@@ -1732,244 +1732,213 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderShop = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <StarryBackground />
-      <div className="max-w-7xl mx-auto w-full">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Emporium Shop</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {shopItems.map((item, index) => (
-                <div
-                  key={item.id}
-                  className="bg-gradient-to-br from-gray-900/70 to-black/70 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-800/50 hover:border-primary/50 group"
-                >
-                  <div className="p-3">
-                    <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300">
-                      {item.name}
-                    </h3>
-                    <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
-                      />
-                    </div>
-                    <p className="text-xs text-white mb-1">Level: {item.level}</p>
-                    <p className="text-xs text-white mb-2">
-                      Profit: {formatNumber(item.baseProfit * item.level)}/h
-                    </p>
-                    <Button
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-md text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
-                      onClick={() => {
-                        buyItem(item);
-                      }}
-                    >
-                      Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
-                    </Button>
-                  </div>
+      <div className="max-w-7xl mx-auto">
+        <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {shopItems.map((item, index) => (
+            <div
+              key={item.id}
+              className="bg-gradient-to-br from-gray-900/70 to-black/70 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-800/50 hover:border-primary/50 group"
+            >
+              <div className="p-3">
+                <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300">
+                  {item.name}
+                </h3>
+                <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
+                  />
                 </div>
-              ))}
+                <p className="text-xs text-white mb-1">Level: {item.level}</p>
+                <p className="text-xs text-white mb-2">
+                  Profit: {formatNumber(item.baseProfit * item.level)}/h
+                </p>
+                <Button
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-md text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
+                  onClick={() => {
+                    buyItem(item);
+                  }}
+                >
+                  Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
+                </Button>
+              </div>
             </div>
+          ))}
+        </div>
 
-            <h4 className="text-3xl font-bold my-8 text-center text-white">Booster Shop</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {premiumShopItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-gradient-to-br from-yellow-600/30 to-yellow-800/30 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-yellow-500/50 hover:border-yellow-400 group"
-                >
-                  <div className="p-4">
-                    <h3 className="text-lg font-bold text-center mb-3 group-hover:text-yellow-400 transition-colors duration-300">
-                      {item.name}
-                    </h3>
-                    <div className="relative w-full h-32 mb-3 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className="group-hover:opacity-80 transition-opacity duration-300"
-                      />
-                    </div>
-                    <p className="text-sm text-white mb-1">Level: {item.level}</p>
-                    <p className="text-sm text-white mb-3">Effect: {item.effect}</p>
-                    <Button
-                      className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center"
-                      onClick={() => {
-                        buyItem(item, true);
-                      }}
-                    >
-                      Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1))}
-                    </Button>
-                  </div>
+        <h4 className="text-3xl font-bold my-8 text-center text-white">Booster Shop</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {premiumShopItems.map((item) => (
+            <div
+              key={item.id}
+              className="bg-gradient-to-br from-yellow-600/30 to-yellow-800/30 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-yellow-500/50 hover:border-yellow-400 group"
+            >
+              <div className="p-4">
+                <h3 className="text-lg font-bold text-center mb-3 group-hover:text-yellow-400 transition-colors duration-300">
+                  {item.name}
+                </h3>
+                <div className="relative w-full h-32 mb-3 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="group-hover:opacity-80 transition-opacity duration-300"
+                  />
                 </div>
-              ))}
+                <p className="text-sm text-white mb-1">Level: {item.level}</p>
+                <p className="text-sm text-white mb-3">Effect: {item.effect}</p>
+                <Button
+                  className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center"
+                  onClick={() => {
+                    buyItem(item, true);
+                  }}
+                >
+                  Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1))}
+                </Button>
+              </div>
             </div>
-          </CardContent>
-        </NeonGradientCard>
+          ))}
+        </div>
       </div>
     </div>
   );
 
   const renderTasks = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
-      <div className="max-w-7xl mx-auto w-full">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Tasks</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {tasks.map((task) => (
-                <NeonGradientCard
-                  key={task.id}
-                  className="bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl text-sm"
-                >
-                  <CardHeader className="relative p-3">
-                    <CardTitle className="flex items-center justify-between z-10 text-base">
-                      <span className="flex items-center">
-                        {task.icon}
-                        <span className="ml-2 text-white">{task.description}</span>
-                      </span>
-                      <span className="text-white font-bold">
-                        {formatNumber(task.reward)} coins
-                      </span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-3">
-                    <div className="h-3 bg-gray-700 rounded-full overflow-hidden mb-3">
-                      <div
-                        className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
-                        style={{ width: `${(task.progress / (task.maxProgress || 1)) * 100}%` }}
-                      />
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-white">
-                        {task.progress}/{task.maxProgress || 1} complete
-                      </span>
-                      {task.completed ? (
-                        task.claimed ? (
-                          <Button
-                            className="bg-green-600 text-white px-4 py-2 rounded-full text-xs"
-                            disabled
-                          >
-                            <CheckCircle className="w-4 h-4 mr-1" />
-                            <span>Claimed</span>
-                          </Button>
-                        ) : (
-                          <Button
-                            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
-                            onClick={() => {
-                              setUser((prevUser) => ({
-                                ...prevUser,
-                                coins: prevUser.coins + task.reward,
-                              }));
-                              setTasks((prevTasks) =>
-                                prevTasks.map((t) =>
-                                  t.id === task.id ? { ...t, claimed: true } : t
-                                )
-                              );
-                              showGameAlert(`Claimed ${task.reward} coins!`);
-                            }}
-                          >
-                            <Star className="w-4 h-4 mr-1" />
-                            <span>Claim</span>
-                          </Button>
-                        )
-                      ) : (
-                        <Button
-                          className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
-                          onClick={() => {
-                            task.action();
-                          }}
-                        >
-                          <ArrowRight className=" w-4 h-4 mr-1" />
-                          <span>Start</span>
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </NeonGradientCard>
-              ))}
-            </div>
-          </CardContent>
-        </NeonGradientCard>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4">
+        {tasks.map((task) => (
+          <NeonGradientCard
+            key={task.id}
+            className="bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl text-sm"
+          >
+            <CardHeader className="relative p-3">
+              <CardTitle className="flex items-center justify-between z-10 text-base">
+                <span className="flex items-center">
+                  {task.icon}
+                  <span className="ml-2 text-white">{task.description}</span>
+                </span>
+                <span className="text-white font-bold">{formatNumber(task.reward)} coins</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-3">
+              <div className="h-3 bg-gray-700 rounded-full overflow-hidden mb-3">
+                <div
+                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                  style={{ width: `${(task.progress / (task.maxProgress || 1)) * 100}%` }}
+                />
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white">
+                  {task.progress}/{task.maxProgress || 1} complete
+                </span>
+                {task.completed ? (
+                  task.claimed ? (
+                    <Button
+                      className="bg-green-600 text-white px-4 py-2 rounded-full text-xs"
+                      disabled
+                    >
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      <span>Claimed</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                      onClick={() => {
+                        setUser((prevUser) => ({
+                          ...prevUser,
+                          coins: prevUser.coins + task.reward,
+                        }));
+                        setTasks((prevTasks) =>
+                          prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
+                        );
+                        showGameAlert(`Claimed ${task.reward} coins!`);
+                      }}
+                    >
+                      <Star className="w-4 h-4 mr-1" />
+                      <span>Claim</span>
+                    </Button>
+                  )
+                ) : (
+                  <Button
+                    className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                    onClick={() => {
+                      task.action();
+                    }}
+                  >
+                    <ArrowRight className=" w-4 h-4 mr-1" />
+                    <span>Start</span>
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </NeonGradientCard>
+        ))}
       </div>
     </div>
   );
 
-  const renderRating = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
-      <div className="max-w-7xl mx-auto w-full">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Leaderboard</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
-              {leaderboardData.slice(0, 200).map((player, index) => (
+  const renderRating = () => {
+    return (
+      <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+        <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
+          {leaderboardData.slice(0, 200).map((player, index) => (
+            <div
+              key={player.id}
+              className={`flex items-center justify-between p-4 ${
+                index < 3
+                  ? `bg-gradient-to-r ${
+                      index === 0
+                        ? 'from-yellow-600/50 to-yellow-800/50'
+                        : index === 1
+                          ? 'from-gray-400/50 to-gray-600/50'
+                          : 'from-orange-600/50 to-orange-800/50'
+                    } text-white font-bold`
+                  : index % 2 === 0
+                    ? 'bg-gray-800/30'
+                    : 'bg-gray-900/30'
+              } ${player.rank === currentUserRank ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
+            >
+              <div className="flex items-center space-x-4">
                 <div
-                  key={player.id}
-                  className={`flex items-center justify-between p-4 ${
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
                     index < 3
-                      ? `bg-gradient-to-r ${
-                          index === 0
-                            ? 'from-yellow-600/50 to-yellow-800/50'
-                            : index === 1
-                              ? 'from-gray-400/50 to-gray-600/50'
-                              : 'from-orange-600/50 to-orange-800/50'
-                        } text-white font-bold`
-                      : index % 2 === 0
-                        ? 'bg-gray-800/30'
-                        : 'bg-gray-900/30'
-                  } ${player.rank === currentUserRank ? 'bg-gradient-to-r from-primary/50 to-primary-foreground/50' : ''}`}
+                      ? index === 0
+                        ? 'bg-yellow-400'
+                        : index === 1
+                          ? 'bg-gray-300'
+                          : 'bg-orange-400'
+                      : 'bg-gray-600'
+                  }`}
                 >
-                  <div className="flex items-center space-x-4">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                        index < 3
-                          ? index === 0
-                            ? 'bg-yellow-400'
-                            : index === 1
-                              ? 'bg-gray-300'
-                              : 'bg-orange-400'
-                          : 'bg-gray-600'
-                      }`}
-                    >
-                      {index + 1}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-white">{player.name}</h3>
-                      <p className="text-sm text-white">{formatNumber(player.coins)} coins</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-white">Profit/h</p>
-                    <p className="font-bold text-white">{formatNumber(player.profitPerHour)}</p>
-                  </div>
+                  {index + 1}
                 </div>
-              ))}
-            </div>
-            {currentUserRank > 0 && (
-              <div className="mt-8 p-4 bg-gradient-to-r from-primary/30 to-primary-foreground/30 rounded-lg shadow-lg backdrop-blur-md">
-                <p className="text-white text-xl">
-                  Your current rank: <span className="font-bold text-white">{currentUserRank}</span>
-                </p>
+                <div>
+                  <h3 className="font-bold text-white">{player.name}</h3>
+                  <p className="text-sm text-white">{formatNumber(player.coins)} coins</p>
+                </div>
               </div>
-            )}
-          </CardContent>
-        </NeonGradientCard>
+              <div className="text-right">
+                <p className="text-sm text-white">Profit/h</p>
+                <p className="font-bold text-white">{formatNumber(player.profitPerHour)}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        {currentUserRank > 0 && (
+          <div className="mt-8 p-4 bg-gradient-to-r from-primary/30 to-primary-foreground/30 rounded-lg shadow-lg backdrop-blur-md">
+            <p className="text-white text-xl">
+              Your current rank: <span className="font-bold text-white">{currentUserRank}</span>
+            </p>
+          </div>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderWallet = () => (
     <div className="flex-grow flex items-center justify-center p-6 relative">
@@ -2031,155 +2000,67 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
-  const renderInvite = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
-      <div className="max-w-md mx-auto w-full">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="p-6 space-y-6">
-            <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
-              <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
-              <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
-                <span className="text-sm text-white truncate mr-2">
-                  https://t.me/BabyCheetah_Bot?start={user.telegramId}
-                </span>
-                <Button
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      `https://t.me/BabyCheetah_Bot?start=${user.telegramId}`
-                    );
-                    showGameAlert('Referral link copied to clipboard!');
-                  }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"
-                >
-                  <Copy className="w-4 h-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-center mt-2 text-white">
-                Share this link to earn 1000 coins for each friend who joins!
-              </p>
-            </div>
-            <Button
-              onClick={() => setCurrentPage('friendsActivity')}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
-            >
-              <Users className="w-5 h-5 mr-2" />
-              Friends Activity
-            </Button>
-          </CardContent>
-        </NeonGradientCard>
-      </div>
-    </div>
-  );
-
-  const renderFriendsActivity = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
-      <div className="max-w-md mx-auto w-full">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Friends Activity</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="p-6 space-y-6">
-            {invitedFriends.map((friendId) => (
-              <div
-                key={friendId}
-                className="flex justify-between items-center bg-gray-700 bg-opacity-50 p-4 rounded-lg backdrop-blur-md"
-              >
-                <span className="font-bold text-white">Friend {friendId}</span>
-                <span className="text-white">Invited</span>
-              </div>
-            ))}
-            {invitedFriends.length === 0 && (
-              <p className="text-center text-white">
-                No friends invited yet. Share your referral link to get started!
-              </p>
-            )}
-          </CardContent>
-        </NeonGradientCard>
-      </div>
-    </div>
-  );
-
   const renderLevels = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
-      <div className="max-w-7xl mx-auto w-full">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Levels</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {levelImages.map((image, index) => {
-                const isUnlocked = user.coins >= levelRequirements[index];
-                if (isUnlocked && !unlockedLevels.includes(index + 1)) {
-                  setUnlockedLevels((prev) => [...prev, index + 1]);
-                }
-                return (
-                  <div key={index}>
-                    <NeonGradientCard
-                      className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${isUnlocked ? 'border-2 border-primary' : ''}`}
-                    >
-                      <CardHeader className="relative p-2">
-                        <CardTitle className="z-10 text-center text-xs text-white">
-                          Level {index + 1}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="flex flex-col items-center justify-center p-2">
-                        <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
-                          <Image
-                            src={image}
-                            alt={`Level ${index + 1}`}
-                            layout="fill"
-                            objectFit="contain"
-                            className={`relative z-10 ${!isUnlocked ? 'opacity-50 grayscale' : ''}`}
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.src =
-                                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
-                            }}
-                          />
-                        </div>
-                        <p className="text-xs text-center text-white mb-2">
-                          {isUnlocked
-                            ? 'Unlocked'
-                            : `Unlock at ${formatNumber(levelRequirements[index])} coins`}
-                        </p>
-                        {isUnlocked && (
-                          <Button
-                            onClick={() => {
-                              setSelectedCoinImage(image);
-                              setCurrentPage('home');
-                              if (!unlockedLevels.includes(index + 1)) {
-                                showGameAlert(
-                                  `Congratulations! You've unlocked Level ${index + 1}!`
-                                );
-                              }
-                            }}
-                            className={`w-full text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
-                              selectedCoinImage === image
-                                ? 'bg-green-500 hover:bg-green-700'
-                                : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900'
-                            }`}
-                          >
-                            {selectedCoinImage === image ? 'Current' : 'Use'}
-                          </Button>
-                        )}
-                      </CardContent>
-                    </NeonGradientCard>
+      <div className="grid grid-cols-2 gap-4 p-4">
+        {levelImages.map((image, index) => {
+          const isUnlocked = user.coins >= levelRequirements[index];
+          if (isUnlocked && !unlockedLevels.includes(index + 1)) {
+            setUnlockedLevels((prev) => [...prev, index + 1]);
+          }
+          return (
+            <div key={index}>
+              <NeonGradientCard
+                className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${isUnlocked ? 'border-2 border-primary' : ''}`}
+              >
+                <CardHeader className="relative p-2">
+                  <CardTitle className="z-10 text-center text-xs text-white">
+                    Level {index + 1}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center p-2">
+                  <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
+                    <Image
+                      src={image}
+                      alt={`Level ${index + 1}`}
+                      layout="fill"
+                      objectFit="contain"
+                      className={`relative z-10 ${!isUnlocked ? 'opacity-50 grayscale' : ''}`}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src =
+                          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
+                      }}
+                    />
                   </div>
-                );
-              })}
+                  <p className="text-xs text-center text-white mb-2">
+                    {isUnlocked
+                      ? 'Unlocked'
+                      : `Unlock at ${formatNumber(levelRequirements[index])} coins`}
+                  </p>
+                  {isUnlocked && (
+                    <Button
+                      onClick={() => {
+                        setSelectedCoinImage(image);
+                        setCurrentPage('home');
+                        if (!unlockedLevels.includes(index + 1)) {
+                          showGameAlert(`Congratulations! You've unlocked Level ${index + 1}!`);
+                        }
+                      }}
+                      className={`w-full text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
+                        selectedCoinImage === image
+                          ? 'bg-green-500 hover:bg-green-700'
+                          : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900'
+                      }`}
+                    >
+                      {selectedCoinImage === image ? 'Current' : 'Use'}
+                    </Button>
+                  )}
+                </CardContent>
+              </NeonGradientCard>
             </div>
-          </CardContent>
-        </NeonGradientCard>
+          );
+        })}
       </div>
     </div>
   );
@@ -2200,123 +2081,185 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderSettings = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
-      <div className="max-w-md mx-auto w-full">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Settings</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="p-6 space-y-6">
-            {[
-              { id: 'vibration', icon: Vibrate, label: 'Vibration' },
-              { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
-            ].map(({ id, icon: Icon, label }) => (
-              <div key={id} className="flex items-center justify-between py-2">
-                <div className="flex items-center space-x-2">
-                  <Icon className="w-5 h-5 text-primary" />
-                  <Label htmlFor={id} className="text-white text-sm">
-                    {label}
-                  </Label>
-                </div>
-                <Switch
-                  id={id}
-                  checked={
-                    typeof settings[id as keyof typeof settings] === 'boolean'
-                      ? (settings[id as keyof typeof settings] as boolean)
-                      : false
-                  }
-                  onCheckedChange={(checked) => {
-                    setSettings((prev) => {
-                      const newSettings = { ...prev, [id]: checked };
-                      if (id === 'vibration' && checked && navigator.vibrate) {
-                        navigator.vibrate([
-                          100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30,
-                          100,
-                        ]);
-                      } else if (id === 'backgroundMusic') {
-                        if (checked && newSettings.backgroundMusicAudio) {
-                          newSettings.backgroundMusicAudio
-                            .play()
-                            .catch((error: Error) => console.error('Error playing audio:', error));
-                          newSettings.backgroundMusicAudio.loop = true;
-                        } else if (newSettings.backgroundMusicAudio) {
-                          newSettings.backgroundMusicAudio.pause();
-                          newSettings.backgroundMusicAudio.currentTime = 0;
-                        }
-                      }
-                      return newSettings;
-                    });
-                  }}
-                  className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
-                />
+    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900/70 via-gray-800/70 to-black/70 backdrop-blur-md text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+        <CardHeader className="relative">
+          <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {[
+            { id: 'vibration', icon: Vibrate, label: 'Vibration' },
+            { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
+          ].map(({ id, icon: Icon, label }) => (
+            <div key={id} className="flex items-center justify-between py-2">
+              <div className="flex items-center space-x-2">
+                <Icon className="w-5 h-5 text-primary" />
+                <Label htmlFor={id} className="text-white text-sm">
+                  {label}
+                </Label>
               </div>
-            ))}
-          </CardContent>
-        </NeonGradientCard>
-      </div>
+              <Switch
+                id={id}
+                checked={
+                  typeof settings[id as keyof typeof settings] === 'boolean'
+                    ? (settings[id as keyof typeof settings] as boolean)
+                    : false
+                }
+                onCheckedChange={(checked) => {
+                  setSettings((prev) => {
+                    const newSettings = { ...prev, [id]: checked };
+                    if (id === 'vibration' && checked && navigator.vibrate) {
+                      navigator.vibrate([
+                        100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
+                      ]);
+                    } else if (id === 'backgroundMusic') {
+                      if (checked && newSettings.backgroundMusicAudio) {
+                        newSettings.backgroundMusicAudio
+                          .play()
+                          .catch((error: Error) => console.error('Error playing audio:', error));
+                        newSettings.backgroundMusicAudio.loop = true;
+                      } else if (newSettings.backgroundMusicAudio) {
+                        newSettings.backgroundMusicAudio.pause();
+                        newSettings.backgroundMusicAudio.currentTime = 0;
+                      }
+                    }
+                    return newSettings;
+                  });
+                }}
+                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
+              />
+            </div>
+          ))}
+        </CardContent>
+      </NeonGradientCard>
     </div>
   );
 
   const renderDailyReward = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
-      <div className="max-w-2xl mx-auto w-full">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Daily Rewards</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-4 gap-2">
-              {Array.from({ length: 30 }, (_, i) => {
-                const day = i + 1;
-                const isCurrentDay = day === dailyReward.day;
-                const isPastDay = day < dailyReward.day;
-                const reward = getDailyReward(day);
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+        <CardHeader className="relative">
+          <CardTitle className="z-10 text-3xl text-center text-white">Daily Rewards</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="grid grid-cols-4 gap-2">
+            {Array.from({ length: 30 }, (_, i) => {
+              const day = i + 1;
+              const isCurrentDay = day === dailyReward.day;
+              const isPastDay = day < dailyReward.day;
+              const reward = getDailyReward(day);
 
-                return (
-                  <div
-                    key={i}
-                    className={`p-2 rounded-lg flex flex-col items-center justify-center relative overflow-hidden ${
-                      isCurrentDay
-                        ? 'bg-gradient-to-br from-gray-800 to-gray-900'
-                        : 'bg-gradient-to-br from-gray-800 to-gray-900'
+              return (
+                <div
+                  key={i}
+                  className={`p-2 rounded-lg flex flex-col items-center justify-center relative overflow-hidden ${
+                    isCurrentDay
+                      ? 'bg-gradient-to-br from-gray-800 to-gray-900'
+                      : 'bg-gradient-to-br from-gray-800 to-gray-900'
+                  }`}
+                >
+                  <span className="text-sm font-bold text-white mb-1">{day}</span>
+                  <Gift
+                    className={`w-6 h-6 ${
+                      isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
                     }`}
-                  >
-                    <span className="text-sm font-bold text-white mb-1">{day}</span>
-                    <Gift
-                      className={`w-6 h-6 ${
-                        isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
-                      }`}
-                    />
-                    <div className="mt-1 text-xs font-semibold text-white">
-                      {formatNumber(reward)}
-                    </div>
-                    {isPastDay && (
-                      <CheckCircle className="absolute top-1 right-1 w-4 h-4 text-green-400" />
-                    )}
+                  />
+                  <div className="mt-1 text-xs font-semibold text-white">
+                    {formatNumber(reward)}
                   </div>
-                );
-              })}
-            </div>
-            <div className="mt-6 text-center">
-              <p className="text-xl mb-4 text-white">Current Streak: {dailyReward.streak} days</p>
+                  {isPastDay && (
+                    <CheckCircle className="absolute top-1 right-1 w-4 h-4 text-green-400" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-6 text-center">
+            <p className="text-xl mb-4 text-white">Current Streak: {dailyReward.streak} days</p>
+            <Button
+              onClick={() => {
+                claimDailyReward();
+              }}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
+              disabled={dailyReward.completed}
+            >
+              <Gift className="w-6 h-6 mr-2" />
+              Claim Reward{' '}
+            </Button>
+          </div>
+        </CardContent>
+      </NeonGradientCard>
+    </div>
+  );
+
+  const renderInvite = () => (
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+        <CardHeader className="relative">
+          <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+        </CardHeader>
+        <CardContent className="p-6 space-y-6">
+          <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
+            <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
+            <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
+              <span className="text-sm text-white truncate mr-2">
+                https://t.me/BabyCheetah_Bot?start={user.telegramId}
+              </span>
               <Button
                 onClick={() => {
-                  claimDailyReward();
+                  navigator.clipboard.writeText(
+                    `https://t.me/BabyCheetah_Bot?start=${user.telegramId}`
+                  );
+                  showGameAlert('Referral link copied to clipboard!');
                 }}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
-                disabled={dailyReward.completed}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"
               >
-                <Gift className="w-6 h-6 mr-2" />
-                Claim Reward{' '}
+                <Copy className="w-4 h-4" />
               </Button>
             </div>
-          </CardContent>
-        </NeonGradientCard>
-      </div>
+            <p className="text-xs text-center mt-2 text-white">
+              Share this link to earn 1000 coins for each friend who joins!
+            </p>
+          </div>
+          <Button
+            onClick={() => setCurrentPage('friendsActivity')}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
+          >
+            <Users className="w-5 h-5 mr-2" />
+            Friends Activity
+          </Button>
+        </CardContent>
+      </NeonGradientCard>
+    </div>
+  );
+
+  const renderFriendsActivity = () => (
+    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+        <CardHeader className="relative">
+          <CardTitle className="z-10 text-3xl text-center text-white">Friends Activity</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+        </CardHeader>
+        <CardContent className="p-6 space-y-6">
+          {invitedFriends.map((friendId) => (
+            <div
+              key={friendId}
+              className="flex justify-between items-center bg-gray-700 bg-opacity-50 p-4 rounded-lg backdrop-blur-md"
+            >
+              <span className="font-bold text-white">Friend {friendId}</span>
+              <span className="text-white">Invited</span>
+            </div>
+          ))}
+          {invitedFriends.length === 0 && (
+            <p className="text-center text-white">
+              No friends invited yet. Share your referral link to get started!
+            </p>
+          )}
+        </CardContent>
+      </NeonGradientCard>
     </div>
   );
 
