@@ -117,13 +117,13 @@ interface UserData extends Omit<User, 'dailyReward'> {
 // Keyframe animation
 const styles = `
   @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-2px, -2px) rotate(-2deg); }
+    50% { transform: translate(2px, 2px) rotate(2deg); }
+    75% { transform: translate(-2px, 2px) rotate(-2deg); }
   }
   .coin-button:active, .coin-button.shake {
-    animation: shake 0.1s cubic-bezier(.36,.07,.19,.97) both;
+    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
@@ -919,8 +919,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
       if (energy > 0) {
         const clickValue = clickPower * multiplier;
-        const newCoins = user.coins + clickValue;
-        const newExp = user.exp + 1;
+        const taps = 5; // Allow 3 taps at a time
+        const totalClickValue = clickValue * taps;
+        const newCoins = user.coins + totalClickValue;
+        const newExp = user.exp + taps;
         const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
         const updatedUser = {
@@ -933,7 +935,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setUser(updatedUser);
         saveUserData(updatedUser);
 
-        setEnergy((prev) => Math.max(prev - 1, 0));
+        setEnergy((prev) => Math.max(prev - taps, 0));
 
         // Add click effect at the exact tap position only for coin button
         if (event.currentTarget.classList.contains('coin-button')) {
@@ -951,7 +953,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const effectColor = 'white'; // Pure white color
           setClickEffects((prev) => [
             ...prev,
-            { id: Date.now(), x, y, value: clickValue, color: effectColor },
+            { id: Date.now(), x, y, value: totalClickValue, color: effectColor },
           ]);
         }
 
@@ -968,7 +970,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         // Send tap data to Telegram Mini App
         if (window.Telegram && window.Telegram.WebApp) {
           window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
+            JSON.stringify({ action: 'tap', amount: totalClickValue })
           );
         }
 
