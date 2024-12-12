@@ -1532,7 +1532,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderFooter = () => (
     <div
-      className="fixed bottom-1 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
@@ -1692,7 +1692,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   setCurrentPage('dailyReward');
                 }}
-                className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
+                className="flex-1 bg-transparent backdrop-filter backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
@@ -1707,7 +1707,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   activateMultiplier();
                 }}
-                className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
+                className={`flex-1 bg-transparent backdrop-filter backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
+                  boosterCooldown ? 'opacity-50' : ''
+                }`}
                 disabled={!!multiplierEndTime || !!boosterCooldown}
               >
                 <Image
