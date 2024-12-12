@@ -368,6 +368,7 @@ const trophies = [
     requirement: 10000,
     prize: 1000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1T-nUWKYBAKLuUbRUCtQ4Pe6bKVvuayqD.png',
+    claimed: false,
   },
   {
     name: 'Blockchain Pioneer',
@@ -375,6 +376,7 @@ const trophies = [
     requirement: 50000,
     prize: 5000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2T-qkckZRo7F2pFbjOXFUsmZW1aVDaKkX.png',
+    claimed: false,
   },
   {
     name: 'DeFi Explorer',
@@ -382,6 +384,7 @@ const trophies = [
     requirement: 100000,
     prize: 10000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3T-S4ZJ26mqOyNGPIIBKrLLwkozCZFPru.png',
+    claimed: false,
   },
   {
     name: 'NFT Collector',
@@ -389,6 +392,7 @@ const trophies = [
     requirement: 250000,
     prize: 25000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4T-8R9RicTTe3vC5WD0wWAY7OCNaF1vxx.png',
+    claimed: false,
   },
   {
     name: 'Hodl Master',
@@ -396,6 +400,7 @@ const trophies = [
     requirement: 500000,
     prize: 50000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5T-QEssxxIveH9hiQ0nJcZZrmdJJguJbF.png',
+    claimed: false,
   },
   {
     name: 'Altcoin Adventurer',
@@ -403,6 +408,7 @@ const trophies = [
     requirement: 1000000,
     prize: 100000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/6T-fnsT0zSHQjez6E6KHO3AjIwflnyT1P.png',
+    claimed: false,
   },
   {
     name: 'Smart Contract Sage',
@@ -410,6 +416,7 @@ const trophies = [
     requirement: 2500000,
     prize: 250000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7T-2DEkkrvJaawGC1O7GADjiHOn8RQfia.png',
+    claimed: false,
   },
   {
     name: 'Crypto Whale',
@@ -417,6 +424,7 @@ const trophies = [
     requirement: 5000000,
     prize: 500000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8T-i7iib3r4xoqtY9qYHdrOOgiUflPOCu.png',
+    claimed: false,
   },
   {
     name: 'Metaverse Mogul',
@@ -424,6 +432,7 @@ const trophies = [
     requirement: 7500000,
     prize: 750000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/9T-FOz1XZIhMkDitSvZsKOFXfYkP6QdQt.png',
+    claimed: false,
   },
   {
     name: 'Crypto Legend',
@@ -431,6 +440,7 @@ const trophies = [
     requirement: 10000000,
     prize: 1000000,
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/10-m1ABpvscvGrraWnHOclc7sLK531TqB.png',
+    claimed: false,
   },
 ];
 
@@ -2306,7 +2316,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       {trophies.map((trophy, index) => (
         <div key={index}>
           <NeonGradientCard
-            className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${user.coins >= trophy.requirement ? 'border-2 border-primary' : ''}`}
+            className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${
+              user.coins >= trophy.requirement ? 'border-2 border-primary' : ''
+            }`}
           >
             <CardHeader className="relative">
               <CardTitle className="z-10 text-center text-white">{trophy.name}</CardTitle>
@@ -2334,10 +2346,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 Prize: {formatNumber(trophy.prize)} coins
               </p>
               {user.coins >= trophy.requirement ? (
-                <div className="w-full bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center">
-                  <Check className="w-5 h-5 mr-2" />
-                  Unlocked
-                </div>
+                trophy.claimed ? (
+                  <div className="w-full bg-green-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center">
+                    <Check className="w-5 h-5 mr-2" />
+                    Claimed
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => claimTrophy(trophy)}
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-700 hover:to-blue-900"
+                  >
+                    <Gift className="w-5 h-5 mr-2" />
+                    Claim
+                  </Button>
+                )
               ) : (
                 <div className="w-full bg-gray-600 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center">
                   <Lock className="w-5 h-5 mr-2" />
@@ -2350,6 +2372,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       ))}
     </div>
   );
+
+  const claimTrophy = (trophy: (typeof trophies)[0]) => {
+    if (user.coins >= trophy.requirement && !trophy.claimed) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        coins: prevUser.coins + trophy.prize,
+      }));
+      trophies.find((t) => t.name === trophy.name)!.claimed = true;
+      showGameAlert(
+        `Congratulations! You've claimed ${formatNumber(trophy.prize)} coins for the "${trophy.name}" trophy!`
+      );
+      saveUserData({ ...user, coins: user.coins + trophy.prize });
+    }
+  };
 
   const showPopup = (popupType: string) => {
     if (!shownPopups.has(popupType)) {
