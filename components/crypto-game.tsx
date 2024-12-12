@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import TonConnect from '@tonconnect/sdk';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -494,7 +493,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [currentUserRank, setCurrentUserRank] = useState(0);
-  const [wallet, setWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [clickPower, setClickPower] = useState(1);
@@ -1054,72 +1052,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setPopupShown,
     ]
   );
-
-  const connectWallet = async () => {
-    try {
-      const manifestUrl = 'https://babycheetah.vercel.app/tonconnect-manifest.json';
-      const tonConnect = new TonConnect({ manifestUrl });
-
-      const walletConnectionSource = {
-        jsBridgeKey: 'tonkeeper',
-      };
-
-      await tonConnect.connect(walletConnectionSource);
-
-      const walletInfo = await tonConnect.getWallets();
-      if (walletInfo && walletInfo.length > 0) {
-        const firstWallet = walletInfo[0];
-        if ('address' in firstWallet) {
-          return firstWallet.address as string;
-        } else {
-          throw new Error('Failed to get wallet address');
-        }
-      } else {
-        throw new Error('No wallets available');
-      }
-    } catch (error) {
-      console.error('Failed to connect wallet:', error);
-      throw error;
-    }
-  };
-
-  const App: React.FC = () => {
-    const [wallet, setWallet] = useState<string>('');
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleConnectWallet = useCallback(async () => {
-      try {
-        setIsLoading(true);
-        const address = await connectWallet();
-        setWallet(address);
-        showGameAlert('Wallet connected successfully with Tonkeeper!');
-      } catch (error) {
-        console.error('Failed to connect wallet:', error);
-        showGameAlert('Failed to connect wallet. Please try again.');
-      } finally {
-        setIsLoading(false);
-      }
-    }, []);
-
-    return (
-      <div>
-        <h1>Tonkeeper</h1>
-        <button onClick={handleConnectWallet} disabled={isLoading}>
-          {isLoading ? 'Connecting...' : 'Connect Wallet'}
-        </button>
-        {wallet && <p>Connected Wallet: {wallet}</p>}
-        {/* Display user data */}
-        {user && (
-          <div>
-            <p>User ID: {user.telegramId}</p>
-            <p>Username: {user.username}</p>
-            <p>Name: {user.username}</p>
-            <p>Coins: {user.coins}</p>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   const claimPPH = useCallback(() => {
     if (pphAccumulated > 0) {
@@ -2034,47 +1966,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-            {isLoading ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                <span className="ml-2">Connecting...</span>
-              </div>
-            ) : !wallet ? (
-              <Button
-                onClick={() => {
-                  connectWallet()
-                    .then((address) => {
-                      setWallet(address);
-                      showGameAlert('Wallet connected successfully with Tonkeeper!');
-                    })
-                    .catch((error) => {
-                      console.error('Failed to connect wallet:', error);
-                      showGameAlert('Failed to connect wallet. Please try again.');
-                    });
-                }}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md flex items-center justify-center"
-              >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
-                  alt="Tonkeeper"
-                  width={20}
-                  height={20}
-                  className="mr-2"
-                />
-                <span className="text-base">Connect Tonkeeper</span>
-              </Button>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between bg-gray-800 p-4 rounded-lg">
-                  <span className="text-green-400 flex items-center text-lg">
-                    <CheckCircle className="mr-2 w-6 h-6" /> Connected
-                  </span>
-                  <span className="text-xs bg-gray-700 px-3 py-1 rounded-full text-white">
-                    {wallet.slice(0, 6)}...{wallet.slice(-4)}
-                  </span>
-                </div>
-              </div>
-            )}
+            <div className="bg-gray-800 p-4 rounded-lg">
+              <h3 className="text-xl font-bold mb-2 text-white">Game Coins</h3>
+              <p className="text-2xl font-bold text-green-400">{formatNumber(user.coins)}</p>
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg">
+              <h3 className="text-xl font-bold mb-2 text-white">Wallet Connection</h3>
+              <p className="text-red-400">Unavailable</p>
+            </div>
+            <Button
+              disabled
+              className="w-full bg-gray-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 opacity-50 cursor-not-allowed"
+            >
+              Connect Wallet (Unavailable)
+            </Button>
           </CardContent>
         </NeonGradientCard>
       </div>
