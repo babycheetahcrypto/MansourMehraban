@@ -2162,62 +2162,54 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderSettings = () => (
-    <div className="flex-grow flex items-center justify-center p-4 pb-16 relative overflow-y-auto">
-      <div className="absolute inset-0 z-0">
-        <StarryBackground />
-      </div>
-      <div className="relative z-10 w-full max-w-md">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 via-gray-800/30 to-black/30 backdrop-blur-md text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700/50">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-3xl text-center text-white">Settings</CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="space-y-6 p-6">
-            {[
-              { id: 'vibration', icon: Vibrate, label: 'Vibration' },
-              { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
-            ].map(({ id, icon: Icon, label }) => (
-              <div key={id} className="flex items-center justify-between py-2">
-                <div className="flex items-center space-x-2">
-                  <Icon className="w-5 h-5 text-primary" />
-                  <Label htmlFor={id} className="text-white text-sm">
-                    {label}
-                  </Label>
-                </div>
-                <Switch
-                  id={id}
-                  checked={!!settings[id as keyof typeof settings]}
-                  onCheckedChange={(checked) => {
-                    setSettings((prev) => {
-                      const newSettings = { ...prev, [id]: checked };
-                      if (id === 'vibration' && checked && navigator.vibrate) {
-                        navigator.vibrate([
-                          100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30,
-                          100,
-                        ]);
-                      } else if (id === 'backgroundMusic') {
-                        if (checked && settings.backgroundMusicAudio) {
-                          settings.backgroundMusicAudio
-                            .play()
-                            .catch((error) => console.error('Error playing audio:', error));
-                          settings.backgroundMusicAudio.loop = true;
-                        } else if (settings.backgroundMusicAudio) {
-                          settings.backgroundMusicAudio.pause();
-                          settings.backgroundMusicAudio.currentTime = 0;
-                        }
-                      }
-                      return newSettings;
-                    });
-                  }}
-                  className={`w-12 h-6 ${
-                    settings[id as keyof typeof settings] ? 'bg-green-400' : 'bg-gray-300'
-                  } rounded-full p-1 duration-300 ease-in-out cursor-pointer`}
-                />
+    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900/70 via-gray-800/70 to-black/70 backdrop-blur-md text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+        <CardHeader className="relative">
+          <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {[
+            { id: 'vibration', icon: Vibrate, label: 'Vibration' },
+            { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
+          ].map(({ id, icon: Icon, label }) => (
+            <div key={id} className="flex items-center justify-between py-2">
+              <div className="flex items-center space-x-2">
+                <Icon className="w-5 h-5 text-primary" />
+                <Label htmlFor={id} className="text-white text-sm">
+                  {label}
+                </Label>
               </div>
-            ))}
-          </CardContent>
-        </NeonGradientCard>
-      </div>
+              <Switch
+                id={id}
+                checked={!!settings[id as keyof typeof settings]}
+                onCheckedChange={(checked) => {
+                  setSettings((prev) => {
+                    const newSettings = { ...prev, [id]: checked };
+                    if (id === 'vibration' && checked && navigator.vibrate) {
+                      navigator.vibrate([
+                        100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
+                      ]);
+                    } else if (id === 'backgroundMusic') {
+                      if (checked && settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio
+                          .play()
+                          .catch((error) => console.error('Error playing audio:', error));
+                        settings.backgroundMusicAudio.loop = true;
+                      } else if (settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio.pause();
+                        settings.backgroundMusicAudio.currentTime = 0;
+                      }
+                    }
+                    return newSettings;
+                  });
+                }}
+                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
+              />
+            </div>
+          ))}
+        </CardContent>
+      </NeonGradientCard>
     </div>
   );
 
