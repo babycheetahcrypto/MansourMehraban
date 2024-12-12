@@ -116,14 +116,13 @@ interface UserData extends Omit<User, 'dailyReward'> {
 
 // Keyframe animation
 const styles = `
-  @keyframes shake {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(-2px, -2px) rotate(-2deg); }
-    50% { transform: translate(2px, 2px) rotate(2deg); }
-    75% { transform: translate(-2px, 2px) rotate(-2deg); }
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
   }
-  .coin-button:active, .coin-button.shake {
-    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
+  .coin-button:active, .coin-button.pulse {
+    animation: pulse 0.3s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
@@ -917,10 +916,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (energy > 0) {
-        const clickValue = clickPower * multiplier;
+      if (energy >= 3) {
+        const clickValue = clickPower * multiplier * 3;
         const newCoins = user.coins + clickValue;
-        const newExp = user.exp + 1;
+        const newExp = user.exp + 3;
         const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
         const updatedUser = {
@@ -933,7 +932,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setUser(updatedUser);
         saveUserData(updatedUser);
 
-        setEnergy((prev) => Math.max(prev - 1, 0));
+        setEnergy((prev) => Math.max(prev - 3, 0));
 
         // Add click effect at the exact tap position only for coin button
         if (event.currentTarget.classList.contains('coin-button')) {
@@ -967,16 +966,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         // Send tap data to Telegram Mini App
         if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
-          );
+          window.Telegram.WebApp.sendData(JSON.stringify({ action: 'tap', amount: clickValue }));
         }
 
-        // Add shake effect for touch events
+        // Add pulse effect for touch events
         if ('touches' in event) {
           const button = event.currentTarget;
-          button.classList.add('shake');
-          setTimeout(() => button.classList.remove('shake'), 200);
+          button.classList.add('pulse');
+          setTimeout(() => button.classList.remove('pulse'), 300);
         }
       }
     },
