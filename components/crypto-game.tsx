@@ -1057,13 +1057,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const connectWallet = async () => {
     try {
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.openTelegramLink('https://app.tonkeeper.com/ton-connect');
-        // Note: In a real implementation, you would need to handle the callback from Tonkeeper
-        // and update the wallet state accordingly. This example just simulates a successful connection.
-        return 'simulated_wallet_address';
+      const manifestUrl = 'https://babycheetah.vercel.app/tonconnect-manifest.json';
+      const tonConnect = new TonConnect({ manifestUrl });
+
+      const walletConnectionSource = {
+        jsBridgeKey: 'tonkeeper',
+      };
+
+      await tonConnect.connect(walletConnectionSource);
+
+      const walletInfo = await tonConnect.getWallets();
+      if (walletInfo && walletInfo.length > 0) {
+        const firstWallet = walletInfo[0];
+        if ('address' in firstWallet) {
+          return firstWallet.address as string;
+        } else {
+          throw new Error('Failed to get wallet address');
+        }
       } else {
-        throw new Error('Telegram WebApp is not available');
+        throw new Error('No wallets available');
       }
     } catch (error) {
       console.error('Failed to connect wallet:', error);
