@@ -156,6 +156,13 @@ const styles = `
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
   }
+  .fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -923,15 +930,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const newExp = user.exp + 1;
         const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
-        const updatedUser = {
-          ...user,
+        setUser((prevUser) => ({
+          ...prevUser,
           coins: newCoins,
           exp: newExp % 100,
           level: newLevel,
-        };
-
-        setUser(updatedUser);
-        saveUserData(updatedUser);
+        }));
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -948,7 +952,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
           const x = clientX - rect.left;
           const y = clientY - rect.top;
-          const effectColor = 'white'; // Pure white color
+          const effectColor = 'white';
           setClickEffects((prev) => [
             ...prev,
             { id: Date.now(), x, y, value: clickValue, color: effectColor },
@@ -959,7 +963,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         if (
           settings.vibration &&
           window.Telegram &&
-          window.Telegram &&
           window.Telegram.WebApp &&
           window.Telegram.WebApp.HapticFeedback
         ) {
@@ -968,9 +971,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         // Send tap data to Telegram Mini App
         if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
-          );
+          window.Telegram.WebApp.sendData(JSON.stringify({ action: 'tap', amount: clickValue }));
         }
 
         // Add shake effect for touch events
@@ -981,7 +982,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
+    [clickPower, multiplier, energy, settings.vibration, user]
   );
 
   const buyItem = useCallback(
@@ -1529,64 +1530,67 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
-  const renderFooter = () => (
-    <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-    >
-      <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
-        {[
-          {
-            page: 'home',
-            text: 'Home',
-            icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
-          },
-          {
-            page: 'shop',
-            text: 'Shop',
-            icon: 'SHOP%203D%20ICON-8W5KCBOOeijJzAMwkJlM3AvlopMlor.png',
-          },
-          {
-            page: 'tasks',
-            text: 'Tasks',
-            icon: 'TASKS%203D%20ICON-xYtBLApGw0DH6Z96oMKZEnNZJu5KvW.png',
-          },
-          {
-            page: 'rating',
-            text: 'Rating',
-            icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
-          },
-          {
-            page: 'wallet',
-            text: 'Wallet',
-            icon: 'WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png',
-          },
-          {
-            page: 'invite',
-            text: 'Invite',
-            icon: 'FRIEND%20INVITE%203D%20ICON-8lQ0eY4dY5Qznxnip4OH8ae53TzlvY.png',
-          },
-        ].map(({ page, text, icon }) => (
-          <CryptoButton
-            key={page}
-            icon={(props) => (
-              <Image
-                src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
-                alt={text}
-                width={32}
-                height={32}
-                {...props}
-              />
-            )}
-            href={page}
-            text={text}
-            isActive={currentPage === page}
-            setCurrentPage={setCurrentPage}
-          />
-        ))}
+  const renderFooter = useCallback(
+    () => (
+      <div
+        className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <div className="flex justify-around items-center max-w-md mx-auto relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
+          {[
+            {
+              page: 'home',
+              text: 'Home',
+              icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
+            },
+            {
+              page: 'shop',
+              text: 'Shop',
+              icon: 'SHOP%203D%20ICON-8W5KCBOOeijJzAMwkJlM3AvlopMlor.png',
+            },
+            {
+              page: 'tasks',
+              text: 'Tasks',
+              icon: 'TASKS%203D%20ICON-xYtBLApGw0DH6Z96oMKZEnNZJu5KvW.png',
+            },
+            {
+              page: 'rating',
+              text: 'Rating',
+              icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
+            },
+            {
+              page: 'wallet',
+              text: 'Wallet',
+              icon: 'WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png',
+            },
+            {
+              page: 'invite',
+              text: 'Invite',
+              icon: 'FRIEND%20INVITE%203D%20ICON-8lQ0eY4dY5Qznxnip4OH8ae53TzlvY.png',
+            },
+          ].map(({ page, text, icon }) => (
+            <CryptoButton
+              key={page}
+              icon={(props) => (
+                <Image
+                  src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
+                  alt={text}
+                  width={32}
+                  height={32}
+                  {...props}
+                />
+              )}
+              href={page}
+              text={text}
+              isActive={currentPage === page}
+              setCurrentPage={setCurrentPage}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    ),
+    [currentPage, setCurrentPage]
   );
 
   const renderHome = () => (
@@ -2501,7 +2505,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         WebkitUserSelect: 'none',
         MozUserSelect: 'none',
         msUserSelect: 'none',
-        paddingBottom: 'env(safe-area-inset-bottom)',
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + 80px)', // Add padding for the footer
         paddingTop: 'env(safe-area-inset-top)',
       }}
     >
