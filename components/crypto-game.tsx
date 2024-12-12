@@ -156,6 +156,9 @@ const styles = `
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
   }
+  .ios-safe-area-fix {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 `;
 
 // Telegram WebApp type definition
@@ -321,7 +324,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   setCurrentPage,
 }) => {
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <Button
         variant="ghost"
         className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
@@ -331,14 +334,10 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
           setCurrentPage(href);
         }}
       >
-        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
-        <span
-          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
-        >
-          {text}
-        </span>
+        <Icon className={`w-6 h-6 ${isActive ? 'text-primary' : 'text-white'}`} />
         {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
       </Button>
+      <span className={`text-xs mt-1 ${isActive ? 'text-white' : 'text-gray-300'}`}>{text}</span>
     </div>
   );
 };
@@ -1532,7 +1531,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderFooter = () => (
     <div
       className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      style={{
+        paddingBottom: 'env(safe-area-inset-bottom)',
+        height: 'auto',
+        minHeight: '80px',
+      }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
@@ -2488,7 +2491,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   return (
     <div
-      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
+      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col ios-safe-area-fix"
       style={{
         width: '100%',
         height: '100dvh',
