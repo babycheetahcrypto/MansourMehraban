@@ -117,13 +117,13 @@ interface UserData extends Omit<User, 'dailyReward'> {
 // Keyframe animation
 const styles = `
   @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-2px, -2px) rotate(-2deg); }
+    50% { transform: translate(2px, 2px) rotate(2deg); }
+    75% { transform: translate(-2px, 2px) rotate(-2deg); }
   }
   .coin-button:active, .coin-button.shake {
-    animation: shake 0.1s cubic-bezier(.36,.07,.19,.97) both;
+    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
