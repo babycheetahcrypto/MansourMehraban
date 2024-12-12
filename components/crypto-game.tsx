@@ -503,15 +503,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<{
+    vibration: boolean;
+    backgroundMusic: boolean;
+    backgroundMusicAudio: HTMLAudioElement | null;
+  }>({
     vibration: true,
     backgroundMusic: false,
-    backgroundMusicAudio:
-      typeof Audio !== 'undefined'
-        ? new Audio(
-            'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3'
-          )
-        : null,
+    backgroundMusicAudio: null,
   });
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
@@ -2104,7 +2103,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <Switch
                 id={id}
-                checked={!!settings[id as keyof typeof settings]}
+                checked={
+                  typeof settings[id as keyof typeof settings] === 'boolean'
+                    ? (settings[id as keyof typeof settings] as boolean)
+                    : false
+                }
                 onCheckedChange={(checked) => {
                   setSettings((prev) => {
                     const newSettings = { ...prev, [id]: checked };
@@ -2113,14 +2116,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
                       ]);
                     } else if (id === 'backgroundMusic') {
-                      if (checked && settings.backgroundMusicAudio) {
-                        settings.backgroundMusicAudio
+                      if (checked && newSettings.backgroundMusicAudio) {
+                        newSettings.backgroundMusicAudio
                           .play()
-                          .catch((error) => console.error('Error playing audio:', error));
-                        settings.backgroundMusicAudio.loop = true;
-                      } else if (settings.backgroundMusicAudio) {
-                        settings.backgroundMusicAudio.pause();
-                        settings.backgroundMusicAudio.currentTime = 0;
+                          .catch((error: Error) => console.error('Error playing audio:', error));
+                        newSettings.backgroundMusicAudio.loop = true;
+                      } else if (newSettings.backgroundMusicAudio) {
+                        newSettings.backgroundMusicAudio.pause();
+                        newSettings.backgroundMusicAudio.currentTime = 0;
                       }
                     }
                     return newSettings;
