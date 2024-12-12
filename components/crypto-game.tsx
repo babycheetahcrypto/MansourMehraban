@@ -321,7 +321,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   setCurrentPage,
 }) => {
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <Button
         variant="ghost"
         className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
@@ -339,6 +339,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         </span>
         {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
       </Button>
+      <span className={`text-xs mt-1 ${isActive ? 'text-white' : 'text-gray-300'}`}>{text}</span>
     </div>
   );
 };
@@ -1534,7 +1535,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <div className="flex justify-around items-center max-w-md mx-auto relative">
+      <div className="flex justify-around items-end max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
           {
