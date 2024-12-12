@@ -476,7 +476,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       unlockedLevels: [1],
       clickPower: 1,
       friendsCoins: {},
-      energy: 500,
+      energy: 1000,
       pphAccumulated: 0,
       multiplier: 1,
       multiplierEndTime: null,
@@ -497,8 +497,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
   const [currentPage, setCurrentPage] = useState('home');
-  const [energy, setEnergy] = useState(500);
-  const [maxEnergy] = useState(500);
+  const [energy, setEnergy] = useState(1000);
+  const [maxEnergy] = useState(1000);
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);

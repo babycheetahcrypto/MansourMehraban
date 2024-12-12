@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
         unlockedLevels: [1],
         clickPower: 1,
         friendsCoins: {},
-        energy: 500,
+        energy: 1000,
         pphAccumulated: 0,
         multiplier: 1,
         settings: { vibration: true, backgroundMusic: false },
