@@ -542,6 +542,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     congratulation: false,
   });
   const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
+  const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
+  const [unlockedLevel, setUnlockedLevel] = useState(0);
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -1488,6 +1490,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
 
+    const newUnlockedLevels = levelRequirements
+      .filter((req, index) => user.coins >= req && !unlockedLevels.includes(index + 1))
+      .map((_, index) => index + 1);
+    if (newUnlockedLevels.length > 0) {
+      setUnlockedLevels((prev) => [...prev, ...newUnlockedLevels]);
+      setUnlockedLevel(Math.max(...newUnlockedLevels));
+      setShowLevelUnlockPopup(true);
+    }
+
     setTasks((prevTasks) =>
       prevTasks.map((task) => {
         if (task.id === 8) {
@@ -1501,7 +1512,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return task;
       })
     );
-  }, [level, user.level, popupShown.levelUp]);
+  }, [level, user.level, popupShown.levelUp, user.coins, unlockedLevels]);
 
   useEffect(() => {
     // Clear click effects when changing pages
@@ -2073,57 +2084,81 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderLevels = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <div className="grid grid-cols-2 gap-4 p-4">
-        {levelImages.map((image, index) => (
-          <div key={index}>
-            <NeonGradientCard
-              className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${unlockedLevels.includes(index + 1) ? 'border-2 border-primary' : ''}`}
-            >
-              <CardHeader className="relative p-2">
-                <CardTitle className="z-10 text-center text-xs text-white">
-                  Level {index + 1}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center p-2">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
-                  <Image
-                    src={image}
-                    alt={`Level ${index + 1}`}
-                    layout="fill"
-                    objectFit="contain"
-                    className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'opacity-50 grayscale' : ''}`}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src =
-                        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
-                    }}
-                  />
-                </div>
-                <p className="text-xs text-center text-white mb-2">
-                  {unlockedLevels.includes(index + 1)
-                    ? 'Unlocked'
-                    : `Unlock at ${formatNumber(levelRequirements[index])} coins`}
-                </p>
-                {unlockedLevels.includes(index + 1) && (
-                  <Button
-                    onClick={() => {
-                      setSelectedCoinImage(image);
-                      setCurrentPage('home');
-                    }}
-                    className={`w-full text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
-                      selectedCoinImage === image
-                        ? 'bg-green-500 hover:bg-green-700'
-                        : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900'
-                    }`}
-                  >
-                    {selectedCoinImage === image ? 'Current' : 'Use'}
-                  </Button>
-                )}
-              </CardContent>
-            </NeonGradientCard>
-          </div>
-        ))}
+        {levelImages.map((image, index) => {
+          const isUnlocked = user.coins >= levelRequirements[index];
+          if (isUnlocked && !unlockedLevels.includes(index + 1)) {
+            setUnlockedLevels((prev) => [...prev, index + 1]);
+          }
+          return (
+            <div key={index}>
+              <NeonGradientCard
+                className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${isUnlocked ? 'border-2 border-primary' : ''}`}
+              >
+                <CardHeader className="relative p-2">
+                  <CardTitle className="z-10 text-center text-xs text-white">
+                    Level {index + 1}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center p-2">
+                  <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
+                    <Image
+                      src={image}
+                      alt={`Level ${index + 1}`}
+                      layout="fill"
+                      objectFit="contain"
+                      className={`relative z-10 ${!isUnlocked ? 'opacity-50 grayscale' : ''}`}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src =
+                          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-center text-white mb-2">
+                    {isUnlocked
+                      ? 'Unlocked'
+                      : `Unlock at ${formatNumber(levelRequirements[index])} coins`}
+                  </p>
+                  {isUnlocked && (
+                    <Button
+                      onClick={() => {
+                        setSelectedCoinImage(image);
+                        setCurrentPage('home');
+                        if (!unlockedLevels.includes(index + 1)) {
+                          showGameAlert(`Congratulations! You've unlocked Level ${index + 1}!`);
+                        }
+                      }}
+                      className={`w-full text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
+                        selectedCoinImage === image
+                          ? 'bg-green-500 hover:bg-green-700'
+                          : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900'
+                      }`}
+                    >
+                      {selectedCoinImage === image ? 'Current' : 'Use'}
+                    </Button>
+                  )}
+                </CardContent>
+              </NeonGradientCard>
+            </div>
+          );
+        })}
       </div>
     </div>
+  );
+
+  const renderLevelUnlockPopup = () => (
+    <Popup title="Level Unlocked!" onClose={() => setShowLevelUnlockPopup(false)}>
+      <p className="mb-6 text-xl text-center text-white">
+        Congratulations! You've unlocked <span className="font-bold">Level {unlockedLevel}</span>!
+      </p>
+      <Button
+        onClick={() => setShowLevelUnlockPopup(false)}
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+      >
+        <Zap className="w-5 h-5 mr-2" />
+        Awesome!
+      </Button>
+    </Popup>
   );
 
   const renderSettings = () => (
@@ -2637,6 +2672,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onCancel={gamePopup.onCancel}
         />
       )}
+      {showLevelUnlockPopup && renderLevelUnlockPopup()}
     </div>
   );
 };
