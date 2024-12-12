@@ -1967,7 +1967,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </CardHeader>
           <CardContent className="space-y-6 p-6">
             <div className="bg-gray-800 p-4 rounded-lg">
-              <h3 className="text-xl font-bold mb-2 text-white">Game Coins</h3>
+              <h3 className="text-xl font-bold mb-2 text-white">Earned Coins</h3>
               <p className="text-2xl font-bold text-green-400">{formatNumber(user.coins)}</p>
             </div>
             <div className="bg-gray-800 p-4 rounded-lg">
@@ -1978,7 +1978,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               disabled
               className="w-full bg-gray-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 opacity-50 cursor-not-allowed"
             >
-              Connect Wallet (Unavailable)
+              Tonkeeper (Unavailable)
             </Button>
           </CardContent>
         </NeonGradientCard>
