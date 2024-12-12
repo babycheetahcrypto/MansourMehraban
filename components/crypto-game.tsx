@@ -1982,7 +1982,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
               <h3 className="text-xl font-bold mb-2 text-white">Wallet Connection</h3>
-              <p className="text-red-400">Unavailable</p>
+              <p className="text-red-400">Unavailable!</p>
             </div>
             <Button
               disabled
