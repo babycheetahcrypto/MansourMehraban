@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import TonConnect from '@tonconnect/sdk';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -1054,6 +1055,72 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     ]
   );
 
+  const connectWallet = async () => {
+    try {
+      const manifestUrl = 'https://babycheetah.vercel.app/tonconnect-manifest.json';
+      const tonConnect = new TonConnect({ manifestUrl });
+
+      const walletConnectionSource = {
+        jsBridgeKey: 'tonkeeper',
+      };
+
+      await tonConnect.connect(walletConnectionSource);
+
+      const walletInfo = await tonConnect.getWallets();
+      if (walletInfo && walletInfo.length > 0) {
+        const firstWallet = walletInfo[0];
+        if ('address' in firstWallet) {
+          return firstWallet.address as string;
+        } else {
+          throw new Error('Failed to get wallet address');
+        }
+      } else {
+        throw new Error('No wallets available');
+      }
+    } catch (error) {
+      console.error('Failed to connect wallet:', error);
+      throw error;
+    }
+  };
+
+  const App: React.FC = () => {
+    const [wallet, setWallet] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleConnectWallet = useCallback(async () => {
+      try {
+        setIsLoading(true);
+        const address = await connectWallet();
+        setWallet(address);
+        showGameAlert('Wallet connected successfully with Tonkeeper!');
+      } catch (error) {
+        console.error('Failed to connect wallet:', error);
+        showGameAlert('Failed to connect wallet. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    }, []);
+
+    return (
+      <div>
+        <h1>Tonkeeper</h1>
+        <button onClick={handleConnectWallet} disabled={isLoading}>
+          {isLoading ? 'Connecting...' : 'Connect Wallet'}
+        </button>
+        {wallet && <p>Connected Wallet: {wallet}</p>}
+        {/* Display user data */}
+        {user && (
+          <div>
+            <p>User ID: {user.telegramId}</p>
+            <p>Username: {user.username}</p>
+            <p>Name: {user.username}</p>
+            <p>Coins: {user.coins}</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const claimPPH = useCallback(() => {
     if (pphAccumulated > 0) {
       const updatedUser = {
@@ -1951,50 +2018,63 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardHeader className="relative">
             <CardTitle className="z-10 text-2xl flex items-center justify-between">
               <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-                Your Wallet
+                Airdrop Soon!
               </span>
               <div className="relative">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20icon-qTW5KRopM7teMBA6gpKYTnjNQ8mnTw.png"
-                  alt="Wallet"
-                  width={64}
-                  height={64}
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-qTW5KRopM7teMBA6gpKYTnjNQ8mnTw.png"
+                  alt="Airdrop"
+                  width={128}
+                  height={128}
                   className="relative z-10"
                 />
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full filter blur-md animate-pulse"></div>
               </div>
             </CardTitle>
             <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-            <div className="flex items-center justify-between bg-gray-800 p-4 rounded-lg">
-              <span className="text-green-400 flex items-center text-lg">
-                <Coins className="mr-2 w-6 h-6" /> Earned Coins
-              </span>
-              <span className="text-2xl font-bold text-white">{formatNumber(user.coins)}</span>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between bg-gray-800 p-4 rounded-lg">
-                <span className="text-yellow-400 flex items-center text-lg">
-                  <Lock className="mr-2 w-6 h-6" /> Connect Wallet
-                </span>
-                <span className="text-sm bg-gray-700 px-3 py-1 rounded-full text-white">
-                  Coming Soon
-                </span>
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                <span className="ml-2">Connecting...</span>
               </div>
-            </div>
-            <Button
-              disabled
-              className="w-full bg-gradient-to-r from-gray-600 to-gray-800 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 backdrop-blur-md flex items-center justify-center opacity-50 cursor-not-allowed"
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
-                alt="Tonkeeper"
-                width={20}
-                height={20}
-                className="mr-2"
-              />
-              <span className="text-base">Connect Wallet (Unavailable)</span>
-            </Button>
+            ) : !wallet ? (
+              <Button
+                onClick={() => {
+                  connectWallet()
+                    .then((address) => {
+                      setWallet(address);
+                      showGameAlert('Wallet connected successfully with Tonkeeper!');
+                    })
+                    .catch((error) => {
+                      console.error('Failed to connect wallet:', error);
+                      showGameAlert('Failed to connect wallet. Please try again.');
+                    });
+                }}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md flex items-center justify-center"
+              >
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
+                  alt="Tonkeeper"
+                  width={20}
+                  height={20}
+                  className="mr-2"
+                />
+                <span className="text-base">Connect Tonkeeper</span>
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between bg-gray-800 p-4 rounded-lg">
+                  <span className="text-green-400 flex items-center text-lg">
+                    <CheckCircle className="mr-2 w-6 h-6" /> Connected
+                  </span>
+                  <span className="text-xs bg-gray-700 px-3 py-1 rounded-full text-white">
+                    {wallet.slice(0, 6)}...{wallet.slice(-4)}
+                  </span>
+                </div>
+              </div>
+            )}
           </CardContent>
         </NeonGradientCard>
       </div>
