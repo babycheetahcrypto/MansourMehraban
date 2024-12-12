@@ -156,6 +156,13 @@ const styles = `
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
   }
+  .fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -313,39 +320,36 @@ interface CryptoButtonProps {
   setCurrentPage: (page: string) => void;
 }
 
-const CryptoButton: React.FC<CryptoButtonProps> = ({
-  icon: Icon,
-  href,
-  text,
-  isActive,
-  setCurrentPage,
-}) => {
-  return (
-    <div className="flex flex-col items-center">
-      <Button
-        variant="ghost"
-        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
-          isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
-        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
-        onClick={() => {
-          setCurrentPage(href);
-        }}
-      >
-        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
-        <span
-          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
+const CryptoButton = React.memo<CryptoButtonProps>(
+  ({ icon: Icon, href, text, isActive, setCurrentPage }) => {
+    return (
+      <div className="flex flex-col items-center">
+        <Button
+          variant="ghost"
+          className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
+            isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
+          } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
+          onClick={() => {
+            setCurrentPage(href);
+          }}
         >
-          {text}
-        </span>
-        {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
-      </Button>
-    </div>
-  );
-};
+          <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+          <span
+            className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
+          >
+            {text}
+          </span>
+          {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
+        </Button>
+      </div>
+    );
+  }
+);
 
-const levelRequirements = [
-  0, 5000, 50000, 100000, 500000, 800000, 1000000, 5000000, 8000000, 10000000,
-];
+const levelRequirements = useMemo(
+  () => [0, 5000, 50000, 100000, 500000, 800000, 1000000, 5000000, 8000000, 10000000],
+  []
+);
 
 const levelImages = [
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-pZJ2aUjvx5OQNVKP5jfNIBh9qDFVSd.png',
@@ -360,88 +364,91 @@ const levelImages = [
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Super%20Hero%20Cheetah-Ja0KaW8LPfG0wBkpPGktH0h027wmWq.png',
 ];
 
-const trophies = [
-  {
-    name: 'Crypto Novice',
-    description: 'First steps into the digital realm',
-    requirement: 10000,
-    prize: 1000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1T-nUWKYBAKLuUbRUCtQ4Pe6bKVvuayqD.png',
-    claimed: false,
-  },
-  {
-    name: 'Blockchain Pioneer',
-    description: 'Exploring the foundations of crypto',
-    requirement: 50000,
-    prize: 5000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2T-qkckZRo7F2pFbjOXFUsmZW1aVDaKkX.png',
-    claimed: false,
-  },
-  {
-    name: 'DeFi Explorer',
-    description: 'Venturing into decentralized finance',
-    requirement: 100000,
-    prize: 10000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3T-S4ZJ26mqOyNGPIIBKrLLwkozCZFPru.png',
-    claimed: false,
-  },
-  {
-    name: 'NFT Collector',
-    description: 'Embracing the world of digital art',
-    requirement: 250000,
-    prize: 25000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4T-8R9RicTTe3vC5WD0wWAY7OCNaF1vxx.png',
-    claimed: false,
-  },
-  {
-    name: 'Hodl Master',
-    description: 'Showing true diamond hands',
-    requirement: 500000,
-    prize: 50000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5T-QEssxxIveH9hiQ0nJcZZrmdJJguJbF.png',
-    claimed: false,
-  },
-  {
-    name: 'Altcoin Adventurer',
-    description: 'Diversifying beyond Bitcoin',
-    requirement: 1000000,
-    prize: 100000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/6T-fnsT0zSHQjez6E6KHO3AjIwflnyT1P.png',
-    claimed: false,
-  },
-  {
-    name: 'Smart Contract Sage',
-    description: 'Mastering the art of crypto automation',
-    requirement: 2500000,
-    prize: 250000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7T-2DEkkrvJaawGC1O7GADjiHOn8RQfia.png',
-    claimed: false,
-  },
-  {
-    name: 'Crypto Whale',
-    description: 'Making waves in the digital ocean',
-    requirement: 5000000,
-    prize: 500000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8T-i7iib3r4xoqtY9qYHdrOOgiUflPOCu.png',
-    claimed: false,
-  },
-  {
-    name: 'Metaverse Mogul',
-    description: 'Conquering virtual worlds',
-    requirement: 7500000,
-    prize: 750000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/9T-FOz1XZIhMkDitSvZsKOFXfYkP6QdQt.png',
-    claimed: false,
-  },
-  {
-    name: 'Crypto Legend',
-    description: 'Achieving legendary status in the crypto world',
-    requirement: 10000000,
-    prize: 1000000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/10-m1ABpvscvGrraWnHOclc7sLK531TqB.png',
-    claimed: false,
-  },
-];
+const trophies = useMemo(
+  () => [
+    {
+      name: 'Crypto Novice',
+      description: 'First steps into the digital realm',
+      requirement: 10000,
+      prize: 1000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1T-nUWKYBAKLuUbRUCtQ4Pe6bKVvuayqD.png',
+      claimed: false,
+    },
+    {
+      name: 'Blockchain Pioneer',
+      description: 'Exploring the foundations of crypto',
+      requirement: 50000,
+      prize: 5000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2T-qkckZRo7F2pFbjOXFUsmZW1aVDaKkX.png',
+      claimed: false,
+    },
+    {
+      name: 'DeFi Explorer',
+      description: 'Venturing into decentralized finance',
+      requirement: 100000,
+      prize: 10000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3T-S4ZJ26mqOyNGPIIBKrLLwkozCZFPru.png',
+      claimed: false,
+    },
+    {
+      name: 'NFT Collector',
+      description: 'Embracing the world of digital art',
+      requirement: 250000,
+      prize: 25000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4T-8R9RicTTe3vC5WD0wWAY7OCNaF1vxx.png',
+      claimed: false,
+    },
+    {
+      name: 'Hodl Master',
+      description: 'Showing true diamond hands',
+      requirement: 500000,
+      prize: 50000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5T-QEssxxIveH9hiQ0nJcZZrmdJJguJbF.png',
+      claimed: false,
+    },
+    {
+      name: 'Altcoin Adventurer',
+      description: 'Diversifying beyond Bitcoin',
+      requirement: 1000000,
+      prize: 100000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/6T-fnsT0zSHQjez6E6KHO3AjIwflnyT1P.png',
+      claimed: false,
+    },
+    {
+      name: 'Smart Contract Sage',
+      description: 'Mastering the art of crypto automation',
+      requirement: 2500000,
+      prize: 250000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7T-2DEkkrvJaawGC1O7GADjiHOn8RQfia.png',
+      claimed: false,
+    },
+    {
+      name: 'Crypto Whale',
+      description: 'Making waves in the digital ocean',
+      requirement: 5000000,
+      prize: 500000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8T-i7iib3r4xoqtY9qYHdrOOgiUflPOCu.png',
+      claimed: false,
+    },
+    {
+      name: 'Metaverse Mogul',
+      description: 'Conquering virtual worlds',
+      requirement: 7500000,
+      prize: 750000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/9T-FOz1XZIhMkDitSvZsKOFXfYkP6QdQt.png',
+      claimed: false,
+    },
+    {
+      name: 'Crypto Legend',
+      description: 'Achieving legendary status in the crypto world',
+      requirement: 10000000,
+      prize: 1000000,
+      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/10-m1ABpvscvGrraWnHOclc7sLK531TqB.png',
+      claimed: false,
+    },
+  ],
+  []
+);
 
 const formatNumber = (num: number) => {
   if (num >= 1e18) return (num / 1e18).toFixed(2) + 'Q';
@@ -923,15 +930,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const newExp = user.exp + 1;
         const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
-        const updatedUser = {
-          ...user,
+        setUser((prevUser) => ({
+          ...prevUser,
           coins: newCoins,
           exp: newExp % 100,
           level: newLevel,
-        };
-
-        setUser(updatedUser);
-        saveUserData(updatedUser);
+        }));
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -948,7 +952,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
           const x = clientX - rect.left;
           const y = clientY - rect.top;
-          const effectColor = 'white'; // Pure white color
+          const effectColor = 'white';
           setClickEffects((prev) => [
             ...prev,
             { id: Date.now(), x, y, value: clickValue, color: effectColor },
@@ -959,7 +963,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         if (
           settings.vibration &&
           window.Telegram &&
-          window.Telegram &&
           window.Telegram.WebApp &&
           window.Telegram.WebApp.HapticFeedback
         ) {
@@ -968,9 +971,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         // Send tap data to Telegram Mini App
         if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
-          );
+          window.Telegram.WebApp.sendData(JSON.stringify({ action: 'tap', amount: clickValue }));
         }
 
         // Add shake effect for touch events
@@ -981,7 +982,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
+    [clickPower, multiplier, energy, settings.vibration, user]
   );
 
   const buyItem = useCallback(
@@ -1529,64 +1530,67 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
-  const renderFooter = () => (
-    <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-    >
-      <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
-        {[
-          {
-            page: 'home',
-            text: 'Home',
-            icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
-          },
-          {
-            page: 'shop',
-            text: 'Shop',
-            icon: 'SHOP%203D%20ICON-8W5KCBOOeijJzAMwkJlM3AvlopMlor.png',
-          },
-          {
-            page: 'tasks',
-            text: 'Tasks',
-            icon: 'TASKS%203D%20ICON-xYtBLApGw0DH6Z96oMKZEnNZJu5KvW.png',
-          },
-          {
-            page: 'rating',
-            text: 'Rating',
-            icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
-          },
-          {
-            page: 'wallet',
-            text: 'Wallet',
-            icon: 'WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png',
-          },
-          {
-            page: 'invite',
-            text: 'Invite',
-            icon: 'FRIEND%20INVITE%203D%20ICON-8lQ0eY4dY5Qznxnip4OH8ae53TzlvY.png',
-          },
-        ].map(({ page, text, icon }) => (
-          <CryptoButton
-            key={page}
-            icon={(props) => (
-              <Image
-                src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
-                alt={text}
-                width={32}
-                height={32}
-                {...props}
-              />
-            )}
-            href={page}
-            text={text}
-            isActive={currentPage === page}
-            setCurrentPage={setCurrentPage}
-          />
-        ))}
+  const renderFooter = useCallback(
+    () => (
+      <div
+        className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <div className="flex justify-around items-center max-w-md mx-auto relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
+          {[
+            {
+              page: 'home',
+              text: 'Home',
+              icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
+            },
+            {
+              page: 'shop',
+              text: 'Shop',
+              icon: 'SHOP%203D%20ICON-8W5KCBOOeijJzAMwkJlM3AvlopMlor.png',
+            },
+            {
+              page: 'tasks',
+              text: 'Tasks',
+              icon: 'TASKS%203D%20ICON-xYtBLApGw0DH6Z96oMKZEnNZJu5KvW.png',
+            },
+            {
+              page: 'rating',
+              text: 'Rating',
+              icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
+            },
+            {
+              page: 'wallet',
+              text: 'Wallet',
+              icon: 'WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png',
+            },
+            {
+              page: 'invite',
+              text: 'Invite',
+              icon: 'FRIEND%20INVITE%203D%20ICON-8lQ0eY4dY5Qznxnip4OH8ae53TzlvY.png',
+            },
+          ].map(({ page, text, icon }) => (
+            <CryptoButton
+              key={page}
+              icon={(props) => (
+                <Image
+                  src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
+                  alt={text}
+                  width={32}
+                  height={32}
+                  {...props}
+                />
+              )}
+              href={page}
+              text={text}
+              isActive={currentPage === page}
+              setCurrentPage={setCurrentPage}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    ),
+    [currentPage, setCurrentPage]
   );
 
   const renderHome = () => (
@@ -2501,7 +2505,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         WebkitUserSelect: 'none',
         MozUserSelect: 'none',
         msUserSelect: 'none',
-        paddingBottom: 'env(safe-area-inset-bottom)',
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + 80px)', // Add padding for the footer
         paddingTop: 'env(safe-area-inset-top)',
       }}
     >
