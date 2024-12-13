@@ -1409,12 +1409,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setPopupShown((prev) => ({ ...prev, pph: true }));
       // Reset pphAccumulated after 3 hours
       setPphAccumulated(Math.min(pphAccumulated, profitPerHour * 3));
-    } else if (level > user.level && !popupShown.levelUp) {
+    }
+    if (level > user.level && !popupShown.levelUp) {
       setNewLevel(level);
       setShowLevelUpPopup(true);
       setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
-  }, [pphAccumulated, level, user.level, popupShown, lastActiveTime]);
+  }, [pphAccumulated, level, user.level, popupShown, lastActiveTime, profitPerHour]);
 
   // Level up and task progress
   useEffect(() => {
@@ -2559,8 +2560,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             claimPPH();
           }}
         >
+          <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
           <p className="mb-6 text-xl text-center text-white flex items-center justify-center">
-            You've accumulated
             <span className="font-bold mx-2">{formatNumber(pphAccumulated)}</span>
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
@@ -2569,6 +2570,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               height={24}
               className="ml-2"
             />
+          </p>
+          <p className="mb-6 text-sm text-center text-white">
+            To keep earning, enter the game every 3 hours.
           </p>
           <Button
             onClick={() => {
