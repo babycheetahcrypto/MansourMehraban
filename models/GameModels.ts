@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
   unlockedLevels: [Number],
   clickPower: { type: Number, default: 1 },
   friendsCoins: { type: Map, of: Number },
-  energy: { type: Number, default: 1000 },
+  energy: { type: Number, default: 5000 },
   pphAccumulated: { type: Number, default: 0 },
   multiplier: { type: Number, default: 1 },
   multiplierEndTime: Date,
