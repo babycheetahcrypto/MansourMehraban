@@ -1247,17 +1247,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
     useEffect(() => {
       const timer = setInterval(() => {
-        setPphAccumulated((prev) => {
-          const newPPH = prev + profitPerHour / 3600;
-          if (newPPH >= 1000) {
-            showPopup('pph');
-          }
-          return newPPH;
-        });
+        if (pphAccumulated >= 1000) {
+          showPopup('pph');
+        }
       }, 1000);
 
       return () => clearInterval(timer);
-    }, [profitPerHour]);
+    }, [pphAccumulated]);
 
     useEffect(() => {
       if (userData) {
@@ -1413,9 +1409,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const timeDiff = now - lastActiveTime;
     const maxOfflineTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 
-    if (pphAccumulated >= 1000 || timeDiff > maxOfflineTime) {
+    if (timeDiff > maxOfflineTime) {
       const offlineEarnings = Math.min((profitPerHour * timeDiff) / 3600000, profitPerHour * 3);
-      setPphAccumulated((prev) => prev + offlineEarnings);
+      setPphAccumulated(offlineEarnings);
       showPopup('pph');
     }
 
@@ -1423,7 +1419,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setNewLevel(level);
       showPopup('levelUp');
     }
-  }, [pphAccumulated, level, user.level, activePopups, lastActiveTime, profitPerHour]);
+  }, [lastActiveTime, profitPerHour, level, user.level, activePopups]);
 
   // Level up and task progress
   useEffect(() => {
