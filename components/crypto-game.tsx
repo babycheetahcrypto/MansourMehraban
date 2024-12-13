@@ -458,7 +458,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 4990,
+      coins: 10000000,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -535,6 +535,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [unlockedLevel, setUnlockedLevel] = useState(0);
   const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Added lastActiveTime state
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set()); // Added activePopups state
+  const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set()); // Added shownLevelUnlocks state
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -1413,7 +1414,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   // Level up and task progress
   useEffect(() => {
-    if (level > user.level) {
+    if (level > user.level && !activePopups.has('levelUp')) {
       setNewLevel(level);
       showPopup('levelUp');
     }
@@ -1423,8 +1424,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       .map((_, index) => index + 1);
     if (newUnlockedLevels.length > 0) {
       setUnlockedLevels((prev) => [...prev, ...newUnlockedLevels]);
-      setUnlockedLevel(Math.max(...newUnlockedLevels));
-      setShowLevelUnlockPopup(true);
+      const highestNewLevel = Math.max(...newUnlockedLevels);
+      if (!shownLevelUnlocks.has(highestNewLevel)) {
+        setUnlockedLevel(highestNewLevel);
+        showPopup('levelUnlock');
+      }
     }
 
     setTasks((prevTasks) =>
@@ -1440,7 +1444,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return task;
       })
     );
-  }, [level, user.level, user.coins, unlockedLevels]);
+  }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
 
   useEffect(() => {
     // Clear click effects when changing pages
@@ -2079,12 +2083,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderLevelUnlockPopup = () => (
-    <Popup title="Level Unlocked!" onClose={() => setShowLevelUnlockPopup(false)}>
+    <Popup
+      title="Level Unlocked!"
+      onClose={() => {
+        hidePopup('levelUnlock');
+        setShownLevelUnlocks((prev) => new Set(prev).add(unlockedLevel));
+      }}
+    >
       <p className="mb-6 text-xl text-center text-white">
         Congratulations! You've unlocked <span className="font-bold">Level {unlockedLevel}</span>!
       </p>
       <Button
-        onClick={() => setShowLevelUnlockPopup(false)}
+        onClick={() => {
+          hidePopup('levelUnlock');
+          setShownLevelUnlocks((prev) => new Set(prev).add(unlockedLevel));
+        }}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
         <Zap className="w-5 h-5 mr-2" />
@@ -2623,7 +2636,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onCancel={gamePopup.onCancel}
         />
       )}
-      {showLevelUnlockPopup && renderLevelUnlockPopup()}
+      {activePopups.has('levelUnlock') && renderLevelUnlockPopup()}
     </div>
   );
 };
