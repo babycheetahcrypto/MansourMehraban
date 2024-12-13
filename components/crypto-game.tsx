@@ -458,7 +458,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 4990,
+      coins: 4900,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -530,6 +530,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [clickEffects, setClickEffects] = useState<
     { id: number; x: number; y: number; value: number; color: string }[]
   >([]);
+  const [popupShown, setPopupShown] = useState({
+    pph: false,
+    levelUp: false,
+    congratulation: false,
+  });
   const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
   const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
   const [unlockedLevel, setUnlockedLevel] = useState(0);
@@ -1063,7 +1068,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }));
     setUnlockedLevels((prev) => [...new Set([...prev, newLevel])]);
     setShowLevelUpPopup(false);
-    setShownPopups((prev) => new Set(prev).add('levelUp'));
+    setPopupShown((prev) => ({ ...prev, levelUp: true }));
   }, [newLevel]);
 
   const claimDailyReward = useCallback(() => {
@@ -1395,22 +1400,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   // Show PPH popup
   useEffect(() => {
-    if (
-      pphAccumulated > 0 &&
-      !shownPopups.has('pph') &&
-      Date.now() - lastActiveTime > 3 * 60 * 60 * 1000
-    ) {
+    if (pphAccumulated > 0 && !popupShown.pph && Date.now() - lastActiveTime > 3 * 60 * 60 * 1000) {
       setShowPPHPopup(true);
-      showPopup('pph');
+      setPopupShown((prev) => ({ ...prev, pph: true }));
       // Reset pphAccumulated after 3 hours
       setPphAccumulated(Math.min(pphAccumulated, profitPerHour * 3));
     }
-    if (level > user.level && !shownPopups.has('levelUp')) {
+    if (level > user.level && !popupShown.levelUp) {
       setNewLevel(level);
       setShowLevelUpPopup(true);
-      showPopup('levelUp');
+      setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
-  }, [pphAccumulated, level, user.level, shownPopups, lastActiveTime, profitPerHour]);
+  }, [pphAccumulated, level, user.level, popupShown, lastActiveTime, profitPerHour]);
 
   // Level up and task progress
   useEffect(() => {
@@ -2549,13 +2550,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       {renderFooter()}
 
       {/* Popup logic */}
-      {!shownPopups.has('pph') && showPPHPopup && (
+      {showPPHPopup && (
         <Popup
           title="Profit Accumulated!"
           onClose={() => {
             setShowPPHPopup(false);
             claimPPH();
-            showPopup('pph');
           }}
         >
           <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
@@ -2585,13 +2585,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </Popup>
       )}
 
-      {!shownPopups.has('levelUp') && showLevelUpPopup && (
+      {showLevelUpPopup && (
         <Popup
           title="Cosmic Level Up!"
           onClose={() => {
             setShowLevelUpPopup(false);
             claimNewLevel();
-            showPopup('levelUp');
           }}
         >
           <p className="mb-6 text-xl text-center text-white">
@@ -2614,7 +2613,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </Popup>
       )}
 
-      {!shownPopups.has('congratulation') && congratulationPopup.show && <CongratulationPopup />}
+      {congratulationPopup.show && <CongratulationPopup />}
       {gamePopup.show && (
         <GamePopup
           message={gamePopup.message}
