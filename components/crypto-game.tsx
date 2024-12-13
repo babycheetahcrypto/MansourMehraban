@@ -447,7 +447,13 @@ const trophies = [
 ];
 
 const formatNumber = (num: number) => {
-  return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  if (num >= 1e18) return (num / 1e18).toFixed(2) + 'Q';
+  if (num >= 1e15) return (num / 1e15).toFixed(2) + 'P';
+  if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+  if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+  if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+  if (num >= 1e3) return (num / 1e3).toFixed(2) + 'k';
+  return num.toFixed(2);
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
@@ -1462,9 +1468,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div>
               <h2 className="font-bold text-sm text-white">
-                {user.username ||
-                  `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-                  'Anonymous'}
+                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 12) + '...'}
               </h2>
               <div className="text-xs text-white flex items-center">
                 <Image
@@ -1622,7 +1626,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1 className="text-5xl font-bold text-white overflow-hidden">
-            {formatNumber(user.coins)}
+            {formatNumber(user.coins)
+              .split('')
+              .map((digit, index) => (
+                <span
+                  key={index}
+                  className="inline-block"
+                  style={{
+                    animation: `countUp 0.5s ${index * 0.1}s backwards`,
+                  }}
+                >
+                  {digit}
+                </span>
+              ))}
           </h1>
           <div className="w-12 h-12">
             <Image
