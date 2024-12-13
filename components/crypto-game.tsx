@@ -447,7 +447,7 @@ const trophies = [
 ];
 
 const formatNumber = (num: number) => {
-  return num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+  return Math.floor(num).toLocaleString('en-US');
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
@@ -538,6 +538,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
   const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
   const [unlockedLevel, setUnlockedLevel] = useState(0);
+  const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Added lastActiveTime state
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -975,6 +976,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           button.classList.add('pulse');
           setTimeout(() => button.classList.remove('pulse'), 300);
         }
+        setLastActiveTime(Date.now()); // Update last active time
       }
     },
     [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
@@ -1392,22 +1394,27 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         return newEnergy;
       });
-      setPphAccumulated((prev) => prev + profitPerHour / 3600);
+      setPphAccumulated((prev) => {
+        const newValue = prev + profitPerHour / 3600;
+        return Math.floor(newValue);
+      });
     }, 1000);
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
 
   // Show PPH popup
   useEffect(() => {
-    if (pphAccumulated > 0 && !popupShown.pph) {
+    if (pphAccumulated > 0 && !popupShown.pph && Date.now() - lastActiveTime > 3 * 60 * 60 * 1000) {
       setShowPPHPopup(true);
       setPopupShown((prev) => ({ ...prev, pph: true }));
+      // Reset pphAccumulated after 3 hours
+      setPphAccumulated(Math.min(pphAccumulated, profitPerHour * 3));
     } else if (level > user.level && !popupShown.levelUp) {
       setNewLevel(level);
       setShowLevelUpPopup(true);
       setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
-  }, [pphAccumulated, level, user.level, popupShown]);
+  }, [pphAccumulated, level, user.level, popupShown, lastActiveTime]);
 
   // Level up and task progress
   useEffect(() => {
@@ -2552,9 +2559,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             claimPPH();
           }}
         >
-          <p className="mb-6 text-xl text-center text-white">
-            You've accumulated <span className="font-bold">{formatNumber(pphAccumulated)}</span>{' '}
-            coins!
+          <p className="mb-6 text-xl text-center text-white flex items-center justify-center">
+            You've accumulated
+            <span className="font-bold mx-2">{formatNumber(pphAccumulated)}</span>
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+              alt="Game Logo"
+              width={24}
+              height={24}
+              className="ml-2"
+            />
           </p>
           <Button
             onClick={() => {
