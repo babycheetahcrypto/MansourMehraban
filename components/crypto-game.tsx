@@ -155,16 +155,6 @@ const styles = `
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
   }
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-2px); }
-    50% { transform: translateX(2px); }
-    75% { transform: translateX(-2px); }
-    100% { transform: translateX(0); }
-  }
-  .animate-shake {
-    animation: shake 0.5s ease-in-out;
-  }
 `;
 
 // Telegram WebApp type definition
@@ -1631,9 +1621,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-5xl font-bold text-white animate-shake">
-            {formatNumber(user.coins)}
-          </h1>
+          <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
           <div className="w-12 h-12">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
@@ -1669,10 +1657,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 style={{
                   left: `${effect.x}px`,
                   top: `${effect.y}px`,
-                  color: 'white',
-                  textShadow:
-                    '0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7)',
-                  fontSize: '1.5rem',
+                  color: 'white', // Always white
+                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)', // Add a glow effect
                 }}
               >
                 +{effect.value}
