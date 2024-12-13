@@ -914,7 +914,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (energy > 0) {
+      if (energy >= 1) {
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
         const newExp = user.exp + 1;
@@ -1386,7 +1386,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     const timer = setInterval(() => {
       setEnergy((prevEnergy) => {
-        const newEnergy = Math.min(prevEnergy + 0.1, maxEnergy);
+        const newEnergy = Math.min(prevEnergy + 0.01, maxEnergy);
         if (energyRef.current) {
           energyRef.current.style.width = `${(newEnergy / maxEnergy) * 100}%`;
         }
@@ -1682,7 +1682,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <div className="flex justify-between text-sm mb-2 text-white">
                 <span className="font-semibold">Energy</span>
                 <span>
-                  {energy.toFixed(1)}/{maxEnergy}
+                  {Math.floor(energy)}/{maxEnergy}
                 </span>
               </div>
               <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
