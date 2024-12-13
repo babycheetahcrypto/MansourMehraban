@@ -530,11 +530,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [clickEffects, setClickEffects] = useState<
     { id: number; x: number; y: number; value: number; color: string }[]
   >([]);
-  const [shownPopups, setShownPopups] = useState<Set<string>>(new Set()); // Removed popupShown state
+  const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
   const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
   const [unlockedLevel, setUnlockedLevel] = useState(0);
-  const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Added lastActiveTime state
-  const [activePopups, setActivePopups] = useState<Set<string>>(new Set()); // Added activePopups state
+  const [lastActiveTime, setLastActiveTime] = useState(Date.now());
+  const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -972,7 +972,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           button.classList.add('pulse');
           setTimeout(() => button.classList.remove('pulse'), 300);
         }
-        setLastActiveTime(Date.now()); // Update last active time
+        setLastActiveTime(Date.now());
       }
     },
     [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
@@ -1053,6 +1053,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       saveUserData(updatedUser);
       setPphAccumulated(0);
       hidePopup('pph');
+      setShownPopups((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete('pph');
+        return newSet;
+      });
     } else {
       showGameAlert('No profits to claim yet!');
     }
@@ -1065,6 +1070,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }));
     setUnlockedLevels((prev) => [...new Set([...prev, newLevel])]);
     hidePopup('levelUp');
+    setShownPopups((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete('levelUp');
+      return newSet;
+    });
   }, [newLevel]);
 
   const claimDailyReward = useCallback(() => {
@@ -1399,17 +1409,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     if (
       pphAccumulated > 0 &&
       !activePopups.has('pph') &&
+      !shownPopups.has('pph') &&
       Date.now() - lastActiveTime > 3 * 60 * 60 * 1000
     ) {
       showPopup('pph');
       // Reset pphAccumulated after 3 hours
       setPphAccumulated(Math.min(pphAccumulated, profitPerHour * 3));
     }
-    if (level > user.level && !activePopups.has('levelUp')) {
+    if (level > user.level && !activePopups.has('levelUp') && !shownPopups.has('levelUp')) {
       setNewLevel(level);
       showPopup('levelUp');
     }
-  }, [pphAccumulated, level, user.level, activePopups, lastActiveTime, profitPerHour]);
+  }, [pphAccumulated, level, user.level, activePopups, shownPopups, lastActiveTime, profitPerHour]);
 
   // Level up and task progress
   useEffect(() => {
@@ -2353,11 +2364,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   const showPopup = (popupType: string) => {
-    setActivePopups((prev) => new Set(prev).add(popupType));
+    if (!shownPopups.has(popupType)) {
+      setActivePopups((prev) => new Set(prev).add(popupType));
+      setShownPopups((prev) => new Set(prev).add(popupType));
+    }
   };
 
   const hidePopup = (popupType: string) => {
     setActivePopups((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(popupType);
+      return newSet;
+    });
+    setShownPopups((prev) => {
       const newSet = new Set(prev);
       newSet.delete(popupType);
       return newSet;
