@@ -254,8 +254,8 @@ const StarryBackground: React.FC = () => {
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 3,
-        speed: Math.random() * 0.5,
+        radius: Math.random() * 4,
+        speed: Math.random() * 0.6,
       });
     }
 
@@ -1570,8 +1570,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={38}
-                height={38}
+                width={32}
+                height={32}
                 {...props}
               />
             )}
