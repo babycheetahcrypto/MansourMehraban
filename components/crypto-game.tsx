@@ -1392,35 +1392,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         return newEnergy;
       });
-      const pphIncrement = profitPerHour / 3600;
-      setPphAccumulated((prev) => prev + pphIncrement);
-      setUser((prevUser) => ({
-        ...prevUser,
-        coins: prevUser.coins + pphIncrement,
-      }));
+      setPphAccumulated((prev) => prev + profitPerHour / 3600);
     }, 1000);
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
 
   // Show PPH popup
   useEffect(() => {
-    if (level > user.level && !popupShown.levelUp) {
+    if (pphAccumulated > 0 && !popupShown.pph) {
+      setShowPPHPopup(true);
+      setPopupShown((prev) => ({ ...prev, pph: true }));
+    } else if (level > user.level && !popupShown.levelUp) {
       setNewLevel(level);
       setShowLevelUpPopup(true);
       setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
-  }, [level, user.level, popupShown]);
-
-  useEffect(() => {
-    const showPPHPopupInterval = setInterval(() => {
-      if (pphAccumulated > 0) {
-        setShowPPHPopup(true);
-        setPopupShown((prev) => ({ ...prev, pph: true }));
-      }
-    }, 60000); // Show PPH popup every minute if there's accumulated profit
-
-    return () => clearInterval(showPPHPopupInterval);
-  }, [pphAccumulated]);
+  }, [pphAccumulated, level, user.level, popupShown]);
 
   // Level up and task progress
   useEffect(() => {
@@ -1714,7 +1701,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   setCurrentPage('dailyReward');
                 }}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-900 active:scale-95 backdrop-blur-md"
+                className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
@@ -1729,9 +1716,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   activateMultiplier();
                 }}
-                className={`flex-1 bg-gradient-to-r ${
-                  boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-blue-600 to-blue-800'
-                } text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-900 active:scale-95 backdrop-blur-md`}
+                className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
                 disabled={!!multiplierEndTime || !!boosterCooldown}
               >
                 <Image
