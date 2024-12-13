@@ -458,7 +458,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 0,
+      coins: 10000000,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -2569,17 +2569,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }}
         >
           <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
-          <p className="mb-6 text-xl text-center text-white flex items-center justify-center">
+          <p className="mb-7 text-xl text-center text-white flex items-center justify-center">
             <span className="font-bold mx-2">{formatNumber(pphAccumulated)}</span>
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
               alt="Game Logo"
-              width={24}
-              height={24}
+              width={26}
+              height={26}
               className="ml-3"
             />
           </p>
-          <p className="mb-6 text-sm text-center text-white">
+          <p className="mb-5 text-sm text-center text-white">
             To keep earning, enter the game every 3 hours.
           </p>
           <Button
