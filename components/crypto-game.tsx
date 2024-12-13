@@ -1399,7 +1399,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   // Show PPH popup
   useEffect(() => {
-    if (pphAccumulated > 0) {
+    if (pphAccumulated > 0 && !popupShown.pph) {
       setShowPPHPopup(true);
       setPopupShown((prev) => ({ ...prev, pph: true }));
     } else if (level > user.level && !popupShown.levelUp) {
@@ -1407,7 +1407,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setShowLevelUpPopup(true);
       setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
-  }, [pphAccumulated]);
+  }, [pphAccumulated, level, user.level, popupShown]);
 
   // Level up and task progress
   useEffect(() => {
@@ -1716,9 +1716,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   activateMultiplier();
                 }}
-                className={`flex-1 bg-gradient-to-r ${
-                  boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'
-                } text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
+                className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
                 disabled={!!multiplierEndTime || !!boosterCooldown}
               >
                 <Image
