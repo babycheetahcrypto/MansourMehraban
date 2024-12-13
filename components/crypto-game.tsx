@@ -1246,6 +1246,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }, []);
 
     useEffect(() => {
+      const timer = setInterval(() => {
+        setPphAccumulated((prev) => {
+          const newPPH = prev + profitPerHour / 3600;
+          if (newPPH >= 1000) {
+            showPopup('pph');
+          }
+          return newPPH;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }, [profitPerHour]);
+
+    useEffect(() => {
       if (userData) {
         setUser(userData);
       }
@@ -1399,9 +1413,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const timeDiff = now - lastActiveTime;
     const maxOfflineTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 
-    if (timeDiff > maxOfflineTime) {
+    if (pphAccumulated >= 1000 || timeDiff > maxOfflineTime) {
       const offlineEarnings = Math.min((profitPerHour * timeDiff) / 3600000, profitPerHour * 3);
-      setPphAccumulated(offlineEarnings);
+      setPphAccumulated((prev) => prev + offlineEarnings);
       showPopup('pph');
     }
 
