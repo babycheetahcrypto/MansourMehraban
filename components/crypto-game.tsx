@@ -1012,18 +1012,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             );
           }
 
-          // Always show the congratulation popup
           setCongratulationPopup({ show: true, item: item });
           showPopup('congratulation');
 
-          // Send purchase data to Telegram Mini App
           if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.sendData(
               JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
             );
           }
-
-          // Show success message
         } catch (error) {
           console.error('Error purchasing item:', error);
           showGameAlert('Failed to purchase item. Please try again.');
@@ -1054,6 +1050,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       saveUserData(updatedUser);
       setPphAccumulated(0);
       hidePopup('pph');
+      setLastActiveTime(Date.now());
     } else {
       showGameAlert('No profits to claim yet!');
     }
@@ -1387,25 +1384,27 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         return newEnergy;
       });
-      setPphAccumulated((prev) => {
-        const newValue = prev + profitPerHour / 3600;
-        return Math.floor(newValue);
-      });
+      setPphAccumulated((prev) => prev + profitPerHour / 3600);
+      setUser((prevUser) => ({
+        ...prevUser,
+        coins: prevUser.coins + profitPerHour / 3600,
+      }));
     }, 1000);
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
 
   // Show PPH popup
   useEffect(() => {
-    if (
-      pphAccumulated > 0 &&
-      !activePopups.has('pph') &&
-      Date.now() - lastActiveTime > 3 * 60 * 60 * 1000
-    ) {
+    const now = Date.now();
+    const timeDiff = now - lastActiveTime;
+    const maxOfflineTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+
+    if (timeDiff > maxOfflineTime) {
+      const offlineEarnings = Math.min((profitPerHour * timeDiff) / 3600000, profitPerHour * 3);
+      setPphAccumulated(offlineEarnings);
       showPopup('pph');
-      // Reset pphAccumulated after 3 hours
-      setPphAccumulated(Math.min(pphAccumulated, profitPerHour * 3));
     }
+
     if (level > user.level && !activePopups.has('levelUp')) {
       setNewLevel(level);
       showPopup('levelUp');
