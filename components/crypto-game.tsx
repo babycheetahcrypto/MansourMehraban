@@ -535,7 +535,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [unlockedLevel, setUnlockedLevel] = useState(0);
   const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Added lastActiveTime state
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set()); // Added activePopups state
-  const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set()); // Added shownLevelUnlocks state
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -1414,7 +1413,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   // Level up and task progress
   useEffect(() => {
-    if (level > user.level && !activePopups.has('levelUp')) {
+    if (level > user.level) {
       setNewLevel(level);
       showPopup('levelUp');
     }
@@ -1424,11 +1423,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       .map((_, index) => index + 1);
     if (newUnlockedLevels.length > 0) {
       setUnlockedLevels((prev) => [...prev, ...newUnlockedLevels]);
-      const highestNewLevel = Math.max(...newUnlockedLevels);
-      if (!shownLevelUnlocks.has(highestNewLevel)) {
-        setUnlockedLevel(highestNewLevel);
-        showPopup('levelUnlock');
-      }
+      setUnlockedLevel(Math.max(...newUnlockedLevels));
+      setShowLevelUnlockPopup(true);
     }
 
     setTasks((prevTasks) =>
@@ -1444,7 +1440,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return task;
       })
     );
-  }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
+  }, [level, user.level, user.coins, unlockedLevels]);
 
   useEffect(() => {
     // Clear click effects when changing pages
@@ -1624,7 +1620,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text5xl font-bold text-white overflow-hidden">
+          <h1 className="text-5xl font-bold text-white overflow-hidden">
             {formatNumber(user.coins)
               .split('')
               .map((digit, index) => (
@@ -2083,21 +2079,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderLevelUnlockPopup = () => (
-    <Popup
-      title="Level Unlocked!"
-      onClose={() => {
-        hidePopup('levelUnlock');
-        setShownLevelUnlocks((prev) => new Set(prev).add(unlockedLevel));
-      }}
-    >
+    <Popup title="Level Unlocked!" onClose={() => setShowLevelUnlockPopup(false)}>
       <p className="mb-6 text-xl text-center text-white">
         Congratulations! You've unlocked <span className="font-bold">Level {unlockedLevel}</span>!
       </p>
       <Button
-        onClick={() => {
-          hidePopup('levelUnlock');
-          setShownLevelUnlocks((prev) => new Set(prev).add(unlockedLevel));
-        }}
+        onClick={() => setShowLevelUnlockPopup(false)}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
         <Zap className="w-5 h-5 mr-2" />
@@ -2636,7 +2623,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onCancel={gamePopup.onCancel}
         />
       )}
-      {activePopups.has('levelUnlock') && renderLevelUnlockPopup()}
+      {showLevelUnlockPopup && renderLevelUnlockPopup()}
     </div>
   );
 };
