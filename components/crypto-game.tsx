@@ -1386,7 +1386,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     const timer = setInterval(() => {
       setEnergy((prevEnergy) => {
-        const newEnergy = Math.min(prevEnergy + 0.01, maxEnergy);
+        const newEnergy = Math.min(prevEnergy + 0.5, maxEnergy);
         if (energyRef.current) {
           energyRef.current.style.width = `${(newEnergy / maxEnergy) * 100}%`;
         }
