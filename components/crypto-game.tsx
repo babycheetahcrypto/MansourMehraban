@@ -1393,20 +1393,34 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return newEnergy;
       });
       setPphAccumulated((prev) => prev + profitPerHour / 3600);
+      setUser((prevUser) => ({
+        ...prevUser,
+        coins: prevUser.coins + profitPerHour / 3600,
+      }));
     }, 1000);
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
 
   // Show PPH popup
   useEffect(() => {
-    if (pphAccumulated > 0 && !popupShown.pph) {
-      setShowPPHPopup(true);
-      setPopupShown((prev) => ({ ...prev, pph: true }));
-    } else if (level > user.level && !popupShown.levelUp) {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && pphAccumulated > 0) {
+        setShowPPHPopup(true);
+        setPopupShown((prev) => ({ ...prev, pph: true }));
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    if (level > user.level && !popupShown.levelUp) {
       setNewLevel(level);
       setShowLevelUpPopup(true);
       setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [pphAccumulated, level, user.level, popupShown]);
 
   // Level up and task progress
@@ -1701,7 +1715,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   setCurrentPage('dailyReward');
                 }}
-                className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
+                className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
@@ -1716,7 +1730,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   activateMultiplier();
                 }}
-                className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
+                className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600/50 to-gray-700/50' : 'from-gray-800/50 to-gray-900/50'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
                 disabled={!!multiplierEndTime || !!boosterCooldown}
               >
                 <Image
