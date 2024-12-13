@@ -2571,7 +2571,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       {/* Popup logic */}
       {activePopups.has('pph') && (
         <Popup
-          title="Offline Earnings"
+          title="Earned"
           onClose={() => {
             hidePopup('pph');
             claimPPH();
