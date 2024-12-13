@@ -1396,21 +1396,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const now = Date.now();
     const timeDiff = now - lastActiveTime;
     const maxOfflineTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-    const minCoinsForPopup = 1000;
 
     if (timeDiff > 1000) {
       // User was offline for more than a second
       const offlineEarnings = Math.min((profitPerHour * timeDiff) / 3600000, profitPerHour * 3);
-      if (offlineEarnings >= minCoinsForPopup) {
-        setPphAccumulated(offlineEarnings);
-        showPopup('pph');
-      } else {
-        // If less than 1000 coins, add directly to user's coins
-        setUser((prevUser) => ({
-          ...prevUser,
-          coins: prevUser.coins + offlineEarnings,
-        }));
-      }
+      setPphAccumulated(offlineEarnings);
+      showPopup('pph');
     }
 
     setLastActiveTime(now);
@@ -2585,7 +2576,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               alt="Game Logo"
               width={24}
               height={24}
-              className="ml-2"
+              className="ml-3"
             />
           </p>
           <p className="mb-6 text-sm text-center text-white">
