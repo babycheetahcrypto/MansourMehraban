@@ -146,7 +146,7 @@ const styles = `
     animation: fadeOutUp 0.7s ease-out forwards;
     color: white;
     font-weight: bold;
-    font-size: 2rem; /* Further increased font size */
+    font-size: 1.5rem;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%);
     z-index: 30;
@@ -540,6 +540,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
   const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
   const [unlockedLevel, setUnlockedLevel] = useState(0);
+  const [prevCoins, setPrevCoins] = useState(0);
+  const [displayedCoins, setDisplayedCoins] = useState(user.coins);
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -1620,8 +1622,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
+        <div className="flex itemscenter justify-center gap-2 mb-2">
+          <h1 className="text-5xl font-bold text-white">
+            {formatNumber(Math.floor(displayedCoins))}
+          </h1>
           <div className="w-12 h-12">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
@@ -1657,8 +1661,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 style={{
                   left: `${effect.x}px`,
                   top: `${effect.y}px`,
-                  color: 'white', // Always white
-                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)', // Add a glow effect
+                  color: effect.color,
+                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)',
                 }}
               >
                 +{effect.value}
@@ -2415,6 +2419,28 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setPrevCoins(user.coins);
+  }, [user.coins]);
+
+  useEffect(() => {
+    if (user.coins !== displayedCoins) {
+      const difference = user.coins - displayedCoins;
+      const increment = difference / 20; // Divide the difference into 20 steps
+      const timer = setInterval(() => {
+        setDisplayedCoins((prev) => {
+          const next = prev + increment;
+          if ((increment > 0 && next >= user.coins) || (increment < 0 && next <= user.coins)) {
+            clearInterval(timer);
+            return user.coins;
+          }
+          return next;
+        });
+      }, 50); // Update every 50ms
+      return () => clearInterval(timer);
+    }
+  }, [user.coins, displayedCoins]);
 
   if (isLoading) {
     return (
