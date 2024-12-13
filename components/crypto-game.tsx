@@ -141,24 +141,15 @@ const styles = `
     }
   }
   .click-effect {
-    position: fixed;
+    position: absolute;
     pointer-events: none;
-    animation: fallAndFade 2s ease-out forwards;
+    animation: fadeOutUp 0.7s ease-out forwards;
     color: white;
     font-weight: bold;
     font-size: 1.5rem;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
-    z-index: 9999;
-  }
-  @keyframes fallAndFade {
-    0% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(100vh) scale(0.5);
-    }
+    transform: translate(-50%, -50%);
+    z-index: 30;
   }
   @keyframes twinkle {
     0%, 100% { opacity: 0; }
@@ -950,19 +941,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             clientX = event.clientX;
             clientY = event.clientY;
           }
-          const x = clientX;
-          const y = clientY;
-          const clickEffect = {
-            id: Date.now(),
-            x: clientX,
-            y: clientY,
-            value: clickValue,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-          };
+          const x = clientX - rect.left;
+          const y = clientY - rect.top;
+          const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
           setClickEffects((prev) => [...prev, clickEffect]);
           setTimeout(() => {
             setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-          }, 2000);
+          }, 700);
         }
 
         // Trigger haptic feedback
