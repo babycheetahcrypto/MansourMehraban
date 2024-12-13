@@ -458,7 +458,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 4900,
+      coins: 0,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -509,10 +509,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     backgroundMusic: false,
     backgroundMusicAudio: null,
   });
-  const [showLevelUpPopup, setShowLevelUpPopup] = useState<{
-    show: boolean;
-    type: 'level' | 'trophy' | null;
-  }>({ show: false, type: null });
+  const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
   const [dailyReward, setDailyReward] = useState({
@@ -1070,7 +1067,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       level: newLevel,
     }));
     setUnlockedLevels((prev) => [...new Set([...prev, newLevel])]);
-    setShowLevelUpPopup({ show: false, type: null });
+    setShowLevelUpPopup(false);
     setPopupShown((prev) => ({ ...prev, levelUp: true }));
   }, [newLevel]);
 
@@ -1411,7 +1408,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
     if (level > user.level && !popupShown.levelUp) {
       setNewLevel(level);
-      setShowLevelUpPopup({ show: true, type: 'level' });
+      setShowLevelUpPopup(true);
+      setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
   }, [pphAccumulated, level, user.level, popupShown, lastActiveTime, profitPerHour]);
 
@@ -1419,7 +1417,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     if (level > user.level) {
       setNewLevel(level);
-      setShowLevelUpPopup({ show: true, type: 'level' });
+      setShowLevelUpPopup(true);
     }
 
     const newUnlockedLevels = levelRequirements
@@ -2082,22 +2080,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
-  const renderLevelUpPopup = () => (
-    <Popup
-      title={showLevelUpPopup.type === 'level' ? 'Level Up!' : 'Trophy Unlocked!'}
-      onClose={() => setShowLevelUpPopup({ show: false, type: null })}
-    >
-      {showLevelUpPopup.type === 'level' ? (
-        <p className="mb-6 text-xl text-center text-white">
-          Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
-        </p>
-      ) : (
-        <p className="mb-6 text-xl text-center text-white">
-          Congratulations! You've unlocked a new trophy!
-        </p>
-      )}
+  const renderLevelUnlockPopup = () => (
+    <Popup title="Level Unlocked!" onClose={() => setShowLevelUnlockPopup(false)}>
+      <p className="mb-6 text-xl text-center text-white">
+        Congratulations! You've unlocked <span className="font-bold">Level {unlockedLevel}</span>!
+      </p>
       <Button
-        onClick={() => setShowLevelUpPopup({ show: false, type: null })}
+        onClick={() => setShowLevelUnlockPopup(false)}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
         <Zap className="w-5 h-5 mr-2" />
@@ -2358,7 +2347,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         coins: prevUser.coins + trophy.prize,
       }));
       trophies.find((t) => t.name === trophy.name)!.claimed = true;
-      setShowLevelUpPopup({ show: true, type: 'trophy' });
+      showGameAlert(
+        `Congratulations! You've claimed ${formatNumber(trophy.prize)} coins for the "${trophy.name}" trophy!`
+      );
       saveUserData({ ...user, coins: user.coins + trophy.prize });
     }
   };
@@ -2594,7 +2585,33 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </Popup>
       )}
 
-      {showLevelUpPopup.show && renderLevelUpPopup()}
+      {showLevelUpPopup && (
+        <Popup
+          title="Cosmic Level Up!"
+          onClose={() => {
+            setShowLevelUpPopup(false);
+            claimNewLevel();
+          }}
+        >
+          <p className="mb-6 text-xl text-center text-white">
+            Incredible! You've ascended to{' '}
+            <span className="font-bold text-yellow-400">Level {newLevel}</span>!
+          </p>
+          <p className="mb-6 text-center text-white">
+            Your crypto mastery grows stronger. New powers and riches await you!
+          </p>
+          <Button
+            onClick={() => {
+              claimNewLevel();
+              setShowLevelUpPopup(false);
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+          >
+            <Zap className="w-5 h-5 mr-2" />
+            Claim Rewards
+          </Button>
+        </Popup>
+      )}
 
       {congratulationPopup.show && <CongratulationPopup />}
       {gamePopup.show && (
@@ -2604,6 +2621,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onCancel={gamePopup.onCancel}
         />
       )}
+      {showLevelUnlockPopup && renderLevelUnlockPopup()}
     </div>
   );
 };
