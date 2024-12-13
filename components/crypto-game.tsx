@@ -458,7 +458,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 0,
+      coins: 10000000,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -530,12 +530,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [clickEffects, setClickEffects] = useState<
     { id: number; x: number; y: number; value: number; color: string }[]
   >([]);
-  const [shownPopups, setShownPopups] = useState<Set<string>>(new Set()); // Removed popupShown state
+  const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
   const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
   const [unlockedLevel, setUnlockedLevel] = useState(0);
-  const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Added lastActiveTime state
-  const [activePopups, setActivePopups] = useState<Set<string>>(new Set()); // Added activePopups state
-  const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set()); // Added shownLevelUnlocks state
+  const [lastActiveTime, setLastActiveTime] = useState(Date.now());
+  const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
+  const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -1246,16 +1246,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }, []);
 
     useEffect(() => {
-      const timer = setInterval(() => {
-        if (pphAccumulated >= 1000) {
-          showPopup('pph');
-        }
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }, [pphAccumulated]);
-
-    useEffect(() => {
       if (userData) {
         setUser(userData);
       }
@@ -1395,10 +1385,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return newEnergy;
       });
       setPphAccumulated((prev) => prev + profitPerHour / 3600);
-      setUser((prevUser) => ({
-        ...prevUser,
-        coins: prevUser.coins + profitPerHour / 3600,
-      }));
     }, 1000);
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
@@ -1409,17 +1395,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const timeDiff = now - lastActiveTime;
     const maxOfflineTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 
-    if (timeDiff > maxOfflineTime) {
-      const offlineEarnings = Math.min((profitPerHour * timeDiff) / 3600000, profitPerHour * 3);
-      setPphAccumulated(offlineEarnings);
+    if (timeDiff > 1000 && pphAccumulated > 0) {
+      // Only show if offline for more than a second and accumulated more than 0 coins
       showPopup('pph');
     }
 
-    if (level > user.level && !activePopups.has('levelUp')) {
-      setNewLevel(level);
-      showPopup('levelUp');
-    }
-  }, [lastActiveTime, profitPerHour, level, user.level, activePopups]);
+    setLastActiveTime(now);
+  }, [lastActiveTime, pphAccumulated]);
 
   // Level up and task progress
   useEffect(() => {
