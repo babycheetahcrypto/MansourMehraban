@@ -146,7 +146,7 @@ const styles = `
     animation: fadeOutUp 0.7s ease-out forwards;
     color: white;
     font-weight: bold;
-    font-size: 2rem; /* Further increased font size */
+    font-size: 1.5rem;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%);
     z-index: 30;
@@ -154,6 +154,10 @@ const styles = `
   @keyframes twinkle {
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
+  }
+  @keyframes countUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
 `;
 
@@ -947,11 +951,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
           const x = clientX - rect.left;
           const y = clientY - rect.top;
-          const effectColor = 'white'; // Pure white color
-          setClickEffects((prev) => [
-            ...prev,
-            { id: Date.now(), x, y, value: clickValue, color: effectColor },
-          ]);
+          const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
+          setClickEffects((prev) => [...prev, clickEffect]);
+          setTimeout(() => {
+            setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
+          }, 700);
         }
 
         // Trigger haptic feedback
@@ -1621,7 +1625,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
+          <h1 className="text-5xl font-bold text-white overflow-hidden">
+            {formatNumber(user.coins)
+              .split('')
+              .map((digit, index) => (
+                <span
+                  key={index}
+                  className="inline-block"
+                  style={{
+                    animation: `countUp 0.5s ${index * 0.1}s backwards`,
+                  }}
+                >
+                  {digit}
+                </span>
+              ))}
+          </h1>
           <div className="w-12 h-12">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
@@ -1657,8 +1675,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 style={{
                   left: `${effect.x}px`,
                   top: `${effect.y}px`,
-                  color: 'white', // Always white
-                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)', // Add a glow effect
+                  color: effect.color,
+                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)',
                 }}
               >
                 +{effect.value}
