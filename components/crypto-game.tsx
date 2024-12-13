@@ -155,26 +155,6 @@ const styles = `
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
   }
-  @keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-
-.coin-counter {
-  animation: shake 0.1s cubic-bezier(.36,.07,.19,.97) both;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
 `;
 
 // Telegram WebApp type definition
@@ -951,8 +931,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setUser(updatedUser);
         saveUserData(updatedUser);
-        document.querySelector('.coin-counter')?.classList.remove('coin-counter');
-        setTimeout(() => document.querySelector('h1')?.classList.add('coin-counter'), 10);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1643,7 +1621,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-5xl font-bold text-white coin-counter">{formatNumber(user.coins)}</h1>
+          <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
           <div className="w-12 h-12">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
@@ -1679,9 +1657,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 style={{
                   left: `${effect.x}px`,
                   top: `${effect.y}px`,
-                  color: `hsl(${Math.random() * 360}, 100%, 70%)`, // Dynamic color
-                  textShadow: '0 0 5px currentColor', // Glow effect
-                  fontSize: '1.5rem', // Slightly smaller
+                  color: 'white', // Always white
+                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)', // Add a glow effect
                 }}
               >
                 +{effect.value}
