@@ -458,7 +458,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 10000000000,
+      coins: 10000000,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -1042,19 +1042,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const claimPPH = useCallback(() => {
     if (pphAccumulated > 0) {
-      const updatedUser = {
-        ...user,
-        coins: user.coins + pphAccumulated,
-      };
-      setUser(updatedUser);
-      saveUserData(updatedUser);
+      showGameAlert(`You've collected ${formatNumber(pphAccumulated)} coins!`);
       setPphAccumulated(0);
       hidePopup('pph');
       setLastActiveTime(Date.now());
     } else {
       showGameAlert('No profits to claim yet!');
     }
-  }, [pphAccumulated, user, saveUserData]);
+  }, [pphAccumulated]);
 
   const claimNewLevel = useCallback(() => {
     setUser((prevUser) => ({
@@ -1384,14 +1379,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         return newEnergy;
       });
-      setPphAccumulated((prev) => prev + profitPerHour / 3600);
-      setUser((prevUser) => ({
-        ...prevUser,
-        coins: prevUser.coins + profitPerHour / 3600,
-      }));
+      const now = Date.now();
+      const timeDiff = now - lastActiveTime;
+      const maxOfflineTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+      if (timeDiff <= maxOfflineTime) {
+        setPphAccumulated((prev) => prev + profitPerHour / 3600);
+      }
     }, 1000);
     return () => clearInterval(timer);
-  }, [maxEnergy, profitPerHour]);
+  }, [maxEnergy, profitPerHour, lastActiveTime]);
 
   // Show PPH popup
   useEffect(() => {
@@ -1399,9 +1395,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const timeDiff = now - lastActiveTime;
     const maxOfflineTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 
-    if (timeDiff > maxOfflineTime) {
-      const offlineEarnings = Math.min((profitPerHour * timeDiff) / 3600000, profitPerHour * 3);
-      setPphAccumulated(offlineEarnings);
+    if (timeDiff > maxOfflineTime && pphAccumulated > 0 && !activePopups.has('pph')) {
       showPopup('pph');
     }
 
@@ -1409,7 +1403,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       setNewLevel(level);
       showPopup('levelUp');
     }
-  }, [pphAccumulated, level, user.level, activePopups, lastActiveTime, profitPerHour]);
+  }, [pphAccumulated, level, user.level, activePopups, lastActiveTime]);
 
   // Level up and task progress
   useEffect(() => {
@@ -2572,7 +2566,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             claimPPH();
           }}
         >
-          <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
+          <p className="mb-2 text-xl text-center text-white">While you were away, you mined</p>
           <p className="mb-6 text-xl text-center text-white flex items-center justify-center">
             <span className="font-bold mx-2">{formatNumber(pphAccumulated)}</span>
             <Image
@@ -2594,7 +2588,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
             <Coins className="w-5 h-5 mr-2" />
-            Claim Profits
+            Collect
           </Button>
         </Popup>
       )}
