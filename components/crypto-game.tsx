@@ -1015,10 +1015,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             );
           }
 
-          if (!popupShown.congratulation) {
-            setCongratulationPopup({ show: true, item: item });
-            setPopupShown((prev) => ({ ...prev, congratulation: true }));
-          }
+          // Always show the congratulation popup
+          setCongratulationPopup({ show: true, item: item });
 
           // Send purchase data to Telegram Mini App
           if (window.Telegram && window.Telegram.WebApp) {
@@ -1039,14 +1037,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     [
       user,
       saveUserData,
-      popupShown.congratulation,
       setUser,
       setPremiumShopItems,
       setShopItems,
       setProfitPerHour,
       setClickPower,
       setCongratulationPopup,
-      setPopupShown,
     ]
   );
 
@@ -1419,10 +1415,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   // Level up and task progress
   useEffect(() => {
-    if (!popupShown.levelUp && level > user.level) {
+    if (level > user.level) {
       setNewLevel(level);
       setShowLevelUpPopup(true);
-      setPopupShown((prev) => ({ ...prev, levelUp: true }));
     }
 
     const newUnlockedLevels = levelRequirements
@@ -1447,7 +1442,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return task;
       })
     );
-  }, [level, user.level, popupShown.levelUp, user.coins, unlockedLevels]);
+  }, [level, user.level, user.coins, unlockedLevels]);
 
   useEffect(() => {
     // Clear click effects when changing pages
@@ -2481,16 +2476,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const CongratulationPopup = () => (
     <Popup
-      title="Congratulations!"
+      title="Epic Achievement Unlocked!"
       onClose={() => {
         setCongratulationPopup({ show: false, item: null });
         showPopup('congratulation');
       }}
     >
       <p className="mb-6 text-xl text-center text-white">
-        You've purchased <span className="font-bold">{congratulationPopup.item?.name}</span>!
+        You've acquired the legendary{' '}
+        <span className="font-bold text-yellow-400">{congratulationPopup.item?.name}</span>!
       </p>
-      <p className="mb-6 text-center text-white">This will boost your crypto earnings!</p>
+      <p className="mb-6 text-center text-white">
+        This cosmic upgrade will supercharge your crypto earnings and propel you to new heights!
+      </p>
       <Button
         onClick={() => {
           setCongratulationPopup({ show: false, item: null });
@@ -2499,7 +2497,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
         <Award className="w-6 h-6 mr-2" />
-        Awesome!
+        Embrace the Power!
       </Button>
     </Popup>
   );
@@ -2589,14 +2587,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
       {showLevelUpPopup && (
         <Popup
-          title="Level Up!"
+          title="Cosmic Level Up!"
           onClose={() => {
             setShowLevelUpPopup(false);
             claimNewLevel();
           }}
         >
           <p className="mb-6 text-xl text-center text-white">
-            Congratulations! You've reached <span className="font-bold">Level {newLevel}</span>!
+            Incredible! You've ascended to{' '}
+            <span className="font-bold text-yellow-400">Level {newLevel}</span>!
+          </p>
+          <p className="mb-6 text-center text-white">
+            Your crypto mastery grows stronger. New powers and riches await you!
           </p>
           <Button
             onClick={() => {
