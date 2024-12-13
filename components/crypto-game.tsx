@@ -530,16 +530,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [clickEffects, setClickEffects] = useState<
     { id: number; x: number; y: number; value: number; color: string }[]
   >([]);
-  const [popupStates, setPopupStates] = useState({
-    pph: false,
-    levelUp: false,
-    trophyLevelUp: false,
-    unlockedLevel: false,
-  });
+  const [shownPopups, setShownPopups] = useState<Set<string>>(new Set()); // Removed popupShown state
   const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
   const [unlockedLevel, setUnlockedLevel] = useState(0);
-  const [lastActiveTime, setLastActiveTime] = useState(Date.now());
-  const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
+  const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Added lastActiveTime state
+  const [activePopups, setActivePopups] = useState<Set<string>>(new Set()); // Added activePopups state
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -977,7 +972,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           button.classList.add('pulse');
           setTimeout(() => button.classList.remove('pulse'), 300);
         }
-        setLastActiveTime(Date.now());
+        setLastActiveTime(Date.now()); // Update last active time
       }
     },
     [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
@@ -1399,56 +1394,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
 
+  // Show PPH popup
   useEffect(() => {
-    const currentTime = Date.now();
-
-    // PPH popup logic
     if (
       pphAccumulated > 0 &&
-      !popupStates.pph &&
-      currentTime - lastActiveTime > 3 * 60 * 60 * 1000
+      !activePopups.has('pph') &&
+      Date.now() - lastActiveTime > 3 * 60 * 60 * 1000
     ) {
-      setShowPPHPopup(true);
-      setPopupStates((prev) => ({ ...prev, pph: true }));
+      showPopup('pph');
+      // Reset pphAccumulated after 3 hours
       setPphAccumulated(Math.min(pphAccumulated, profitPerHour * 3));
     }
-
-    // Level up popup logic
-    if (level > user.level && !popupStates.levelUp) {
+    if (level > user.level && !activePopups.has('levelUp')) {
       setNewLevel(level);
-      setShowLevelUpPopup(true);
-      setPopupStates((prev) => ({ ...prev, levelUp: true }));
+      showPopup('levelUp');
     }
-
-    // Trophy level up popup logic
-    const unclaimedTrophy = trophies.find(
-      (trophy) => user.coins >= trophy.requirement && !trophy.claimed
-    );
-    if (unclaimedTrophy && !popupStates.trophyLevelUp) {
-      setShowTrophyLevelUpPopup(true);
-      setPopupStates((prev) => ({ ...prev, trophyLevelUp: true }));
-    }
-
-    // Unlocked level popup logic
-    const newUnlockedLevels = levelRequirements
-      .filter((req, index) => user.coins >= req && !unlockedLevels.includes(index + 1))
-      .map((_, index) => index + 1);
-    if (newUnlockedLevels.length > 0 && !popupStates.unlockedLevel) {
-      setUnlockedLevel(Math.max(...newUnlockedLevels));
-      setShowLevelUnlockPopup(true);
-      setPopupStates((prev) => ({ ...prev, unlockedLevel: true }));
-    }
-  }, [
-    pphAccumulated,
-    level,
-    user.level,
-    user.coins,
-    lastActiveTime,
-    profitPerHour,
-    unlockedLevels,
-    trophies,
-    popupStates,
-  ]);
+  }, [pphAccumulated, level, user.level, activePopups, lastActiveTime, profitPerHour]);
 
   // Level up and task progress
   useEffect(() => {
@@ -2118,12 +2079,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderLevelUnlockPopup = () => (
-    <Popup title="Level Unlocked!" onClose={closeLevelUnlockPopup}>
+    <Popup title="Level Unlocked!" onClose={() => setShowLevelUnlockPopup(false)}>
       <p className="mb-6 text-xl text-center text-white">
         Congratulations! You've unlocked <span className="font-bold">Level {unlockedLevel}</span>!
       </p>
       <Button
-        onClick={closeLevelUnlockPopup}
+        onClick={() => setShowLevelUnlockPopup(false)}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
         <Zap className="w-5 h-5 mr-2" />
@@ -2433,28 +2394,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     });
   };
 
-  const closePPHPopup = () => {
-    setShowPPHPopup(false);
-    claimPPH();
-    setPopupStates((prev) => ({ ...prev, pph: false }));
-  };
-
-  const closeLevelUpPopup = () => {
-    setShowLevelUpPopup(false);
-    claimNewLevel();
-    setPopupStates((prev) => ({ ...prev, levelUp: false }));
-  };
-
-  const closeTrophyLevelUpPopup = () => {
-    setShowTrophyLevelUpPopup(false);
-    setPopupStates((prev) => ({ ...prev, trophyLevelUp: false }));
-  };
-
-  const closeLevelUnlockPopup = () => {
-    setShowLevelUnlockPopup(false);
-    setPopupStates((prev) => ({ ...prev, unlockedLevel: false }));
-  };
-
   useEffect(() => {
     const audio = new Audio(
       'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3'
@@ -2565,8 +2504,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </Popup>
   );
 
-  const [showTrophyLevelUpPopup, setShowTrophyLevelUpPopup] = useState(false);
-
   return (
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
@@ -2615,8 +2552,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       {renderFooter()}
 
       {/* Popup logic */}
-      {showPPHPopup && (
-        <Popup title="Profit Accumulated!" onClose={closePPHPopup}>
+      {activePopups.has('pph') && (
+        <Popup
+          title="Profit Accumulated!"
+          onClose={() => {
+            hidePopup('pph');
+            claimPPH();
+          }}
+        >
           <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
           <p className="mb-6 text-xl text-center text-white flex items-center justify-center">
             <span className="font-bold mx-2">{formatNumber(pphAccumulated)}</span>
@@ -2632,7 +2575,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             To keep earning, enter the game every 3 hours.
           </p>
           <Button
-            onClick={closePPHPopup}
+            onClick={() => {
+              claimPPH();
+              hidePopup('pph');
+            }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
             <Coins className="w-5 h-5 mr-2" />
@@ -2641,8 +2587,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </Popup>
       )}
 
-      {showLevelUpPopup && (
-        <Popup title="Cosmic Level Up!" onClose={closeLevelUpPopup}>
+      {activePopups.has('levelUp') && (
+        <Popup
+          title="Cosmic Level Up!"
+          onClose={() => {
+            hidePopup('levelUp');
+            claimNewLevel();
+          }}
+        >
           <p className="mb-6 text-xl text-center text-white">
             Incredible! You've ascended to{' '}
             <span className="font-bold text-yellow-400">Level {newLevel}</span>!
@@ -2651,26 +2603,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             Your crypto mastery grows stronger. New powers and riches await you!
           </p>
           <Button
-            onClick={closeLevelUpPopup}
+            onClick={() => {
+              claimNewLevel();
+              hidePopup('levelUp');
+            }}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
           >
             <Zap className="w-5 h-5 mr-2" />
             Claim Rewards
-          </Button>
-        </Popup>
-      )}
-
-      {showTrophyLevelUpPopup && (
-        <Popup title="Trophy Unlocked!" onClose={closeTrophyLevelUpPopup}>
-          <p className="mb-6 text-xl text-center text-white">
-            Congratulations! You've unlocked a new trophy!
-          </p>
-          <Button
-            onClick={closeTrophyLevelUpPopup}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-          >
-            <Award className="w-5 h-5 mr-2" />
-            Awesome!
           </Button>
         </Popup>
       )}
