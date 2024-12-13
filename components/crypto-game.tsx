@@ -146,7 +146,7 @@ const styles = `
     animation: fadeOutUp 0.7s ease-out forwards;
     color: white;
     font-weight: bold;
-    font-size: 1rem; /* Further increased font size */
+    font-size: 2rem; /* Further increased font size */
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%);
     z-index: 30;
@@ -154,17 +154,6 @@ const styles = `
   @keyframes twinkle {
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
-  }
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-  }
-
-  .animate-shake {
-    animation: shake 0.5s ease-in-out;
   }
 `;
 
@@ -958,15 +947,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }
           const x = clientX - rect.left;
           const y = clientY - rect.top;
+          const effectColor = 'white'; // Pure white color
           setClickEffects((prev) => [
             ...prev,
-            {
-              id: Date.now(),
-              x,
-              y,
-              value: clickValue,
-              color: `hsl(${Math.random() * 360}, 100%, 50%)`, // Dynamic color
-            },
+            { id: Date.now(), x, y, value: clickValue, color: effectColor },
           ]);
         }
 
@@ -1637,9 +1621,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-5xl font-bold text-white animate-shake">
-            {formatNumber(user.coins)}
-          </h1>
+          <h1 className="text-5xl font-bold text-white">{formatNumber(user.coins)}</h1>
           <div className="w-12 h-12">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
@@ -1675,8 +1657,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 style={{
                   left: `${effect.x}px`,
                   top: `${effect.y}px`,
-                  color: effect.color,
-                  fontSize: '1.5rem', // Slightly smaller
+                  color: 'white', // Always white
+                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)', // Add a glow effect
                 }}
               >
                 +{effect.value}
