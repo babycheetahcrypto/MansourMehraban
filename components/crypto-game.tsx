@@ -1300,6 +1300,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         console.log('User data saved successfully');
       } catch (error) {
         console.error('Error saving user data:', error);
+        showGameAlert('Failed to save user data. Please try again.');
       }
     }, []);
 
@@ -1463,6 +1464,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     // Clear click effects when changing pages
     setClickEffects([]);
   }, [currentPage]);
+
+  useEffect(() => {
+    if (!user.settings) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        settings: {
+          vibration: true,
+          backgroundMusic: false,
+        },
+      }));
+    }
+  }, [user]);
 
   const renderHeader = () => (
     <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full">
