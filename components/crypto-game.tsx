@@ -530,11 +530,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     vibration: boolean;
     backgroundMusic: boolean;
     backgroundMusicAudio: HTMLAudioElement | null;
-  }>({
-    vibration: true,
-    backgroundMusic: false,
+  }>(() => ({
+    vibration: user?.settings?.vibration ?? true,
+    backgroundMusic: user?.settings?.backgroundMusic ?? false,
     backgroundMusicAudio: null,
-  });
+  }));
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
@@ -1629,10 +1629,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <span>{formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins</span>
             </div>
           </div>
-          <div
-            className="flex-none w-16 h-16 bg
-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center"
-          >
+          <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-BOmbm8gpqO0AMx6vImTMvMohF71biw.png"
               alt="Profit Per Hour"
