@@ -2157,31 +2157,37 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <Switch
                 id={id}
-                checked={
-                  typeof settings[id as keyof typeof settings] === 'boolean'
-                    ? (settings[id as keyof typeof settings] as boolean)
-                    : false
-                }
+                checked={user.settings[id as keyof typeof user.settings]}
                 onCheckedChange={(checked) => {
-                  setSettings((prev) => {
-                    const newSettings = { ...prev, [id]: checked };
-                    if (id === 'vibration' && checked && navigator.vibrate) {
-                      navigator.vibrate([
-                        100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
-                      ]);
-                    } else if (id === 'backgroundMusic') {
-                      if (checked && newSettings.backgroundMusicAudio) {
-                        newSettings.backgroundMusicAudio
-                          .play()
-                          .catch((error: Error) => console.error('Error playing audio:', error));
-                        newSettings.backgroundMusicAudio.loop = true;
-                      } else if (newSettings.backgroundMusicAudio) {
-                        newSettings.backgroundMusicAudio.pause();
-                        newSettings.backgroundMusicAudio.currentTime = 0;
-                      }
-                    }
-                    return newSettings;
+                  setUser((prevUser) => ({
+                    ...prevUser,
+                    settings: {
+                      ...prevUser.settings,
+                      [id]: checked,
+                    },
+                  }));
+                  saveUserData({
+                    ...user,
+                    settings: {
+                      ...user.settings,
+                      [id]: checked,
+                    },
                   });
+                  if (id === 'vibration' && checked && navigator.vibrate) {
+                    navigator.vibrate([
+                      100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
+                    ]);
+                  } else if (id === 'backgroundMusic') {
+                    if (checked && settings.backgroundMusicAudio) {
+                      settings.backgroundMusicAudio
+                        .play()
+                        .catch((error) => console.error('Error playing audio:', error));
+                      settings.backgroundMusicAudio.loop = true;
+                    } else if (settings.backgroundMusicAudio) {
+                      settings.backgroundMusicAudio.pause();
+                      settings.backgroundMusicAudio.currentTime = 0;
+                    }
+                  }
                 }}
                 className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
               />
@@ -2282,7 +2288,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flexitems-center justify-center"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
           >
             <Users className="w-5 h-5 mr-2" />
             Friends Activity
