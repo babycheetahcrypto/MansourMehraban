@@ -232,7 +232,7 @@ declare global {
 }
 
 // Component definitions
-const StarryBackground: React.FC = () => {
+const CryptoNetworkBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -249,36 +249,53 @@ const StarryBackground: React.FC = () => {
 
     resizeCanvas();
 
-    const stars: { x: number; y: number; radius: number; speed: number }[] = [];
-    for (let i = 0; i < 50; i++) {
-      stars.push({
+    const nodes: { x: number; y: number; vx: number; vy: number }[] = [];
+    const numNodes = 50;
+    const connectionDistance = 100;
+
+    for (let i = 0; i < numNodes; i++) {
+      nodes.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 4,
-        speed: Math.random() * 0.6,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2,
       });
     }
-
-    let animationFrameId: number;
 
     const animate = () => {
       if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.beginPath();
+      ctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
+      ctx.strokeStyle = 'rgba(0, 255, 255, 0.3)';
 
-      stars.forEach((star) => {
-        ctx.moveTo(star.x, star.y);
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        star.y += star.speed;
-        if (star.y > canvas.height) {
-          star.y = 0;
+      nodes.forEach((node, i) => {
+        node.x += node.vx;
+        node.y += node.vy;
+
+        if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+        if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < nodes.length; j++) {
+          const otherNode = nodes[j];
+          const dx = otherNode.x - node.x;
+          const dy = otherNode.y - node.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < connectionDistance) {
+            ctx.beginPath();
+            ctx.moveTo(node.x, node.y);
+            ctx.lineTo(otherNode.x, otherNode.y);
+            ctx.stroke();
+          }
         }
       });
 
-      ctx.fill();
-      animationFrameId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     };
 
     animate();
@@ -287,7 +304,6 @@ const StarryBackground: React.FC = () => {
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
@@ -1743,7 +1759,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderShop = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
+      <CryptoNetworkBackground />
       <div className="max-w-7xl mx-auto">
         <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -1954,7 +1970,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderWallet = () => (
     <div className="flex-grow flex items-center justify-center p-6 relative">
-      <StarryBackground />
+      <CryptoNetworkBackground />
       <div className="w-full max-w-md relative z-10">
         <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
           <CardHeader className="relative">
@@ -2536,7 +2552,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
       />
       <style>{styles}</style>
-      <StarryBackground />
+      <CryptoNetworkBackground />
       {renderHeader()}
       <div
         className="flex-grow pb-20"
