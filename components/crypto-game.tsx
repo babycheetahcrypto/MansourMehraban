@@ -958,7 +958,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         // Add click effect at the exact tap position only for coin button
         if (event.currentTarget.classList.contains('coin-button')) {
-          const rect = event.currentTarget.getBoundingClientRect();
           let clientX, clientY;
           if ('touches' in event) {
             clientX = event.touches[0].clientX;
@@ -967,9 +966,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             clientX = event.clientX;
             clientY = event.clientY;
           }
-          const x = clientX - rect.left;
-          const y = clientY - rect.top;
-          const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
+          const clickEffect = {
+            id: Date.now(),
+            x: clientX,
+            y: clientY,
+            value: clickValue,
+            color: 'white',
+          };
           setClickEffects((prev) => [...prev, clickEffect]);
           setTimeout(() => {
             setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
@@ -1697,6 +1700,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   top: `${effect.y}px`,
                   color: effect.color,
                   textShadow: '0 0 5px rgba(255, 255, 255, 0.7)',
+                  position: 'fixed',
+                  zIndex: 1000,
                 }}
               >
                 +{effect.value}
