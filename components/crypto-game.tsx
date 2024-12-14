@@ -2156,7 +2156,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <Switch
                 id={id}
-                checked={user.settings[id as keyof typeof user.settings]}
+                checked={user.settings?.[id as keyof typeof user.settings] ?? false}
                 onCheckedChange={(checked) => {
                   setUser((prevUser) => ({
                     ...prevUser,
