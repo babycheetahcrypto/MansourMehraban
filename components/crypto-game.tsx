@@ -2159,7 +2159,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <Switch
                 id={id}
-                checked={user.settings?.[id as keyof typeof user.settings] ?? false}
+                checked={user.settings?.[id as keyof typeof user.settings] ?? true}
                 onCheckedChange={(checked) => {
                   setUser((prevUser) => ({
                     ...prevUser,
@@ -2176,9 +2176,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     },
                   });
                   if (id === 'vibration' && checked && navigator.vibrate) {
-                    navigator.vibrate([
-                      100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
-                    ]);
+                    navigator.vibrate([100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200]);
                   } else if (id === 'backgroundMusic') {
                     if (checked && settings.backgroundMusicAudio) {
                       settings.backgroundMusicAudio
