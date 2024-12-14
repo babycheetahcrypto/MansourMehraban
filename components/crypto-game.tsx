@@ -1458,16 +1458,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return task;
       })
     );
-  }, [
-    level,
-    user.level,
-    user.coins,
-    unlockedLevels,
-    activePopups,
-    shownLevelUnlocks,
-    setUser,
-    setUnlockedLevels,
-  ]);
+  }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
 
   useEffect(() => {
     if (!user.settings) {
