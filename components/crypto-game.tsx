@@ -2169,13 +2169,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         [id]: checked,
                       },
                     }));
-                    saveUserData({
-                      ...user,
-                      settings: {
-                        ...user.settings,
-                        [id]: checked,
-                      },
-                    });
                     if (id === 'vibration' && checked && navigator.vibrate) {
                       navigator.vibrate([
                         100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
