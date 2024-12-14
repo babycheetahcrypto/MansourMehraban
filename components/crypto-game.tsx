@@ -265,7 +265,22 @@ const StarryBackground: React.FC = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Create a radial gradient
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        0,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width / 2
+      );
+      gradient.addColorStop(0, 'rgba(25, 25, 112, 1)');
+      gradient.addColorStop(1, 'rgba(0, 0, 25, 1)');
+
+      // Fill the background with the gradient
+      ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const currentScrollY = window.scrollY;
