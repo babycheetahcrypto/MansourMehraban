@@ -249,18 +249,15 @@ const StarryBackground: React.FC = () => {
 
     resizeCanvas();
 
-    const stars: { x: number; y: number; radius: number; speed: number; color: string }[] = [];
-    for (let i = 0; i < 200; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1,
-        speed: Math.random() * 0.5 + 0.1,
-        color: `rgba(${Math.random() * 200 + 55}, ${Math.random() * 200 + 55}, ${
-          Math.random() * 200 + 55
-        }, ${Math.random() * 0.5 + 0.5})`,
-      });
-    }
+    const stars = Array.from({ length: 200 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2 + 1,
+      speed: Math.random() * 0.5 + 0.1,
+      color: `rgba(${Math.random() * 200 + 55}, ${Math.random() * 200 + 55}, ${
+        Math.random() * 200 + 55
+      }, ${Math.random() * 0.5 + 0.5})`,
+    }));
 
     let animationFrameId: number;
 
@@ -278,8 +275,8 @@ const StarryBackground: React.FC = () => {
         canvas.height / 2,
         canvas.width / 2
       );
-      gradient.addColorStop(0, 'rgba(25, 25, 112, 1)'); // Dark blue at the center
-      gradient.addColorStop(1, 'rgba(0, 0, 25, 1)'); // Almost black at the edges
+      gradient.addColorStop(0, 'rgba(25, 25, 112, 1)');
+      gradient.addColorStop(1, 'rgba(0, 0, 25, 1)');
 
       // Fill the background with the gradient
       ctx.fillStyle = gradient;
