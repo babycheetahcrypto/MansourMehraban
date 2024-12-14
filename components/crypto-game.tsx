@@ -232,7 +232,7 @@ declare global {
 }
 
 // Component definitions
-const CosmicNebulaBackground: React.FC = () => {
+const StarryBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -249,25 +249,13 @@ const CosmicNebulaBackground: React.FC = () => {
 
     resizeCanvas();
 
-    const particles: {
-      x: number;
-      y: number;
-      radius: number;
-      color: string;
-      vx: number;
-      vy: number;
-    }[] = [];
-    const particleCount = 100;
-    const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff00aa', '#00aaff'];
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
+    const stars: { x: number; y: number; radius: number; speed: number }[] = [];
+    for (let i = 0; i < 50; i++) {
+      stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 3 + 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
+        radius: Math.random() * 4,
+        speed: Math.random() * 0.6,
       });
     }
 
@@ -277,50 +265,19 @@ const CosmicNebulaBackground: React.FC = () => {
       if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.beginPath();
 
-      // Create a radial gradient for the background
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        0,
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width / 2
-      );
-      gradient.addColorStop(0, 'rgba(25, 0, 50, 1)');
-      gradient.addColorStop(1, 'rgba(0, 0, 25, 1)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((particle) => {
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color;
-        ctx.fill();
-
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+      stars.forEach((star) => {
+        ctx.moveTo(star.x, star.y);
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+        }
       });
 
-      // Add some "nebula" effects
-      for (let i = 0; i < 5; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        const radius = Math.random() * 100 + 50;
-        const color = colors[Math.floor(Math.random() * colors.length)];
-
-        ctx.beginPath();
-        const nebulaGradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-        nebulaGradient.addColorStop(0, `${color}33`);
-        nebulaGradient.addColorStop(1, 'transparent');
-        ctx.fillStyle = nebulaGradient;
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
+      ctx.fill();
       animationFrameId = requestAnimationFrame(animate);
     };
 
@@ -1786,7 +1743,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderShop = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <CosmicNebulaBackground />
+      <StarryBackground />
       <div className="max-w-7xl mx-auto">
         <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -1997,7 +1954,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderWallet = () => (
     <div className="flex-grow flex items-center justify-center p-6 relative">
-      <CosmicNebulaBackground />
+      <StarryBackground />
       <div className="w-full max-w-md relative z-10">
         <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
           <CardHeader className="relative">
@@ -2579,7 +2536,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
       />
       <style>{styles}</style>
-      <CosmicNebulaBackground />
+      <StarryBackground />
       {renderHeader()}
       <div
         className="flex-grow pb-20"
