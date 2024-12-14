@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Label } from '@radix-ui/react-label';
 import {
   Users,
   ShoppingBag,
@@ -531,8 +531,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     backgroundMusic: boolean;
     backgroundMusicAudio: HTMLAudioElement | null;
   }>({
-    vibration: user?.settings?.vibration ?? true,
-    backgroundMusic: user?.settings?.backgroundMusic ?? false,
+    vibration: true,
+    backgroundMusic: false,
     backgroundMusicAudio: null,
   });
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
@@ -965,8 +965,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           clientX = event.clientX;
           clientY = event.clientY;
         }
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
+        const x = clientX;
+        const y = clientY;
         const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
         setClickEffects((prev) => [...prev, clickEffect]);
         setTimeout(() => {
