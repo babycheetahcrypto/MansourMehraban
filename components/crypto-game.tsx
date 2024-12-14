@@ -260,6 +260,7 @@ const StarryBackground: React.FC = () => {
     }));
 
     let animationFrameId: number;
+    let lastScrollY = window.scrollY;
 
     const animate = () => {
       if (!ctx || !canvas) return;
@@ -282,15 +283,21 @@ const StarryBackground: React.FC = () => {
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      const currentScrollY = window.scrollY;
+      const scrollDiff = currentScrollY - lastScrollY;
+      lastScrollY = currentScrollY;
+
       stars.forEach((star) => {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
         ctx.fill();
 
-        star.y += star.speed;
+        star.y += star.speed + scrollDiff * 0.1;
         if (star.y > canvas.height) {
           star.y = 0;
+        } else if (star.y < 0) {
+          star.y = canvas.height;
         }
       });
 
@@ -300,9 +307,13 @@ const StarryBackground: React.FC = () => {
     animate();
 
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('scroll', () => {
+      lastScrollY = window.scrollY;
+    });
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('scroll', () => {});
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -1759,7 +1770,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderShop = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <StarryBackground />
+      </div>
       <div className="max-w-7xl mx-auto">
         <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -1970,7 +1983,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderWallet = () => (
     <div className="flex-grow flex items-center justify-center p-6 relative">
-      <StarryBackground />
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <StarryBackground />
+      </div>
       <div className="w-full max-w-md relative z-10">
         <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
           <CardHeader className="relative">
@@ -2553,7 +2568,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
       />
       <style>{styles}</style>
-      <StarryBackground />
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <StarryBackground />
+      </div>
       {renderHeader()}
       <div
         className="flex-grow pb-20"
