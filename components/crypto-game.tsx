@@ -2188,6 +2188,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     }
                   }
                 }}
+                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
               />
             </div>
           ))}
