@@ -974,12 +974,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }, 700);
 
         // Trigger haptic feedback
-        if (
-          settings.vibration &&
-          window.Telegram &&
-          window.Telegram.WebApp &&
-          window.Telegram.WebApp.HapticFeedback
-        ) {
+        if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
           window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
         }
 
