@@ -285,12 +285,6 @@ const StarryBackground: React.FC = () => {
         } else if (star.y < 0) {
           star.y = canvas.height;
         }
-        star.x += Math.sin(Date.now() * 0.001 + star.seed) * 0.2;
-        if (star.x > canvas.width) {
-          star.x = 0;
-        } else if (star.x < 0) {
-          star.x = canvas.width;
-        }
       });
 
       animationFrameId = requestAnimationFrame(animate);
