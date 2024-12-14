@@ -257,7 +257,6 @@ const StarryBackground: React.FC = () => {
       color: `rgba(${Math.random() * 200 + 55}, ${Math.random() * 200 + 55}, ${
         Math.random() * 200 + 55
       }, ${Math.random() * 0.5 + 0.5})`,
-      seed: Math.random() * 10000,
     }));
 
     let animationFrameId: number;
