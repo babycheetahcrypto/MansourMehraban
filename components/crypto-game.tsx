@@ -249,14 +249,13 @@ const StarryBackground: React.FC = () => {
 
     resizeCanvas();
 
-    const stars: { x: number; y: number; radius: number; speed: number; color: string }[] = [];
-    for (let i = 0; i < 100; i++) {
+    const stars: { x: number; y: number; radius: number; speed: number }[] = [];
+    for (let i = 0; i < 50; i++) {
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 2,
-        speed: Math.random() * 0.5,
-        color: `rgba(${Math.random() * 255},${Math.random() * 255},255,${Math.random() * 0.8 + 0.2})`,
+        radius: Math.random() * 4,
+        speed: Math.random() * 0.6,
       });
     }
 
@@ -266,19 +265,19 @@ const StarryBackground: React.FC = () => {
       if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.beginPath();
 
       stars.forEach((star) => {
-        ctx.beginPath();
+        ctx.moveTo(star.x, star.y);
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = star.color;
-        ctx.fill();
-
         star.y += star.speed;
         if (star.y > canvas.height) {
           star.y = 0;
         }
       });
 
+      ctx.fill();
       animationFrameId = requestAnimationFrame(animate);
     };
 
@@ -301,13 +300,11 @@ const NeonGradientCard: React.FC<React.ComponentProps<'div'>> = ({
   ...props
 }) => (
   <div
-    className={`relative overflow-hidden rounded-lg bg-black/50 backdrop-blur-md text-white ${className}`}
+    className={`relative overflow-hidden rounded-lg bg-black/30 backdrop-blur-md text-white ${className}`}
     {...props}
   >
-    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-lg"></div>
     <div className="absolute inset-0 bg-black/30 backdrop-blur-md rounded-lg"></div>
     <div className="relative z-10 p-6 rounded-lg">{children}</div>
-    <div className="absolute inset-0 border border-purple-500/30 rounded-lg"></div>
   </div>
 );
 
@@ -2517,7 +2514,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-b from-black via-purple-900/20 to-black text-white overflow-hidden relative flex flex-col"
+      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
       style={{
         width: '100%',
         height: '100dvh',
