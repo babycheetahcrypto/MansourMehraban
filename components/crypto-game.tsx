@@ -131,25 +131,29 @@ const styles = `
     scroll-behavior: smooth;
   }
   @keyframes fadeOutUp {
-    from {
+    0% {
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
+      transform: translate(-50%, -50%) scale(1) rotate(0deg);
     }
-    to {
+    50% {
+      opacity: 0.7;
+      transform: translate(-50%, -100%) scale(1.5) rotate(180deg);
+    }
+    100% {
       opacity: 0;
-      transform: translate(-50%, -150%) scale(1.5);
+      transform: translate(-50%, -200%) scale(2) rotate(360deg);
     }
   }
   .click-effect {
-    position: absolute;
+    position: fixed;
     pointer-events: none;
-    animation: fadeOutUp 0.7s ease-out forwards;
+    animation: fadeOutUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     color: white;
     font-weight: bold;
     font-size: 1.5rem;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%);
-    z-index: 30;
+    z-index: 1000;
   }
   @keyframes twinkle {
     0%, 100% { opacity: 0; }
@@ -958,7 +962,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         // Add click effect at the exact tap position only for coin button
         if (event.currentTarget.classList.contains('coin-button')) {
-          const rect = event.currentTarget.getBoundingClientRect();
           let clientX, clientY;
           if ('touches' in event) {
             clientX = event.touches[0].clientX;
@@ -967,9 +970,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             clientX = event.clientX;
             clientY = event.clientY;
           }
-          const x = clientX - rect.left;
-          const y = clientY - rect.top;
-          const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
+          const clickEffect = {
+            id: Date.now(),
+            x: clientX,
+            y: clientY,
+            value: clickValue,
+            color: 'white',
+          };
           setClickEffects((prev) => [...prev, clickEffect]);
           setTimeout(() => {
             setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
@@ -1697,6 +1704,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   top: `${effect.y}px`,
                   color: effect.color,
                   textShadow: '0 0 5px rgba(255, 255, 255, 0.7)',
+                  position: 'fixed',
+                  zIndex: 1000,
                 }}
               >
                 +{effect.value}
