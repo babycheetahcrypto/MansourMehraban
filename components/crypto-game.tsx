@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@radix-ui/react-label';
+import { Label } from '@/components/ui/label';
 import {
   Users,
   ShoppingBag,
