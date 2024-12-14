@@ -149,7 +149,7 @@ const styles = `
     font-size: 1.5rem;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
     transform: translate(-50%, -50%);
-    z-index: 30;
+    z-index: 1000;
   }
   @keyframes twinkle {
     0%, 100% { opacity: 0; }
