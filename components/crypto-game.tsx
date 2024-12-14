@@ -531,8 +531,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     backgroundMusic: boolean;
     backgroundMusicAudio: HTMLAudioElement | null;
   }>({
-    vibration: true,
-    backgroundMusic: false,
+    vibration: user?.settings?.vibration ?? true,
+    backgroundMusic: user?.settings?.backgroundMusic ?? false,
     backgroundMusicAudio: null,
   });
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
