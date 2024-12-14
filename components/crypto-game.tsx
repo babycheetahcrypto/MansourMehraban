@@ -965,8 +965,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           clientX = event.clientX;
           clientY = event.clientY;
         }
-        const x = clientX;
-        const y = clientY;
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
         const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
         setClickEffects((prev) => [...prev, clickEffect]);
         setTimeout(() => {
