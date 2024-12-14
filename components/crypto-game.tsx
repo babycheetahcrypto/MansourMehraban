@@ -141,7 +141,7 @@ const styles = `
     }
   }
   .click-effect {
-    position: absolute;
+    position: fixed;
     pointer-events: none;
     animation: fadeOutUp 0.7s ease-out forwards;
     color: white;
@@ -956,25 +956,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
-        // Add click effect at the exact tap position only for coin button
-        if (event.currentTarget.classList.contains('coin-button')) {
-          const rect = event.currentTarget.getBoundingClientRect();
-          let clientX, clientY;
-          if ('touches' in event) {
-            clientX = event.touches[0].clientX;
-            clientY = event.touches[0].clientY;
-          } else {
-            clientX = event.clientX;
-            clientY = event.clientY;
-          }
-          const x = clientX - rect.left;
-          const y = clientY - rect.top;
-          const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
-          setClickEffects((prev) => [...prev, clickEffect]);
-          setTimeout(() => {
-            setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-          }, 700);
+        const rect = event.currentTarget.getBoundingClientRect();
+        let clientX, clientY;
+        if ('touches' in event) {
+          clientX = event.touches[0].clientX;
+          clientY = event.touches[0].clientY;
+        } else {
+          clientX = event.clientX;
+          clientY = event.clientY;
         }
+        const x = clientX;
+        const y = clientY;
+        const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
+        setClickEffects((prev) => [...prev, clickEffect]);
+        setTimeout(() => {
+          setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
+        }, 700);
 
         // Trigger haptic feedback
         if (
@@ -1632,7 +1629,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <span>{formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins</span>
             </div>
           </div>
-          <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
+          <div
+            className="flex-none w-16 h-16 bg<continuation_point>
+gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center"
+          >
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-BOmbm8gpqO0AMx6vImTMvMohF71biw.png"
               alt="Profit Per Hour"
@@ -1671,23 +1671,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex flex-col items-center justify-center w-full mx-auto">
-          <button
-            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
-            onClick={clickCoin}
-            onTouchStart={clickCoin}
-            onTouchEnd={(e) => e.preventDefault()}
-          >
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Image
-                src={selectedCoinImage}
-                alt={`Level ${level} Cheetah`}
-                width={340}
-                height={340}
-                objectFit="contain"
-                className="relative z-10"
-                priority
-              />
-            </div>
+          <div className="relative">
+            <button
+              className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
+              onClick={clickCoin}
+              onTouchStart={clickCoin}
+              onTouchEnd={(e) => e.preventDefault()}
+            >
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <Image
+                  src={selectedCoinImage}
+                  alt={`Level ${level} Cheetah`}
+                  width={340}
+                  height={340}
+                  objectFit="contain"
+                  className="relative z-10"
+                  priority
+                />
+              </div>
+            </button>
             {clickEffects.map((effect) => (
               <div
                 key={effect.id}
@@ -1702,7 +1704,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 +{effect.value}
               </div>
             ))}
-          </button>
+          </div>
           <div className="w-full space-y-4">
             <div>
               <div className="flex justify-between text-sm mb-2 text-white">
