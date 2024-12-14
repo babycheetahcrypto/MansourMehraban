@@ -232,7 +232,7 @@ declare global {
 }
 
 // Component definitions
-const StarryBackground: React.FC = () => {
+const IceFireBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -249,13 +249,17 @@ const StarryBackground: React.FC = () => {
 
     resizeCanvas();
 
-    const stars: { x: number; y: number; radius: number; speed: number }[] = [];
-    for (let i = 0; i < 50; i++) {
-      stars.push({
+    const particles: { x: number; y: number; radius: number; color: string; velocity: number }[] =
+      [];
+    const particleCount = 100;
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 4,
-        speed: Math.random() * 0.6,
+        radius: Math.random() * 2 + 1,
+        color: Math.random() > 0.5 ? '#00FFFF' : '#FF00FF', // Cyan for ice, Magenta for fire
+        velocity: Math.random() * 2 + 0.5,
       });
     }
 
@@ -264,20 +268,23 @@ const StarryBackground: React.FC = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.beginPath();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      stars.forEach((star) => {
-        ctx.moveTo(star.x, star.y);
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        star.y += star.speed;
-        if (star.y > canvas.height) {
-          star.y = 0;
+      particles.forEach((particle) => {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+
+        particle.y -= particle.velocity;
+
+        if (particle.y + particle.radius < 0) {
+          particle.y = canvas.height + particle.radius;
+          particle.x = Math.random() * canvas.width;
         }
       });
 
-      ctx.fill();
       animationFrameId = requestAnimationFrame(animate);
     };
 
@@ -1743,7 +1750,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderShop = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <StarryBackground />
+      <IceFireBackground />
       <div className="max-w-7xl mx-auto">
         <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -1954,7 +1961,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderWallet = () => (
     <div className="flex-grow flex items-center justify-center p-6 relative">
-      <StarryBackground />
+      <IceFireBackground />
       <div className="w-full max-w-md relative z-10">
         <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
           <CardHeader className="relative">
@@ -2536,7 +2543,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
       />
       <style>{styles}</style>
-      <StarryBackground />
+      <IceFireBackground />
       {renderHeader()}
       <div
         className="flex-grow pb-20"
