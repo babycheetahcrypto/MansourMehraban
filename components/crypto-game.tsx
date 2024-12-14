@@ -944,6 +944,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const newExp = user.exp + 1;
         const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
+        // Batch the state updates together
         const updatedUser = {
           ...user,
           coins: newCoins,
@@ -952,7 +953,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         };
 
         setUser(updatedUser);
-        saveUserData(updatedUser);
+
+        // Move saveUserData to a separate effect to prevent update loops
+        const saveTimer = setTimeout(() => {
+          saveUserData(updatedUser);
+        }, 0);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -969,9 +974,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const y = clientY;
         const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
         setClickEffects((prev) => [...prev, clickEffect]);
-        setTimeout(() => {
-          setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-        }, 700);
+
+        // Cleanup timers
+        return () => {
+          clearTimeout(saveTimer);
+        };
 
         // Trigger haptic feedback
         if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
@@ -994,7 +1001,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setLastActiveTime(Date.now()); // Update last active time
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
+    [clickPower, multiplier, energy, user, saveUserData]
   );
 
   const buyItem = useCallback(
@@ -2563,6 +2570,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </Button>
     </Popup>
   );
+
+  useEffect(() => {
+    if (user.settings) {
+      const saveTimer = setTimeout(() => {
+        saveUserData(user);
+      }, 0);
+      return () => clearTimeout(saveTimer);
+    }
+  }, [user.settings, saveUserData]);
 
   return (
     <div
