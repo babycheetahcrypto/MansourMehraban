@@ -1461,15 +1461,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
 
   useEffect(() => {
-    // Clear click effects when changing pages
-    setClickEffects([]);
-    // Ensure the correct page content is rendered
-    if (currentPage === 'settings') {
-      renderSettings();
-    }
-  }, [currentPage]);
-
-  useEffect(() => {
     if (!user.settings) {
       setUser((prevUser) => ({
         ...prevUser,
