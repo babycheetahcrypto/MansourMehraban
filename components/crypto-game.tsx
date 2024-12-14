@@ -148,6 +148,7 @@ const styles = `
     font-weight: bold;
     font-size: 1.5rem;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
+    transform: translate(-50%, -50%);
     z-index: 30;
   }
   @keyframes twinkle {
@@ -955,7 +956,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
-        // Add click effect outside the coin button
+        // Add click effect at the exact tap position only for coin button
         if (event.currentTarget.classList.contains('coin-button')) {
           const rect = event.currentTarget.getBoundingClientRect();
           let clientX, clientY;
@@ -966,10 +967,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             clientX = event.clientX;
             clientY = event.clientY;
           }
-          const angle = Math.random() * Math.PI * 2;
-          const distance = 100 + Math.random() * 50; // Adjust this value to control how far the effects appear
-          const x = Math.cos(angle) * distance;
-          const y = Math.sin(angle) * distance;
+          const x = clientX - rect.left;
+          const y = clientY - rect.top;
           const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
           setClickEffects((prev) => [...prev, clickEffect]);
           setTimeout(() => {
@@ -1694,9 +1693,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 key={effect.id}
                 className="click-effect"
                 style={{
-                  left: `calc(50% + ${effect.x}px)`,
-                  top: `calc(50% + ${effect.y}px)`,
-                  transform: 'translate(-50%, -50%)',
+                  left: `${effect.x}px`,
+                  top: `${effect.y}px`,
                   color: effect.color,
                   textShadow: '0 0 5px rgba(255, 255, 255, 0.7)',
                 }}
