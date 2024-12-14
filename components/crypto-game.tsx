@@ -249,15 +249,18 @@ const StarryBackground: React.FC = () => {
 
     resizeCanvas();
 
-    const stars: { x: number; y: number; radius: number; speed: number }[] = [];
-    for (let i = 0; i < 50; i++) {
-      stars.push({
+    const particles: { x: number; y: number; radius: number; speed: number; color: string }[] = [];
+    for (let i = 0; i < 100; i++) {
+      particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 5,
-        speed: Math.random() * 0.7,
+        radius: Math.random() * 2 + 1,
+        speed: Math.random() * 1 + 0.5,
+        color: Math.random() > 0.5 ? '#00ffff' : '#87cefa', // Cyan and Light Sky Blue
       });
     }
+
+    const icons = ['❄️', '🌟', '💎', '🔮', '✨'];
 
     let animationFrameId: number;
 
@@ -265,19 +268,28 @@ const StarryBackground: React.FC = () => {
       if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.beginPath();
 
-      stars.forEach((star) => {
-        ctx.moveTo(star.x, star.y);
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        star.y += star.speed;
-        if (star.y > canvas.height) {
-          star.y = 0;
+      // Draw particles
+      particles.forEach((particle) => {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+
+        particle.y -= particle.speed;
+        if (particle.y < 0) {
+          particle.y = canvas.height;
         }
       });
 
-      ctx.fill();
+      // Draw icons
+      ctx.font = '20px Arial';
+      icons.forEach((icon, index) => {
+        const x = (canvas.width / (icons.length + 1)) * (index + 1);
+        const y = canvas.height / 2 + Math.sin(Date.now() / 1000 + index) * 50;
+        ctx.fillText(icon, x, y);
+      });
+
       animationFrameId = requestAnimationFrame(animate);
     };
 
