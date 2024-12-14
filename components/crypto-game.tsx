@@ -1463,6 +1463,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     // Clear click effects when changing pages
     setClickEffects([]);
+    // Ensure the correct page content is rendered
+    if (currentPage === 'settings') {
+      renderSettings();
+    }
   }, [currentPage]);
 
   useEffect(() => {
