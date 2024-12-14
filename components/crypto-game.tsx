@@ -1983,45 +1983,64 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   const renderWallet = () => (
-    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900/70 via-gray-800/70 to-black/70 backdrop-blur-md text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
-        <CardHeader className="relative">
-          <CardTitle className="z-10 text-3xl text-center text-white">Wallet</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
-        </CardHeader>
-        <CardContent className="p-6 space-y-6">
-          <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
-            <h3 className="text-xl font-bold mb-2 text-center text-white">Earned Coins</h3>
-            <div className="flex items-center justify-center bg-gray-800/50 rounded-lg p-2">
+    <div className="flex-grow flex items-center justify-center p-6 relative">
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <StarryBackground />
+      </div>
+      <div className="w-full max-w-md relative z-10">
+        <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
+          <CardHeader className="relative">
+            <CardTitle className="z-10 text-2xl flex items-center justify-between">
+              <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                Airdrop Soon!
+              </span>
+              <div className="relative">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-qTW5KRopM7teMBA6gpKYTnjNQ8mnTw.png"
+                  alt="Airdrop"
+                  width={128}
+                  height={128}
+                  className="relative z-10"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full filter blur-md animate-pulse"></div>
+              </div>
+            </CardTitle>
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
+          </CardHeader>
+          <CardContent className="space-y-6 p-6">
+            <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
+              <h3 className="text-xl font-bold mb-2 text-white">Earned Coins</h3>
+              <div className="flex items-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                  alt="Game Logo"
+                  width={32}
+                  height={32}
+                  className="mr-2"
+                />
+                <p className="text-2xl font-bold text-green-400">{formatNumber(user.coins)}</p>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
+              <h3 className="text-xl font-bold mb-2 text-white">Wallet Connection</h3>
+              <p className="text-red-400">Unavailable!</p>
+            </div>
+            <Button
+              disabled
+              className="w-full bg-gray-600/50 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 opacity-50 cursor-not-allowed backdrop-filter backdrop-blur-sm flex items-center justify-center"
+            >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                alt="Game Logo"
-                width={32}
-                height={32}
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
+                alt="Tonkeeper"
+                width={24}
+                height={24}
                 className="mr-2"
               />
-              <span className="text-2xl font-bold text-white">{formatNumber(user.coins)}</span>
-            </div>
-          </div>
-          <div className="bg-gray-800/50 p-4 rounded-lg backdrop-blur-md">
-            <h3 className="text-xl font-bold mb-2 text-white">Wallet Connection</h3>
-            <p className="text-red-400">Unavailable!</p>
-          </div>
-          <Button
-            disabled
-            className="w-full bg-gray-600/50 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 opacity-50 cursor-not-allowed backdrop-filter backdrop-blur-sm flex items-center justify-center"
-          >
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
-              alt="Tonkeeper"
-              width={24}
-              height={24}
-              className="mr-2"
-            />
-            Tonkeeper (Unavailable)
-          </Button>
-        </CardContent>
-      </NeonGradientCard>
+              Tonkeeper (Unavailable)
+            </Button>
+          </CardContent>
+        </NeonGradientCard>
+      </div>
     </div>
   );
 
@@ -2118,18 +2137,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900/70 via-gray-800/70 to-black/70 backdrop-blur-md text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
-          <CardTitle className="z-10 text-3xl text-center text-white">Settings</CardTitle>
+          <CardTitle className="z-10 text-2xl text-white">Settings</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
-        <CardContent className="p-6 space-y-6">
+        <CardContent className="space-y-6">
           {[
             { id: 'vibration', icon: Vibrate, label: 'Vibration' },
             { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
           ].map(({ id, icon: Icon, label }) => (
-            <div
-              key={id}
-              className="flex items-center justify-between py-2 bg-gray-800/50 rounded-lg p-4"
-            >
+            <div key={id} className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-2">
                 <Icon className="w-5 h-5 text-primary" />
                 <Label htmlFor={id} className="text-white text-sm">
@@ -2263,7 +2279,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flexitems-center justify-center"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
           >
             <Users className="w-5 h-5 mr-2" />
             Friends Activity
