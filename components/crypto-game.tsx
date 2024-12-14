@@ -249,13 +249,16 @@ const StarryBackground: React.FC = () => {
 
     resizeCanvas();
 
-    const stars: { x: number; y: number; radius: number; speed: number }[] = [];
-    for (let i = 0; i < 50; i++) {
+    const stars: { x: number; y: number; radius: number; speed: number; color: string }[] = [];
+    for (let i = 0; i < 200; i++) {
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 5,
-        speed: Math.random() * 0.7,
+        radius: Math.random() * 2 + 1,
+        speed: Math.random() * 0.5 + 0.1,
+        color: `rgba(${Math.random() * 200 + 55}, ${Math.random() * 200 + 55}, ${
+          Math.random() * 200 + 55
+        }, ${Math.random() * 0.5 + 0.5})`,
       });
     }
 
@@ -265,19 +268,35 @@ const StarryBackground: React.FC = () => {
       if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.beginPath();
+
+      // Create a radial gradient
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        0,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width / 2
+      );
+      gradient.addColorStop(0, 'rgba(25, 25, 112, 1)'); // Dark blue at the center
+      gradient.addColorStop(1, 'rgba(0, 0, 25, 1)'); // Almost black at the edges
+
+      // Fill the background with the gradient
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       stars.forEach((star) => {
-        ctx.moveTo(star.x, star.y);
+        ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = star.color;
+        ctx.fill();
+
         star.y += star.speed;
         if (star.y > canvas.height) {
           star.y = 0;
         }
       });
 
-      ctx.fill();
       animationFrameId = requestAnimationFrame(animate);
     };
 
@@ -2516,6 +2535,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div
       className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
       style={{
+        backgroundAttachment: 'fixed',
         width: '100%',
         height: '100dvh',
         overflowY: 'auto',
