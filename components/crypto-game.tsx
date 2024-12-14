@@ -327,11 +327,10 @@ const NeonGradientCard: React.FC<React.ComponentProps<'div'>> = ({
   ...props
 }) => (
   <div
-    className={`relative overflow-hidden rounded-lg bg-black/30 backdrop-blur-md text-white ${className}`}
+    className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900/50 to-black/50 text-white border border-gray-700/30 backdrop-blur-xl ${className}`}
     {...props}
   >
-    <div className="absolute inset-0 bg-black/30 backdrop-blur-md rounded-lg"></div>
-    <div className="relative z-10 p-6 rounded-lg">{children}</div>
+    <div className="relative z-10 p-6">{children}</div>
   </div>
 );
 
@@ -1775,39 +1774,41 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </div>
       <div className="max-w-7xl mx-auto">
         <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {shopItems.map((item, index) => (
-            <div
+            <NeonGradientCard
               key={item.id}
-              className="bg-gradient-to-br from-gray-900/70 to-black/70 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-800/50 hover:border-primary/50 group"
+              className="transform transition-all duration-300 hover:shadow-2xl group"
             >
-              <div className="p-3">
-                <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300">
-                  {item.name}
-                </h3>
-                <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className={`relative z-10 ${!unlockedLevels.includes(index + 1) ? 'group-hover:opacity-80 transition-opacity duration-300' : ''}`}
-                  />
-                </div>
-                <p className="text-xs text-white mb-1">Level: {item.level}</p>
-                <p className="text-xs text-white mb-2">
-                  Profit: {formatNumber(item.baseProfit * item.level)}/h
-                </p>
-                <Button
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-md text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
-                  onClick={() => {
-                    buyItem(item);
-                  }}
-                >
-                  Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
-                </Button>
+              <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300">
+                {item.name}
+              </h3>
+              <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  layout="fill"
+                  objectFit="cover"
+                  className={`relative z-10 ${
+                    !unlockedLevels.includes(index + 1)
+                      ? 'group-hover:opacity-80 transition-opacity duration-300'
+                      : ''
+                  }`}
+                />
               </div>
-            </div>
+              <p className="text-xs text-white mb-1">Level: {item.level}</p>
+              <p className="text-xs text-white mb-2">
+                Profit: {formatNumber(item.baseProfit * item.level)}/h
+              </p>
+              <Button
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
+                onClick={() => {
+                  buyItem(item);
+                }}
+              >
+                Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
+              </Button>
+            </NeonGradientCard>
           ))}
         </div>
 
@@ -1851,13 +1852,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderTasks = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
         {tasks.map((task) => (
           <NeonGradientCard
             key={task.id}
-            className="bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl text-sm"
+            className="transform transition-all duration-300 hover:shadow-2xl"
           >
-            <CardHeader className="relative p-3">
+            <CardHeader className="p-3">
               <CardTitle className="flex items-center justify-between z-10 text-base">
                 <span className="flex items-center">
                   {task.icon}
@@ -1911,7 +1912,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       task.action();
                     }}
                   >
-                    <ArrowRight className=" w-4 h-4 mr-1" />
+                    <ArrowRight className="w-4 h-4 mr-1" />
                     <span>Start</span>
                   </Button>
                 )}
