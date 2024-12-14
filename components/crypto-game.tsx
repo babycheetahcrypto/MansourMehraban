@@ -940,19 +940,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
       if (energy >= 1) {
         const clickValue = clickPower * multiplier;
-        const newCoins = user.coins + clickValue;
-        const newExp = user.exp + 1;
-        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
+        setUser((prevUser) => {
+          const newCoins = prevUser.coins + clickValue;
+          const newExp = prevUser.exp + 1;
+          const newLevel = newExp >= 100 ? prevUser.level + 1 : prevUser.level;
 
-        const updatedUser = {
-          ...user,
-          coins: newCoins,
-          exp: newExp % 100,
-          level: newLevel,
-        };
+          const updatedUser = {
+            ...prevUser,
+            coins: newCoins,
+            exp: newExp % 100,
+            level: newLevel,
+          };
 
-        setUser(updatedUser);
-        saveUserData(updatedUser);
+          saveUserData(updatedUser);
+          return updatedUser;
+        });
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -969,10 +971,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const y = clientY;
         const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
         setClickEffects((prev) => [...prev, clickEffect]);
-        setTimeout(() => {
-          setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-        }, 700);
-
         // Trigger haptic feedback
         if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
           window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
@@ -994,7 +992,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setLastActiveTime(Date.now()); // Update last active time
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
+    [clickPower, multiplier, energy, settings.vibration, saveUserData]
   );
 
   const buyItem = useCallback(
@@ -1380,6 +1378,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     };
 
     initializeGame();
+    return () => {
+      // Cleanup function
+      setClickEffects([]);
+      setCurrentPage('home');
+    };
   }, []);
 
   // Check if TelegramWebApp is available
@@ -2497,6 +2500,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setClickEffects([]);
+    }, 700); // Match the animation duration
+
+    return () => clearTimeout(timer);
+  }, [clickEffects]);
 
   if (isLoading) {
     return (
