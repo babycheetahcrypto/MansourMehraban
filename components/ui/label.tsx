@@ -1,9 +1,8 @@
-// components/ui/label.tsx
 'use client';
 
 import * as React from 'react';
 import * as LabelPrimitives from '@radix-ui/react-label';
-import { cn } from '@/lib/utils'; // Ensure this import is correct
+import { cn } from '@/lib/utils';
 
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitives.Root>,
@@ -11,11 +10,13 @@ const Label = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <LabelPrimitives.Root
     ref={ref}
-    className={cn('text-white', className)} // Use cn from utils
+    className={cn(
+      'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+      className
+    )}
     {...props}
   />
 ));
-
 Label.displayName = LabelPrimitives.Root.displayName;
 
 export { Label };
