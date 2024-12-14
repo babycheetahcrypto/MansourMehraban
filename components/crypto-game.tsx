@@ -257,6 +257,7 @@ const StarryBackground: React.FC = () => {
       color: `rgba(${Math.random() * 200 + 55}, ${Math.random() * 200 + 55}, ${
         Math.random() * 200 + 55
       }, ${Math.random() * 0.5 + 0.5})`,
+      seed: Math.random() * 10000,
     }));
 
     let animationFrameId: number;
@@ -265,22 +266,7 @@ const StarryBackground: React.FC = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Create a radial gradient
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        0,
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width / 2
-      );
-      gradient.addColorStop(0, 'rgba(25, 25, 112, 1)');
-      gradient.addColorStop(1, 'rgba(0, 0, 25, 1)');
-
-      // Fill the background with the gradient
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const currentScrollY = window.scrollY;
@@ -298,6 +284,12 @@ const StarryBackground: React.FC = () => {
           star.y = 0;
         } else if (star.y < 0) {
           star.y = canvas.height;
+        }
+        star.x += Math.sin(Date.now() * 0.001 + star.seed) * 0.2;
+        if (star.x > canvas.width) {
+          star.x = 0;
+        } else if (star.x < 0) {
+          star.x = canvas.width;
         }
       });
 
