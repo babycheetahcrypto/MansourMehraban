@@ -232,7 +232,7 @@ declare global {
 }
 
 // Component definitions
-const DynamicBackground: React.FC = () => {
+const StarryBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -249,37 +249,36 @@ const DynamicBackground: React.FC = () => {
 
     resizeCanvas();
 
-    let time = 0;
-    const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff'];
+    const stars: { x: number; y: number; radius: number; speed: number }[] = [];
+    for (let i = 0; i < 50; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 4,
+        speed: Math.random() * 0.6,
+      });
+    }
+
+    let animationFrameId: number;
 
     const animate = () => {
-      time += 0.01;
-      const width = canvas.width;
-      const height = canvas.height;
+      if (!ctx || !canvas) return;
 
-      // Create gradient
-      const gradient = ctx.createLinearGradient(0, 0, width, height);
-      for (let i = 0; i < colors.length; i++) {
-        gradient.addColorStop((i + time) % 1, colors[i]);
-      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.beginPath();
 
-      // Fill background
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
+      stars.forEach((star) => {
+        ctx.moveTo(star.x, star.y);
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+        }
+      });
 
-      // Add some moving circles
-      for (let i = 0; i < 5; i++) {
-        const x = Math.sin(time * (i + 1) * 0.5) * width * 0.4 + width * 0.5;
-        const y = Math.cos(time * (i + 1) * 0.5) * height * 0.4 + height * 0.5;
-        const radius = Math.sin(time * (i + 2)) * 50 + 100;
-
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${0.1 - i * 0.02})`;
-        ctx.fill();
-      }
-
-      requestAnimationFrame(animate);
+      ctx.fill();
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
@@ -288,6 +287,7 @@ const DynamicBackground: React.FC = () => {
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
@@ -1743,7 +1743,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderShop = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <DynamicBackground />
+      <StarryBackground />
       <div className="max-w-7xl mx-auto">
         <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -1954,7 +1954,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderWallet = () => (
     <div className="flex-grow flex items-center justify-center p-6 relative">
-      <DynamicBackground />
+      <StarryBackground />
       <div className="w-full max-w-md relative z-10">
         <NeonGradientCard className="bg-gradient-to-br from-gray-900/30 to-black/30 text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl backdrop-filter backdrop-blur-md">
           <CardHeader className="relative">
@@ -2536,7 +2536,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
       />
       <style>{styles}</style>
-      <DynamicBackground />
+      <StarryBackground />
       {renderHeader()}
       <div
         className="flex-grow pb-20"
