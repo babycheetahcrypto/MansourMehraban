@@ -123,14 +123,6 @@ const styles = `
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
   }
-  @keyframes glow {
-    0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.7), 0 0 10px rgba(0, 255, 255, 0.5); }
-    50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.9), 0 0 30px rgba(0, 255, 255, 0.7); }
-  }
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
   .coin-button:active, .coin-button.pulse {
     animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
   }
@@ -376,22 +368,18 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         variant="ghost"
         className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
-        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white hover:animate-pulse`}
+        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
         onClick={() => {
           setCurrentPage(href);
         }}
       >
-        <Icon
-          className={`w-6 h-6 mb-1 ${isActive ? 'text-primary animate-pulse' : 'text-white'}`}
-        />
+        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
           className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
           {text}
         </span>
-        {isActive && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary animate-glow" />
-        )}
+        {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
       </Button>
     </div>
   );
