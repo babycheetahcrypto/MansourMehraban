@@ -273,7 +273,6 @@ const StarryBackground: React.FC = () => {
     }));
 
     let animationFrameId: number;
-    let lastScrollY = window.scrollY;
 
     const animate = () => {
       if (!ctx || !canvas) return;
@@ -296,21 +295,15 @@ const StarryBackground: React.FC = () => {
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const currentScrollY = window.scrollY;
-      const scrollDiff = currentScrollY - lastScrollY;
-      lastScrollY = currentScrollY;
-
       stars.forEach((star) => {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
         ctx.fill();
 
-        star.y += star.speed + scrollDiff * 0.1;
+        star.y += star.speed;
         if (star.y > canvas.height) {
           star.y = 0;
-        } else if (star.y < 0) {
-          star.y = canvas.height;
         }
       });
 
@@ -320,13 +313,9 @@ const StarryBackground: React.FC = () => {
     animate();
 
     window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('scroll', () => {
-      lastScrollY = window.scrollY;
-    });
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('scroll', () => {});
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
