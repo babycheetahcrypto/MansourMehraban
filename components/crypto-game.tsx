@@ -2137,68 +2137,71 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </Popup>
   );
 
-  const renderSettings = () => (
-    <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
-        <CardHeader className="relative">
-          <CardTitle className="z-10 text-3xl text-center text-white">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
-        </CardHeader>
-        <CardContent className="p-6 space-y-6">
-          {[
-            { id: 'vibration', icon: Vibrate, label: 'Vibration' },
-            { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
-          ].map(({ id, icon: Icon, label }) => (
-            <div
-              key={id}
-              className="flex items-center justify-between py-2 bg-gray-800/50 rounded-lg p-4"
-            >
-              <div className="flex items-center space-x-2">
-                <Icon className="w-5 h-5 text-primary" />
-                <Label htmlFor={id} className="text-white text-sm">
-                  {label}
-                </Label>
-              </div>
-              <Switch
-                id={id}
-                checked={user.settings?.[id as keyof typeof user.settings] ?? true}
-                onCheckedChange={(checked) => {
-                  setUser((prevUser) => ({
-                    ...prevUser,
-                    settings: {
-                      ...prevUser.settings,
-                      [id]: checked,
-                    },
-                  }));
-                  saveUserData({
-                    ...user,
-                    settings: {
-                      ...user.settings,
-                      [id]: checked,
-                    },
-                  });
-                  if (id === 'vibration' && checked && navigator.vibrate) {
-                    navigator.vibrate([100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200]);
-                  } else if (id === 'backgroundMusic') {
-                    if (checked && settings.backgroundMusicAudio) {
-                      settings.backgroundMusicAudio
-                        .play()
-                        .catch((error) => console.error('Error playing audio:', error));
-                      settings.backgroundMusicAudio.loop = true;
-                    } else if (settings.backgroundMusicAudio) {
-                      settings.backgroundMusicAudio.pause();
-                      settings.backgroundMusicAudio.currentTime = 0;
+  const renderSettings = () => {
+    const [localSettings, setLocalSettings] = useState(user.settings);
+
+    const updateSetting = (id: string, value: boolean) => {
+      setLocalSettings((prev) => ({ ...prev, [id]: value }));
+      setUser((prevUser) => ({
+        ...prevUser,
+        settings: { ...prevUser.settings, [id]: value },
+      }));
+      saveUserData({
+        ...user,
+        settings: { ...user.settings, [id]: value },
+      });
+    };
+
+    return (
+      <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
+        <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+          <CardHeader className="relative">
+            <CardTitle className="z-10 text-3xl text-center text-white">Settings</CardTitle>
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
+          </CardHeader>
+          <CardContent className="p-6 space-y-6">
+            {[
+              { id: 'vibration', icon: Vibrate, label: 'Vibration' },
+              { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
+            ].map(({ id, icon: Icon, label }) => (
+              <div
+                key={id}
+                className="flex items-center justify-between py-2 bg-gray-800/50 rounded-lg p-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <Icon className="w-5 h-5 text-primary" />
+                  <Label htmlFor={id} className="text-white text-sm">
+                    {label}
+                  </Label>
+                </div>
+                <Switch
+                  id={id}
+                  checked={localSettings[id as keyof typeof localSettings] ?? true}
+                  onCheckedChange={(checked) => {
+                    updateSetting(id, checked);
+                    if (id === 'vibration' && checked && navigator.vibrate) {
+                      navigator.vibrate([100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200]);
+                    } else if (id === 'backgroundMusic') {
+                      if (checked && settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio
+                          .play()
+                          .catch((error) => console.error('Error playing audio:', error));
+                        settings.backgroundMusicAudio.loop = true;
+                      } else if (settings.backgroundMusicAudio) {
+                        settings.backgroundMusicAudio.pause();
+                        settings.backgroundMusicAudio.currentTime = 0;
+                      }
                     }
-                  }
-                }}
-                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
-              />
-            </div>
-          ))}
-        </CardContent>
-      </NeonGradientCard>
-    </div>
-  );
+                  }}
+                  className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
+                />
+              </div>
+            ))}
+          </CardContent>
+        </NeonGradientCard>
+      </div>
+    );
+  };
 
   const renderDailyReward = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
