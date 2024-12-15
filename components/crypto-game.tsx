@@ -530,11 +530,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     vibration: boolean;
     backgroundMusic: boolean;
     backgroundMusicAudio: HTMLAudioElement | null;
-  }>(() => ({
+  }>({
     vibration: true,
     backgroundMusic: false,
     backgroundMusicAudio: null,
-  }));
+  });
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
@@ -2144,15 +2144,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white">Settings</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
-        <CardContent className="p-6 space-y-6">
+        <CardContent className="space-y-6">
           {[
             { id: 'vibration', icon: Vibrate, label: 'Vibration' },
             { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
           ].map(({ id, icon: Icon, label }) => (
-            <div
-              key={id}
-              className="flex items-center justify-between py-2 bg-gray-800/50 rounded-lg p-4"
-            >
+            <div key={id} className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-2">
                 <Icon className="w-5 h-5 text-primary" />
                 <Label htmlFor={id} className="text-white text-sm">
@@ -2161,35 +2158,31 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <Switch
                 id={id}
-                checked={user.settings[id as keyof typeof user.settings]}
+                checked={
+                  typeof settings[id as keyof typeof settings] === 'boolean'
+                    ? (settings[id as keyof typeof settings] as boolean)
+                    : false
+                }
                 onCheckedChange={(checked) => {
-                  setUser((prevUser) => ({
-                    ...prevUser,
-                    settings: {
-                      ...prevUser.settings,
-                      [id]: checked,
-                    },
-                  }));
-                  saveUserData({
-                    ...user,
-                    settings: {
-                      ...user.settings,
-                      [id]: checked,
-                    },
-                  });
-                  if (id === 'vibration' && checked && navigator.vibrate) {
-                    navigator.vibrate([100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200]);
-                  } else if (id === 'backgroundMusic') {
-                    if (checked && settings.backgroundMusicAudio) {
-                      settings.backgroundMusicAudio
-                        .play()
-                        .catch((error) => console.error('Error playing audio:', error));
-                      settings.backgroundMusicAudio.loop = true;
-                    } else if (settings.backgroundMusicAudio) {
-                      settings.backgroundMusicAudio.pause();
-                      settings.backgroundMusicAudio.currentTime = 0;
+                  setSettings((prev) => {
+                    const newSettings = { ...prev, [id]: checked };
+                    if (id === 'vibration' && checked && navigator.vibrate) {
+                      navigator.vibrate([
+                        100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
+                      ]);
+                    } else if (id === 'backgroundMusic') {
+                      if (checked && newSettings.backgroundMusicAudio) {
+                        newSettings.backgroundMusicAudio
+                          .play()
+                          .catch((error: Error) => console.error('Error playing audio:', error));
+                        newSettings.backgroundMusicAudio.loop = true;
+                      } else if (newSettings.backgroundMusicAudio) {
+                        newSettings.backgroundMusicAudio.pause();
+                        newSettings.backgroundMusicAudio.currentTime = 0;
+                      }
                     }
-                  }
+                    return newSettings;
+                  });
                 }}
                 className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
               />
