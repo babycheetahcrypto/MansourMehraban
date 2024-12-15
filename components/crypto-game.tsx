@@ -26,7 +26,6 @@ import {
   Lock,
 } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
-import { motion } from 'framer-motion';
 
 interface User {
   id: string;
@@ -172,14 +171,6 @@ const styles = `
   .trophy-button:active, .level-button:active {
     transform: translateY(0);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-  }
-  .animate-pulse {
-    animation: pulse 2s infinite;
   }
 `;
 
@@ -372,46 +363,25 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   setCurrentPage,
 }) => {
   return (
-    <motion.div
-      className="flex flex-col items-center"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <motion.button
-        variants={{
-          active: { backgroundColor: 'rgba(59, 130, 246, 0.5)' },
-          inactive: { backgroundColor: 'rgba(0, 0, 0, 0.3)' },
-        }}
-        animate={isActive ? 'active' : 'inactive'}
-        transition={{ duration: 0.3 }}
-        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center backdrop-blur-md text-white rounded-lg overflow-hidden`}
+    <div className="flex flex-col items-center">
+      <Button
+        variant="ghost"
+        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
+          isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
+        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
         onClick={() => {
           setCurrentPage(href);
         }}
       >
-        <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
-        </motion.div>
-        <motion.span
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <span
           className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
           {text}
-        </motion.span>
-        {isActive && (
-          <motion.div
-            className="absolute bottom-0 left-0 right-0 h-1 bg-primary"
-            layoutId="activeIndicator"
-          />
-        )}
-      </motion.button>
-    </motion.div>
+        </span>
+        {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
+      </Button>
+    </div>
   );
 };
 
@@ -1557,13 +1527,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <motion.button
+            <Button
+              variant="ghost"
               className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
               onClick={() => {
                 setCurrentPage('trophies');
               }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
             >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%203D%20ICON-r7DrilofLzG7BdFZtgONM1tDZHT5aO.png"
@@ -1571,14 +1540,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 width={28}
                 height={28}
               />
-            </motion.button>
-            <motion.button
+            </Button>
+            <Button
+              variant="ghost"
               className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
               onClick={() => {
                 setCurrentPage('levels');
               }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
             >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LEVEL%203D%20ICON-0VzQFGvjHWkPoGl5HmoDJ4edD4ZztE.png"
@@ -1586,14 +1554,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 width={28}
                 height={28}
               />
-            </motion.button>
-            <motion.button
+            </Button>
+            <Button
+              variant="ghost"
               className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
               onClick={() => {
                 setCurrentPage('settings');
               }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
             >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-Zln2aXS4iPIxlZfmYO42iPAKAwEtKt.png"
@@ -1601,7 +1568,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 width={28}
                 height={28}
               />
-            </motion.button>
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -1609,12 +1576,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderFooter = () => (
-    <motion.div
+    <div
       className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
-      initial={{ y: 100 }}
-      animate={{ y: 0 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
@@ -1668,7 +1632,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           />
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 
   const renderHome = () => (
@@ -1787,14 +1751,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
 
             <div className="flex space-x-4 mt-auto">
-              <AnimatedButton
+              <Button
                 onClick={() => {
                   setCurrentPage('dailyReward');
                 }}
-                className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-white px-4 py-2 rounded-full shadow-lg backdrop-blur-md bg-black/30 text-white"
-                whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(59, 130, 246, 0.5)' }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
@@ -1804,18 +1765,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   className="mr-2"
                 />
                 <span>Daily Reward</span>
-              </AnimatedButton>
-              <AnimatedButton
+              </Button>
+              <Button
                 onClick={activateMultiplier}
                 className={`flex-1 bg-gradient-to-r ${
                   user.boosterCredits === 0 || multiplierEndTime
                     ? 'from-gray-600/50 to-gray-700/50'
                     : 'from-gray-800/50 to-gray-900/50'
-                } text-white px-4 py-2 rounded-full shadow-lg backdrop-blur-md bg-black/30 text-white`}
+                } text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
                 disabled={user.boosterCredits === 0 || !!multiplierEndTime}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
@@ -1831,7 +1789,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       ? 'No credits'
                       : `Booster (${user.boosterCredits})`}
                 </span>
-              </AnimatedButton>
+              </Button>
             </div>
           </div>
         </div>
@@ -1872,17 +1830,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <p className="text-xs text-white mb-2">
                 Profit: {formatNumber(item.baseProfit * item.level, true)}/h
               </p>
-              <AnimatedButton
+              <Button
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
                 onClick={() => {
                   buyItem(item);
                 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               >
                 Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
-              </AnimatedButton>
+              </Button>
             </NeonGradientCard>
           ))}
         </div>
@@ -1909,17 +1864,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 </div>
                 <p className="text-sm text-white mb-1">Level: {item.level}</p>
                 <p className="text-sm text-white mb-3">Effect: {item.effect}</p>
-                <AnimatedButton
+                <Button
                   className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center"
                   onClick={() => {
                     buyItem(item, true);
                   }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 >
                   Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
-                </AnimatedButton>
+                </Button>
               </div>
             </div>
           ))}
@@ -1960,18 +1912,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 </span>
                 {task.completed ? (
                   task.claimed ? (
-                    <AnimatedButton
+                    <Button
                       className="bg-green-600 text-white px-4 py-2 rounded-full text-xs"
                       disabled
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                     >
                       <CheckCircle className="w-4 h-4 mr-1" />
                       <span>Claimed</span>
-                    </AnimatedButton>
+                    </Button>
                   ) : (
-                    <AnimatedButton
+                    <Button
                       className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
                       onClick={() => {
                         setUser((prevUser) => ({
@@ -1983,27 +1932,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         );
                         showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
                       }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                     >
                       <Star className="w-4 h-4 mr-1" />
                       <span>Claim</span>
-                    </AnimatedButton>
+                    </Button>
                   )
                 ) : (
-                  <AnimatedButton
+                  <Button
                     className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
                     onClick={() => {
                       task.action();
                     }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   >
                     <ArrowRight className="w-4 h-4 mr-1" />
                     <span>Start</span>
-                  </AnimatedButton>
+                  </Button>
                 )}
               </div>
             </CardContent>
@@ -2116,12 +2059,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <h3 className="text-xl font-bold mb-2 text-white">Wallet Connection</h3>
               <p className="text-red-400">Unavailable!</p>
             </div>
-            <AnimatedButton
+            <Button
               disabled
               className="w-full bg-gray-600/50 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 opacity-50 cursor-not-allowed backdrop-filter backdrop-blur-sm flex items-center justify-center"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
             >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
@@ -2131,7 +2071,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className="mr-2"
               />
               Tonkeeper (Unavailable)
-            </AnimatedButton>
+            </Button>
           </CardContent>
         </NeonGradientCard>
       </div>
@@ -2177,7 +2117,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       : `Unlock at ${formatNumber(levelRequirements[index], true)} coins`}
                   </p>
                   {isUnlocked && (
-                    <AnimatedButton
+                    <Button
                       onClick={() => {
                         setSelectedCoinImage(image);
                         setCurrentPage('home');
@@ -2190,9 +2130,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           ? 'bg-gradient-to-r from-green-400 to-blue-500'
                           : 'bg-gradient-to-r from-blue-400 to-purple-500'
                       } flex items-center justify-center`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                     >
                       {selectedCoinImage === image ? (
                         <Check className="w-4 h-4 mr-1" />
@@ -2200,7 +2137,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         <Zap className="w-4 h-4 mr-1" />
                       )}
                       {selectedCoinImage === image ? 'Current' : 'Use'}
-                    </AnimatedButton>
+                    </Button>
                   )}
                 </CardContent>
               </NeonGradientCard>
@@ -2222,19 +2159,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <p className="mb-6 text-xl text-center text-white">
         Congratulations! You've unlocked <span className="font-bold">Level {unlockedLevel}</span>!
       </p>
-      <AnimatedButton
+      <Button
         onClick={() => {
           hidePopup('levelUnlock');
           setShownLevelUnlocks((prev) => new Set(prev).add(unlockedLevel));
         }}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       >
         <Zap className="w-5 h-5 mr-2" />
         Awesome!
-      </AnimatedButton>
+      </Button>
     </Popup>
   );
 
@@ -2336,19 +2270,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <div className="mt-6 text-center">
             <p className="text-xl mb-4 text-white">Current Streak: {dailyReward.streak} days</p>
-            <AnimatedButton
+            <Button
               onClick={() => {
                 claimDailyReward();
               }}
               className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
               disabled={dailyReward.completed}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
             >
               <Gift className="w-6 h-6 mr-2" />
               Claim Reward{' '}
-            </AnimatedButton>
+            </Button>
           </div>
         </CardContent>
       </NeonGradientCard>
@@ -2369,7 +2300,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <span className="text-sm text-white truncate mr-2">
                 https://t.me/BabyCheetah_Bot?start={user.telegramId}
               </span>
-              <AnimatedButton
+              <Button
                 onClick={() => {
                   navigator.clipboard.writeText(
                     `https://t.me/BabyCheetah_Bot?start=${user.telegramId}`
@@ -2377,27 +2308,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   showGameAlert('Referral link copied to clipboard!');
                 }}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               >
                 <Copy className="w-4 h-4" />
-              </AnimatedButton>
+              </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
               Share this link to earn 1000 coins for each friend who joins!
             </p>
           </div>
-          <AnimatedButton
+          <Button
             onClick={() => setCurrentPage('friendsActivity')}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
           >
             <Users className="w-5 h-5 mr-2" />
             Friends Activity
-          </AnimatedButton>
+          </Button>
         </CardContent>
       </NeonGradientCard>
     </div>
@@ -2471,16 +2396,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     Claimed
                   </div>
                 ) : (
-                  <AnimatedButton
+                  <Button
                     onClick={() => claimTrophy(trophy)}
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   >
                     <Gift className="w-5 h-5 mr-2" />
                     Claim
-                  </AnimatedButton>
+                  </Button>
                 )
               ) : (
                 <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center">
@@ -2669,22 +2591,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <p className="mb-6 text-center text-white">
         This cosmic upgrade will supercharge your crypto earnings and propel you to new heights!
       </p>
-      <AnimatedButton
+      <Button
         onClick={() => {
           hidePopup('congratulation');
         }}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       >
         <Award className="w-6 h-6 mr-2" />
         Embrace the Power!
-      </AnimatedButton>
+      </Button>
     </Popup>
   );
-
-  const AnimatedButton = motion(Button);
 
   return (
     <div
