@@ -386,7 +386,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 };
 
 const levelRequirements = [
-  0, 5000, 50000, 100000, 500000, 800000, 1000000, 5000000, 8000000, 10000000,
+  0, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000, 100000000, 1000000000,
 ];
 
 const levelImages = [
@@ -2080,8 +2080,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <div className="grid grid-cols-2 gap-4 p-4">
         {levelImages.map((image, index) => {
-          const isUnlocked = user.coins >= levelRequirements[index];
-          if (isUnlocked && !unlockedLevels.includes(index + 1)) {
+          const isUnlocked = unlockedLevels.includes(index + 1);
+          if (user.coins >= levelRequirements[index] && !unlockedLevels.includes(index + 1)) {
             setUnlockedLevels((prev) => [...prev, index + 1]);
           }
           return (
@@ -2387,21 +2387,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <p className="text-sm text-center text-white">
                 Prize: {formatNumber(trophy.prize, true)} coins
               </p>
-              {user.coins >= trophy.requirement ? (
-                trophy.claimed ? (
-                  <div className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center">
-                    <Check className="w-5 h-5 mr-2" />
-                    Claimed
-                  </div>
-                ) : (
-                  <Button
-                    onClick={() => claimTrophy(trophy)}
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button"
-                  >
-                    <Gift className="w-5 h-5 mr-2" />
-                    Claim
-                  </Button>
-                )
+              {user.coins >= trophy.requirement && !trophy.claimed ? (
+                <Button
+                  onClick={() => claimTrophy(trophy)}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button"
+                >
+                  <Gift className="w-5 h-5 mr-2" />
+                  Claim
+                </Button>
+              ) : trophy.claimed ? (
+                <div className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center">
+                  <Check className="w-5 h-5 mr-2" />
+                  Claimed
+                </div>
               ) : (
                 <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center">
                   <Lock className="w-5 h-5 mr-2" />
@@ -2421,7 +2419,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + trophy.prize,
       }));
-      trophies.find((t) => t.name === trophy.name)!.claimed = true;
+      trophy.claimed = true;
       showGameAlert(
         `Congratulations! You've claimed ${formatNumber(trophy.prize, true)} coins for the "${trophy.name}" trophy!`
       );
