@@ -2138,19 +2138,37 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderSettings = () => {
-    const [localSettings, setLocalSettings] = useState(user.settings);
+    const [localSettings, setLocalSettings] = useState(() => ({
+      vibration: user.settings?.vibration ?? true,
+      backgroundMusic: user.settings?.backgroundMusic ?? false,
+    }));
 
-    const updateSetting = (id: string, value: boolean) => {
-      setLocalSettings((prev) => ({ ...prev, [id]: value }));
-      setUser((prevUser) => ({
-        ...prevUser,
-        settings: { ...prevUser.settings, [id]: value },
-      }));
-      saveUserData({
-        ...user,
-        settings: { ...user.settings, [id]: value },
-      });
-    };
+    const updateSetting = useCallback(
+      (id: keyof typeof localSettings, value: boolean) => {
+        setLocalSettings((prev) => ({ ...prev, [id]: value }));
+        const updatedUser = {
+          ...user,
+          settings: { ...user.settings, [id]: value },
+        };
+        setUser(updatedUser);
+        saveUserData(updatedUser);
+
+        if (id === 'vibration' && value && navigator.vibrate) {
+          navigator.vibrate([100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200]);
+        } else if (id === 'backgroundMusic') {
+          if (value && settings.backgroundMusicAudio) {
+            settings.backgroundMusicAudio
+              .play()
+              .catch((error) => console.error('Error playing audio:', error));
+            settings.backgroundMusicAudio.loop = true;
+          } else if (settings.backgroundMusicAudio) {
+            settings.backgroundMusicAudio.pause();
+            settings.backgroundMusicAudio.currentTime = 0;
+          }
+        }
+      },
+      [user, setUser, saveUserData, settings.backgroundMusicAudio]
+    );
 
     return (
       <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
@@ -2176,23 +2194,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 </div>
                 <Switch
                   id={id}
-                  checked={localSettings[id as keyof typeof localSettings] ?? true}
-                  onCheckedChange={(checked) => {
-                    updateSetting(id, checked);
-                    if (id === 'vibration' && checked && navigator.vibrate) {
-                      navigator.vibrate([100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200]);
-                    } else if (id === 'backgroundMusic') {
-                      if (checked && settings.backgroundMusicAudio) {
-                        settings.backgroundMusicAudio
-                          .play()
-                          .catch((error) => console.error('Error playing audio:', error));
-                        settings.backgroundMusicAudio.loop = true;
-                      } else if (settings.backgroundMusicAudio) {
-                        settings.backgroundMusicAudio.pause();
-                        settings.backgroundMusicAudio.currentTime = 0;
-                      }
-                    }
-                  }}
+                  checked={localSettings[id as keyof typeof localSettings]}
+                  onCheckedChange={(checked) =>
+                    updateSetting(id as keyof typeof localSettings, checked)
+                  }
                   className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
                 />
               </div>
