@@ -161,6 +161,17 @@ const styles = `
     from { transform: translateY(100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
+  .trophy-button, .level-button {
+    transition: all 0.3s ease;
+  }
+  .trophy-button:hover, .level-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  .trophy-button:active, .level-button:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 // Telegram WebApp type definition
@@ -2070,7 +2081,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center p-2">
-                  <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 coin-button">
+                  <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg mb-2 level-button">
                     <Image
                       src={image}
                       alt={`Level ${index + 1}`}
@@ -2098,7 +2109,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           showGameAlert(`Congratulations! You've unlocked Level ${index + 1}!`);
                         }
                       }}
-                      className={`w-full text-white text-xs py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
+                      className={`w-full text-white text-xs py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 level-button ${
                         selectedCoinImage === image
                           ? 'bg-gradient-to-r from-green-400 to-blue-500'
                           : 'bg-gradient-to-r from-blue-400 to-purple-500'
@@ -2371,7 +2382,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 ) : (
                   <Button
                     onClick={() => claimTrophy(trophy)}
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700"
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button"
                   >
                     <Gift className="w-5 h-5 mr-2" />
                     Claim
