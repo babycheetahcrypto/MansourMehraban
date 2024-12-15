@@ -112,7 +112,7 @@ const PCMessage = () => {
             className="mb-6 text-center"
           >
             <h1 className="mb-2 bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-4xl font-bold text-transparent">
-              Baby Cheetah Crypto Game
+              Baby Cheetah
             </h1>
             <div className="flex items-center justify-center space-x-2">
               <Sparkles className="h-5 w-5 text-purple-400" />
