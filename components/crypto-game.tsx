@@ -922,10 +922,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             setInvitedFriends((prev) => [...prev, friendId]);
             setUser((prevUser) => ({
               ...prevUser,
-              coins: prevUser.coins + 1000,
+              coins: prevUser.coins + 2000,
             }));
-            saveUserData({ ...user, coins: user.coins + 1000 });
-            showGameAlert('You earned 1000 coins for inviting a friend!');
+            saveUserData({ ...user, coins: user.coins + 2000 });
+            showGameAlert('You earned 2000 coins for inviting a friend!');
           } else {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Failed to process invitation');
@@ -2289,7 +2289,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+          <div className="absolute inset-0 bg-gradient-to-brfrom-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
@@ -2311,7 +2311,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
-              Share this link to earn 1000 coins for each friend who joins!
+              Share this link to earn 2000 coins for each friend who joins!
             </p>
           </div>
           <Button
@@ -2334,16 +2334,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          {invitedFriends.map((friendId) => (
+          {Object.entries(friendsCoins).map(([friendId, coins]) => (
             <div
               key={friendId}
               className="flex justify-between items-center bg-gray-700 bg-opacity-50 p-4 rounded-lg backdrop-blur-md"
             >
               <span className="font-bold text-white">Friend {friendId}</span>
-              <span className="text-white">Invited</span>
+              <span className="text-white">{formatNumber(coins, true)} coins</span>
             </div>
           ))}
-          {invitedFriends.length === 0 && (
+          {Object.keys(friendsCoins).length === 0 && (
             <p className="text-center text-white">
               No friends invited yet. Share your referral link to get started!
             </p>
