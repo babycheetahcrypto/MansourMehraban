@@ -485,7 +485,17 @@ const trophies = [
   },
 ];
 
-const formatNumber = (num: number) => {
+const formatNumberWithSuffix = (num: number): string => {
+  if (num >= 1e9) return (num / 1e9).toFixed(1) + 'b';
+  if (num >= 1e6) return (num / 1e6).toFixed(1) + 'm';
+  if (num >= 1e3) return (num / 1e3).toFixed(1) + 'k';
+  return num.toString();
+};
+
+const formatNumber = (num: number, useShortFormat: boolean = true): string => {
+  if (useShortFormat) {
+    return formatNumberWithSuffix(Math.floor(num));
+  }
   return Math.floor(num).toLocaleString('en-US');
 };
 
@@ -497,7 +507,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 0,
+      coins: 100000,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -1512,7 +1522,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={16}
                   className="mr-1"
                 />
-                {formatNumber(user.coins)} coins
+                {formatNumber(user.coins, false)} coins
               </div>
             </div>
           </div>
@@ -1642,8 +1652,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
             </div>
             <div className="text-xs text-white flex justify-between mt-1">
-              <span>{formatNumber(user.coins - levelRequirements[level - 1])}</span>
-              <span>{formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins</span>
+              <span>{formatNumber(user.coins - levelRequirements[level - 1], true)}</span>
+              <span>
+                {formatNumber(nextLevelRequirement - levelRequirements[level - 1], true)} coins
+              </span>
             </div>
           </div>
           <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
@@ -1654,13 +1666,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               height={16}
               className="mb-1"
             />
-            <span className="text-xs text-white">{formatNumber(profitPerHour)}/h</span>
+            <span className="text-xs text-white">{formatNumber(profitPerHour, true)}/h</span>
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1 className="text-5xl font-bold text-white overflow-hidden">
-            {formatNumber(user.coins)
+            {formatNumber(user.coins, false)
               .split('')
               .map((digit, index) => (
                 <span
@@ -1816,7 +1828,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <p className="text-xs text-white mb-1">Level: {item.level}</p>
               <p className="text-xs text-white mb-2">
-                Profit: {formatNumber(item.baseProfit * item.level)}/h
+                Profit: {formatNumber(item.baseProfit * item.level, true)}/h
               </p>
               <Button
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
@@ -1824,7 +1836,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   buyItem(item);
                 }}
               >
-                Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1))}
+                Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
               </Button>
             </NeonGradientCard>
           ))}
@@ -1858,7 +1870,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     buyItem(item, true);
                   }}
                 >
-                  Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1))}
+                  Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
                 </Button>
               </div>
             </div>
@@ -1882,7 +1894,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   {task.icon}
                   <span className="ml-2 text-white">{task.description}</span>
                 </span>
-                <span className="text-white font-bold">{formatNumber(task.reward)} coins</span>
+                <span className="text-white font-bold">
+                  {formatNumber(task.reward, true)} coins
+                </span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3">
@@ -1916,7 +1930,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         setTasks((prevTasks) =>
                           prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
                         );
-                        showGameAlert(`Claimed ${task.reward} coins!`);
+                        showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
                       }}
                     >
                       <Star className="w-4 h-4 mr-1" />
@@ -1979,12 +1993,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 </div>
                 <div>
                   <h3 className="font-bold text-white">{player.name}</h3>
-                  <p className="text-sm text-white">{formatNumber(player.coins)} coins</p>
+                  <p className="text-sm text-white">{formatNumber(player.coins, true)} coins</p>
                 </div>
               </div>
               <div className="text-right">
                 <p className="text-sm text-white">Profit/h</p>
-                <p className="font-bold text-white">{formatNumber(player.profitPerHour)}</p>
+                <p className="font-bold text-white">{formatNumber(player.profitPerHour, true)}</p>
               </div>
             </div>
           ))}
@@ -2036,7 +2050,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={32}
                   className="mr-2"
                 />
-                <p className="text-2xl font-bold text-green-400">{formatNumber(user.coins)}</p>
+                <p className="text-2xl font-bold text-green-400">
+                  {formatNumber(user.coins, false)}
+                </p>
               </div>
             </div>
             <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
@@ -2098,7 +2114,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <p className="text-xs text-center text-white mb-2">
                     {isUnlocked
                       ? 'Unlocked'
-                      : `Unlock at ${formatNumber(levelRequirements[index])} coins`}
+                      : `Unlock at ${formatNumber(levelRequirements[index], true)} coins`}
                   </p>
                   {isUnlocked && (
                     <Button
@@ -2243,7 +2259,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     }`}
                   />
                   <div className="mt-1 text-xs font-semibold text-white">
-                    {formatNumber(reward)}
+                    {formatNumber(reward, true)}
                   </div>
                   {isPastDay && (
                     <CheckCircle className="absolute top-1 right-1 w-4 h-4 text-green-400" />
@@ -2368,10 +2384,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <p className="text-sm text-center text-white">{trophy.description}</p>
               <p className="text-sm text-center text-white mt-2">
-                Requirement: {formatNumber(trophy.requirement)} coins
+                Requirement: {formatNumber(trophy.requirement, true)} coins
               </p>
               <p className="text-sm text-center text-white">
-                Prize: {formatNumber(trophy.prize)} coins
+                Prize: {formatNumber(trophy.prize, true)} coins
               </p>
               {user.coins >= trophy.requirement ? (
                 trophy.claimed ? (
@@ -2409,7 +2425,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       }));
       trophies.find((t) => t.name === trophy.name)!.claimed = true;
       showGameAlert(
-        `Congratulations! You've claimed ${formatNumber(trophy.prize)} coins for the "${trophy.name}" trophy!`
+        `Congratulations! You've claimed ${formatNumber(trophy.prize, true)} coins for the "${trophy.name}" trophy!`
       );
       saveUserData({ ...user, coins: user.coins + trophy.prize });
     }
@@ -2648,7 +2664,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         >
           <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
           <p className="mb-7 text-xl text-center text-white flex items-center justify-center">
-            <span className="font-bold mx-2">{formatNumber(pphAccumulated)}</span>
+            <span className="font-bold mx-2">{formatNumber(pphAccumulated, true)}</span>
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
               alt="Game Logo"
