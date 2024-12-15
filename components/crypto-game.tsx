@@ -1405,9 +1405,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       const TelegramWebApp = window.Telegram.WebApp;
       TelegramWebApp.ready();
       TelegramWebApp.expand();
-    } else {
-      // Non-Telegram environment
-      console.log('Not running in Telegram Mini App');
     }
   }, []);
   useEffect(() => {
@@ -2595,22 +2592,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </Button>
     </Popup>
   );
-
-  if (
-    typeof window !== 'undefined' &&
-    window.Telegram &&
-    window.Telegram.WebApp &&
-    !window.Telegram.WebApp.isExpanded
-  ) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-black text-white p-4 text-center">
-        <p>
-          This game is designed for mobile devices. Please open it in the Telegram mobile app to
-          play.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div
