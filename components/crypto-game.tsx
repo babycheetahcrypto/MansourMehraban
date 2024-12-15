@@ -2098,12 +2098,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           showGameAlert(`Congratulations! You've unlocked Level ${index + 1}!`);
                         }
                       }}
-                      className={`w-full text-white text-xs py-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
+                      className={`w-full text-white text-xs py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 ${
                         selectedCoinImage === image
-                          ? 'bg-green-500 hover:bg-green-700'
-                          : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900'
-                      }`}
+                          ? 'bg-gradient-to-r from-green-400 to-blue-500'
+                          : 'bg-gradient-to-r from-blue-400 to-purple-500'
+                      } flex items-center justify-center`}
                     >
+                      {selectedCoinImage === image ? (
+                        <Check className="w-4 h-4 mr-1" />
+                      ) : (
+                        <Zap className="w-4 h-4 mr-1" />
+                      )}
                       {selectedCoinImage === image ? 'Current' : 'Use'}
                     </Button>
                   )}
@@ -2359,21 +2364,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </p>
               {user.coins >= trophy.requirement ? (
                 trophy.claimed ? (
-                  <div className="w-full bg-green-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center">
+                  <div className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center">
                     <Check className="w-5 h-5 mr-2" />
                     Claimed
                   </div>
                 ) : (
                   <Button
                     onClick={() => claimTrophy(trophy)}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-700 hover:to-blue-900"
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700"
                   >
                     <Gift className="w-5 h-5 mr-2" />
                     Claim
                   </Button>
                 )
               ) : (
-                <div className="w-full bg-gray-600 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center">
+                <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center">
                   <Lock className="w-5 h-5 mr-2" />
                   Locked
                 </div>
