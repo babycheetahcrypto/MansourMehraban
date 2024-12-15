@@ -26,6 +26,8 @@ import {
   Lock,
 } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
+import { isMobile } from '../utils/deviceCheck';
+import PCMessage from '../components/PCMessage';
 
 interface User {
   id: string;
@@ -2594,129 +2596,135 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   return (
-    <div
-      className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
-      style={{
-        backgroundAttachment: 'fixed',
-        width: '100%',
-        height: '100dvh',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        touchAction: 'pan-y',
-        WebkitOverflowScrolling: 'touch',
-        userSelect: 'none',
-        WebkitTouchCallout: 'none',
-        WebkitUserSelect: 'none',
-        MozUserSelect: 'none',
-        msUserSelect: 'none',
-        paddingBottom: 'env(safe-area-inset-bottom)',
-        paddingTop: 'env(safe-area-inset-top)',
-      }}
-    >
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-      />
-      <style>{styles}</style>
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <StarryBackground />
-      </div>
-      {renderHeader()}
-      <div
-        className="flex-grow pb-20"
-        style={{
-          paddingBottom: 'calc(5rem + env(safe-area-inset-bottom) + 16px)',
-          marginBottom: '16px',
-        }}
-      >
-        {currentPage === 'home' && renderHome()}
-        {currentPage === 'shop' && renderShop()}
-        {currentPage === 'tasks' && renderTasks()}
-        {currentPage === 'rating' && renderRating()}
-        {currentPage === 'wallet' && renderWallet()}
-        {currentPage === 'invite' && renderInvite()}
-        {currentPage === 'friendsActivity' && renderFriendsActivity()}
-        {currentPage === 'levels' && renderLevels()}
-        {currentPage === 'settings' && renderSettings()}
-        {currentPage === 'dailyReward' && renderDailyReward()}
-        {currentPage === 'trophies' && renderTrophies()}
-      </div>
-      {renderFooter()}
-
-      {/* Popup logic */}
-      {activePopups.has('pph') && (
-        <Popup
-          title="Earned"
-          onClose={() => {
-            hidePopup('pph');
-            claimPPH();
+    <>
+      {!isMobile() ? (
+        <PCMessage />
+      ) : (
+        <div
+          className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
+          style={{
+            backgroundAttachment: 'fixed',
+            width: '100%',
+            height: '100dvh',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            touchAction: 'pan-y',
+            WebkitOverflowScrolling: 'touch',
+            userSelect: 'none',
+            WebkitTouchCallout: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none',
+            paddingBottom: 'env(safe-area-inset-bottom)',
+            paddingTop: 'env(safe-area-inset-top)',
           }}
         >
-          <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
-          <p className="mb-7 text-xl text-center text-white flex items-center justify-center">
-            <span className="font-bold mx-2">{formatNumber(pphAccumulated, true)}</span>
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-              alt="Game Logo"
-              width={26}
-              height={26}
-              className="ml-3"
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+          />
+          <style>{styles}</style>
+          <div className="fixed inset-0 z-0 overflow-hidden">
+            <StarryBackground />
+          </div>
+          {renderHeader()}
+          <div
+            className="flex-grow pb-20"
+            style={{
+              paddingBottom: 'calc(5rem + env(safe-area-inset-bottom) + 16px)',
+              marginBottom: '16px',
+            }}
+          >
+            {currentPage === 'home' && renderHome()}
+            {currentPage === 'shop' && renderShop()}
+            {currentPage === 'tasks' && renderTasks()}
+            {currentPage === 'rating' && renderRating()}
+            {currentPage === 'wallet' && renderWallet()}
+            {currentPage === 'invite' && renderInvite()}
+            {currentPage === 'friendsActivity' && renderFriendsActivity()}
+            {currentPage === 'levels' && renderLevels()}
+            {currentPage === 'settings' && renderSettings()}
+            {currentPage === 'dailyReward' && renderDailyReward()}
+            {currentPage === 'trophies' && renderTrophies()}
+          </div>
+          {renderFooter()}
+
+          {/* Popup logic */}
+          {activePopups.has('pph') && (
+            <Popup
+              title="Earned"
+              onClose={() => {
+                hidePopup('pph');
+                claimPPH();
+              }}
+            >
+              <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
+              <p className="mb-7 text-xl text-center text-white flex items-center justify-center">
+                <span className="font-bold mx-2">{formatNumber(pphAccumulated, true)}</span>
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                  alt="Game Logo"
+                  width={26}
+                  height={26}
+                  className="ml-3"
+                />
+              </p>
+              <p className="mb-5 text-sm text-center text-white">
+                To keep earning, enter the game every 3 hours.
+              </p>
+              <Button
+                onClick={() => {
+                  claimPPH();
+                  hidePopup('pph');
+                }}
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+              >
+                <Coins className="w-5 h-5 mr-2" />
+                Claim
+              </Button>
+            </Popup>
+          )}
+
+          {activePopups.has('levelUp') && (
+            <Popup
+              title="Cosmic Level Up!"
+              onClose={() => {
+                hidePopup('levelUp');
+                claimNewLevel();
+              }}
+            >
+              <p className="mb-6 text-xl text-center text-white">
+                Incredible! You've ascended to{' '}
+                <span className="font-bold text-yellow-400">Level {newLevel}</span>!
+              </p>
+              <p className="mb-6 text-center text-white">
+                Your crypto mastery grows stronger. New powers and riches await you!
+              </p>
+              <Button
+                onClick={() => {
+                  claimNewLevel();
+                  hidePopup('levelUp');
+                }}
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+              >
+                <Zap className="w-5 h-5 mr-2" />
+                Claim Rewards
+              </Button>
+            </Popup>
+          )}
+
+          {activePopups.has('congratulation') && <CongratulationPopup />}
+          {gamePopup.show && (
+            <GamePopup
+              message={gamePopup.message}
+              onConfirm={gamePopup.onConfirm}
+              onCancel={gamePopup.onCancel}
             />
-          </p>
-          <p className="mb-5 text-sm text-center text-white">
-            To keep earning, enter the game every 3 hours.
-          </p>
-          <Button
-            onClick={() => {
-              claimPPH();
-              hidePopup('pph');
-            }}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-          >
-            <Coins className="w-5 h-5 mr-2" />
-            Claim
-          </Button>
-        </Popup>
+          )}
+          {activePopups.has('levelUnlock') && renderLevelUnlockPopup()}
+        </div>
       )}
-
-      {activePopups.has('levelUp') && (
-        <Popup
-          title="Cosmic Level Up!"
-          onClose={() => {
-            hidePopup('levelUp');
-            claimNewLevel();
-          }}
-        >
-          <p className="mb-6 text-xl text-center text-white">
-            Incredible! You've ascended to{' '}
-            <span className="font-bold text-yellow-400">Level {newLevel}</span>!
-          </p>
-          <p className="mb-6 text-center text-white">
-            Your crypto mastery grows stronger. New powers and riches await you!
-          </p>
-          <Button
-            onClick={() => {
-              claimNewLevel();
-              hidePopup('levelUp');
-            }}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
-          >
-            <Zap className="w-5 h-5 mr-2" />
-            Claim Rewards
-          </Button>
-        </Popup>
-      )}
-
-      {activePopups.has('congratulation') && <CongratulationPopup />}
-      {gamePopup.show && (
-        <GamePopup
-          message={gamePopup.message}
-          onConfirm={gamePopup.onConfirm}
-          onCancel={gamePopup.onCancel}
-        />
-      )}
-      {activePopups.has('levelUnlock') && renderLevelUnlockPopup()}
-    </div>
+    </>
   );
 };
 
