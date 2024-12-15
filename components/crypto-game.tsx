@@ -562,6 +562,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
   const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
+  const [coinClicked, setCoinClicked] = useState(false); // Added state for coin click
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
