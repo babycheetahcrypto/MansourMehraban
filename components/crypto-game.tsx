@@ -486,15 +486,7 @@ const trophies = [
 ];
 
 const formatNumber = (num: number) => {
-  if (num >= 1000000000) {
-    return (num / 1000000000).toFixed(1) + 'b';
-  } else if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + 'm';
-  } else if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'k';
-  } else {
-    return Math.floor(num).toLocaleString('en-US');
-  }
+  return Math.floor(num).toLocaleString('en-US');
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
@@ -1668,7 +1660,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1 className="text-5xl font-bold text-white overflow-hidden">
-            {user.coins.toLocaleString('en-US')}
+            {formatNumber(user.coins)
+              .split('')
+              .map((digit, index) => (
+                <span
+                  key={index}
+                  className="inline-block"
+                  style={{
+                    animation: `countUp 0.5s ${index * 0.1}s backwards`,
+                  }}
+                >
+                  {digit}
+                </span>
+              ))}
           </h1>
           <div className="w-12 h-12">
             <Image
@@ -2032,9 +2036,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={32}
                   className="mr-2"
                 />
-                <p className="text-2xl font-bold text-green-400">
-                  {user.coins.toLocaleString('en-US')}
-                </p>
+                <p className="text-2xl font-bold text-green-400">{formatNumber(user.coins)}</p>
               </div>
             </div>
             <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
