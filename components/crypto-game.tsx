@@ -1223,7 +1223,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, []);
 
   const inviteFriends = useCallback(() => {
-    const referralLink = `https://t.me/BabyCheetah_Bot/start?startapp=${user.telegramId}`;
+    const referralLink = `https://t.me/BabyCheetah_Bot/?startapp=${user.telegramId}`;
     showGameConfirm(`Share your referral link: ${referralLink}`, (confirmed: boolean) => {
       if (confirmed) {
         navigator.clipboard.writeText(referralLink);
@@ -2290,12 +2290,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
               <span className="text-sm text-white truncate mr-2">
-                https://t.me/BabyCheetah_Bot?start={user.telegramId}
+                https://t.me/BabyCheetah_Bot/?startapp={user.telegramId}
               </span>
               <Button
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `https://t.me/BabyCheetah_Bot?start=${user.telegramId}`
+                    `https://t.me/BabyCheetah_Bot/?startapp=${user.telegramId}`
                   );
                   showGameAlert('Referral link copied to clipboard!');
                 }}
