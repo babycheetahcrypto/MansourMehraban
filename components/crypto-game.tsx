@@ -562,7 +562,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
   const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
-  const [coinClicked, setCoinClicked] = useState(false); // Added state for coin click
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -939,6 +938,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
+      if (currentPage === 'settings') return; // Add this line
+
       if (energy >= 1) {
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
@@ -995,7 +996,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setLastActiveTime(Date.now()); // Update last active time
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user]
+    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage] // Add currentPage to the dependency array
   );
 
   const buyItem = useCallback(
