@@ -131,7 +131,7 @@ const PCMessage = () => {
             <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 opacity-75 blur-lg" />
             <div className="relative rounded-lg bg-black p-4">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-19dXT9iOOVkyd4wBJ6BgBGEOMLR3ZI.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-m7vi1NoEBPSHQklH0S98IdObm90hIl.png"
                 alt="Telegram QR Code"
                 width={240}
                 height={240}
