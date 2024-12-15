@@ -123,11 +123,6 @@ const styles = `
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
   }
-  @keyframes glow {
-    0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
-    50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8); }
-    100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
-  }
   .coin-button:active, .coin-button.pulse {
     animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
   }
@@ -176,17 +171,6 @@ const styles = `
   .trophy-button:active, .level-button:active {
     transform: translateY(0);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  }
-  .button:not(.coin-button) {
-    transition: all 0.3s ease;
-    animation: glow 2s infinite;
-  }
-  .button:not(.coin-button):hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
-  }
-  .button:not(.coin-button):active {
-    animation: pulse 0.3s ease-in-out;
   }
 `;
 
@@ -384,7 +368,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         variant="ghost"
         className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
-        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white hover:scale-110 hover:rotate-3`}
+        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
         onClick={() => {
           setCurrentPage(href);
         }}
@@ -1771,7 +1755,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   setCurrentPage('dailyReward');
                 }}
-                className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white hover:shadow-cyan-500/50"
+                className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
