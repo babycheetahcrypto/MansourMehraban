@@ -1673,25 +1673,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex flex-col items-center justify-center w-full mx-auto">
-          <div className="relative">
-            <button
-              className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
-              onClick={clickCoin}
-              onTouchStart={clickCoin}
-              onTouchEnd={(e) => e.preventDefault()}
-            >
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <Image
-                  src={selectedCoinImage}
-                  alt={`Level ${level} Cheetah`}
-                  width={340}
-                  height={340}
-                  objectFit="contain"
-                  className="relative z-10"
-                  priority
-                />
-              </div>
-            </button>
+          <button
+            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
+            onClick={clickCoin}
+            onTouchStart={clickCoin}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <Image
+                src={selectedCoinImage}
+                alt={`Level ${level} Cheetah`}
+                width={340}
+                height={340}
+                objectFit="contain"
+                className="relative z-10"
+                priority
+              />
+            </div>
             {clickEffects.map((effect) => (
               <div
                 key={effect.id}
@@ -1706,7 +1704,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 +{effect.value}
               </div>
             ))}
-          </div>
+          </button>
           <div className="w-full space-y-4">
             <div>
               <div className="flex justify-between text-sm mb-2 text-white">
