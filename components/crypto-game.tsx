@@ -1151,9 +1151,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [dailyReward, user, saveUserData]);
 
   const getDailyReward = (day: number) => {
-    const rewards = [
-      100, 500, 1000, 5000, 10000, 50000, 70000, 100000, 300000, 500000, 800000, 1000000,
-    ];
+    const rewards = [100, 500, 700, 10000, 15000, 17000, 20000, 25000, 27000, 30000, 35000, 50000];
     return rewards[(day - 1) % rewards.length];
   };
 
