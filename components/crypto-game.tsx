@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect, useMemo, useRef, useReducer } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -476,34 +476,6 @@ const formatNumber = (num: number) => {
   return Math.floor(num).toLocaleString('en-US');
 };
 
-type GameState = {
-  coins: number;
-  energy: number;
-  level: number;
-  exp: number;
-};
-
-type GameAction =
-  | { type: 'INCREMENT_COINS'; payload: number }
-  | { type: 'DECREMENT_ENERGY'; payload: number }
-  | { type: 'SET_LEVEL'; payload: number }
-  | { type: 'INCREMENT_EXP'; payload: number };
-
-const gameReducer = (state: GameState, action: GameAction): GameState => {
-  switch (action.type) {
-    case 'INCREMENT_COINS':
-      return { ...state, coins: state.coins + action.payload };
-    case 'DECREMENT_ENERGY':
-      return { ...state, energy: Math.max(state.energy - action.payload, 0) };
-    case 'SET_LEVEL':
-      return { ...state, level: action.payload };
-    case 'INCREMENT_EXP':
-      return { ...state, exp: state.exp + action.payload };
-    default:
-      return state;
-  }
-};
-
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
   const [user, setUser] = useState<User>(
     userData || {
@@ -962,66 +934,69 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [level]);
 
-  const [gameState, dispatch] = useReducer(gameReducer, {
-    coins: user.coins,
-    energy: energy,
-    level: user.level,
-    exp: user.exp,
-  });
-
   const clickCoin = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (currentPage !== 'home' || gameState.energy < 1) return;
+      if (currentPage === 'settings') return; // Add this line to prevent updates on the settings page
 
-      const clickValue = clickPower * multiplier;
-      dispatch({ type: 'INCREMENT_COINS', payload: clickValue });
-      dispatch({ type: 'DECREMENT_ENERGY', payload: 1 });
-      dispatch({ type: 'INCREMENT_EXP', payload: 1 });
+      if (energy >= 1) {
+        const clickValue = clickPower * multiplier;
+        const newCoins = user.coins + clickValue;
+        const newExp = user.exp + 1;
+        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
-      if (gameState.exp + 1 >= 100) {
-        dispatch({ type: 'SET_LEVEL', payload: gameState.level + 1 });
+        const updatedUser = {
+          ...user,
+          coins: newCoins,
+          exp: newExp % 100,
+          level: newLevel,
+        };
+
+        setUser(updatedUser);
+        saveUserData(updatedUser);
+
+        setEnergy((prev) => Math.max(prev - 1, 0));
+
+        const rect = event.currentTarget.getBoundingClientRect();
+        let clientX, clientY;
+        if ('touches' in event) {
+          clientX = event.touches[0].clientX;
+          clientY = event.touches[0].clientY;
+        } else {
+          clientX = event.clientX;
+          clientY = event.clientY;
+        }
+        const x = clientX;
+        const y = clientY;
+        const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
+        setClickEffects((prev) => [...prev, clickEffect]);
+        setTimeout(() => {
+          setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
+        }, 700);
+
+        // Trigger haptic feedback
+        if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
+          window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        }
+
+        // Send tap data to Telegram Mini App
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.sendData(
+            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
+          );
+        }
+
+        // Add pulse effect for touch events
+        if ('touches' in event) {
+          const button = event.currentTarget;
+          button.classList.add('pulse');
+          setTimeout(() => button.classList.remove('pulse'), 300);
+        }
+        setLastActiveTime(Date.now()); // Update last active time
       }
-
-      const rect = event.currentTarget.getBoundingClientRect();
-      let clientX, clientY;
-      if ('touches' in event) {
-        clientX = event.touches[0].clientX;
-        clientY = event.touches[0].clientY;
-      } else {
-        clientX = event.clientX;
-        clientY = event.clientY;
-      }
-      const x = clientX;
-      const y = clientY;
-      const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
-      setClickEffects((prev) => [...prev, clickEffect]);
-      setTimeout(() => {
-        setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-      }, 700);
-
-      // Trigger haptic feedback
-      if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-      }
-
-      // Send tap data to Telegram Mini App
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.sendData(
-          JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
-        );
-      }
-
-      // Add pulse effect for touch events
-      if ('touches' in event) {
-        const button = event.currentTarget;
-        button.classList.add('pulse');
-        setTimeout(() => button.classList.remove('pulse'), 300);
-      }
-      setLastActiveTime(Date.now()); // Update last active time
     },
-    [clickPower, multiplier, currentPage, gameState]
+    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage] // Add currentPage to the dependency array
   );
 
   const buyItem = useCallback(
@@ -1429,7 +1404,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       });
 
       // Instantly add profits while user is playing
-      dispatch({ type: 'INCREMENT_COINS', payload: Math.floor(profitPerHour / 3600) });
+      setUser((prevUser) => ({
+        ...prevUser,
+        coins: prevUser.coins + profitPerHour / 3600,
+      }));
     }, 1000);
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
@@ -1452,7 +1430,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   // Level up and task progress
   useEffect(() => {
-    if (level > gameState.level && !activePopups.has('levelUp')) {
+    if (level > user.level && !activePopups.has('levelUp')) {
       setNewLevel(level);
       showPopup('levelUp');
     }
@@ -1475,14 +1453,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const newProgress = Math.min(level, 10);
           const completed = newProgress >= 10;
           if (completed && !task.completed) {
-            dispatch({ type: 'INCREMENT_COINS', payload: task.reward });
+            setUser((u) => ({ ...u, coins: u.coins + task.reward }));
           }
           return { ...task, progress: newProgress, completed };
         }
         return task;
       })
     );
-  }, [level, gameState.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
+  }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
 
   useEffect(() => {
     if (!user.settings) {
@@ -1637,25 +1615,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderHome = () => (
     <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
-      <div className="text-center w-full max-wmd flex flex-col justify-end h-full">
+      <div className="text-center w-full max-w-md flex flex-col justify-end h-full">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-sm font-bold text-white">Level {gameState.level}</span>
+              <span className="text-sm font-bold text-white">Level {level}</span>
             </div>
             <div className="w-full bg-gray-700 h-1 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
                 style={{
-                  width: `${((user.coins - levelRequirements[gameState.level - 1]) / (nextLevelRequirement - levelRequirements[gameState.level - 1])) * 100}%`,
+                  width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
                 }}
               />
             </div>
             <div className="text-xs text-white flex justify-between mt-1">
-              <span>{formatNumber(user.coins - levelRequirements[gameState.level - 1])}</span>
-              <span>
-                {formatNumber(nextLevelRequirement - levelRequirements[gameState.level - 1])} coins
-              </span>
+              <span>{formatNumber(user.coins - levelRequirements[level - 1])}</span>
+              <span>{formatNumber(nextLevelRequirement - levelRequirements[level - 1])} coins</span>
             </div>
           </div>
           <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
@@ -1672,7 +1648,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1 className="text-5xl font-bold text-white overflow-hidden">
-            {formatNumber(gameState.coins)
+            {formatNumber(user.coins)
               .split('')
               .map((digit, index) => (
                 <span
@@ -1707,7 +1683,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <Image
                   src={selectedCoinImage}
-                  alt={`Level ${gameState.level} Cheetah`}
+                  alt={`Level ${level} Cheetah`}
                   width={340}
                   height={340}
                   objectFit="contain"
@@ -1736,7 +1712,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <div className="flex justify-between text-sm mb-2 text-white">
                 <span className="font-semibold">Energy</span>
                 <span>
-                  {Math.floor(gameState.energy)}/{maxEnergy}
+                  {Math.floor(energy)}/{maxEnergy}
                 </span>
               </div>
               <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
@@ -1744,7 +1720,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   className="h-full bg-gradient-to-r from-green-500 to-blue-500"
                   ref={energyRef}
                   style={{
-                    width: `${(gameState.energy / maxEnergy) * 100}%`,
+                    width: `${(energy / maxEnergy) * 100}%`,
                   }}
                 />
               </div>
@@ -1919,7 +1895,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     <Button
                       className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
                       onClick={() => {
-                        dispatch({ type: 'INCREMENT_COINS', payload: task.reward });
+                        setUser((prevUser) => ({
+                          ...prevUser,
+                          coins: prevUser.coins + task.reward,
+                        }));
                         setTasks((prevTasks) =>
                           prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
                         );
@@ -2043,7 +2022,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={32}
                   className="mr-2"
                 />
-                <p className="text-2xl font-bold text-green-400">{formatNumber(gameState.coins)}</p>
+                <p className="text-2xl font-bold text-green-400">{formatNumber(user.coins)}</p>
               </div>
             </div>
             <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
@@ -2179,7 +2158,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <Switch
                 id={id}
-                checked={settings[id as keyof typeof settings] as boolean}
+                checked={
+                  typeof settings[id as keyof typeof settings] === 'boolean'
+                    ? (settings[id as keyof typeof settings] as boolean)
+                    : false
+                }
                 onCheckedChange={(checked) => {
                   setSettings((prev) => {
                     const newSettings = { ...prev, [id]: checked };
@@ -2401,7 +2384,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const claimTrophy = (trophy: (typeof trophies)[0]) => {
     if (user.coins >= trophy.requirement && !trophy.claimed) {
-      dispatch({ type: 'INCREMENT_COINS', payload: trophy.prize });
+      setUser((prevUser) => ({
+        ...prevUser,
+        coins: prevUser.coins + trophy.prize,
+      }));
       trophies.find((t) => t.name === trophy.name)!.claimed = true;
       showGameAlert(
         `Congratulations! You've claimed ${formatNumber(trophy.prize)} coins for the "${trophy.name}" trophy!`
