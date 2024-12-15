@@ -386,7 +386,8 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
 };
 
 const levelRequirements = [
-  0, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000, 100000000, 1000000000,
+  0, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000, 100000000, 1000000000, 5000000000,
+  10000000000, 50000000000, 100000000000,
 ];
 
 const levelImages = [
@@ -507,7 +508,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 0,
+      coins: 1000000000,
       level: 1,
       exp: 0,
       profilePhoto: '',
