@@ -486,10 +486,7 @@ const trophies = [
 ];
 
 const formatNumber = (num: number) => {
-  if (num >= 1e9) return (num / 1e9).toFixed(1) + 'b';
-  if (num >= 1e6) return (num / 1e6).toFixed(1) + 'm';
-  if (num >= 1e3) return (num / 1e3).toFixed(1) + 'k';
-  return Math.floor(num).toString();
+  return Math.floor(num).toLocaleString('en-US');
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
