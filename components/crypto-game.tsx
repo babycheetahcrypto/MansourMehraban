@@ -2178,7 +2178,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     },
                   });
                   if (id === 'vibration' && checked && navigator.vibrate) {
-                    navigator.vibrate([100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200]);
+                    navigator.vibrate([200, 30, 200, 30, 200]);
                   } else if (id === 'backgroundMusic') {
                     if (checked && settings.backgroundMusicAudio) {
                       settings.backgroundMusicAudio
