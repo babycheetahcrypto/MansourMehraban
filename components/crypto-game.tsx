@@ -60,6 +60,8 @@ interface User {
     backgroundMusic: boolean;
   };
   profitPerHour: number;
+  boosterCredits: number;
+  lastBoosterReset: string | null;
 }
 
 interface CryptoGameProps {
@@ -511,6 +513,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         backgroundMusic: false,
       },
       profitPerHour: 0,
+      boosterCredits: 3,
+      lastBoosterReset: null,
     }
   );
 
@@ -1133,37 +1137,34 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   const activateMultiplier = useCallback(() => {
-    if (!multiplierEndTime && !boosterCooldown) {
+    if (user.boosterCredits > 0 && !multiplierEndTime) {
       setMultiplier(2);
-      const endTime = Date.now() + 1 * 60 * 1000;
+      const endTime = Date.now() + 1 * 60 * 1000; // 1 minute
       setMultiplierEndTime(endTime);
-      showGameAlert(`Activated 2x multiplier for 1 minutes!`);
+      setUser((prevUser) => ({
+        ...prevUser,
+        boosterCredits: prevUser.boosterCredits - 1,
+      }));
+      showGameAlert(
+        `Activated 2x multiplier for 1 minute! Credits left: ${user.boosterCredits - 1}`
+      );
 
       const cooldownTimer = setTimeout(
         () => {
           setMultiplier(1);
           setMultiplierEndTime(null);
-          setBoosterCooldown(Date.now() + 100 * 60 * 1000);
-          const unlockTimer = setTimeout(
-            () => {
-              setBoosterCooldown(null);
-            },
-            100 * 60 * 1000
-          );
-          return () => clearTimeout(unlockTimer);
         },
         1 * 60 * 1000
       );
 
       return () => clearTimeout(cooldownTimer);
-    } else if (boosterCooldown) {
-      const remainingCooldown = Math.ceil((boosterCooldown - Date.now()) / 1000);
-      showGameAlert(`Booster on cooldown. Available in ${remainingCooldown} seconds.`);
+    } else if (user.boosterCredits === 0) {
+      showGameAlert('No booster credits left. Wait for daily reset.');
     } else if (multiplierEndTime) {
       const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
       showGameAlert(`Multiplier active for ${remainingMultiplier} more seconds.`);
     }
-  }, [multiplierEndTime, boosterCooldown, user.id]);
+  }, [user.boosterCredits, multiplierEndTime]);
 
   const shareToSocialMedia = useCallback((platform: string) => {
     const message =
@@ -1743,11 +1744,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <span>Daily Reward</span>
               </Button>
               <Button
-                onClick={() => {
-                  activateMultiplier();
-                }}
-                className={`flex-1 bg-gradient-to-r ${boosterCooldown ? 'from-gray-600 to-gray-700' : 'from-gray-800 to-gray-900'} text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
-                disabled={!!multiplierEndTime || !!boosterCooldown}
+                onClick={activateMultiplier}
+                className={`flex-1 bg-gradient-to-r ${
+                  user.boosterCredits === 0 || multiplierEndTime
+                    ? 'from-gray-600 to-gray-700'
+                    : 'from-gray-800 to-gray-900'
+                } text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
+                disabled={user.boosterCredits === 0 || !!multiplierEndTime}
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
@@ -1757,11 +1760,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   className="mr-2"
                 />
                 <span>
-                  {boosterCooldown
-                    ? `Cooldown (${Math.ceil((boosterCooldown - Date.now()) / 1000)}s)`
-                    : multiplierEndTime
-                      ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
-                      : 'Booster'}
+                  {multiplierEndTime
+                    ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                    : user.boosterCredits === 0
+                      ? 'No credits'
+                      : `Booster (${user.boosterCredits})`}
                 </span>
               </Button>
             </div>
@@ -2437,6 +2440,26 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       },
     });
   };
+
+  const resetBoosterCredits = useCallback(() => {
+    const now = new Date();
+    const lastReset = new Date(user.lastBoosterReset || 0);
+    if (
+      now.getDate() !== lastReset.getDate() ||
+      now.getMonth() !== lastReset.getMonth() ||
+      now.getFullYear() !== lastReset.getFullYear()
+    ) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        boosterCredits: 3,
+        lastBoosterReset: now.toISOString(),
+      }));
+    }
+  }, [user.lastBoosterReset]);
+
+  useEffect(() => {
+    resetBoosterCredits();
+  }, [resetBoosterCredits]);
 
   useEffect(() => {
     const audio = new Audio(
