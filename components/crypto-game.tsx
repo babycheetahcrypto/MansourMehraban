@@ -26,7 +26,6 @@ import {
   Lock,
 } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
-import { motion } from 'framer-motion';
 
 interface User {
   id: string;
@@ -1752,60 +1751,45 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
 
             <div className="flex space-x-4 mt-auto">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  onClick={() => {
-                    setCurrentPage('dailyReward');
-                  }}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:from-purple-700 hover:to-pink-700"
-                >
-                  <motion.div
-                    initial={{ rotate: 0 }}
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                  >
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
-                      alt="Daily Reward"
-                      width={24}
-                      height={24}
-                      className="mr-2"
-                    />
-                  </motion.div>
-                  <span>Daily Reward</span>
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  onClick={activateMultiplier}
-                  className={`flex-1 ${
-                    user.boosterCredits === 0 || multiplierEndTime
-                      ? 'bg-gradient-to-r from-gray-600 to-gray-700'
-                      : 'bg-gradient-to-r from-yellow-400 to-orange-500'
-                  } text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300`}
-                  disabled={user.boosterCredits === 0 || !!multiplierEndTime}
-                >
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                  >
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
-                      alt="2x Multiplier"
-                      width={24}
-                      height={24}
-                      className="mr-2"
-                    />
-                  </motion.div>
-                  <span>
-                    {multiplierEndTime
-                      ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
-                      : user.boosterCredits === 0
-                        ? 'No credits'
-                        : `Booster (${user.boosterCredits})`}
-                  </span>
-                </Button>
-              </motion.div>
+              <Button
+                onClick={() => {
+                  setCurrentPage('dailyReward');
+                }}
+                className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
+              >
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
+                  alt="Daily Reward"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                <span>Daily Reward</span>
+              </Button>
+              <Button
+                onClick={activateMultiplier}
+                className={`flex-1 bg-gradient-to-r ${
+                  user.boosterCredits === 0 || multiplierEndTime
+                    ? 'from-gray-600/50 to-gray-700/50'
+                    : 'from-gray-800/50 to-gray-900/50'
+                } text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
+                disabled={user.boosterCredits === 0 || !!multiplierEndTime}
+              >
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
+                  alt="2x Multiplier"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                <span>
+                  {multiplierEndTime
+                    ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                    : user.boosterCredits === 0
+                      ? 'No credits'
+                      : `Booster (${user.boosterCredits})`}
+                </span>
+              </Button>
             </div>
           </div>
         </div>
@@ -1846,22 +1830,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <p className="text-xs text-white mb-2">
                 Profit: {formatNumber(item.baseProfit * item.level, true)}/h
               </p>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-full text-xs font-bold transition-all duration-300 flex items-center justify-center"
-                  onClick={() => {
-                    buyItem(item);
-                  }}
-                >
-                  <motion.span
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
-                  </motion.span>
-                </Button>
-              </motion.div>
+              <Button
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
+                onClick={() => {
+                  buyItem(item);
+                }}
+              >
+                Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
+              </Button>
             </NeonGradientCard>
           ))}
         </div>
@@ -1944,47 +1920,33 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       <span>Claimed</span>
                     </Button>
                   ) : (
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
-                        onClick={() => {
-                          setUser((prevUser) => ({
-                            ...prevUser,
-                            coins: prevUser.coins + task.reward,
-                          }));
-                          setTasks((prevTasks) =>
-                            prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
-                          );
-                          showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
-                        }}
-                      >
-                        <motion.div
-                          animate={{ rotate: [0, 360] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                        >
-                          <Star className="w-4 h-4 mr-1" />
-                        </motion.div>
-                        <span>Claim</span>
-                      </Button>
-                    </motion.div>
-                  )
-                ) : (
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button
-                      className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 flex items-center justify-center"
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
                       onClick={() => {
-                        task.action();
+                        setUser((prevUser) => ({
+                          ...prevUser,
+                          coins: prevUser.coins + task.reward,
+                        }));
+                        setTasks((prevTasks) =>
+                          prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
+                        );
+                        showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
                       }}
                     >
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                      >
-                        <ArrowRight className="w-4 h-4 mr-1" />
-                      </motion.div>
-                      <span>Start</span>
+                      <Star className="w-4 h-4 mr-1" />
+                      <span>Claim</span>
                     </Button>
-                  </motion.div>
+                  )
+                ) : (
+                  <Button
+                    className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                    onClick={() => {
+                      task.action();
+                    }}
+                  >
+                    <ArrowRight className="w-4 h-4 mr-1" />
+                    <span>Start</span>
+                  </Button>
                 )}
               </div>
             </CardContent>
@@ -2308,23 +2270,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <div className="mt-6 text-center">
             <p className="text-xl mb-4 text-white">Current Streak: {dailyReward.streak} days</p>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                onClick={() => {
-                  claimDailyReward();
-                }}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center"
-                disabled={dailyReward.completed}
-              >
-                <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                >
-                  <Gift className="w-6 h-6 mr-2" />
-                </motion.div>
-                Claim Reward{' '}
-              </Button>
-            </motion.div>
+            <Button
+              onClick={() => {
+                claimDailyReward();
+              }}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
+              disabled={dailyReward.completed}
+            >
+              <Gift className="w-6 h-6 mr-2" />
+              Claim Reward{' '}
+            </Button>
           </div>
         </CardContent>
       </NeonGradientCard>
@@ -2361,20 +2316,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               Share this link to earn 1000 coins for each friend who joins!
             </p>
           </div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              onClick={() => setCurrentPage('friendsActivity')}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transition-all duration-300 backdrop-blur-md mt-4 flex items-center justify-center"
-            >
-              <motion.div
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >
-                <Users className="w-5 h-5 mr-2" />
-              </motion.div>
-              Friends Activity
-            </Button>
-          </motion.div>
+          <Button
+            onClick={() => setCurrentPage('friendsActivity')}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
+          >
+            <Users className="w-5 h-5 mr-2" />
+            Friends Activity
+          </Button>
         </CardContent>
       </NeonGradientCard>
     </div>
@@ -2448,20 +2396,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     Claimed
                   </div>
                 ) : (
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button
-                      onClick={() => claimTrophy(trophy)}
-                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 trophy-button"
-                    >
-                      <motion.div
-                        animate={{ rotate: [0, 360] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                      >
-                        <Gift className="w-5 h-5 mr-2" />
-                      </motion.div>
-                      Claim
-                    </Button>
-                  </motion.div>
+                  <Button
+                    onClick={() => claimTrophy(trophy)}
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button"
+                  >
+                    <Gift className="w-5 h-5 mr-2" />
+                    Claim
+                  </Button>
                 )
               ) : (
                 <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center">
