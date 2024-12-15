@@ -1120,7 +1120,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         now.getFullYear() !== lastClaimed.getFullYear())
     ) {
       const newStreak =
-        lastClaimed && now.getDate() - lastClaimed.getDate() === 1 ? dailyReward.streak + 1 : 1;
+        lastClaimed && (now.getTime() - lastClaimed.getTime()) / (1000 * 60 * 60 * 24) <= 1
+          ? dailyReward.streak + 1
+          : 1;
       const reward = getDailyReward(newStreak);
 
       setUser((prevUser) => ({
@@ -1128,7 +1130,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         coins: prevUser.coins + reward,
       }));
 
-      const newDay = (dailyReward.day % 30) + 1;
+      const newDay = (dailyReward.day % 12) + 1;
       const completed = newDay === 1;
 
       setDailyReward({
@@ -1142,7 +1144,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`
       );
     } else if (dailyReward.completed) {
-      showGameAlert('You have completed the 30-day reward cycle!');
+      showGameAlert('You have completed the 12-day reward cycle!');
     } else {
       showGameAlert('You have already claimed your daily reward today!');
     }
@@ -1150,11 +1152,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const getDailyReward = (day: number) => {
     const rewards = [
-      100, 250, 350, 450, 550, 650, 750, 850, 1000, 2500, 3500, 4500, 5500, 6500, 7500, 8500, 10000,
-      20000, 30000, 40000, 50000, 60000, 70000, 80000, 100000, 300000, 600000, 700000, 800000,
-      1000000, 2000000,
+      100, 500, 1000, 5000, 10000, 50000, 70000, 100000, 300000, 500000, 800000, 1000000,
     ];
-    return rewards[day % rewards.length];
+    return rewards[(day - 1) % rewards.length];
   };
 
   const activateMultiplier = useCallback(() => {
@@ -2236,8 +2236,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6">
-          <div className="grid grid-cols-4 gap-2">
-            {Array.from({ length: 30 }, (_, i) => {
+          <div className="grid grid-cols-3 gap-2">
+            {Array.from({ length: 12 }, (_, i) => {
               const day = i + 1;
               const isCurrentDay = day === dailyReward.day;
               const isPastDay = day < dailyReward.day;
