@@ -116,7 +116,7 @@ const PCMessage = () => {
             </h1>
             <div className="flex items-center justify-center space-x-2">
               <Sparkles className="h-5 w-5 text-purple-400" />
-              <p className="text-lg text-gray-300">Mobile Experience Awaits</p>
+              <p className="text-lg text-gray-300">Play on your mobile</p>
               <Sparkles className="h-5 w-5 text-purple-400" />
             </div>
           </motion.div>
@@ -139,24 +139,6 @@ const PCMessage = () => {
               />
             </div>
           </motion.div>
-
-          {/* Message Section */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.5 }}
-            className="text-center"
-          >
-            <p className="mb-4 text-lg text-gray-300">
-              This game is exclusively available on mobile devices via Telegram Mini App.
-            </p>
-            <div className="space-y-2 text-gray-400">
-              <p>📱 Scan the QR code with your mobile device</p>
-              <p>🎮 Start your crypto journey on Telegram</p>
-              <p>🏆 Join thousands of players worldwide</p>
-            </div>
-          </motion.div>
-
           {/* Animated Border Effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20 opacity-50 blur-3xl" />
         </div>
