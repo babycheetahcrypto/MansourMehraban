@@ -1670,7 +1670,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-4xl font-bold text-white overflow-hidden">
+          <h1 className="text-4/50xl font-bold text-white overflow-hidden">
             {formatNumber(user.coins, false)
               .split('')
               .map((digit, index) => (
