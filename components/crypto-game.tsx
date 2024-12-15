@@ -100,12 +100,15 @@ type Task = {
   action: () => void;
 };
 
-interface LeaderboardEntry {
+type LeaderboardEntry = {
   id: string;
+  telegramId: string;
   name: string;
+  username: true;
   coins: number;
+  profitPerHour: number;
   rank: number;
-}
+};
 
 interface UserData extends Omit<User, 'dailyReward'> {
   dailyReward: {
@@ -1241,16 +1244,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     window.Telegram.WebApp.openLink('https://whatsapp.com/channel/0029VasnzUPAO7RJkehdu43p');
   }, []);
 
-  type LeaderboardEntry = {
-    id: string;
-    telegramId: string;
-    name: string;
-    username: true;
-    coins: number;
-    profitPerHour: number;
-    rank: number;
-  };
-
   const useUserData = () => {
     const fetchUserData = useCallback(async () => {
       try {
@@ -1670,7 +1663,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-4xl font-bold text-white overflow-hidden">
+          <h1 className="text-5xl font-bold text-white overflow-hidden">
             {formatNumber(user.coins, false)
               .split('')
               .map((digit, index) => (
