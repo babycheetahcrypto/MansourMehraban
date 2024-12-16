@@ -194,6 +194,15 @@ const styles = `
   .animate-button-click {
     animation: button-click 0.3s ease-in-out;
   }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) skewX(-12deg); }
+    100% { transform: translateX(200%) skewX(-12deg); }
+  }
 `;
 
 // Telegram WebApp type definition
@@ -303,16 +312,12 @@ const StarryBackground: React.FC = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Create a radial gradient
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        0,
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width / 2
-      );
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       gradient.addColorStop(0, 'rgba(0, 0, 25, 1)');
+      gradient.addColorStop(0.5, 'rgba(0, 0, 50, 1)');
       gradient.addColorStop(1, 'rgba(0, 0, 25, 1)');
+
+      ctx.globalCompositeOperation = 'source-over';
 
       // Fill the background with the gradient
       ctx.fillStyle = gradient;
@@ -2568,22 +2573,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <div className="relative w-32 h-32 mx-auto mb-8">
-            <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
-            <div
-              className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
-              style={{ animationDuration: '1.5s' }}
-            ></div>
+          <div className="relative w-48 h-48 mx-auto mb-8">
+            <div className="absolute inset-0 border-8 border-blue-500 rounded-full animate-ping opacity-75"></div>
+            <div className="absolute inset-0 border-8 border-purple-500 rounded-full animate-pulse"></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                 alt="Game Logo"
-                width={64}
-                height={64}
+                width={96}
+                height={96}
+                className="animate-bounce"
               />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Loading...</h2>
+          <h2 className="text-3xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
         </div>
       </div>
     );
