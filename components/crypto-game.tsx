@@ -186,9 +186,6 @@ const styles = `
   #__next {
     height: 100%;
   }
-  .crypto-button-glow {
-    box-shadow: 0 0 15px 5px rgba(59, 130, 246, 0.5);
-  }
 `;
 
 // Telegram WebApp type definition
@@ -396,9 +393,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         >
           {text}
         </span>
-        {isActive && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-t-full" />
-        )}
+        {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
       </Button>
     </div>
   );
