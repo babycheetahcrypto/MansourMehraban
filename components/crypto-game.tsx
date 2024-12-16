@@ -1605,7 +1605,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderFooter = () => (
     <div
-      className="sticky bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
@@ -1664,7 +1664,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 relative overflow-hidden">
+    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
       <div className="text-center w-full max-w-md flex flex-col justify-end h-full">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
@@ -2732,7 +2732,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               title="Cosmic Level Up!"
               onClose={() => {
                 hidePopup('levelUp');
-
                 claimNewLevel();
               }}
             >
