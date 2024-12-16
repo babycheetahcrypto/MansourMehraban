@@ -194,6 +194,23 @@ const styles = `
   .animate-button-click {
     animation: button-click 0.3s ease-in-out;
   }
+  @keyframes dotFade {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+
+  .dots .dot {
+    animation: dotFade 1.5s infinite;
+    display: inline-block;
+  }
+
+  .dots .dot:nth-child(2) {
+    animation-delay: 0.5s;
+  }
+
+  .dots .dot:nth-child(3) {
+    animation-delay: 1s;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -2566,10 +2583,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="text-center">
-          <div className="relative w-32 h-32 mx-auto mb-8">
-            <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
+          <div className="relative w-40 h-40 mx-auto mb-8">
+            <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-ping"></div>
             <div
               className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
               style={{ animationDuration: '1.5s' }}
@@ -2578,12 +2595,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                 alt="Game Logo"
-                width={64}
-                height={64}
+                width={80}
+                height={80}
+                className="animate-pulse"
               />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Loading...</h2>
+          <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 animate-pulse">
+            Loading
+            <span className="dots">
+              <span className="dot">.</span>
+              <span className="dot">.</span>
+              <span className="dot">.</span>
+            </span>
+          </h2>
         </div>
       </div>
     );
