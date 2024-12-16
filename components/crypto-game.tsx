@@ -1683,7 +1683,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <h1 className="text-5xl font-bold text-white overflow-hidden">
+          <h1
+            className={`font-bold text-white overflow-hidden ${
+              formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'
+            }`}
+          >
             {formatNumber(user.coins, false)
               .split('')
               .map((digit, index) => (
