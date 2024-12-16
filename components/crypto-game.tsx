@@ -2579,8 +2579,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
-                  width={64}
-                  height={64}
+                  width={84}
+                  height={84}
                   className="animate-pulse"
                 />
               </div>
