@@ -186,6 +186,14 @@ const styles = `
   #__next {
     height: 100%;
   }
+  @keyframes button-click {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+  }
+  .animate-button-click {
+    animation: button-click 0.3s ease-in-out;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -376,16 +384,24 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   isActive,
   setCurrentPage,
 }) => {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleClick = () => {
+    setCurrentPage(href);
+    setIsClicked(true);
+    setTimeout(() => setIsClicked(false), 300); // Reset after animation
+  };
+
   return (
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
         className={`relative w-18 h-18 bg-transparent flex flex-col items-center justify-center ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
+        } ${
+          isClicked ? 'animate-button-click' : ''
         } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
-        onClick={() => {
-          setCurrentPage(href);
-        }}
+        onClick={handleClick}
       >
         <Icon className={`w-8 h-8 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
