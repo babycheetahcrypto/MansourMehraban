@@ -2568,22 +2568,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <div className="relative w-32 h-32 mx-auto mb-8">
-            <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin"></div>
+          <div className="relative w-40 h-40 mx-auto mb-8">
+            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
             <div
-              className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
-              style={{ animationDuration: '1.5s' }}
+              className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
+              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
             ></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                alt="Game Logo"
-                width={64}
-                height={64}
-              />
+              <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                  alt="Game Logo"
+                  width={64}
+                  height={64}
+                  className="animate-pulse"
+                />
+              </div>
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Loading...</h2>
+          <h2 className="text-3xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
         </div>
       </div>
     );
