@@ -2572,7 +2572,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
             <div
               className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
-              style={{ animationDirection: 'reverse', animationDuration: '5.5s' }}
+              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
             ></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
