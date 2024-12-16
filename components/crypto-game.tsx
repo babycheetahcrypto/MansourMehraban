@@ -136,22 +136,6 @@ const styles = `
   }
   html, body {
     scroll-behavior: smooth;
-    height: 100%;
-    overflow: hidden;
-  }
-  body {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    -webkit-overflow-scrolling: touch;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  #__next {
-    height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
   @keyframes fadeOutUp {
     from {
@@ -193,9 +177,14 @@ const styles = `
     transform: translateY(0);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   }
-  * {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+  #__next {
+    height: 100%;
   }
 `;
 
@@ -2632,7 +2621,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <div
           className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
           style={{
-            height: '100%',
+            backgroundAttachment: 'fixed',
+            width: '100%',
+            height: '100vh',
             minHeight: '-webkit-fill-available',
             overflowY: 'auto',
             overflowX: 'hidden',
