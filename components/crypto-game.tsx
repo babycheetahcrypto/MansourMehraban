@@ -380,14 +380,19 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-20 h-20 bg-transparent flex flex-col items-center justify-center ${
+        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
         onClick={() => {
           setCurrentPage(href);
         }}
       >
-        <Icon className={`w-10 h-10 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <span
+          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
+        >
+          {text}
+        </span>
         {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
       </Button>
     </div>
@@ -1633,7 +1638,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
             )}
             href={page}
-            text=""
+            text={text}
             isActive={currentPage === page}
             setCurrentPage={setCurrentPage}
           />
