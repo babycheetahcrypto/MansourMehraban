@@ -860,7 +860,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Invite%203D%20icon-2VG1B7pHqsL5VeIjvBp0me4DZXRIKg.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Invite%20Friends-zoNaAe54HVxyqUHWGMnRk0yVSPlQNe.png"
           alt="Invite Friends"
           width={48}
           height={48}
