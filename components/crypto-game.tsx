@@ -1647,7 +1647,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
-  const renderFooter = () => (
+  const renderbottom = () => (
     <div
       className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
@@ -2774,7 +2774,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             {currentPage === 'dailyReward' && renderDailyReward()}
             {currentPage === 'trophies' && renderTrophies()}
           </div>
-          {renderFooter()}
+          {renderbottom()}
 
           {/* Popup logic */}
           {activePopups.has('pph') && (
