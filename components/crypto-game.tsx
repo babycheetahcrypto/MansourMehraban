@@ -1778,7 +1778,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <div className="flex flex-col items-center justify-center w-full mx-auto">
           <div className="relative">
             <button
-              className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
+              className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
               onClick={clickCoin}
               onTouchStart={clickCoin}
               onTouchEnd={(e) => e.preventDefault()}
