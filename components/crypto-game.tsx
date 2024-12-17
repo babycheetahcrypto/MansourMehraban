@@ -403,7 +403,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
+        className={`relative w-18 h-18 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
@@ -412,7 +412,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         }`}
         onClick={handleClick}
       >
-        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon className={`w-8 h-8 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
           className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
@@ -1689,8 +1689,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={32}
-                height={32}
+                width={36}
+                height={36}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
@@ -1841,8 +1841,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
                   alt="Daily Reward"
-                  width={24}
-                  height={24}
+                  width={28}
+                  height={28}
                   className="mr-1"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
@@ -1856,8 +1856,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
                   alt="Wallet"
-                  width={24}
-                  height={24}
+                  width={28}
+                  height={28}
                   className="mr-1"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
@@ -1874,8 +1874,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
                   alt="2x Multiplier"
-                  width={24}
-                  height={24}
+                  width={28}
+                  height={28}
                   className="mr-1"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
@@ -2483,8 +2483,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src={trophy.icon}
                   alt={trophy.name}
-                  width={100}
-                  height={100}
+                  width={120}
+                  height={120}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src =
