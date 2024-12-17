@@ -11,7 +11,7 @@ bot.command('start', async (ctx: Context) => {
   }
 
   const welcomeMessage = `
-Welcome ${telegramUser.username || telegramUser.first_name}! 🐾🎉
+Welcome *${telegramUser.username || telegramUser.first_name}*! 🐾🎉
 
 Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't to miss! 💸
 
