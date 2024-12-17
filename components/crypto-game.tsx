@@ -403,7 +403,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-18 h-18 bg-transparent flex flex-col items-center justify-center ${
+        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
@@ -412,7 +412,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         }`}
         onClick={handleClick}
       >
-        <Icon className={`w-8 h-8 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
           className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
@@ -1692,8 +1692,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={36}
-                height={36}
+                width={34}
+                height={34}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
