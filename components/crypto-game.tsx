@@ -1603,8 +1603,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%203D%20ICON-r7DrilofLzG7BdFZtgONM1tDZHT5aO.png"
                 alt="Trophies"
-                width={28}
-                height={28}
+                width={30}
+                height={30}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -1619,8 +1619,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LEVEL%203D%20ICON-0VzQFGvjHWkPoGl5HmoDJ4edD4ZztE.png"
                 alt="Levels"
-                width={28}
-                height={28}
+                width={30}
+                height={30}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -1635,8 +1635,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-Zln2aXS4iPIxlZfmYO42iPAKAwEtKt.png"
                 alt="Settings"
-                width={28}
-                height={28}
+                width={30}
+                height={30}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
