@@ -201,6 +201,11 @@ const styles = `
     -moz-user-select: none;
     -ms-user-select: none;
   }
+  @keyframes energyPulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
 `;
 
 // Telegram WebApp type definition
@@ -1812,83 +1817,97 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             ))}
           </div>
-          <div className="w-full space-y-4">
-            <div>
-              <div className="flex justify-between text-sm mb-2 text-white">
-                <span className="font-semibold">Energy</span>
-                <span>
-                  {Math.floor(energy)}/{maxEnergy}
-                </span>
-              </div>
-              <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-green-500 to-blue-500"
-                  ref={energyRef}
-                  style={{
-                    width: `${(energy / maxEnergy) * 100}%`,
-                  }}
+          <div>
+            <div className="flex justify-between text-sm mb-2 text-white">
+              <span className="font-semibold flex items-center gap-2">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Energy%203D%20ICON-4zZaqZ94OWxLZYPRzSYsS1bpecFsCS.png"
+                  alt="Energy"
+                  width={24}
+                  height={24}
+                  className="animate-pulse"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
-              </div>
+                Energy
+              </span>
+              <span>
+                {Math.floor(energy)}/{maxEnergy}
+              </span>
             </div>
-
-            <div className="flex space-x-2 mt-auto">
-              <Button
-                onClick={() => {
-                  setCurrentPage('dailyReward');
+            <div className="h-3 bg-gray-800/50 backdrop-blur-sm rounded-full overflow-hidden relative">
+              <div
+                ref={energyRef}
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-400 via-blue-400 to-blue-600 rounded-full transition-all duration-300 ease-out"
+                style={{
+                  width: `${(energy / maxEnergy) * 100}%`,
+                  boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)',
                 }}
-                className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
               >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
-                  alt="Daily Reward"
-                  width={30}
-                  height={30}
-                  className="mr-1"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <span>Daily Reward</span>
-              </Button>
-              <Button
-                onClick={() => setCurrentPage('wallet')}
-                className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
-              >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
-                  alt="Wallet"
-                  width={30}
-                  height={30}
-                  className="mr-1"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <span>Wallet</span>
-              </Button>
-              <Button
-                onClick={activateMultiplier}
-                className={`flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
-                  user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
-                }`}
-                disabled={user.boosterCredits === 0 || !!multiplierEndTime}
-              >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
-                  alt="2x Multiplier"
-                  width={30}
-                  height={30}
-                  className="mr-1"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <span>
-                  {multiplierEndTime
-                    ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
-                    : user.boosterCredits === 0
-                      ? 'No credits'
-                      : `Booster (${user.boosterCredits})`}
-                </span>
-              </Button>
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+              </div>
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiIGlkPSJhIj48c3RvcCBzdG9wLWNvbG9yPSIjRkZGIiBzdG9wLW9wYWNpdHk9Ii4yIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjEwMCUiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cGF0aCBmaWxsPSJ1cmwoI2EpIiBkPSJNMCAwaDIwdjIwSDB6Ii8+PC9zdmc+')]"></div>
             </div>
+          </div>
+
+          <div className="flex space-x-2 mt-auto">
+            <Button
+              onClick={() => {
+                setCurrentPage('dailyReward');
+              }}
+              className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
+                alt="Daily Reward"
+                width={30}
+                height={30}
+                className="mr-1"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span>Daily Reward</span>
+            </Button>
+            <Button
+              onClick={() => setCurrentPage('wallet')}
+              className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
+                alt="Wallet"
+                width={30}
+                height={30}
+                className="mr-1"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span>Wallet</span>
+            </Button>
+            <Button
+              onClick={activateMultiplier}
+              className={`flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
+                user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
+              }`}
+              disabled={user.boosterCredits === 0 || !!multiplierEndTime}
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
+                alt="2x Multiplier"
+                width={30}
+                height={30}
+                className="mr-1"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span>
+                {multiplierEndTime
+                  ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                  : user.boosterCredits === 0
+                    ? 'No credits'
+                    : `Booster (${user.boosterCredits})`}
+              </span>
+            </Button>
           </div>
         </div>
       </div>
