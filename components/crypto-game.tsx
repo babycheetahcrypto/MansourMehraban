@@ -148,13 +148,14 @@ const styles = `
     }
   }
   .click-effect {
-    position: absolute; /* Updated: Changed from fixed to absolute */
+    position: fixed;
     pointer-events: none;
     animation: fadeOutUp 0.7s ease-out forwards;
     color: white;
-    font-weight: 900; /* Updated: Added font-weight: 900 */
+    font-weight: 900;
     font-size: 1.5rem;
     text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 25px rgba(255, 255, 255, 0.8);
+    transform: translate(-50%, -50%);
     z-index: 30;
   }
   @keyframes twinkle {
