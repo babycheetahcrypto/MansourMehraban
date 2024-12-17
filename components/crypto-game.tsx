@@ -389,7 +389,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   const handleClick = () => {
     setCurrentPage(href);
     setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 300);
+    setTimeout(() => setIsClicked(false), 300); // Reset after animation
   };
 
   return (
@@ -400,21 +400,16 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
-        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white rounded-full overflow-hidden group`}
+        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
         onClick={handleClick}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <Icon
-          className={`w-8 h-8 mb-1 ${isActive ? 'text-primary' : 'text-white'} relative z-10 transition-transform duration-300 group-hover:scale-110`}
-        />
+        <Icon className={`w-8 h-8 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
-          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white relative z-10 transition-all duration-300 group-hover:font-bold`}
+          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
           {text}
         </span>
-        {isActive && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full"></div>
-        )}
+        {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
       </Button>
     </div>
   );
@@ -1610,11 +1605,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderFooter = () => (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-3xl z-50 transition-all duration-300 ease-in-out hover:bg-black/50"
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 to-blue-600/30 rounded-full blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
           {
             page: 'home',
