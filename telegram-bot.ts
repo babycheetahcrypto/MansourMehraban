@@ -11,9 +11,9 @@ bot.command('start', async (ctx: Context) => {
   }
 
   const welcomeMessage = `
-Welcome to Baby Cheetah! 🐾🎉
+Welcome ${telegramUser.username || telegramUser.first_name}! 🐾🎉
 
-Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won’t to miss! 💸
+Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't to miss! 💸
 
 What You Can Do Now:
 💰 Earn $BBCH: Play our mining game and start stacking coins.
@@ -22,7 +22,7 @@ What You Can Do Now:
 
 Start earning today and be part of the next big upcoming airdrop. ✨
 Stay fast, stay fierce, stay Baby Cheetah! 🌟
-  `;
+`;
 
   try {
     let user = await prisma.user.findUnique({
@@ -43,7 +43,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           unlockedLevels: [1],
           clickPower: 1,
           friendsCoins: {},
-          energy: 500,
+          energy: 2000,
           pphAccumulated: 0,
           multiplier: 1,
           multiplierEndTime: null,
