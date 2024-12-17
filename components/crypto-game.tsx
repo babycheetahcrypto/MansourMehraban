@@ -745,7 +745,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Facebook%20icon-6GoJtap21nyoiQnYLSpB6IJtMTN02p.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Facebook%203D%20ICON-HuOyHlDIHEQusiCA0otRLNqN2QFWGz.png"
           alt="Facebook"
           width={48}
           height={48}
@@ -764,7 +764,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/X%203D%20icon-BKGCBNiG3sECcTXzWnsCIQKt2C7s2q.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/X%203D%20ICON-7WGq7XU7tZHnLw8Jh2tmLCjf0e94ii.png"
           alt="X"
           width={48}
           height={48}
@@ -783,7 +783,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20icon-oGuCqwnySi2zDrS8HlS44YDNgGaCuH.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20ICON-ClIOzvVv2BnSM9iRv28uoYcA6K4UMZ.png"
           alt="Instagram"
           width={48}
           height={48}
@@ -802,7 +802,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20icon-6rol1Ge421KShZTlo6utbgTE8fsxm8.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20ICON-n3DFRVp9JnkM0qQcysyNK18eaDTZQ9.png"
           alt="YouTube"
           width={48}
           height={48}
@@ -821,7 +821,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20icon-6rol1Ge421KShZTlo6utbgTE8fsxm8.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20ICON-n3DFRVp9JnkM0qQcysyNK18eaDTZQ9.png"
           alt="YouTube"
           width={48}
           height={48}
@@ -840,7 +840,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Telegram%203D%20icon-0mE8I8odV0mcJBqfO91vdaj6mxrgGS.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Telegram%203D%20ICON-NDxLVpptGuaMMEVnUxO3JwNPsoQURR.png"
           alt="Telegram"
           width={48}
           height={48}
@@ -919,7 +919,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/X%203D%20icon-BKGCBNiG3sECcTXzWnsCIQKt2C7s2q.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/X%203D%20ICON-7WGq7XU7tZHnLw8Jh2tmLCjf0e94ii.png"
           alt="X"
           width={48}
           height={48}
@@ -938,7 +938,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20icon-oGuCqwnySi2zDrS8HlS44YDNgGaCuH.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20ICON-ClIOzvVv2BnSM9iRv28uoYcA6K4UMZ.png"
           alt="Instagram"
           width={48}
           height={48}
@@ -957,7 +957,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Whatsapp%203D%20icon-zQ7YPZyXLWhIzlUUDOv03O3EE8qWSI.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Whatsapp%203D%20ICON-xBKvZqkfPamAPHhSnS56SBjZbnQWF7.png"
           alt="WhatsApp"
           width={48}
           height={48}
