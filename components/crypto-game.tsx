@@ -1736,8 +1736,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-BOmbm8gpqO0AMx6vImTMvMohF71biw.png"
               alt="Profit Per Hour"
-              width={24}
-              height={24}
+              width={22}
+              height={22}
               className="mb-1"
               draggable="false"
               onContextMenu={(e) => e.preventDefault()}
@@ -1844,8 +1844,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
                   alt="Daily Reward"
-                  width={24}
-                  height={24}
+                  width={28}
+                  height={28}
                   className="mr-2"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
@@ -1864,8 +1864,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
                   alt="2x Multiplier"
-                  width={24}
-                  height={24}
+                  width={28}
+                  height={28}
                   className="mr-2"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
