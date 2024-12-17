@@ -206,6 +206,15 @@ const styles = `
     50% { opacity: 1; }
     100% { opacity: 0.5; }
   }
+  @keyframes float {
+    0% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-5px) scale(1.05); }
+    100% { transform: translateY(0px) scale(1); }
+  }
+
+  .daily-reward-button:hover, .wallet-button:hover {
+    animation: float 1s ease-in-out infinite;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -1782,6 +1791,38 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full mx-auto">
           <div className="relative">
+            {/* Daily Reward Button - Absolute positioned to the right */}
+            <Button
+              onClick={() => {
+                setCurrentPage('dailyReward');
+              }}
+              className="absolute -right-16 top-1/2 -translate-y-1/2 transform hover:scale-110 transition-all duration-300 w-12 h-12 rounded-full bg-gradient-to-r from-green-600 to-teal-600 p-0 shadow-lg hover:shadow-green-500/25 daily-reward-button"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
+                alt="Daily Reward"
+                width={30}
+                height={30}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </Button>
+
+            {/* Wallet Button - Absolute positioned to the left */}
+            <Button
+              onClick={() => setCurrentPage('wallet')}
+              className="absolute -left-16 top-1/2 -translate-y-1/2 transform hover:scale-110 transition-all duration-300 w-12 h-12 rounded-full bg-gradient-to-r from-yellow-600 to-orange-600 p-0 shadow-lg hover:shadow-orange-500/25 wallet-button"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
+                alt="Wallet"
+                width={30}
+                height={30}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </Button>
+
             <button
               className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
               onClick={clickCoin}
@@ -1802,22 +1843,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 />
               </div>
             </button>
-            {clickEffects.map((effect) => (
-              <div
-                key={effect.id}
-                className="click-effect"
-                style={{
-                  left: `${effect.x}px`,
-                  top: `${effect.y}px`,
-                  color: effect.color,
-                  textShadow: '0 0 5px rgba(255, 255, 255, 0.7)',
-                }}
-              >
-                +{effect.value}
-              </div>
-            ))}
           </div>
-          <div>
+
+          {/* Move the energy bar above the booster section */}
+          <div className="w-full max-w-md mb-4">
             <div className="flex justify-between text-sm mb-2 text-white">
               <span className="font-semibold flex items-center gap-2">
                 <Image
@@ -1847,68 +1876,34 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
                 <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
               </div>
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiIGlkPSJhIj48c3RvcCBzdG9wLWNvbG9yPSIjRkZGIiBzdG9wLW9wYWNpdHk9Ii4yIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjEwMCUiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cGF0aCBmaWxsPSJ1cmwoI2EpIiBkPSJNMCAwaDIwdjIwSDB6Ii8+PC9zdmc+')]"></div>
             </div>
           </div>
 
-          <div className="flex space-x-2 mt-auto">
-            <Button
-              onClick={() => {
-                setCurrentPage('dailyReward');
-              }}
-              className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
-                alt="Daily Reward"
-                width={30}
-                height={30}
-                className="mr-1"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-              <span>Daily Reward</span>
-            </Button>
-            <Button
-              onClick={() => setCurrentPage('wallet')}
-              className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
-                alt="Wallet"
-                width={30}
-                height={30}
-                className="mr-1"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-              <span>Wallet</span>
-            </Button>
-            <Button
-              onClick={activateMultiplier}
-              className={`flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
-                user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
-              }`}
-              disabled={user.boosterCredits === 0 || !!multiplierEndTime}
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
-                alt="2x Multiplier"
-                width={30}
-                height={30}
-                className="mr-1"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-              <span>
-                {multiplierEndTime
-                  ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
-                  : user.boosterCredits === 0
-                    ? 'No credits'
-                    : `Booster (${user.boosterCredits})`}
-              </span>
-            </Button>
-          </div>
+          {/* Booster button remains at the bottom */}
+          <Button
+            onClick={activateMultiplier}
+            className={`w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
+              user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
+            }`}
+            disabled={user.boosterCredits === 0 || !!multiplierEndTime}
+          >
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
+              alt="2x Multiplier"
+              width={30}
+              height={30}
+              className="mr-1"
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
+            />
+            <span>
+              {multiplierEndTime
+                ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                : user.boosterCredits === 0
+                  ? 'No credits'
+                  : `Booster (${user.boosterCredits})`}
+            </span>
+          </Button>
         </div>
       </div>
     </div>
