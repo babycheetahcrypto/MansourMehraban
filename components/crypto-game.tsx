@@ -194,6 +194,14 @@ const styles = `
   .animate-button-click {
     animation: button-click 0.3s ease-in-out;
   }
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -533,6 +541,13 @@ const formatNumber = (num: number, useShortFormat: boolean = true): string => {
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
+  const preventDefaultBehavior = (e: React.SyntheticEvent) => {
+    if (isMobile()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   const [user, setUser] = useState<User>(
     userData || {
       id: '',
@@ -994,8 +1009,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const clickCoin = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-
+      if (isMobile()) {
+        event.preventDefault();
+      }
       if (currentPage === 'settings') return; // Add this line to prevent updates on the settings page
 
       if (energy >= 1) {
@@ -1054,7 +1070,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setLastActiveTime(Date.now()); // Update last active time
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage] // Add currentPage to the dependency array
+    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage]
   );
 
   const buyItem = useCallback(
@@ -2662,10 +2678,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             paddingBottom: 'env(safe-area-inset-bottom)',
             paddingTop: 'env(safe-area-inset-top)',
           }}
+          onContextMenu={preventDefaultBehavior}
+          onTouchStart={preventDefaultBehavior}
         >
           <meta
             name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
           />
           <style>{styles}</style>
           <div className="fixed inset-0 z-0 overflow-hidden">
