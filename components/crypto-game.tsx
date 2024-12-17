@@ -1655,52 +1655,38 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/30 to-gray-900/30 rounded-full blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-800/30 to-blue-900/30 rounded-full blur-xl"></div>
         {[
-          {
-            page: 'home',
-            text: 'Home',
-            icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
-          },
-          {
-            page: 'shop',
-            text: 'Shop',
-            icon: 'SHOP%203D%20ICON-8W5KCBOOeijJzAMwkJlM3AvlopMlor.png',
-          },
-          {
-            page: 'tasks',
-            text: 'Tasks',
-            icon: 'TASKS%203D%20ICON-xYtBLApGw0DH6Z96oMKZEnNZJu5KvW.png',
-          },
-          {
-            page: 'rating',
-            text: 'Rating',
-            icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
-          },
+          { page: 'home', icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png' },
+          { page: 'shop', icon: 'SHOP%203D%20ICON-8W5KCBOOeijJzAMwkJlM3AvlopMlor.png' },
+          { page: 'tasks', icon: 'TASKS%203D%20ICON-xYtBLApGw0DH6Z96oMKZEnNZJu5KvW.png' },
+          { page: 'rating', icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png' },
           {
             page: 'invite',
-            text: 'Invite',
             icon: 'FRIEND%20INVITE%203D%20ICON-8lQ0eY4dY5Qznxnip4OH8ae53TzlvY.png',
           },
-        ].map(({ page, text, icon }) => (
-          <CryptoButton
+        ].map(({ page, icon }) => (
+          <Button
             key={page}
-            icon={(props) => (
-              <Image
-                src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
-                alt={text}
-                width={35}
-                height={35}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-                {...props}
-              />
+            variant="ghost"
+            className={`relative w-14 h-14 bg-transparent flex flex-col items-center justify-center rounded-full ${
+              currentPage === page ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
+            } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white`}
+            onClick={() => setCurrentPage(page)}
+          >
+            <Image
+              src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
+              alt={page}
+              width={32}
+              height={32}
+              className={currentPage === page ? 'filter brightness-150' : ''}
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
+            />
+            {currentPage === page && (
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
             )}
-            href={page}
-            text={text}
-            isActive={currentPage === page}
-            setCurrentPage={setCurrentPage}
-          />
+          </Button>
         ))}
       </div>
     </div>
@@ -1831,42 +1817,38 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
 
-            <div className="flex space-x-2 mt-auto">
+            <div className="flex justify-center space-x-4 mt-auto">
               <Button
                 onClick={() => {
                   setCurrentPage('dailyReward');
                 }}
-                className="flex-1 bg-black/30 backdrop-blur-md text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
+                className="w-16 h-16 bg-black/30 backdrop-blur-md text-white rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-12"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
                   alt="Daily Reward"
-                  width={24}
-                  height={24}
-                  className="mr-1"
+                  width={40}
+                  height={40}
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                <span>Daily Reward</span>
               </Button>
               <Button
                 onClick={() => setCurrentPage('wallet')}
-                className="flex-1 bg-black/30 backdrop-blur-md text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
+                className="w-16 h-16 bg-black/30 backdrop-blur-md text-white rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-12"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png"
                   alt="Wallet"
-                  width={24}
-                  height={24}
-                  className="mr-1"
+                  width={40}
+                  height={40}
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                <span>Wallet</span>
               </Button>
               <Button
                 onClick={activateMultiplier}
-                className={`flex-1 bg-black/30 backdrop-blur-md text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
+                className={`w-16 h-16 bg-black/30 backdrop-blur-md text-white rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-12 ${
                   user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
                 }`}
                 disabled={user.boosterCredits === 0 || !!multiplierEndTime}
@@ -1874,9 +1856,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
                   alt="2x Multiplier"
-                  width={24}
-                  height={24}
-                  className="mr-1"
+                  width={40}
+                  height={40}
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
