@@ -396,14 +396,14 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   const handleClick = () => {
     setCurrentPage(href);
     setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 300); // Reset after animation
+    setTimeout(() => setIsClicked(false), 300);
   };
 
   return (
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center ${
+        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-full ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
@@ -418,7 +418,9 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         >
           {text}
         </span>
-        {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
+        {isActive && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
+        )}
       </Button>
     </div>
   );
@@ -1676,11 +1678,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
           },
           {
-            page: 'wallet',
-            text: 'Wallet',
-            icon: 'WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png',
-          },
-          {
             page: 'invite',
             text: 'Invite',
             icon: 'FRIEND%20INVITE%203D%20ICON-8lQ0eY4dY5Qznxnip4OH8ae53TzlvY.png',
@@ -1834,39 +1831,58 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
 
-            <div className="flex space-x-4 mt-auto">
+            <div className="flex space-x-2 mt-auto">
               <Button
                 onClick={() => {
                   setCurrentPage('dailyReward');
                 }}
-                className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white"
+                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md text-sm font-semibold"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
                   alt="Daily Reward"
-                  width={28}
-                  height={28}
-                  className="mr-2"
+                  width={24}
+                  height={24}
+                  className="mr-1"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
                 <span>Daily Reward</span>
               </Button>
               <Button
+                onClick={() => setCurrentPage('wallet')}
+                className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-teal-700 backdrop-blur-md text-sm font-semibold"
+              >
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png"
+                  alt="Wallet"
+                  width={24}
+                  height={24}
+                  className="mr-1"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+                <span>Wallet</span>
+              </Button>
+              <Button
                 onClick={activateMultiplier}
                 className={`flex-1 bg-gradient-to-r ${
                   user.boosterCredits === 0 || multiplierEndTime
-                    ? 'from-gray-600/50 to-gray-700/50'
-                    : 'from-gray-800/50 to-gray-900/50'
-                } text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md bg-black/30 text-white`}
+                    ? 'from-gray-600 to-gray-700'
+                    : 'from-blue-600 to-indigo-600'
+                } text-white px-3 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 ${
+                  user.boosterCredits === 0 || multiplierEndTime
+                    ? ''
+                    : 'hover:from-blue-700 hover:to-indigo-700'
+                } backdrop-blur-md text-sm font-semibold`}
                 disabled={user.boosterCredits === 0 || !!multiplierEndTime}
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
                   alt="2x Multiplier"
-                  width={28}
-                  height={28}
-                  className="mr-2"
+                  width={24}
+                  height={24}
+                  className="mr-1"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
