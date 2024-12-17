@@ -417,7 +417,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-18 h-18 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
+        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
@@ -426,7 +426,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         }`}
         onClick={handleClick}
       >
-        <Icon className={`w-8 h-8 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
           className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
@@ -1812,7 +1812,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <div className="flex flex-col items-center justify-center w-full mx-auto">
           <div className="relative">
             <button
-              className="w-[360px] h-[360px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
+              className="w-[335px] h-[335px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
               onClick={clickCoin}
               onTouchStart={clickCoin}
               onTouchEnd={(e) => e.preventDefault()}
@@ -1821,8 +1821,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src={selectedCoinImage}
                   alt={`Level ${level} Cheetah`}
-                  width={360}
-                  height={360}
+                  width={335}
+                  height={335}
                   objectFit="contain"
                   className="relative z-10"
                   priority
