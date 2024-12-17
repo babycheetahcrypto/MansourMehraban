@@ -194,6 +194,13 @@ const styles = `
   .animate-button-click {
     animation: button-click 0.3s ease-in-out;
   }
+  img {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -740,6 +747,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Facebook"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => shareToSocialMedia('facebook'),
@@ -757,6 +766,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="X"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => shareToSocialMedia('x'),
@@ -774,6 +785,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Instagram"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => shareToSocialMedia('instagram'),
@@ -791,6 +804,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="YouTube"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => openYouTubeChannel(),
@@ -808,6 +823,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="YouTube"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => watchYouTubeVideos(),
@@ -825,6 +842,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Telegram"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => joinTelegramChannel(),
@@ -843,6 +862,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Invite Friends"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => inviteFriends(),
@@ -861,6 +882,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Reach Level 10"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => {},
@@ -879,6 +902,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Trophy's Level"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => {},
@@ -896,6 +921,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="X"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => followX(),
@@ -913,6 +940,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Instagram"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => followInstagram(),
@@ -930,6 +959,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="WhatsApp"
           width={48}
           height={48}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       ),
       action: () => followWhatsApp(),
@@ -1445,6 +1476,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       TelegramWebApp.expand();
     }
   }, []);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setEnergy((prevEnergy) => {
@@ -1538,6 +1570,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 width={40}
                 height={40}
                 className="rounded-full"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
               />
             </div>
             <div>
@@ -1551,6 +1585,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   width={16}
                   height={16}
                   className="mr-1"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
                 {formatNumber(user.coins, false)} coins
               </div>
@@ -1569,6 +1605,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Trophies"
                 width={28}
                 height={28}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
               />
             </Button>
             <Button
@@ -1583,6 +1621,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Levels"
                 width={28}
                 height={28}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
               />
             </Button>
             <Button
@@ -1597,6 +1637,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Settings"
                 width={28}
                 height={28}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
               />
             </Button>
           </div>
@@ -1652,6 +1694,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt={text}
                 width={36}
                 height={36}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
                 {...props}
               />
             )}
@@ -1695,6 +1739,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               width={16}
               height={16}
               className="mb-1"
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
             />
             <span className="text-xs text-white">{formatNumber(profitPerHour, true)}/h</span>
           </div>
@@ -1726,6 +1772,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               alt="Crypto Coin"
               width={48}
               height={48}
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
             />
           </div>
         </div>
@@ -1747,6 +1795,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   objectFit="contain"
                   className="relative z-10"
                   priority
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
             </button>
@@ -1797,6 +1847,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   width={24}
                   height={24}
                   className="mr-2"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
                 <span>Daily Reward</span>
               </Button>
@@ -1815,6 +1867,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   width={24}
                   height={24}
                   className="mr-2"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
                 <span>
                   {multiplierEndTime
@@ -1858,6 +1912,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       ? 'group-hover:opacity-80 transition-opacity duration-300'
                       : ''
                   }`}
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
               <p className="text-xs text-white mb-1">Level: {item.level}</p>
@@ -1894,6 +1950,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     layout="fill"
                     objectFit="cover"
                     className="group-hover:opacity-80 transition-opacity duration-300"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                 </div>
                 <p className="text-sm text-white mb-1">Level: {item.level}</p>
@@ -2067,6 +2125,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   width={128}
                   height={128}
                   className="relative z-10"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full filter blur-md animate-pulse"></div>
               </div>
@@ -2083,6 +2143,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   width={32}
                   height={32}
                   className="mr-2"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
                 <p className="text-2xl font-bold text-green-400">
                   {formatNumber(user.coins, false)}
@@ -2103,6 +2165,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 width={24}
                 height={24}
                 className="mr-2"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
               />
               Tonkeeper (Unavailable)
             </Button>
@@ -2143,6 +2207,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         target.src =
                           'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
                       }}
+                      draggable="false"
+                      onContextMenu={(e) => e.preventDefault()}
                     />
                   </div>
                   <p className="text-xs text-center text-white mb-2">
@@ -2414,6 +2480,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     target.src =
                       'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-trophy-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
                   }}
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
               <p className="text-sm text-center text-white">{trophy.description}</p>
@@ -2584,6 +2652,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   width={200}
                   height={200}
                   className="animate-pulse"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
             </div>
@@ -2638,6 +2708,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </Popup>
   );
 
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    const href = e.currentTarget.href;
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.openTelegramLink(href);
+    } else {
+      window.open(href, '_blank');
+    }
+  };
+
   return (
     <>
       {!isMobile() ? (
@@ -2657,6 +2737,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             userSelect: 'none',
             WebkitTouchCallout: 'none',
             WebkitUserSelect: 'none',
+            KhtmlUserSelect: 'none',
             MozUserSelect: 'none',
             msUserSelect: 'none',
             paddingBottom: 'env(safe-area-inset-bottom)',
@@ -2665,8 +2746,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         >
           <meta
             name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
           />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <style>{styles}</style>
           <div className="fixed inset-0 z-0 overflow-hidden">
             <StarryBackground />
@@ -2711,6 +2794,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   width={26}
                   height={26}
                   className="ml-3"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               </p>
               <p className="mb-5 text-sm text-center text-white">
