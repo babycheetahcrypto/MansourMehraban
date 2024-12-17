@@ -747,8 +747,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Facebook%203D%20ICON-HuOyHlDIHEQusiCA0otRLNqN2QFWGz.png"
           alt="Facebook"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -766,8 +766,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/X%203D%20ICON-7WGq7XU7tZHnLw8Jh2tmLCjf0e94ii.png"
           alt="X"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -785,8 +785,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20ICON-ClIOzvVv2BnSM9iRv28uoYcA6K4UMZ.png"
           alt="Instagram"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -804,8 +804,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20ICON-n3DFRVp9JnkM0qQcysyNK18eaDTZQ9.png"
           alt="YouTube"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -823,8 +823,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20ICON-n3DFRVp9JnkM0qQcysyNK18eaDTZQ9.png"
           alt="YouTube"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -842,8 +842,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Telegram%203D%20ICON-NDxLVpptGuaMMEVnUxO3JwNPsoQURR.png"
           alt="Telegram"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -862,8 +862,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Invite%20Friends-zoNaAe54HVxyqUHWGMnRk0yVSPlQNe.png"
           alt="Invite Friends"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -882,8 +882,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/FIRE%203D%20ICON-s9MYcBHxjRf2tFINAmTGa2xg78ithG.png"
           alt="Reach Level 10"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -902,8 +902,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%20TASK%203D%20ICON-XNiYwBNTYYMV7G1hu3QOQHyKIMej8o.png"
           alt="Trophy's Level"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -921,8 +921,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/X%203D%20ICON-7WGq7XU7tZHnLw8Jh2tmLCjf0e94ii.png"
           alt="X"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -940,8 +940,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Instagram%203D%20ICON-ClIOzvVv2BnSM9iRv28uoYcA6K4UMZ.png"
           alt="Instagram"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -959,8 +959,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Whatsapp%203D%20ICON-xBKvZqkfPamAPHhSnS56SBjZbnQWF7.png"
           alt="WhatsApp"
-          width={40}
-          height={40}
+          width={36}
+          height={36}
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
