@@ -1643,7 +1643,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </Button>
             <Button
               variant="ghost"
-              className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
+              className="bgtransparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
               onClick={() => {
                 setCurrentPage('settings');
               }}
@@ -1728,13 +1728,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm font-bold text-white">Level {level}</span>
             </div>
-            <div className="w-full bg-gray-700 h-1 rounded-full overflow-hidden">
+            <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
               <div
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out"
                 style={{
                   width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
+                  boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
                 }}
-              />
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+              </div>
             </div>
             <div className="text-xs text-white flex justify-between mt-1">
               <span>{formatNumber(user.coins - levelRequirements[level - 1], true)}</span>
@@ -1743,17 +1747,33 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </span>
             </div>
           </div>
-          <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
-              alt="Profit Per Hour"
-              width={22}
-              height={22}
-              className="mb-1"
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-            <span className="text-xs text-white">{formatNumber(profitPerHour, true)}/h</span>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => setCurrentPage('wallet')}
+              className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
+                alt="Wallet"
+                width={30}
+                height={30}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </Button>
+            <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
+                alt="Profit Per Hour"
+                width={22}
+                height={22}
+                className="mb-1"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span className="text-xs text-white">{formatNumber(profitPerHour, true)}/h</span>
+            </div>
           </div>
         </div>
 
@@ -1791,38 +1811,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex flex-col items-center justify-center w-full mx-auto">
           <div className="relative">
-            {/* Daily Reward Button - Absolute positioned to the right */}
-            <Button
-              onClick={() => {
-                setCurrentPage('dailyReward');
-              }}
-              className="absolute -right-16 top-1/2 -translate-y-1/2 transform hover:scale-110 transition-all duration-300 w-12 h-12 rounded-full bg-gradient-to-r from-green-600 to-teal-600 p-0 shadow-lg hover:shadow-green-500/25 daily-reward-button"
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
-                alt="Daily Reward"
-                width={30}
-                height={30}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Button>
-
-            {/* Wallet Button - Absolute positioned to the left */}
-            <Button
-              onClick={() => setCurrentPage('wallet')}
-              className="absolute -left-16 top-1/2 -translate-y-1/2 transform hover:scale-110 transition-all duration-300 w-12 h-12 rounded-full bg-gradient-to-r from-yellow-600 to-orange-600 p-0 shadow-lg hover:shadow-orange-500/25 wallet-button"
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
-                alt="Wallet"
-                width={30}
-                height={30}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Button>
-
             <button
               className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
               onClick={clickCoin}
@@ -1845,7 +1833,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </button>
           </div>
 
-          {/* Move the energy bar above the booster section */}
           <div className="w-full max-w-md mb-4">
             <div className="flex justify-between text-sm mb-2 text-white">
               <span className="font-semibold flex items-center gap-2">
@@ -1879,31 +1866,48 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
 
-          {/* Booster button remains at the bottom */}
-          <Button
-            onClick={activateMultiplier}
-            className={`w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
-              user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
-            }`}
-            disabled={user.boosterCredits === 0 || !!multiplierEndTime}
-          >
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
-              alt="2x Multiplier"
-              width={30}
-              height={30}
-              className="mr-1"
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-            <span>
-              {multiplierEndTime
-                ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
-                : user.boosterCredits === 0
-                  ? 'No credits'
-                  : `Booster (${user.boosterCredits})`}
-            </span>
-          </Button>
+          <div className="flex gap-2 w-full mb-4">
+            <Button
+              onClick={() => {
+                setCurrentPage('dailyReward');
+              }}
+              className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold daily-reward-button"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
+                alt="Daily Reward"
+                width={30}
+                height={30}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span>Daily Reward</span>
+            </Button>
+            <Button
+              onClick={activateMultiplier}
+              className={`flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
+                user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
+              }`}
+              disabled={user.boosterCredits === 0 || !!multiplierEndTime}
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
+                alt="2x Multiplier"
+                width={30}
+                height={30}
+                className="mr-1"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span>
+                {multiplierEndTime
+                  ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                  : user.boosterCredits === 0
+                    ? 'No credits'
+                    : `Booster (${user.boosterCredits})`}
+              </span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
