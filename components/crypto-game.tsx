@@ -152,9 +152,9 @@ const styles = `
     pointer-events: none;
     animation: fadeOutUp 0.7s ease-out forwards;
     color: white;
-    font-weight: bold;
+    font-weight: 900;
     font-size: 1.5rem;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 25px rgba(255, 255, 255, 0.8);
     transform: translate(-50%, -50%);
     z-index: 30;
   }
@@ -1575,11 +1575,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [user]);
 
   const renderHeader = () => (
-    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full">
+    <div className="sticky top-0 z-10 bg-black/10 backdrop-blur-xl p-2 rounded-full border border-white/10">
       <Card className="bg-transparent border-0 overflow-hidden">
         <CardContent className="p-2 flex items-center justify-between relative flex-wrap">
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden">
+            <div className="w-10 h-10 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden border border-white/20">
               <Image
                 src={user.profilePhoto}
                 alt={user.username}
@@ -1591,10 +1591,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
             </div>
             <div>
-              <h2 className="font-bold text-sm text-white">
+              <h2 className="font-black text-sm text-white">
                 {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 12) + '...'}
               </h2>
-              <div className="text-xs text-white flex items-center">
+              <div className="text-xs text-white flex items-center font-bold">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Coin"
@@ -1611,7 +1611,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
-              className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
+              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10"
               onClick={() => {
                 setCurrentPage('trophies');
               }}
@@ -1627,7 +1627,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </Button>
             <Button
               variant="ghost"
-              className="bg-transparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
+              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10"
               onClick={() => {
                 setCurrentPage('levels');
               }}
@@ -1643,7 +1643,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </Button>
             <Button
               variant="ghost"
-              className="bgtransparent backdrop-filter backdrop-blur-sm text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0"
+              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10"
               onClick={() => {
                 setCurrentPage('settings');
               }}
@@ -1779,7 +1779,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1
-            className={`font-bold text-white overflow-hidden ${
+            className={`font-black text-white overflow-hidden ${
               formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'
             }`}
           >
