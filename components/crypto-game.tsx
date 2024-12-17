@@ -1649,11 +1649,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderFooter = () => (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent backdrop-blur-lg p-2 rounded-t-3xl z-50"
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50 border-t border-gray-700/30"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-full blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
         {[
           {
             page: 'home',
@@ -1686,34 +1686,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             icon: 'FRIEND%20INVITE%203D%20ICON-8lQ0eY4dY5Qznxnip4OH8ae53TzlvY.png',
           },
         ].map(({ page, text, icon }) => (
-          <button
+          <CryptoButton
             key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`flex flex-col items-center justify-center p-2 rounded-full transition-all duration-300 ${
-              currentPage === page
-                ? 'bg-gradient-to-r from-purple-600 to-blue-600 scale-110'
-                : 'hover:bg-white/10'
-            }`}
-          >
-            <div
-              className={`w-12 h-12 rounded-full flex items-center justify-center mb-1 ${
-                currentPage === page ? 'bg-white' : 'bg-gray-800'
-              }`}
-            >
+            icon={(props) => (
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={32}
-                height={32}
-                className={`transition-all duration-300 ${currentPage === page ? 'scale-110' : ''}`}
+                width={35}
+                height={35}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
+                {...props}
               />
-            </div>
-            <span className={`text-xs ${currentPage === page ? 'text-white' : 'text-gray-400'}`}>
-              {text}
-            </span>
-          </button>
+            )}
+            href={page}
+            text={text}
+            isActive={currentPage === page}
+            setCurrentPage={setCurrentPage}
+          />
         ))}
       </div>
     </div>
