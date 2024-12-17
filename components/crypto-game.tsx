@@ -403,16 +403,16 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
+        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
-        } bg-black/30 backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white ${
+        } backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white ${
           isClicked ? 'ring-2 ring-primary ring-offset-2 ring-offset-black' : ''
         }`}
         onClick={handleClick}
       >
-        <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
           className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
@@ -1689,8 +1689,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={35}
-                height={35}
+                width={32}
+                height={32}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
