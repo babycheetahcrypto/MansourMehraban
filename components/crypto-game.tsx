@@ -2053,7 +2053,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
         <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
           {leaderboardData.slice(0, 200).map((player, index) => (
-            <div
+            <NeonGradientCard
               key={player.id}
               className={`flex items-center justify-between p-4 ${
                 index < 3
@@ -2092,7 +2092,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <p className="text-sm text-white">Profit/h</p>
                 <p className="font-bold text-white">{formatNumber(player.profitPerHour, true)}</p>
               </div>
-            </div>
+            </NeonGradientCard>
           ))}
         </div>
         {currentUserRank > 0 && (
