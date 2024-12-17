@@ -403,7 +403,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center ${
+        className={`relative w-14 h-14 bg-transparent flex flex-col items-center justify-center rounded-full ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
@@ -412,13 +412,15 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         }`}
         onClick={handleClick}
       >
-        <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
-          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
+          className={`text-[10px] ${isActive ? 'text-primary' : 'text-gray-300'} group-hover:text-white`}
         >
           {text}
         </span>
-        {isActive && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />}
+        {isActive && (
+          <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
+        )}
       </Button>
     </div>
   );
@@ -1649,11 +1651,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderFooter = () => (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-1 rounded-t-2xl z-50 border-t border-gray-700/30"
+      className="fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-800/30 to-blue-800/30 rounded-full blur-xl"></div>
         {[
           {
             page: 'home',
@@ -1692,8 +1694,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={35}
-                height={35}
+                width={32}
+                height={32}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
