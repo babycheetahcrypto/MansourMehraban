@@ -201,6 +201,23 @@ const styles = `
     -moz-user-select: none;
     -ms-user-select: none;
   }
+  @keyframes energyPulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+  }
+
+  @keyframes energyFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes glowEffect {
+    0% { filter: drop-shadow(0 0 2px #4f46e5); }
+    50% { filter: drop-shadow(0 0 6px #4f46e5); }
+    100% { filter: drop-shadow(0 0 2px #4f46e5); }
+  }
 `;
 
 // Telegram WebApp type definition
