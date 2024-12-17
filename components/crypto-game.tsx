@@ -1736,8 +1736,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-BOmbm8gpqO0AMx6vImTMvMohF71biw.png"
               alt="Profit Per Hour"
-              width={16}
-              height={16}
+              width={20}
+              height={20}
               className="mb-1"
               draggable="false"
               onContextMenu={(e) => e.preventDefault()}
