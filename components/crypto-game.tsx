@@ -446,83 +446,83 @@ const levelImages = [
 
 const trophies = [
   {
-    name: 'Crypto Novice',
-    description: 'First steps into the digital realm',
+    name: 'Cheetah Spirit',
+    description: 'Speed is in your soul, and greatness is in your paws',
     requirement: 10000,
     prize: 1000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1T-nUWKYBAKLuUbRUCtQ4Pe6bKVvuayqD.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Spirit%203D%20ICON-iczgm9Y3jJZuDSDH8FqOjHNtNCNU9g.png',
     claimed: false,
   },
   {
-    name: 'Blockchain Pioneer',
-    description: 'Exploring the foundations of crypto',
+    name: 'Cosmic Runner',
+    description: 'You’ve run past the stars; the galaxy watches in awe',
     requirement: 50000,
     prize: 5000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2T-qkckZRo7F2pFbjOXFUsmZW1aVDaKkX.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cosmic%20Runner%203D%20ICON-V75MZht2LrDPIJ75tb8X2O6QZSo7Ai.png',
     claimed: false,
   },
   {
-    name: 'DeFi Explorer',
-    description: 'Venturing into decentralized finance',
+    name: 'Quest Conqueror',
+    description: 'Every step forward is a victory in itself',
     requirement: 100000,
     prize: 10000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3T-S4ZJ26mqOyNGPIIBKrLLwkozCZFPru.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Quest%20Conqueror%203D%20ICON-aBdcxDA5KX39Gab4JuUqWY2RxU9wok.png',
     claimed: false,
   },
   {
-    name: 'NFT Collector',
-    description: 'Embracing the world of digital art',
+    name: 'Gold Hunter',
+    description: 'Fortune favors those bold enough to chase it',
     requirement: 250000,
     prize: 25000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4T-8R9RicTTe3vC5WD0wWAY7OCNaF1vxx.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Gold%20Hunter%203D%20ICON-1yeVe629S06xwvRcfm37Wo8EYdhIH0.png',
     claimed: false,
   },
   {
-    name: 'Hodl Master',
-    description: 'Showing true diamond hands',
+    name: 'Star Collector',
+    description: 'Shine brighter than the cosmos; the sky is yours to claim',
     requirement: 500000,
     prize: 50000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5T-QEssxxIveH9hiQ0nJcZZrmdJJguJbF.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Star%20Collector-m9ihxt6yrcDf2YWvVq6N481JKJwcjW.png',
     claimed: false,
   },
   {
-    name: 'Altcoin Adventurer',
-    description: 'Diversifying beyond Bitcoin',
+    name: 'Wealth Builder',
+    description: 'True riches are built, not found',
     requirement: 1000000,
     prize: 100000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/6T-fnsT0zSHQjez6E6KHO3AjIwflnyT1P.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wealth%20Builder-tfPdZPXRZCShOPxkshtcOd6f3LCUWk.png',
     claimed: false,
   },
   {
-    name: 'Smart Contract Sage',
-    description: 'Mastering the art of crypto automation',
+    name: 'Friend Magnet',
+    description: 'Greatness grows when shared with others',
     requirement: 2500000,
     prize: 250000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7T-2DEkkrvJaawGC1O7GADjiHOn8RQfia.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friend%20Magnet-GDi7PAhOTeugy3abK6eAbsO9gNidKl.png',
     claimed: false,
   },
   {
-    name: 'Crypto Whale',
-    description: 'Making waves in the digital ocean',
+    name: 'Celebration Master',
+    description: 'Every milestone deserves a moment of joy',
     requirement: 5000000,
     prize: 500000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8T-i7iib3r4xoqtY9qYHdrOOgiUflPOCu.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Celebration%20Master-x20JtpH2kRI4udYImf8WmCjfUt4sfL.png',
     claimed: false,
   },
   {
-    name: 'Metaverse Mogul',
-    description: 'Conquering virtual worlds',
+    name: 'Legendary Unlocker',
+    description: 'Legends aren’t born—they unlock their own destiny',
     requirement: 7500000,
     prize: 750000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/9T-FOz1XZIhMkDitSvZsKOFXfYkP6QdQt.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Legendary%20Unlocker-0jg3EPTYw1rPeMtOlO7ga1hyzfcxKR.png',
     claimed: false,
   },
   {
-    name: 'Crypto Legend',
-    description: 'Achieving legendary status in the crypto world',
+    name: 'King of Coins',
+    description: 'Wealth isn’t just earned, it’s conquered',
     requirement: 10000000,
     prize: 1000000,
-    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/10-m1ABpvscvGrraWnHOclc7sLK531TqB.png',
+    icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/King%20of%20Coins%203D%20ICON-22v8eZDhx9amJWljmN9chWAbCXeMMV.png',
     claimed: false,
   },
 ];
@@ -880,7 +880,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/FIRE%203D%20ICON-2WjFYZbZ4SZ1BggDxdY0b4Zqxkk3lA.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/FIRE%203D%20ICON-s9MYcBHxjRf2tFINAmTGa2xg78ithG.png"
           alt="Reach Level 10"
           width={48}
           height={48}
@@ -900,7 +900,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       claimed: false,
       icon: (
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Trophy%20Task%203D%20icon-TiL6cVCcwg5sxAGaMTNfFUmCFypzv1.png"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%20TASK%203D%20ICON-XNiYwBNTYYMV7G1hu3QOQHyKIMej8o.png"
           alt="Trophy's Level"
           width={48}
           height={48}
@@ -1603,7 +1603,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               }}
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%203D%20ICON-r7DrilofLzG7BdFZtgONM1tDZHT5aO.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%203D%20ICON-OWj5E59yfxlLk1Ggf2x8o0kfMIJNVy.png"
                 alt="Trophies"
                 width={30}
                 height={30}
@@ -1619,7 +1619,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               }}
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LEVEL%203D%20ICON-0VzQFGvjHWkPoGl5HmoDJ4edD4ZztE.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LEVEL%203D%20ICON-1QycsqYoN36yz9KyR6KM3Q7pfm2eTe.png"
                 alt="Levels"
                 width={30}
                 height={30}
@@ -1635,7 +1635,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               }}
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-Zln2aXS4iPIxlZfmYO42iPAKAwEtKt.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-e5kOIT7doa350SWGGjbyEw71v4Ldhm.png"
                 alt="Settings"
                 width={30}
                 height={30}
@@ -1658,29 +1658,29 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <div className="absolute inset-0 bg-gradient-to-r from-purple-800/30 to-blue-900/30 rounded-full blur-xl"></div>
         {[
           {
+            page: 'tasks',
+            text: 'Tasks',
+            icon: 'TASKS%203D%20ICON-TdX24HYmqD0KAnug5YsjXN8t6qMRDr.png',
+          },
+          {
+            page: 'shop',
+            text: 'Shop',
+            icon: 'SHOP%203D%20ICON-02YxP35Bd9AC8hMPGjqzUQylpXOHRS.png',
+          },
+          {
             page: 'home',
             text: 'Home',
             icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
           },
           {
-            page: 'shop',
-            text: 'Shop',
-            icon: 'SHOP%203D%20ICON-8W5KCBOOeijJzAMwkJlM3AvlopMlor.png',
-          },
-          {
-            page: 'tasks',
-            text: 'Tasks',
-            icon: 'TASKS%203D%20ICON-xYtBLApGw0DH6Z96oMKZEnNZJu5KvW.png',
-          },
-          {
             page: 'rating',
             text: 'Rating',
-            icon: 'RATING%203D%20ICON-445ZGZSdRbrUUyhr0TpzxlvsnwJNeu.png',
+            icon: 'RATING%203D%20ICON-fc1CF0mncViyB8MTFT7iisKtLfBKoA.png',
           },
           {
             page: 'invite',
             text: 'Invite',
-            icon: 'FRIEND%20INVITE%203D%20ICON-8lQ0eY4dY5Qznxnip4OH8ae53TzlvY.png',
+            icon: 'FRIEND%20INVITE%203D%20ICON-GyAxv2xoA7fZeN65uJ60ILc6RQxxXN.png',
           },
         ].map(({ page, text, icon }) => (
           <CryptoButton
@@ -1731,7 +1731,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-BOmbm8gpqO0AMx6vImTMvMohF71biw.png"
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
               alt="Profit Per Hour"
               width={22}
               height={22}
@@ -1839,7 +1839,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
               >
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
                   alt="Daily Reward"
                   width={24}
                   height={24}
@@ -1854,7 +1854,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
               >
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
                   alt="Wallet"
                   width={24}
                   height={24}
@@ -1872,7 +1872,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 disabled={user.boosterCredits === 0 || !!multiplierEndTime}
               >
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-dt9XRoqhHoghg1M8hOR1TJBLFPORVi.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
                   alt="2x Multiplier"
                   width={24}
                   height={24}
