@@ -403,7 +403,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-18 h-18 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
+        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
@@ -412,7 +412,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         }`}
         onClick={handleClick}
       >
-        <Icon className={`w-8 h-8 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
           className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
         >
@@ -1689,8 +1689,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={36}
-                height={36}
+                width={35}
+                height={35}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
@@ -2483,8 +2483,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src={trophy.icon}
                   alt={trophy.name}
-                  width={120}
-                  height={120}
+                  width={150}
+                  height={150}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src =
