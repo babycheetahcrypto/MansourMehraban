@@ -11,7 +11,7 @@ bot.command('start', async (ctx: Context) => {
   }
 
   const welcomeMessage = `
-Welcome ${telegramUser.username || telegramUser.first_name}! 🐾🎉
+Welcome <b><font color="blue">${telegramUser.username || telegramUser.first_name}</font></b>! 🐾🎉
 
 Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't to miss! 💸
 
@@ -68,7 +68,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
       },
       {
         caption: welcomeMessage,
-        parse_mode: 'Markdown',
+        parse_mode: 'HTML',
         ...Markup.inlineKeyboard([
           Markup.button.webApp('Play 🚀', gameUrl),
           Markup.button.url('Join community', 'https://t.me/babycheetahcrypto'),
