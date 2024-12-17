@@ -403,7 +403,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-full ${
+        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
@@ -1651,11 +1651,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderbottom = () => (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
+      className="fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-full blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-800/30 to-gray-900/30 rounded-full blur-xl"></div>
         {[
           {
             page: 'home',
@@ -1836,7 +1836,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onClick={() => {
                   setCurrentPage('dailyReward');
                 }}
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700 backdrop-blur-md text-sm font-semibold"
+                className="flex-1 bg-black/30 backdrop-blur-md text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GIFT%203D%20ICON-1N7HahK5oT1NZXElcGOdQiIVEt2fAR.png"
@@ -1851,7 +1851,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
               <Button
                 onClick={() => setCurrentPage('wallet')}
-                className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-teal-700 backdrop-blur-md text-sm font-semibold"
+                className="flex-1 bg-black/30 backdrop-blur-md text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-GQhzZExvdqTlDqxZLcBNZkfiaGpp53.png"
@@ -1866,15 +1866,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
               <Button
                 onClick={activateMultiplier}
-                className={`flex-1 bg-gradient-to-r ${
-                  user.boosterCredits === 0 || multiplierEndTime
-                    ? 'from-gray-600 to-gray-700'
-                    : 'from-blue-600 to-indigo-600'
-                } text-white px-3 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 ${
-                  user.boosterCredits === 0 || multiplierEndTime
-                    ? ''
-                    : 'hover:from-blue-700 hover:to-indigo-700'
-                } backdrop-blur-md text-sm font-semibold`}
+                className={`flex-1 bg-black/30 backdrop-blur-md text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
+                  user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
+                }`}
                 disabled={user.boosterCredits === 0 || !!multiplierEndTime}
               >
                 <Image
