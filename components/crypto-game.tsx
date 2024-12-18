@@ -122,6 +122,10 @@ interface UserData extends Omit<User, 'dailyReward'> {
   };
 }
 
+interface WalletProps {
+  coins: number;
+}
+
 // Keyframe animation
 const styles = `
   @keyframes pulse {
