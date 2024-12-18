@@ -635,7 +635,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     item: null as ShopItem | PremiumShopItem | null,
   });
   const [clickEffects, setClickEffects] = useState<
-    { id: number; x: number; y: number; value: number; color: string }[]
+    { id: number; x: number; y: number; value: number; color: string; text: string }[]
   >([]);
   const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
   const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
@@ -1074,7 +1074,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         const x = clientX;
         const y = clientY;
-        const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
+        const clickEffect = {
+          id: Date.now(),
+          x,
+          y,
+          value: clickValue,
+          color: 'white',
+          text: formatNumber(clickValue, true),
+        };
         setClickEffects((prev) => [...prev, clickEffect]);
         setTimeout(() => {
           setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
@@ -1730,7 +1737,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
               <div
-                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out"
+                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out animate-pulse"
                 style={{
                   width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
                   boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
@@ -2879,6 +2886,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             />
           )}
           {activePopups.has('levelUnlock') && renderLevelUnlockPopup()}
+          {clickEffects.map((effect) => (
+            <div
+              key={effect.id}
+              className="click-effect"
+              style={{
+                left: effect.x,
+                top: effect.y,
+                color: effect.color,
+              }}
+            >
+              <strong>{effect.text}</strong>
+            </div>
+          ))}
         </div>
       )}
     </>
