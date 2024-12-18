@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Wallet from '../components/wallet';
 import { TonConnectUI } from '@tonconnect/ui-react';
 import { useTonConnect } from '@/hooks/useTonConnect';
+import { User as UserType } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -32,47 +33,12 @@ import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
 
-interface User {
-  id: string;
-  telegramId: string;
-  username: string;
-  firstName?: string;
-  lastName?: string;
-  coins: number;
-  level: number;
-  exp: number;
-  profilePhoto: string;
-  shopItems: any[];
-  premiumShopItems: any[];
-  tasks: any[];
-  dailyReward: {
-    lastClaimed: Date | null;
-    streak: number;
-    day: number;
-    completed: boolean;
-  };
-  unlockedLevels: number[];
-  clickPower: number;
-  friendsCoins: { [key: string]: number };
-  energy: number;
-  pphAccumulated: number;
-  multiplier: number;
-  multiplierEndTime: Date | null;
-  boosterCooldown: Date | null;
-  selectedCoinImage: string;
-  settings: {
-    vibration: boolean;
-    backgroundMusic: boolean;
-  };
-  profitPerHour: number;
-  boosterCredits: number;
-  lastBoosterReset: string | null;
-}
+interface User extends UserType {}
 
 interface CryptoGameProps {
-  userData: User | null;
+  userData: UserType | null;
   onCoinsUpdate: (amount: number) => Promise<void>;
-  saveUserData: (userData: Partial<User>) => Promise<void>;
+  saveUserData: (userData: Partial<UserType>) => Promise<void>;
 }
 
 type ShopItem = {
@@ -563,7 +529,7 @@ const formatNumber = (num: number, useShortFormat: boolean = true): string => {
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
-  const [user, setUser] = useState<User>(
+  const [user, setUser] = useState<UserType>(
     userData || {
       id: '',
       telegramId: '',
@@ -651,6 +617,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
   const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
+  const handleWalletConnect = useCallback(
+    (address: string) => {
+      setUser((prevUser) => ({
+        ...prevUser,
+        walletAddress: address,
+      }));
+      saveUserData({ walletAddress: address });
+      console.log('Wallet connected to game:', address);
+    },
+    [saveUserData]
+  );
+
+  useEffect(() => {
+    if (connected && wallet?.address && user.walletAddress !== wallet.address) {
+      handleWalletConnect(wallet.address);
+    }
+  }, [connected, wallet, user.walletAddress, handleWalletConnect]);
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -1394,7 +1377,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       }
     };
 
-    const saveUserData = useCallback(async (updatedUser: UserData) => {
+    const saveUserData = useCallback(async (updatedUser: Partial<UserType>) => {
       if (!updatedUser) return;
       try {
         console.log('Saving user data:', updatedUser);
@@ -2157,7 +2140,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     );
   };
 
-  const renderWallet = () => <Wallet coins={user.coins} />;
+  const renderWallet = () => <Wallet coins={user.coins} onWalletConnect={handleWalletConnect} />;
 
   const renderLevels = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">

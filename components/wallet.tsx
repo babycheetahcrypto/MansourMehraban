@@ -11,9 +11,10 @@ import { TonConnectButton } from '@tonconnect/ui-react';
 
 interface WalletProps {
   coins: number;
+  onWalletConnect: (address: string) => void;
 }
 
-const Wallet: React.FC<WalletProps> = ({ coins }) => {
+const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
   const { connected, wallet, connect, disconnect } = useTonConnect();
   const [isClient, setIsClient] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +22,12 @@ const Wallet: React.FC<WalletProps> = ({ coins }) => {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (connected && wallet?.address) {
+      onWalletConnect(wallet.address);
+    }
+  }, [connected, wallet, onWalletConnect]);
 
   const handleConnect = async () => {
     try {
@@ -93,7 +100,7 @@ const Wallet: React.FC<WalletProps> = ({ coins }) => {
               {connected ? (
                 <div>
                   <p className="text-green-400">Connected</p>
-                  <p className="text-sm text-gray-300">Address: {wallet?.address}</p>
+                  <p className="text-sm text-gray-300 break-all">Address: {wallet?.address}</p>
                   <Button onClick={handleDisconnect} className="mt-2">
                     Disconnect
                   </Button>

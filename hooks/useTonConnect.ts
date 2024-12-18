@@ -11,8 +11,8 @@ export function useTonConnect() {
     const handleConnectionChange = () => {
       setIsConnected(tonConnectUI.connected);
       console.log('Connection state changed:', tonConnectUI.connected);
-      if (tonConnectUI.account) {
-        console.log('Connected wallet:', tonConnectUI.account);
+      if (address) {
+        console.log('Connected wallet address:', address);
       }
     };
 
@@ -22,7 +22,7 @@ export function useTonConnect() {
     return () => {
       unsubscribe();
     };
-  }, [tonConnectUI]);
+  }, [tonConnectUI, address]);
 
   return {
     connected: isConnected,
