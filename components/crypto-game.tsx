@@ -2247,15 +2247,28 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </CardHeader>
         <CardContent className="space-y-6">
           {[
-            { id: 'vibration', icon: Vibrate, label: 'Vibration' },
-            { id: 'backgroundMusic', icon: Music, label: 'Background Music' },
-          ].map(({ id, icon: Icon, label }) => (
+            {
+              id: 'vibration',
+              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-BN6Pod51prGDcUiMLjEjg2leix19MD.png',
+              label: '',
+            },
+            {
+              id: 'backgroundMusic',
+              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Music%203D%20ICON-xQYRmibKIf540A6WMxNsmfjcc3S3J6.png',
+              label: '',
+            },
+          ].map(({ id, icon, label }) => (
             <div key={id} className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-2">
-                <Icon className="w-5 h-5 text-primary" />
-                <Label htmlFor={id} className="text-white text-sm">
-                  {label}
-                </Label>
+                <Image
+                  src={icon}
+                  alt={id}
+                  width={24}
+                  height={24}
+                  className="text-primary"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
               </div>
               <Switch
                 id={id}
