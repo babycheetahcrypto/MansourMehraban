@@ -2251,11 +2251,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               id: 'vibration',
               icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-BN6Pod51prGDcUiMLjEjg2leix19MD.png',
               label: 'Vibration',
+              text: 'Vibration',
             },
             {
               id: 'backgroundMusic',
               icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Music%203D%20ICON-xQYRmibKIf540A6WMxNsmfjcc3S3J6.png',
               label: 'Background Music',
+              text: 'Background Music',
             },
           ].map(({ id, icon, label }) => (
             <div key={id} className="flex items-center justify-between py-2">
