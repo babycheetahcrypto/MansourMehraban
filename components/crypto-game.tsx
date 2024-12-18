@@ -536,7 +536,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 0,
+      coins: 100000,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -2230,9 +2230,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           hidePopup('levelUnlock');
           setShownLevelUnlocks((prev) => new Set(prev).add(unlockedLevel));
         }}
-        className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
-        <Zap className="w-5 h-5 mr-2" />
+        <Image
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Awesome%203D%20ICON-HN2tr353wye3DLusQa15XU8aM36j8U.png"
+          alt="Awesome"
+          width={30}
+          height={30}
+          className="mr-2"
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
+        />
         Awesome!
       </Button>
     </Popup>
@@ -2690,7 +2698,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }}
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
-        <Award className="w-6 h-6 mr-2" />
+        <Image
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Achievement%203D%20ICON-PzuXlrieSfIzfZbR5COIpCsKIonjpx.png"
+          alt="Achievement"
+          width={30}
+          height={30}
+          className="mr-2"
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
+        />
         Embrace the Power!
       </Button>
     </Popup>
