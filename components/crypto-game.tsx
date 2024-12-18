@@ -2792,7 +2792,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 To keep earning, enter the game every 3 hours.
               </p>
               <p className="mb-8 text-x8 text-center text-white flex items-center justify-center">
-                <span className="font-bold mx-2">{formatNumber(pphAccumulated, true)}</span>
+                <span className="font-bold mx-8">{formatNumber(pphAccumulated, true)}</span>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
@@ -2811,7 +2811,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
               >
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cliam%203D%20ICON-w6FGES2W6Kg2sjB4wNOf0p9ZfT0pAt.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
                   alt="Claim Icon"
                   width={30}
                   height={30}
