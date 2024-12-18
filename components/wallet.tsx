@@ -6,35 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { formatNumber } from '../utils/formatNumber';
+import { TonConnectButton } from '@tonconnect/ui-react';
 
 interface WalletProps {
   coins: number;
 }
 
 const Wallet: React.FC<WalletProps> = ({ coins }) => {
-  const { connected, wallet, network, tonConnectUI } = useTonConnect();
+  const { connected, wallet } = useTonConnect();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  useEffect(() => {
-    if (isClient && tonConnectUI) {
-      const connectButtonContainer = document.getElementById('ton-connect-button');
-      if (connectButtonContainer) {
-        // Clear any existing content
-        connectButtonContainer.innerHTML = '';
-        // Create a new button element
-        const button = document.createElement('button');
-        button.textContent = connected ? 'Disconnect' : 'Connect Wallet';
-        button.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded';
-        button.onclick = connected ? tonConnectUI.disconnect : tonConnectUI.connectWallet;
-        // Append the button to the container
-        connectButtonContainer.appendChild(button);
-      }
-    }
-  }, [isClient, tonConnectUI, connected]);
 
   if (!isClient) {
     return null; // or a loading spinner
@@ -89,14 +73,14 @@ const Wallet: React.FC<WalletProps> = ({ coins }) => {
               {connected ? (
                 <div>
                   <p className="text-green-400">Connected</p>
-                  <p className="text-sm text-gray-300">Address: {wallet?.account.address}</p>
-                  <p className="text-sm text-gray-300">Network: {network}</p>
+                  <p className="text-sm text-gray-300">Address: {wallet?.address}</p>
+                  {/* Removed the Network information as it's not available */}
                 </div>
               ) : (
                 <p className="text-red-400">Not connected</p>
               )}
             </div>
-            <div id="ton-connect-button" className="flex justify-center" />
+            <TonConnectButton />
           </CardContent>
         </Card>
       </div>

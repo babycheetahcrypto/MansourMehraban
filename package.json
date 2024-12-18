@@ -32,6 +32,7 @@
     "@telegram-apps/sdk": "^2.8.1",
     "@tonconnect/sdk": "^2.2.0",
     "@tonconnect/ui": "^2.0.9",
+    "@tonconnect/ui-react": "^1.0.0-beta.9",
     "@twa-dev/sdk": "^7.10.1",
     "@twa-dev/types": "^7.10.0",
     "buffer": "^6.0.3",
