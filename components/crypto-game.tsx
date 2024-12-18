@@ -1690,7 +1690,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {
             page: 'home',
             text: 'Home',
-            icon: 'Home%203D%20ICON-FLKcX21cFbDRMC74V3qklcFcG5xc4h.png',
+            icon: 'Home%203D%20ICON-lq4p7b3umu25lmHYmoI2AyAjriJJl5.png',
           },
           {
             page: 'rating',
