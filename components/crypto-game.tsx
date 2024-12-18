@@ -2791,13 +2791,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <p className="mb-5 text-sm text-center text-white">
                 To keep earning, enter the game every 3 hours.
               </p>
-              <p className="mb-8 text-x8 text-center text-white flex items-center justify-center">
+              <p className="mb-18 text-x8 text-center text-white flex items-center justify-center">
                 <span className="font-bold mx-8">{formatNumber(pphAccumulated, true)}</span>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
-                  width={50}
-                  height={50}
+                  width={40}
+                  height={40}
                   className="ml-3"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
