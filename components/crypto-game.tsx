@@ -2699,13 +2699,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
       >
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Achievement%203D%20ICON-PzuXlrieSfIzfZbR5COIpCsKIonjpx.png"
-          alt="Achievement"
+          src="/path/to/your/custom-icon.png"
+          alt="Achievement Icon"
           width={30}
           height={30}
           className="mr-2"
-          draggable="false"
-          onContextMenu={(e) => e.preventDefault()}
         />
         Embrace the Power!
       </Button>
@@ -2790,20 +2788,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               }}
             >
               <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
-              <p className="mb-7 text-xl text-center text-white flex items-center justify-center">
+              <p className="mb-5 text-sm text-center text-white">
+                To keep earning, enter the game every 3 hours.
+              </p>
+              <p className="mb-7 text-x2 text-center text-white flex items-center justify-center">
                 <span className="font-bold mx-2">{formatNumber(pphAccumulated, true)}</span>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
-                  width={26}
-                  height={26}
+                  width={30}
+                  height={30}
                   className="ml-3"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-              </p>
-              <p className="mb-5 text-sm text-center text-white">
-                To keep earning, enter the game every 3 hours.
               </p>
               <Button
                 onClick={() => {
@@ -2812,7 +2810,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 }}
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
               >
-                <Coins className="w-5 h-5 mr-2" />
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cliam%203D%20ICON-w6FGES2W6Kg2sjB4wNOf0p9ZfT0pAt.png"
+                  alt="Claim Icon"
+                  width={20}
+                  height={20}
+                  className="mr-2"
+                />
                 Claim
               </Button>
             </Popup>
@@ -2827,11 +2831,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               }}
             >
               <p className="mb-6 text-xl text-center text-white">
-                Incredible! You've ascended to{' '}
+                Stellar Achievement Unlocked! You've rocketed to{' '}
                 <span className="font-bold text-yellow-400">Level {newLevel}</span>!
               </p>
               <p className="mb-6 text-center text-white">
-                Your crypto mastery grows stronger. New powers and riches await you!
+                Your crypto prowess is reaching new galaxies. Prepare for unprecedented powers and
+                cosmic riches!
               </p>
               <Button
                 onClick={() => {
@@ -2840,7 +2845,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 }}
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
               >
-                <Zap className="w-5 h-5 mr-2" />
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Level%20UP%203D%20ICON-xndJfi9xA5hNBn6sWPRX0jk6MDLA4t.png"
+                  alt="Level Up Icon"
+                  width={20}
+                  height={20}
+                  className="mr-2"
+                />
                 Claim Rewards
               </Button>
             </Popup>
