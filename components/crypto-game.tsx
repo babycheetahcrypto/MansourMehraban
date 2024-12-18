@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
+import { TonConnectUI } from '@tonconnect/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -2141,75 +2142,101 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     );
   };
 
-  const renderWallet = () => (
-    <div className="flex-grow flex items-center justify-center p-6 relative">
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <StarryBackground />
-      </div>
-      <div className="w-full max-w-md relative z-10">
-        <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-2xl flex items-center justify-between">
-              <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-                Airdrop Soon!
-              </span>
-              <div className="relative">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-qTW5KRopM7teMBA6gpKYTnjNQ8mnTw.png"
-                  alt="Airdrop"
-                  width={128}
-                  height={128}
-                  className="relative z-10"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full filter blur-md animate-pulse"></div>
+  const renderWallet = () => {
+    const [isConnecting, setIsConnecting] = useState(false);
+
+    const connectWallet = async () => {
+      setIsConnecting(true);
+      try {
+        const tonConnectUI = new TonConnectUI({
+          manifestUrl: 'https://babycheetah.vercel.app/tonconnect-manifest.json',
+        });
+        await tonConnectUI.connectWallet();
+        showGameAlert('Wallet connected successfully!');
+      } catch (error) {
+        console.error('Error connecting wallet:', error);
+        showGameAlert('Failed to connect wallet. Please try again.');
+      } finally {
+        setIsConnecting(false);
+      }
+    };
+
+    return (
+      <div className="flex-grow flex items-center justify-center p-6 relative">
+        <div className="fixed inset-0 z-0 overflow-hidden">
+          <StarryBackground />
+        </div>
+        <div className="w-full max-w-md relative z-10">
+          <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+            <CardHeader className="relative">
+              <CardTitle className="z-10 text-2xl flex items-center justify-between">
+                <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                  Wallet Connection
+                </span>
+                <div className="relative">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20icon-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
+                    alt="Wallet"
+                    width={128}
+                    height={128}
+                    className="relative z-10"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full filter blur-md animate-pulse"></div>
+                </div>
+              </CardTitle>
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
+            </CardHeader>
+            <CardContent className="space-y-6 p-6">
+              <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
+                <h3 className="text-xl font-bold mb-2 text-white">Earned Coins</h3>
+                <div className="flex items-center">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                    alt="Game Logo"
+                    width={32}
+                    height={32}
+                    className="mr-2"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                  <p className="text-2xl font-extrabold text-green-400">
+                    {formatNumber(user.coins, false)}
+                  </p>
+                </div>
               </div>
-            </CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="space-y-6 p-6">
-            <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-2 text-white">Earned Coins</h3>
-              <div className="flex items-center">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                  alt="Game Logo"
-                  width={32}
-                  height={32}
-                  className="mr-2"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <p className="text-2xl font-extrabold text-green-400">
-                  {formatNumber(user.coins, false)}
-                </p>
-              </div>
-            </div>
-            <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-2 text-white">Wallet Connection</h3>
-              <p className="text-red-400">Unavailable!</p>
-            </div>
-            <Button
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:from-blue-700 hover:to-blue-900 backdrop-filter backdrop-blur-sm flex items-center justify-center"
-              onClick={() => window.Telegram.WebApp.openTelegramLink('https://wallet.ton.org')}
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
-                alt="Tonkeeper"
-                width={24}
-                height={24}
-                className="mr-2"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-              Connect Tonkeeper
-            </Button>
-          </CardContent>
-        </NeonGradientCard>
+              <Button
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:from-blue-700 hover:to-blue-900 backdrop-filter backdrop-blur-sm flex items-center justify-center"
+                onClick={connectWallet}
+                disabled={isConnecting}
+              >
+                {isConnecting ? (
+                  <>
+                    <span className="animate-spin mr-2">⚙️</span>
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
+                      alt="Tonkeeper"
+                      width={24}
+                      height={24}
+                      className="mr-2"
+                      draggable="false"
+                      onContextMenu={(e) => e.preventDefault()}
+                    />
+                    Connect Wallet
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </NeonGradientCard>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderLevels = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
