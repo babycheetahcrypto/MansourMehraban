@@ -155,8 +155,8 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-p9cVGQA6TxUcJbQ3TMM8ErkGxOPDmZ.png"
                   alt="Airdrop"
-                  width={120}
-                  height={120}
+                  width={150}
+                  height={150}
                   className="relative z-10 transition-all duration-300 transform hover:scale-110"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
