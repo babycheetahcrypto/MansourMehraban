@@ -4,6 +4,7 @@ import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import Image from 'next/image';
 import Wallet from '../components/wallet';
 import { TonConnectUI } from '@tonconnect/ui-react';
+import { useTonConnect } from '@/hooks/useTonConnect';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -601,6 +602,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   );
 
+  const { connected, wallet } = useTonConnect();
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -1365,6 +1367,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(false);
       }
     }, []);
+
+    useEffect(() => {
+      if (connected && wallet) {
+        console.log('Wallet connected:', wallet.address);
+        // You can update the user data or perform any other actions here
+        // when the wallet is connected
+      }
+    }, [connected, wallet]);
 
     useEffect(() => {
       if (userData) {
