@@ -134,7 +134,7 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
         <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700/30">
           <CardHeader className="relative">
             <CardTitle className="z-10 text-2xl flex items-center justify-between">
-              <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+              <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
                 Airdrop Soon!
               </span>
               <div className="relative">
@@ -142,8 +142,8 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-p9cVGQA6TxUcJbQ3TMM8ErkGxOPDmZ.png"
                   alt="Airdrop"
-                  width={80}
-                  height={80}
+                  width={120}
+                  height={120}
                   className="relative z-10 transition-all duration-300 transform hover:scale-110"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
