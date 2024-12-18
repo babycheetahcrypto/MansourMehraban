@@ -2181,7 +2181,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                <p className="text-2xl font-bold text-green-400">
+                <p className="text-2xl font-extrabold text-green-400">
                   {formatNumber(user.coins, false)}
                 </p>
               </div>
@@ -2191,8 +2191,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <p className="text-red-400">Unavailable!</p>
             </div>
             <Button
-              disabled
-              className="w-full bg-gray-600/50 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 opacity-50 cursor-not-allowed backdrop-filter backdrop-blur-sm flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 rounded-xl text-lg font-bold transform transition-all duration-200 hover:from-blue-700 hover:to-blue-900 backdrop-filter backdrop-blur-sm flex items-center justify-center"
+              onClick={() => window.Telegram.WebApp.openTelegramLink('https://wallet.ton.org')}
             >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tonkeeper%20icon-aZ7pPSOt0fj9plFTg3WJKeufQ6dM6c.png"
@@ -2203,7 +2203,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
-              Tonkeeper (Unavailable)
+              Connect Tonkeeper
             </Button>
           </CardContent>
         </NeonGradientCard>
