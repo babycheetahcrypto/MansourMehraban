@@ -1,3 +1,4 @@
+// components/wallet.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -13,12 +14,31 @@ interface WalletProps {
 }
 
 const Wallet: React.FC<WalletProps> = ({ coins }) => {
-  const { connected, wallet } = useTonConnect();
+  const { connected, wallet, connect, disconnect } = useTonConnect();
   const [isClient, setIsClient] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const handleConnect = async () => {
+    try {
+      await connect();
+    } catch (err) {
+      console.error('Connection error:', err);
+      setError('Failed to connect wallet. Please try again.');
+    }
+  };
+
+  const handleDisconnect = async () => {
+    try {
+      await disconnect();
+    } catch (err) {
+      console.error('Disconnection error:', err);
+      setError('Failed to disconnect wallet. Please try again.');
+    }
+  };
 
   if (!isClient) {
     return null; // or a loading spinner
@@ -74,12 +94,24 @@ const Wallet: React.FC<WalletProps> = ({ coins }) => {
                 <div>
                   <p className="text-green-400">Connected</p>
                   <p className="text-sm text-gray-300">Address: {wallet?.address}</p>
-                  {/* Removed the Network information as it's not available */}
+                  <Button onClick={handleDisconnect} className="mt-2">
+                    Disconnect
+                  </Button>
                 </div>
               ) : (
-                <p className="text-red-400">Not connected</p>
+                <div>
+                  <p className="text-red-400">Not connected</p>
+                  <Button onClick={handleConnect} className="mt-2">
+                    Connect Wallet
+                  </Button>
+                </div>
               )}
             </div>
+            {error && (
+              <div className="bg-red-500/50 p-4 rounded-lg">
+                <p className="text-white">{error}</p>
+              </div>
+            )}
             <TonConnectButton />
           </CardContent>
         </Card>
