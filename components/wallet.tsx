@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { formatNumber } from '../utils/formatNumber';
 import { TonConnectButton } from '@tonconnect/ui-react';
+import { Coins, WalletIcon, ArrowRight, AlertTriangle } from 'lucide-react';
 
 interface WalletProps {
   coins: number;
@@ -47,7 +48,7 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
   };
 
   if (!isClient) {
-    return null; // or a loading spinner
+    return null;
   }
 
   return (
@@ -55,73 +56,63 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
       <div className="fixed inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 to-indigo-900 opacity-50" />
       </div>
-      <div className="w-full max-w-md relative z-10">
-        <Card className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700">
-          <CardHeader className="relative">
-            <CardTitle className="z-10 text-2xl flex items-center justify-between">
-              <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-                Airdrop Soon!
-              </span>
-              <div className="relative">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
-                  alt="Wallet"
-                  width={64}
-                  height={64}
-                  className="relative z-10"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-              </div>
-            </CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
-          </CardHeader>
-          <CardContent className="space-y-6 p-6">
-            <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-2 text-white">Earned Coins</h3>
-              <div className="flex items-center">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                  alt="Game Logo"
-                  width={32}
-                  height={32}
-                  className="mr-2"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <p className="text-2xl font-extrabold text-green-400">
-                  {formatNumber(coins, false)}
-                </p>
-              </div>
+      <Card className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-md overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700">
+        <CardHeader className="relative">
+          <CardTitle className="z-10 text-2xl flex items-center justify-between">
+            <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+              Crypto Wallet
+            </span>
+            <WalletIcon className="w-8 h-8 text-purple-400" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
+            <h3 className="text-xl font-bold mb-2 text-white">Your Balance</h3>
+            <div className="flex items-center">
+              <Coins className="w-6 h-6 mr-2 text-yellow-400" />
+              <p className="text-2xl font-extrabold text-green-400">{formatNumber(coins, false)}</p>
             </div>
-            <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
-              <h3 className="text-xl font-bold mb-2 text-white">Wallet Connection</h3>
-              {connected ? (
-                <div>
-                  <p className="text-green-400">Connected</p>
-                  <p className="text-sm text-gray-300 break-all">Address: {wallet?.address}</p>
-                  <Button onClick={handleDisconnect} className="mt-2">
-                    Disconnect
-                  </Button>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-red-400">Not connected</p>
-                  <Button onClick={handleConnect} className="mt-2">
-                    Connect Wallet
-                  </Button>
-                </div>
-              )}
-            </div>
-            {error && (
-              <div className="bg-red-500/50 p-4 rounded-lg">
-                <p className="text-white">{error}</p>
+          </div>
+          <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
+            <h3 className="text-xl font-bold mb-2 text-white">Wallet Connection</h3>
+            {connected ? (
+              <div>
+                <p className="text-green-400 mb-2">Connected</p>
+                <p className="text-sm text-gray-300 break-all mb-2">Address: {wallet?.address}</p>
+                <Button onClick={handleDisconnect} variant="destructive" className="w-full">
+                  Disconnect
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <p className="text-red-400 mb-2">Not connected</p>
+                <Button onClick={handleConnect} variant="default" className="w-full">
+                  Connect Wallet
+                </Button>
               </div>
             )}
+          </div>
+          {error && (
+            <div className="bg-red-500/50 p-4 rounded-lg flex items-center">
+              <AlertTriangle className="w-6 h-6 mr-2 text-white" />
+              <p className="text-white">{error}</p>
+            </div>
+          )}
+          <div className="mt-4">
             <TonConnectButton />
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+          <div className="bg-blue-600/20 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
+            <h3 className="text-xl font-bold mb-2 text-white">Airdrop Coming Soon!</h3>
+            <p className="text-sm text-gray-300 mb-2">
+              Get ready for an exciting airdrop event. Stay tuned for more details!
+            </p>
+            <Button variant="outline" className="w-full">
+              <ArrowRight className="w-4 h-4 mr-2" />
+              Learn More
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
