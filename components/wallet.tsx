@@ -153,7 +153,7 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
               <div className="relative ml-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full blur-md animate-pulse"></div>
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-p9cVGQA6TxUcJbQ3TMM8ErkGxOPDmZ.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20ICON-Tsx2ineRiNDjyKpWujizmUcch7ghwr.png"
                   alt="Airdrop"
                   width={150}
                   height={150}

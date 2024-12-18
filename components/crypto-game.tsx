@@ -1690,7 +1690,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {
             page: 'home',
             text: 'Home',
-            icon: 'HOME%203D%20ICON-l0PT1uIGWdh36mELTwJwL4iX9QOqwY.png',
+            icon: 'Home%203D%20ICON-FLKcX21cFbDRMC74V3qklcFcG5xc4h.png',
           },
           {
             page: 'rating',
@@ -1805,7 +1805,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </h1>
           <div className="w-12 h-12">
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Real%20Crypto%20Coin-f2MzxVE8kKpBYtXJ1LdiHOPH8kkXYr.png"
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Home%203D%20ICON-FLKcX21cFbDRMC74V3qklcFcG5xc4h.png"
               alt="Crypto Coin"
               width={48}
               height={48}
