@@ -1,4 +1,3 @@
-// hooks/useTonConnect.ts
 import { useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
 import { useEffect, useState } from 'react';
 

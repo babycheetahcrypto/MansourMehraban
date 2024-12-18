@@ -1,4 +1,3 @@
-// components/wallet.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -61,7 +60,7 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
           <CardHeader className="relative">
             <CardTitle className="z-10 text-2xl flex items-center justify-between">
               <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-                Your Wallet
+                Airdrop Soon!
               </span>
               <div className="relative">
                 <Image
