@@ -7,6 +7,19 @@ import { useTonConnect } from '@/hooks/useTonConnect';
 import { formatNumber } from '../utils/formatNumber';
 import { TonConnectButton } from '@tonconnect/ui-react';
 
+const rainbowKeyframes = `
+  @keyframes rainbow-border {
+    0%, 100% { border-color: rgba(255, 0, 0, 0.5); }
+    25% { border-color: rgba(255, 255, 0, 0.5); }
+    50% { border-color: rgba(0, 255, 0, 0.5); }
+    75% { border-color: rgba(0, 255, 255, 0.5); }
+  }
+`;
+
+const style = document.createElement('style');
+style.textContent = rainbowKeyframes;
+document.head.appendChild(style);
+
 interface WalletProps {
   coins: number;
   onWalletConnect: (address: string) => void;
@@ -95,7 +108,7 @@ const NeonGradientCard: React.FC<React.ComponentProps<'div'>> = ({
   ...props
 }) => (
   <div
-    className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900/50 to-black/50 text-white border border-gray-700/30 backdrop-blur-xl ${className}`}
+    className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900/50 to-black/50 text-white border border-gray-700/30 backdrop-blur-xl animate-rainbow-border ${className}`}
     {...props}
   >
     <div className="relative z-10 p-6">{children}</div>
@@ -122,15 +135,15 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
           <CardHeader className="relative">
             <CardTitle className="z-10 text-2xl flex items-center justify-between">
               <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-                Wallet
+                Airdrop Soon!
               </span>
               <div className="relative">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
-                  alt="Wallet"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-p9cVGQA6TxUcJbQ3TMM8ErkGxOPDmZ.png"
+                  alt="Airdrop"
                   width={64}
                   height={64}
-                  className="relative z-10"
+                  className="relative z-10 animate-bounce hover:animate-none transition-all duration-300 transform hover:scale-110 hover:rotate-12"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
@@ -151,7 +164,7 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                <p className="text-2xl font-extrabold text-green-400">
+                <p className="text-2xl font-extrabold text-green-400 animate-pulse">
                   {formatNumber(coins, false)}
                 </p>
               </div>
