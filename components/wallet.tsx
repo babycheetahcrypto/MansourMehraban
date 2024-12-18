@@ -138,12 +138,13 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                 Airdrop Soon!
               </span>
               <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full blur-md animate-pulse"></div>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-p9cVGQA6TxUcJbQ3TMM8ErkGxOPDmZ.png"
                   alt="Airdrop"
-                  width={64}
-                  height={64}
-                  className="relative z-10 animate-bounce hover:animate-none transition-all duration-300 transform hover:scale-110 hover:rotate-12"
+                  width={80}
+                  height={80}
+                  className="relative z-10 transition-all duration-300 transform hover:scale-110"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
