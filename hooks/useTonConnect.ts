@@ -6,6 +6,6 @@ export function useTonConnect() {
   return {
     connected: tonConnectUI.connected,
     wallet: tonConnectUI.account,
-    // Remove the network property as it doesn't exist on TonConnectUI
+    // Removed the network property as it doesn't exist on TonConnectUI
   };
 }
