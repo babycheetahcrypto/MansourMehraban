@@ -1805,7 +1805,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </h1>
           <div className="w-12 h-12">
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Home%203D%20ICON-FLKcX21cFbDRMC74V3qklcFcG5xc4h.png"
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
               alt="Crypto Coin"
               width={48}
               height={48}
