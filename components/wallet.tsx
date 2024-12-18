@@ -16,8 +16,21 @@ const rainbowKeyframes = `
   }
 `;
 
+const gradientKeyframes = `
+  @keyframes gradient-x {
+    0%, 100% {
+      background-size: 200% 200%;
+      background-position: left center;
+    }
+    50% {
+      background-size: 200% 200%;
+      background-position: right center;
+    }
+  }
+`;
+
 const style = document.createElement('style');
-style.textContent = rainbowKeyframes;
+style.textContent = rainbowKeyframes + gradientKeyframes;
 document.head.appendChild(style);
 
 interface WalletProps {
@@ -134,16 +147,16 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
         <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700/30">
           <CardHeader className="relative">
             <CardTitle className="z-10 text-2xl flex items-center justify-between">
-              <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+              <span className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x">
                 Airdrop Soon!
               </span>
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full blur-md animate-pulse"></div>
+              <div className="relative ml-4">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full blur-md animate-pulse"></div>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20icon-p9cVGQA6TxUcJbQ3TMM8ErkGxOPDmZ.png"
                   alt="Airdrop"
-                  width={120}
-                  height={120}
+                  width={100}
+                  height={100}
                   className="relative z-10 transition-all duration-300 transform hover:scale-110"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
