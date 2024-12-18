@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { formatNumber } from '../utils/formatNumber';
@@ -13,14 +12,99 @@ interface WalletProps {
   onWalletConnect: (address: string) => void;
 }
 
-const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
-  const { connected, wallet, connect, disconnect } = useTonConnect();
-  const [isClient, setIsClient] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+// Inline StarryBackground component
+const StarryBackground: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    setIsClient(true);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resizeCanvas();
+
+    const stars = Array.from({ length: 200 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2 + 1,
+      speed: Math.random() * 0.5 + 0.1,
+      color: `rgba(${Math.random() * 200 + 55}, ${Math.random() * 200 + 55}, ${
+        Math.random() * 200 + 55
+      }, ${Math.random() * 0.5 + 0.5})`,
+    }));
+
+    let animationFrameId: number;
+
+    const animate = () => {
+      if (!ctx || !canvas) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        0,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width / 2
+      );
+      gradient.addColorStop(0, 'rgba(0, 0, 25, 1)');
+      gradient.addColorStop(1, 'rgba(0, 0, 25, 1)');
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach((star) => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = star.color;
+        ctx.fill();
+
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    window.addEventListener('resize', resizeCanvas);
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0" />;
+};
+
+// Inline NeonGradientCard component wrapper
+const NeonGradientCard: React.FC<React.ComponentProps<'div'>> = ({
+  children,
+  className,
+  ...props
+}) => (
+  <div
+    className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900/50 to-black/50 text-white border border-gray-700/30 backdrop-blur-xl ${className}`}
+    {...props}
+  >
+    <div className="relative z-10 p-6">{children}</div>
+  </div>
+);
+
+const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
+  const { connected, wallet, connect, disconnect } = useTonConnect();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (connected && wallet?.address) {
@@ -28,39 +112,17 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
     }
   }, [connected, wallet, onWalletConnect]);
 
-  const handleConnect = async () => {
-    try {
-      await connect();
-    } catch (err) {
-      console.error('Connection error:', err);
-      setError('Failed to connect wallet. Please try again.');
-    }
-  };
-
-  const handleDisconnect = async () => {
-    try {
-      await disconnect();
-    } catch (err) {
-      console.error('Disconnection error:', err);
-      setError('Failed to disconnect wallet. Please try again.');
-    }
-  };
-
-  if (!isClient) {
-    return null; // or a loading spinner
-  }
-
   return (
     <div className="flex-grow flex items-center justify-center p-6 relative">
       <div className="fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 to-indigo-900 opacity-50" />
+        <StarryBackground />
       </div>
       <div className="w-full max-w-md relative z-10">
-        <Card className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700">
+        <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700/30">
           <CardHeader className="relative">
             <CardTitle className="z-10 text-2xl flex items-center justify-between">
               <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-                Airdrop Soon!
+                Wallet
               </span>
               <div className="relative">
                 <Image
@@ -99,9 +161,9 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                 <p className="text-white">{error}</p>
               </div>
             )}
-            <TonConnectButton />
+            <TonConnectButton className="w-full py-3 text-lg font-bold" />
           </CardContent>
-        </Card>
+        </NeonGradientCard>
       </div>
     </div>
   );
