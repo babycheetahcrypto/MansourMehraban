@@ -2249,7 +2249,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           {[
             {
               id: 'vibration',
-              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-BN6Pod51prGDcUiMLjEjg2leix19MD.png',
+              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-2n53zEIwaFDSD3Bl9GWULb8slR8d6c.png',
               label: 'Vibration',
               text: 'Vibration',
             },
