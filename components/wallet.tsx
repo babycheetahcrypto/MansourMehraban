@@ -99,7 +99,9 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                 <p className="text-white">{error}</p>
               </div>
             )}
-            <TonConnectButton />
+            <div className="w-full">
+              <TonConnectButton />
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -108,3 +110,10 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
 };
 
 export default Wallet;
+
+<style jsx global>{`
+  .ton-connect-button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+`}</style>;
