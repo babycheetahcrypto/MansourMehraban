@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { formatNumber } from '../utils/formatNumber';
 import { TonConnectButton } from '@tonconnect/ui-react';
-import StarryBackground from './StarryBackground';
 
 interface WalletProps {
   coins: number;
@@ -53,7 +52,6 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
 
   return (
     <div className="flex-grow flex items-center justify-center p-6 relative">
-      <StarryBackground />
       <div className="fixed inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 to-indigo-900 opacity-50" />
       </div>
