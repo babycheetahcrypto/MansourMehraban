@@ -1760,7 +1760,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button"
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-lCrOq4AcdrdeSLXw6NpUohR2HzXSOw.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-TUMu6jfnFGYG3DhXtOUXGzFEd9Klbr.png"
                 alt="Wallet"
                 width={32}
                 height={32}
