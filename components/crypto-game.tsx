@@ -635,7 +635,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     item: null as ShopItem | PremiumShopItem | null,
   });
   const [clickEffects, setClickEffects] = useState<
-    { id: number; x: number; y: number; value: number; color: string; text: string }[]
+    { id: number; x: number; y: number; value: number; color: string }[]
   >([]);
   const [shownPopups, setShownPopups] = useState<Set<string>>(new Set());
   const [showLevelUnlockPopup, setShowLevelUnlockPopup] = useState(false);
@@ -1074,14 +1074,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         const x = clientX;
         const y = clientY;
-        const clickEffect = {
-          id: Date.now(),
-          x,
-          y,
-          value: clickValue,
-          color: 'white',
-          text: formatNumber(clickValue, true),
-        };
+        const clickEffect = { id: Date.now(), x, y, value: clickValue, color: 'white' };
         setClickEffects((prev) => [...prev, clickEffect]);
         setTimeout(() => {
           setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
@@ -1737,7 +1730,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
               <div
-                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out animate-pulse"
+                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out"
                 style={{
                   width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
                   boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
@@ -1769,13 +1762,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onContextMenu={(e) => e.preventDefault()}
               />
             </Button>
-            <Button
-              onClick={claimPPH}
-              className="flex-none w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 animate-pulse"
-            >
-              <Coins className="w-5 h-5 mr-2" />
-              Claim {formatNumber(pphAccumulated, true)} PPH
-            </Button>
+            <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
+                alt="Profit Per Hour"
+                width={22}
+                height={22}
+                className="mb-1"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span className="text-xs text-white">{formatNumber(profitPerHour, true)}/h</span>
+            </div>
           </div>
         </div>
 
@@ -2881,19 +2879,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             />
           )}
           {activePopups.has('levelUnlock') && renderLevelUnlockPopup()}
-          {clickEffects.map((effect) => (
-            <div
-              key={effect.id}
-              className="click-effect"
-              style={{
-                left: effect.x,
-                top: effect.y,
-                color: effect.color,
-              }}
-            >
-              <strong>{effect.text}</strong>
-            </div>
-          ))}
         </div>
       )}
     </>
