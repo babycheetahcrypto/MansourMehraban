@@ -2155,6 +2155,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const tonConnectUI = new TonConnectUI({
           manifestUrl: 'https://babycheetah.vercel.app/tonconnect-manifest.json',
         });
+        // Use the appropriate method to connect the wallet
+        // Consult the latest TonConnect documentation for the correct approach
         await tonConnectUI.connectWallet();
         showGameAlert('Wallet connected successfully!');
       } catch (error) {
