@@ -1941,14 +1941,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <StarryBackground />
       </div>
       <div className="w-full max-w-7xl mx-auto">
-        <div className="sticky top-0 z-10 bg-gray-900/80 backdrop-blur-md py-4 mb-8">
+        <div className="sticky top-0 z-10 py-4 mb-8">
           <div className="flex justify-center">
-            <div className="bg-gray-800 rounded-full p-1 flex">
+            <div className="rounded-full p-1 flex bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
               <button
                 className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                   currentShopTab === 'regular'
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-300 hover:text-white hover:bg-gray-700'
+                    ? 'bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-lg'
+                    : 'text-white hover:bg-white/20'
                 }`}
                 onClick={() => setCurrentShopTab('regular')}
               >
@@ -1957,8 +1957,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <button
                 className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                   currentShopTab === 'premium'
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-300 hover:text-white hover:bg-gray-700'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-400 text-white shadow-lg'
+                    : 'text-white hover:bg-white/20'
                 }`}
                 onClick={() => setCurrentShopTab('premium')}
               >
@@ -1970,7 +1970,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         {currentShopTab === 'regular' && (
           <>
-            <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
+            {/* <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4> */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {shopItems.map((item, index) => (
                 <NeonGradientCard
@@ -2038,55 +2038,63 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         {currentShopTab === 'premium' && (
           <>
-            <h4 className="text-4xl font-bold mb-8 text-center text-white">Premium Shop</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {/* <h4 className="text-4xl font-bold mb-8 text-center text-white">Premium Shop</h4> */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {premiumShopItems.map((item) => (
-                <div
+                <NeonGradientCard
                   key={item.id}
-                  className="bg-gradient-to-br from-yellow-600/30 to-yellow-800/30 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-yellow-500/50 hover:border-yellow-400 group"
+                  className="transform transition-all duration-300 hover:shadow-2xl group"
                 >
-                  <div className="p-4">
-                    <h3 className="text-lg font-bold text-center mb-3 group-hover:text-yellow-400 transition-colors duration-300 text-white">
-                      {item.name}
-                    </h3>
-                    <div className="relative w-full h-32 mb-3 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className="group-hover:opacity-80 transition-opacity duration-300"
-                        draggable="false"
-                        onContextMenu={(e) => e.preventDefault()}
-                      />
-                    </div>
-                    <p className="text-sm text-white mb-3 flex items-center">
-                      <Image
-                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Upgrade%203D%20ICON-2OXsGEXI0RlBAXXF1uInbd0ay4uavs.png"
-                        alt="Effect"
-                        width={13}
-                        height={13}
-                        className="inline mr-1"
-                      />
-                      Effect: {item.effect}
-                    </p>
-                    <Button
-                      className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center"
-                      onClick={() => {
-                        buyItem(item, true);
-                      }}
-                    >
-                      <Image
-                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
-                        alt="Crypto Coin"
-                        width={16}
-                        height={16}
-                        className="mr-1"
-                      />
-                      Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
-                    </Button>
+                  <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
+                    {item.name}
+                  </h3>
+                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="group-hover:opacity-80 transition-opacity duration-300"
+                      draggable="false"
+                      onContextMenu={(e) => e.preventDefault()}
+                    />
                   </div>
-                </div>
+                  <p className="text-xs text-white mb-1 flex items-center">
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Upgrade%203D%20ICON-2OXsGEXI0RlBAXXF1uInbd0ay4uavs.png"
+                      alt="Effect"
+                      width={13}
+                      height={13}
+                      className="inline mr-1"
+                    />
+                    Effect: {item.effect}
+                  </p>
+                  <p className="text-xs text-white mb-2 flex items-center">
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
+                      alt="Level"
+                      width={13}
+                      height={13}
+                      className="inline mr-1"
+                    />
+                    Level: {item.level}
+                  </p>
+                  <Button
+                    className="w-full bg-gradient-to-r from-purple-400 to-pink-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-purple-500 group-hover:to-pink-700 transition-all duration-300 flex items-center justify-center"
+                    onClick={() => {
+                      buyItem(item, true);
+                    }}
+                  >
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                      alt="Crypto Coin"
+                      width={16}
+                      height={16}
+                      className="mr-1"
+                    />
+                    Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
+                  </Button>
+                </NeonGradientCard>
               ))}
             </div>
           </>
