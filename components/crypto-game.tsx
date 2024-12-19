@@ -1115,7 +1115,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
-      const currentPrice = item.basePrice * Math.pow(1 + 0.9, item.level - 1); // Changed multiplier to 1.10x
+      const currentPrice = item.basePrice * (1 + 0.9 * (item.level - 1)); // Changed multiplier to 1.10x
       const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1)); // Changed to 0.10x profit increase
 
       if (user.coins >= currentPrice) {
@@ -1133,7 +1133,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               i.id === item.id
                 ? {
                     ...i,
-                    level: i.level + 1,
+                    level: i.level + 1 + 0.9,
                   }
                 : i
             )
@@ -2227,7 +2227,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </div>
   );
 
-  const renderRating = () => {
+  const renderRanking = () => {
     return (
       <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
         <div className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-gray-800">
@@ -2938,7 +2938,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             {currentPage === 'home' && renderHome()}
             {currentPage === 'shop' && renderShop()}
             {currentPage === 'tasks' && renderTasks()}
-            {currentPage === 'rating' && renderRating()}
+            {currentPage === 'ranking' && renderRanking()}
             {currentPage === 'wallet' && renderWallet()}
             {currentPage === 'invite' && renderInvite()}
             {currentPage === 'friendsActivity' && renderFriendsActivity()}
