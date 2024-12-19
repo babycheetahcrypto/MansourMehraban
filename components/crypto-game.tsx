@@ -1115,8 +1115,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
-      const currentPrice = item.basePrice * Math.pow(1.8, item.level - 1);
-      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1));
+      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1); // Changed multiplier to 1.5x (50% increase)
+      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1)); // Changed to 0.10x (10% increase)
 
       if (user.coins >= currentPrice) {
         try {
@@ -2082,7 +2082,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       height={16}
                       className="mr-1"
                     />
-                    {formatNumber(item.basePrice * Math.pow(1.8, item.level - 1), true)}
+                    {formatNumber(item.basePrice * Math.pow(1.5, item.level - 1), true)}
                   </Button>
                 </NeonGradientCard>
               ))}
