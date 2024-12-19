@@ -1115,7 +1115,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
-      const currentPrice = item.basePrice * (1 + 0.9 * (item.level - 1)); // Changed multiplier to 1.10x
+      const currentPrice = item.basePrice * Math.pow(1, item.level - 1); // Changed multiplier to 1x
       const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1)); // Changed to 0.10x profit increase
 
       if (user.coins >= currentPrice) {
@@ -1133,7 +1133,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               i.id === item.id
                 ? {
                     ...i,
-                    level: i.level + 1 + 0.9,
+                    level: i.level + 1,
                   }
                 : i
             )
