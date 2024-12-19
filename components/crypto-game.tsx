@@ -1732,7 +1732,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-sm font-bold text-white">Level {level}</span>
+              <div className="flex items-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
+                  alt="Level Icon"
+                  width={16}
+                  height={16}
+                  className="inline-block"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+                <span className="text-sm font-bold text-white">Level {level}</span>
+              </div>
             </div>
             <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
               <div
