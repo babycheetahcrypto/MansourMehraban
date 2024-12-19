@@ -2414,15 +2414,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   );
                   showGameAlert('Referral link copied to clipboard!');
                 }}
-                className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white text-xs py-1 px-2 rounded-full transition-all duration-300 flex items-center justify-center"
+                className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 text-white text-xs py-1 px-2 rounded-full transition-all duration-300 flex items-center justify-center"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-qVagBixv3Uacicht1qeEubKtLUwh6W.png"
                   alt="Copy"
                   width={24}
                   height={24}
-                  className="w-5 h-5"
+                  className="w-5 h-5 mr-1"
                 />
+                <span className="font-bold">Copy</span>
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
@@ -2431,14 +2432,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
-            className="w-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 hover:from-green-500 hover:via-blue-600 hover:to-purple-700 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
+            className="w-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:from-pink-600 hover:via-red-600 hover:to-yellow-600 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
           >
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friends%20Activity%203D%20ICON-MuArgoDXJUAr5rEz9VgjF4KmRcHPy9.png"
               alt="Friends Activity"
               width={34}
               height={34}
-              className="w-5 h-5 mr-2"
+              className="w-8 h-8 mr-2"
             />
             <span className="font-bold">Friends Activity</span>
           </Button>
