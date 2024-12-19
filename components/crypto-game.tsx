@@ -2237,7 +2237,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Awesome"
           width={30}
           height={30}
-          className="mr-2"
+          className="w-6 h-6 relative z-10"
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -2703,7 +2703,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Achievement Icon"
           width={30}
           height={30}
-          className="mr-2"
+          className="w-6 h-6 relative z-10"
         />
         <span className="font-bold text-lg relative z-10">Embrace the Power!</span>
       </Button>
@@ -2817,7 +2817,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Claim Icon"
                   width={30}
                   height={30}
-                  className="mr-2"
+                  className="w-6 h-6 relative z-10"
                 />
                 <span className="font-bold text-lg relative z-10">Claim Now!</span>
               </Button>
@@ -2852,7 +2852,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Level Up Icon"
                   width={30}
                   height={30}
-                  className="mr-2"
+                  className="w-6 h-6 relative z-10"
                 />
                 <span className="font-bold text-lg relative z-10">Level Up</span>
               </Button>
