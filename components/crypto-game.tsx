@@ -1943,11 +1943,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <div className="w-full max-w-7xl mx-auto">
         <div className="sticky top-0 z-10 py-4 mb-8">
           <div className="flex justify-center">
-            <div className="rounded-full p-1 flex bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+            <div className="rounded-full p-1 flex backdrop-blur-md bg-white/10">
               <button
                 className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                   currentShopTab === 'regular'
-                    ? 'bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-white shadow-lg'
                     : 'text-white hover:bg-white/20'
                 }`}
                 onClick={() => setCurrentShopTab('regular')}
@@ -1957,7 +1957,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <button
                 className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                   currentShopTab === 'premium'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-400 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-white shadow-lg'
                     : 'text-white hover:bg-white/20'
                 }`}
                 onClick={() => setCurrentShopTab('premium')}
@@ -2080,7 +2080,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     Level: {item.level}
                   </p>
                   <Button
-                    className="w-full bg-gradient-to-r from-purple-400 to-pink-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-purple-500 group-hover:to-pink-700 transition-all duration-300 flex items-center justify-center"
+                    className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center"
                     onClick={() => {
                       buyItem(item, true);
                     }}
