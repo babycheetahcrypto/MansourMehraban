@@ -1736,8 +1736,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
                   alt="Level Icon"
-                  width={20}
-                  height={20}
+                  width={18}
+                  height={18}
                   className="inline-block"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
