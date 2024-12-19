@@ -1219,7 +1219,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       });
 
       showGameAlert(
-        `Claimed daily reward: ${formatNumber(reward)} coins! Streak: ${newStreak} days`
+        `Claimed daily reward: ${formatNumber(reward)} Coins! Streak: ${newStreak} days`
       );
     } else if (dailyReward.completed) {
       showGameAlert('You have completed the 12-day reward cycle!');
@@ -2241,7 +2241,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
-        Awesome!
+        <span className="bg-black bg-opacity-20 px-2 py-1 rounded">Awesome!</span>
       </Button>
     </Popup>
   );
@@ -2705,7 +2705,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           height={30}
           className="mr-2"
         />
-        Embrace the Power!
+        <span className="bg-black bg-opacity-20 px-2 py-1 rounded">Embrace the Power!</span>
       </Button>
     </Popup>
   );
