@@ -2791,8 +2791,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <p className="mb-5 text-sm text-center text-white">
                 To keep earning, enter the game every 3 hours.
               </p>
-              <p className="mb-3 text-xl text-center text-white flex items-center justify-center">
-                <span className="font-bold mx-8">{formatNumber(pphAccumulated, true)}</span>
+              <div className="flex items-center justify-center mb-3">
+                <span className="text-4xl font-bold text-white">
+                  {formatNumber(pphAccumulated, true)}
+                </span>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
                   alt="Game Logo"
@@ -2802,13 +2804,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-              </p>
+              </div>
               <Button
                 onClick={() => {
                   claimPPH();
                   hidePopup('pph');
                 }}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-lg font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 rounded-full text-xl font-bold flex items-center justify-center hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cliam%203D%20ICON-4TAt1mqi8cGSkOxrY2VHngEEFJGyRi.png"
