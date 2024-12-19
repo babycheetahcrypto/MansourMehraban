@@ -2414,9 +2414,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   );
                   showGameAlert('Referral link copied to clipboard!');
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-2 rounded-full"
+                className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white text-xs py-1 px-2 rounded-full transition-all duration-300"
               >
-                <Copy className="w-4 h-4" />
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-mpRp7dJyIT5j6Rk4N9khP3KO4uhMMM.png"
+                  alt="Copy"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4"
+                />
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
@@ -2425,9 +2431,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
+            className="w-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 hover:from-green-500 hover:via-blue-600 hover:to-purple-700 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
           >
-            <Users className="w-5 h-5 mr-2" />
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friends%203D%20ICON-CH6D4MacLd14dlM6kXELnEpbg2TrEQ.png"
+              alt="Friends Activity"
+              width={20}
+              height={20}
+              className="w-5 h-5 mr-2"
+            />
             Friends Activity
           </Button>
         </CardContent>
