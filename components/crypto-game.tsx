@@ -1823,20 +1823,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
           <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              onClick={() => setCurrentPage('wallet')}
-              className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-i45iGLhTQldoCi8pzRNLinRlgHiofn.png"
-                alt="Wallet"
-                width={32}
-                height={32}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Button>
             <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
@@ -1847,6 +1833,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
+              <Button
+                variant="ghost"
+                onClick={() => setCurrentPage('wallet')}
+                className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
+              >
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-i45iGLhTQldoCi8pzRNLinRlgHiofn.png"
+                  alt="Wallet"
+                  width={32}
+                  height={32}
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </Button>
               <span className="text-xs text-white font-bold">
                 {formatNumber(profitPerHour, true)}/h
               </span>
