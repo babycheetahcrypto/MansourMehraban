@@ -2241,7 +2241,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
-        <span className="bg-black bg-opacity-20 px-2 py-1 rounded">Awesome!</span>
+        Awesome!
       </Button>
     </Popup>
   );
@@ -2705,7 +2705,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           height={30}
           className="mr-2"
         />
-        <span className="bg-black bg-opacity-20 px-2 py-1 rounded">Embrace the Power!</span>
+        Embrace the Power!
       </Button>
     </Popup>
   );
