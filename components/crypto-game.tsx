@@ -1115,8 +1115,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
-      const currentPrice = item.basePrice * Math.pow(2.55, item.level - 1); // Changed multiplier to 2.55x
-      const currentProfit = item.baseProfit * (1 + 0.2 * (item.level - 1)); // Changed to 0.20x profit increase
+      const currentPrice = item.basePrice * Math.pow(1 + 0.9, item.level - 1); // Changed multiplier to 1.10x
+      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1)); // Changed to 0.10x profit increase
 
       if (user.coins >= currentPrice) {
         try {
@@ -1140,7 +1140,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           );
 
           // Update profit per hour
-          const newProfit = currentProfit * 1 + 0.2; // Increase profit by 20%
+          const newProfit = currentProfit * 1 + 0.1; // Increase profit by 10%
           setProfitPerHour((prev) => prev + newProfit);
 
           setCongratulationPopup({ show: true, item: item });
@@ -1190,7 +1190,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             setClickPower((prev) => prev + 1);
             setPremiumShopItems((prevItems) =>
               prevItems.map((i) =>
-                i.id === item.id ? { ...i, basePrice: i.basePrice * 4, tap: (i.tap || 0) + 1 } : i
+                i.id === item.id ? { ...i, basePrice: i.basePrice * 2, tap: (i.tap || 0) + 1 } : i
               )
             );
           }
