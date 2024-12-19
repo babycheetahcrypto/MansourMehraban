@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { X } from 'lucide-react';
 
 interface GamePopupProps {
   message: string;
@@ -13,20 +12,10 @@ const GamePopup: React.FC<GamePopupProps> = ({ message, onConfirm, onCancel }) =
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[70] bg-black bg-opacity-30 backdrop-blur-lg">
       <div className="bg-gradient-to-br from-gray-900/80 to-black/80 text-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 border border-gray-600/50 backdrop-blur-xl">
-        <p className="text-2xl mb-6 text-center font-medium bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
+        <p className="text-2xl mb-6 text-center font-bold bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent animate-pulse">
           {message}
         </p>
         <div className="flex justify-end space-x-4">
-          {onCancel && (
-            <Button
-              onClick={onCancel}
-              variant="outline"
-              className="w-full text-white border-white hover:bg-white/10 flex items-center justify-center"
-            >
-              <X className="w-5 h-5 mr-2" />
-              Cancel
-            </Button>
-          )}
           <Button
             onClick={onConfirm}
             className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-3 transition-all duration-300 shadow-lg hover:shadow-xl"
