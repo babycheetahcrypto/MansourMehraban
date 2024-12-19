@@ -2053,8 +2053,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     <Image
                       src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
                       alt="Level"
-                      width={13}
-                      height={13}
+                      width={14}
+                      height={14}
                       className="inline mr-1"
                     />
                     Level: {item.level}
@@ -2063,8 +2063,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     <Image
                       src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Profit%203D%20ICON-LxqAu2YW7MazlwuZhOdC4RpqnczhU3.png"
                       alt="Profit"
-                      width={13}
-                      height={13}
+                      width={14}
+                      height={14}
                       className="inline mr-1"
                     />
                     Profit: {formatNumber(item.baseProfit * item.level, true)}/h
@@ -2120,8 +2120,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           : 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tap%203D%20ICON-c6aHeRV1j8uaDFXdyjcROOXZmpi7Ei.png'
                       }
                       alt={item.id === 1 ? 'Boost' : 'Tap'}
-                      width={13}
-                      height={13}
+                      width={14}
+                      height={14}
                       className="inline mr-1"
                     />
                     {item.id === 1 ? 'Boost:' : 'Tap:'}{' '}
