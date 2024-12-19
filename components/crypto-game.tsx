@@ -2423,7 +2423,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={24}
                   className="w-5 h-5 mr-2"
                 />
-                <span className="font-bold">Copy</span>
+                <span className="font-extrabold">Copy</span>
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">

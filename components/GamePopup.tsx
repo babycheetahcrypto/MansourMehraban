@@ -44,7 +44,7 @@ const GamePopup: React.FC<GamePopupProps> = ({ message, onConfirm, onCancel }) =
                 height={24}
                 className="w-6 h-6 relative z-10"
               />
-              <span className="font-bold text-lg relative z-10">OK</span>
+              <span className="font-extrabold text-lg relative z-10">OK</span>
             </Button>
           </div>
         </div>
