@@ -1115,8 +1115,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
-      const currentPrice = item.basePrice * Math.pow(1, item.level - 1); // Changed multiplier to 1x
-      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1)); // Changed to 0.10x profit increase
+      const currentPrice = item.basePrice * Math.pow(1.8, item.level - 1);
+      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1));
 
       if (user.coins >= currentPrice) {
         try {
@@ -1140,7 +1140,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           );
 
           // Update profit per hour
-          const newProfit = currentProfit * 1 + 0.1; // Increase profit by 10%
+          const newProfit = currentProfit * 1.1; // Increase profit by 10%
           setProfitPerHour((prev) => prev + newProfit);
 
           setCongratulationPopup({ show: true, item: item });
@@ -1565,7 +1565,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         return newEnergy;
       });
 
-      // Instantly add profits while user is playing
+      // Update coins based on real-time profit
       setUser((prevUser) => ({
         ...prevUser,
         coins: prevUser.coins + profitPerHour / 3600,
@@ -2067,7 +2067,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       height={14}
                       className="inline mr-1"
                     />
-                    Profit: {formatNumber(item.baseProfit * item.level, true)}/h
+                    Profit: {formatNumber(item.baseProfit * (1 + 0.1 * (item.level - 1)), true)}/h
                   </p>
                   <Button
                     className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center"
@@ -2082,7 +2082,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       height={16}
                       className="mr-1"
                     />
-                    {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
+                    {formatNumber(item.basePrice * Math.pow(1.8, item.level - 1), true)}
                   </Button>
                 </NeonGradientCard>
               ))}
