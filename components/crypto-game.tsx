@@ -1637,43 +1637,43 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [user]);
 
   const renderHeader = () => (
-    <div className="z-10 bg-black/10 backdrop-blur-xl p-2 rounded-full border border-white/10">
+    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
       <Card className="bg-transparent border-0 overflow-hidden">
-        <CardContent className="p-2 flex items-center justify-between relative flex-wrap">
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden border border-white/20">
+        <CardContent className="p-0 flex items-center justify-between relative flex-wrap">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden border border-white/20">
               <Image
                 src={user.profilePhoto}
                 alt={user.username}
-                width={40}
-                height={40}
+                width={48}
+                height={48}
                 className="rounded-full"
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
             </div>
             <div>
-              <h2 className="font-black text-sm text-white font-bold">
+              <h2 className="font-black text-base text-white">
                 {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 12) + '...'}
               </h2>
-              <div className="text-xs text-white font-bold flex items-center font-bold">
+              <div className="text-sm text-white font-bold flex items-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Coin"
-                  width={16}
-                  height={16}
+                  width={20}
+                  height={20}
                   className="mr-1"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                <span className="font-bold">{formatNumber(user.coins, false)}</span> coins
+                <span className="font-bold">{formatNumberWithSuffix(user.coins)}</span>
               </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
-              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10 font-bold"
+              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
               onClick={() => {
                 setCurrentPage('trophies');
               }}
@@ -1681,15 +1681,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%203D%20ICON-OWj5E59yfxlLk1Ggf2x8o0kfMIJNVy.png"
                 alt="Trophies"
-                width={30}
-                height={30}
+                width={32}
+                height={32}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
             </Button>
             <Button
               variant="ghost"
-              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10 font-bold"
+              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
               onClick={() => {
                 setCurrentPage('levels');
               }}
@@ -1697,15 +1697,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LEVEL%203D%20ICON-1QycsqYoN36yz9KyR6KM3Q7pfm2eTe.png"
                 alt="Levels"
-                width={30}
-                height={30}
+                width={32}
+                height={32}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
             </Button>
             <Button
               variant="ghost"
-              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10 font-bold"
+              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
               onClick={() => {
                 setCurrentPage('settings');
               }}
@@ -1713,8 +1713,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-e5kOIT7doa350SWGGjbyEw71v4Ldhm.png"
                 alt="Settings"
-                width={30}
-                height={30}
+                width={32}
+                height={32}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
