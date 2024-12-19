@@ -537,7 +537,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 10000000,
+      coins: 0,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -1749,8 +1749,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             icon: 'Home%203D%20ICON-lq4p7b3umu25lmHYmoI2AyAjriJJl5.png',
           },
           {
-            page: 'rating',
-            text: 'Rating',
+            page: 'ranking',
+            text: 'Ranking',
             icon: 'RATING%203D%20ICON-fc1CF0mncViyB8MTFT7iisKtLfBKoA.png',
           },
           {
