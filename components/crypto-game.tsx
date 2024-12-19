@@ -2419,8 +2419,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-mpRp7dJyIT5j6Rk4N9khP3KO4uhMMM.png"
                   alt="Copy"
-                  width={20}
-                  height={20}
+                  width={24}
+                  height={24}
                   className="w-5 h-5"
                 />
               </Button>
@@ -2436,8 +2436,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friends%203D%20ICON-CH6D4MacLd14dlM6kXELnEpbg2TrEQ.png"
               alt="Friends Activity"
-              width={28}
-              height={28}
+              width={34}
+              height={34}
               className="w-5 h-5 mr-2"
             />
             Friends Activity
