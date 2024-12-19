@@ -2235,8 +2235,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Awesome%203D%20ICON-HN2tr353wye3DLusQa15XU8aM36j8U.png"
           alt="Awesome"
-          width={30}
-          height={30}
+          width={34}
+          height={34}
           className="w-6 h-6 relative z-10"
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
@@ -2701,8 +2701,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Achievement%203D%20ICON-uPsT5t3TZ9lrkjkpSqlgwfiFaEKn4K.png"
           alt="Achievement Icon"
-          width={30}
-          height={30}
+          width={34}
+          height={34}
           className="w-6 h-6 relative z-10"
         />
         <span className="font-bold text-lg relative z-10">Embrace the Power!</span>
@@ -2815,8 +2815,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cliam%203D%20ICON-4TAt1mqi8cGSkOxrY2VHngEEFJGyRi.png"
                   alt="Claim Icon"
-                  width={30}
-                  height={30}
+                  width={34}
+                  height={34}
                   className="w-6 h-6 relative z-10"
                 />
                 <span className="font-bold text-lg relative z-10">Claim Now!</span>
@@ -2850,8 +2850,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Level%20UP%203D%20ICON-xndJfi9xA5hNBn6sWPRX0jk6MDLA4t.png"
                   alt="Level Up Icon"
-                  width={30}
-                  height={30}
+                  width={34}
+                  height={34}
                   className="w-6 h-6 relative z-10"
                 />
                 <span className="font-bold text-lg relative z-10">Level Up</span>
