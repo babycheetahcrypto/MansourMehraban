@@ -1115,17 +1115,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
-      const price = item.basePrice * Math.pow(2, item.level - 1);
-      if (user.coins >= price) {
+      const currentPrice = item.basePrice * Math.pow(2.5, item.level - 1); // Changed multiplier to 2.50x
+      const currentProfit = item.baseProfit * (1 + 0.3 * (item.level - 1)); // Added 0.30x profit increase
+
+      if (user.coins >= currentPrice) {
         try {
           const updatedUser = {
             ...user,
-            coins: user.coins - price,
+            coins: user.coins - currentPrice,
           };
           setUser(updatedUser);
           await saveUserData(updatedUser);
 
-          // Update shop items
+          // Update shop item level and recalculate profit per hour
           setShopItems((prevItems) =>
             prevItems.map((i) =>
               i.id === item.id
@@ -1138,11 +1140,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           );
 
           // Update profit per hour
-          const newProfitPerHour = shopItems.reduce(
-            (total, shopItem) => total + shopItem.baseProfit * shopItem.level,
-            0
-          );
-          setProfitPerHour(newProfitPerHour);
+          const newProfit = currentProfit * 1 + 0.3; // Increase profit by 30%
+          setProfitPerHour((prev) => prev + newProfit);
 
           setCongratulationPopup({ show: true, item: item });
           showPopup('congratulation');
@@ -1152,8 +1151,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               JSON.stringify({
                 action: 'purchase',
                 item: item.name,
-                cost: price,
-                isPremium: false,
+                cost: currentPrice,
+                newLevel: item.level + 1,
+                profitIncrease: newProfit,
               })
             );
           }
@@ -1165,7 +1165,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, shopItems, setProfitPerHour]
+    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup]
   );
 
   const buyPremiumItem = useCallback(
@@ -2114,8 +2114,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   </div>
                   <p className="text-xs text-white mb-1 flex items-center">
                     <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Upgrade%203D%20ICON-2OXsGEXI0RlBAXXF1uInbd0ay4uavs.png"
-                      alt="Effect"
+                      src={
+                        item.id === 1
+                          ? 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Boost%203D%20ICON-4b947I4OluagHe9yjdro9LLmy0s41A.png'
+                          : 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tap%203D%20ICON-c6aHeRV1j8uaDFXdyjcROOXZmpi7Ei.png'
+                      }
+                      alt={item.id === 1 ? 'Boost' : 'Tap'}
                       width={13}
                       height={13}
                       className="inline mr-1"
