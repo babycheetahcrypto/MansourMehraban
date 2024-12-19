@@ -1940,44 +1940,44 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <div className="fixed inset-0 z-0 overflow-hidden">
         <StarryBackground />
       </div>
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="flex justify-center mb-8">
-          <div className="bg-gray-800 rounded-full p-1 flex">
-            <button
-              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                currentShopTab === 'regular'
-                  ? 'bg-blue-500 text-white'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-700'
-              }`}
-              onClick={() => setCurrentShopTab('regular')}
-            >
-              Regular Shop
-            </button>
-            <button
-              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                currentShopTab === 'premium'
-                  ? 'bg-blue-500 text-white'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-700'
-              }`}
-              onClick={() => setCurrentShopTab('premium')}
-            >
-              Premium Shop
-            </button>
+      <div className="w-full max-w-7xl mx-auto">
+        <div className="sticky top-0 z-10 bg-gray-900/80 backdrop-blur-md py-4 mb-8">
+          <div className="flex justify-center">
+            <div className="bg-gray-800 rounded-full p-1 flex">
+              <button
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                  currentShopTab === 'regular'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-300 hover:text-white hover:bg-gray-700'
+                }`}
+                onClick={() => setCurrentShopTab('regular')}
+              >
+                Regular Shop
+              </button>
+              <button
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                  currentShopTab === 'premium'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-300 hover:text-white hover:bg-gray-700'
+                }`}
+                onClick={() => setCurrentShopTab('premium')}
+              >
+                Premium Shop
+              </button>
+            </div>
           </div>
         </div>
 
         {currentShopTab === 'regular' && (
           <>
-            <h4 className="text-4xl font-bold mb-8 text-center text-white font-bold">
-              Emporium Shop
-            </h4>
+            <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {shopItems.map((item, index) => (
                 <NeonGradientCard
                   key={item.id}
                   className="transform transition-all duration-300 hover:shadow-2xl group"
                 >
-                  <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 font-bold">
+                  <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
                     {item.name}
                   </h3>
                   <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
@@ -2001,7 +2001,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       alt="Level"
                       width={13}
                       height={13}
-                      className="inline"
+                      className="inline mr-1"
                     />
                     Level: {item.level}
                   </p>
@@ -2011,12 +2011,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       alt="Profit"
                       width={13}
                       height={13}
-                      className="inline"
+                      className="inline mr-1"
                     />
                     Profit: {formatNumber(item.baseProfit * item.level, true)}/h
                   </p>
                   <Button
-                    className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center font-bold"
+                    className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center"
                     onClick={() => {
                       buyItem(item);
                     }}
@@ -2038,9 +2038,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         {currentShopTab === 'premium' && (
           <>
-            <h4 className="text-4xl font-bold mb-8 text-center text-white font-bold">
-              Premium Shop
-            </h4>
+            <h4 className="text-4xl font-bold mb-8 text-center text-white">Premium Shop</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {premiumShopItems.map((item) => (
                 <div
@@ -2048,7 +2046,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   className="bg-gradient-to-br from-yellow-600/30 to-yellow-800/30 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-yellow-500/50 hover:border-yellow-400 group"
                 >
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-center mb-3 group-hover:text-yellow-400 transition-colors duration-300 font-bold">
+                    <h3 className="text-lg font-bold text-center mb-3 group-hover:text-yellow-400 transition-colors duration-300 text-white">
                       {item.name}
                     </h3>
                     <div className="relative w-full h-32 mb-3 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
@@ -2068,12 +2066,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         alt="Effect"
                         width={13}
                         height={13}
-                        className="inline"
+                        className="inline mr-1"
                       />
                       Effect: {item.effect}
                     </p>
                     <Button
-                      className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center font-bold"
+                      className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center"
                       onClick={() => {
                         buyItem(item, true);
                       }}
