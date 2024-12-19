@@ -2414,7 +2414,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   );
                   showGameAlert('Referral link copied to clipboard!');
                 }}
-                className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white text-xs py-1 px-2 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white text-xs py-1 px-2 rounded-full transition-all duration-300 flex items-center justify-center"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-qVagBixv3Uacicht1qeEubKtLUwh6W.png"
@@ -2440,7 +2440,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               height={34}
               className="w-5 h-5 mr-2"
             />
-            Friends Activity
+            <span className="font-bold">Friends Activity</span>
           </Button>
         </CardContent>
       </NeonGradientCard>
