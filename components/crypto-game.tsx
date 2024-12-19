@@ -640,92 +640,92 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
       id: 1,
-      name: 'Cosmic Shipyard',
+      name: 'Swift Vault',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cosmic%20Shipyard.jpg-g0folteuEnRzE2ke1wVnCVMyxpoRC2.jpeg',
-      basePrice: 500,
-      baseProfit: 50,
-      level: 1,
-    },
-    {
-      id: 2,
-      name: 'Galactic WarpCrafts',
-      image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Galactic%20WarpCrafts.jpg-Ebh93DdGRcffZMhpLKm5dOqpN7c7Y4.jpeg',
-      basePrice: 1000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Swift%20Vault%203D%20ICON-YjJdYhrDzvHtpqZFjqpThbolAWY6fR.png',
+      basePrice: 300,
       baseProfit: 100,
       level: 1,
     },
     {
-      id: 3,
-      name: 'Galaxy Gear Crypto',
+      id: 2,
+      name: 'Glow Haven',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Galaxy%20Gear%20Crypto.jpg-FE1Ait4Pr0hgjoQXxY4aACXxtHrSIa.jpeg',
-      basePrice: 2000,
-      baseProfit: 500,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Glow%20Haven%203D%20ICON-shE3nK955ePBhcjxHePTVm1UjmqbXY.png',
+      basePrice: 600,
+      baseProfit: 200,
+      level: 1,
+    },
+    {
+      id: 3,
+      name: 'Turbo Trove',
+      image:
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Turbo%20Trove%203D%20ICON-xRC8mkvRyBp1S1DiZrTSGZv5Wn59gR.png',
+      basePrice: 900,
+      baseProfit: 300,
       level: 1,
     },
     {
       id: 4,
-      name: 'RocketCoin Speedway',
+      name: 'Star Forge',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/RocketCoin%20Speedway.jpg-C7c29Ra1Lo9GWgsb5knfynlR1c4e4h.jpeg',
-      basePrice: 4000,
-      baseProfit: 1000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Star%20Forge%203D%20ICON-dv0713lbRSVu9JoQX9mBx1FzsBTFWk.png',
+      basePrice: 1200,
+      baseProfit: 600,
       level: 1,
     },
     {
       id: 5,
-      name: 'Stellar Speed Vault',
+      name: 'Pulse Vault',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Stellar%20Speed%20Vault.jpg-vQAbuozzA2Bh7op7dd2Xw6hl2wmMwh.jpeg',
-      basePrice: 8000,
-      baseProfit: 2000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Pulse%20Vault%203D%20ICON-VYtHx0eH8O2SUFaHntxVSYq7gQACFX.png',
+      basePrice: 1800,
+      baseProfit: 900,
       level: 1,
     },
     {
       id: 6,
-      name: 'Speedy Coin Shop',
+      name: 'Flash Nest',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Speedy%20Coin%20Shop-4Pjy8KKoF4mPmJqSCKaeBmVjjOeDmG.jpg',
-      basePrice: 15000,
-      baseProfit: 4000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Flash%20Nest%203D%20ICON-A6avR3GCNvkEjhrHUhQ6oX6DPfSjc3.png',
+      basePrice: 2400,
+      baseProfit: 1200,
       level: 1,
     },
     {
       id: 7,
-      name: 'SpaceXcelerate Crypto',
+      name: 'Blaze Vault',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SpaceXcelerate%20Crypto-tRNfj0y3wKPzkeompo47K0INGZ8RzP.jpg',
-      basePrice: 35000,
-      baseProfit: 8000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Blaze%20Vault%203D%20ICON-Zr5ZGgsvzm2M0Dyyk8yYz6ocGAm4oU.png',
+      basePrice: 3600,
+      baseProfit: 1800,
       level: 1,
     },
     {
       id: 8,
-      name: 'Lunar Cruiser Exchange',
+      name: 'Shine Chamber',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lunar%20Cruiser%20Exchange-l3lp6JnCc43BWBNbDAmfoTDRfgVIPr.jpg',
-      basePrice: 50000,
-      baseProfit: 12000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Shine%20Chamber%203D%20ICON-deR5Ww87XqwIZc7P4hlYsGaiUGcBIf.png',
+      basePrice: 4800,
+      baseProfit: 2400,
       level: 1,
     },
     {
       id: 9,
-      name: 'Hyperdrive Coin Garage',
+      name: 'Speed Market',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Hyperdrive%20Coin%20Garage-p3lGkiS6WCbCuwUBxy75HFwCkRjbJU.jpg',
-      basePrice: 70000,
-      baseProfit: 35000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Speed%20Market%203D%20ICON-k6ux9fP6NBPGzVzScR0LAsxGGSEL0P.png',
+      basePrice: 7200,
+      baseProfit: 3600,
       level: 1,
     },
     {
       id: 10,
-      name: 'MoonShip Hangar',
+      name: 'Radiant Depot',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/MoonShip%20Hangar-A3Pne3hTeraZk7TTZDnekdMmnVytf3.jpg',
-      basePrice: 100000,
-      baseProfit: 50000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Radiant%20Depot%203D%20ICON-DxHzpjdjUft5ZQfMz7LZxJ9rT6vHNx.png',
+      basePrice: 9600,
+      baseProfit: 4800,
       level: 1,
     },
   ]);
@@ -733,19 +733,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [premiumShopItems, setPremiumShopItems] = useState<PremiumShopItem[]>([
     {
       id: 1,
-      name: 'Booster Credits',
+      name: 'Booster Burst',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg',
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Booster%20Burst%203D%20ICON-1aG3Bj9yJ581q3FLf2MWhG0iP3HEMz.png',
       basePrice: 50000,
       effect: 'Adds 1 booster credit',
       boosterCredits: 1,
     },
     {
       id: 2,
-      name: 'Cheetah Coin Corner',
+      name: 'Coin Hit',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg',
-      basePrice: 7000,
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Coin%20Hit%203D%20ICON-7MzrNIktY3OEDHK90l9Znezh7buAqj.png',
+      basePrice: 6000,
       effect: 'Adds 1 tap to coin button',
       tap: 1,
     },
@@ -1829,7 +1829,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-TUMu6jfnFGYG3DhXtOUXGzFEd9Klbr.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-i45iGLhTQldoCi8pzRNLinRlgHiofn.png"
                 alt="Wallet"
                 width={32}
                 height={32}
