@@ -563,7 +563,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         backgroundMusic: false,
       },
       profitPerHour: 0,
-      boosterCredits: 3,
+      boosterCredits: 1, // Updated initial boosterCredits
       lastBoosterReset: null,
     }
   );
@@ -737,6 +737,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg',
       basePrice: 7000,
       effect: 'Doubles coin button taps',
+      level: 1,
+    },
+    {
+      id: 7,
+      name: 'Booster Credit',
+      image:
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg', // Replace with actual image URL
+      basePrice: 50000,
+      effect: 'Adds 1 booster credit',
       level: 1,
     },
   ]);
@@ -1118,10 +1127,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           await saveUserData(updatedUser);
 
           if (isPremium) {
-            setPremiumShopItems((prevItems) =>
-              prevItems.map((i) => (i.id === item.id ? { ...i, level: i.level + 1 } : i))
-            );
-            setClickPower((prev) => prev * 2);
+            if (item.name === 'Booster Credit') {
+              setUser((prevUser) => ({
+                ...prevUser,
+                boosterCredits: prevUser.boosterCredits + 1,
+              }));
+            } else {
+              setPremiumShopItems((prevItems) =>
+                prevItems.map((i) => (i.id === item.id ? { ...i, level: i.level + 1 } : i))
+              );
+              setClickPower((prev) => prev * 2);
+            }
           } else {
             setShopItems((prevItems) =>
               prevItems.map((i) => {
