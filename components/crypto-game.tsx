@@ -1986,12 +1986,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 Profit: {formatNumber(item.baseProfit * item.level, true)}/h
               </p>
               <Button
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center font-bold"
+                className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center font-bold"
                 onClick={() => {
                   buyItem(item);
                 }}
               >
-                Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                  alt="Crypto Coin"
+                  width={16}
+                  height={16}
+                  className="mr-1"
+                />
+                {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
               </Button>
             </NeonGradientCard>
           ))}
@@ -2030,11 +2037,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   Effect: {item.effect}
                 </p>
                 <Button
-                  className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center font-bold"
+                  className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center font-bold"
                   onClick={() => {
                     buyItem(item, true);
                   }}
                 >
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                    alt="Crypto Coin"
+                    width={16}
+                    height={16}
+                    className="mr-1"
+                  />
                   Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
                 </Button>
               </div>
