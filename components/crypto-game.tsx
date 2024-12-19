@@ -2092,7 +2092,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       height={16}
                       className="mr-1"
                     />
-                    Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
+                    {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
                   </Button>
                 </NeonGradientCard>
               ))}
