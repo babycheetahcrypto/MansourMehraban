@@ -56,7 +56,8 @@ type PremiumShopItem = {
   image: string;
   basePrice: number;
   effect: string;
-  level: number;
+  boosterCredits?: number;
+  tap?: number;
 };
 
 type Task = {
@@ -731,22 +732,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const [premiumShopItems, setPremiumShopItems] = useState<PremiumShopItem[]>([
     {
-      id: 6,
+      id: 1,
+      name: 'Booster Credits',
+      image:
+        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg',
+      basePrice: 50000,
+      effect: 'Adds 1 booster credit',
+      boosterCredits: 1,
+    },
+    {
+      id: 2,
       name: 'Cheetah Coin Corner',
       image:
         'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg',
       basePrice: 7000,
-      effect: 'Doubles coin button taps',
-      level: 1,
-    },
-    {
-      id: 7,
-      name: 'Booster Credit',
-      image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Coin%20Corner.jpg-xLd8l1UKa8tR7HU4JcT7lcmwi2e8sa.jpeg', // Replace with actual image URL
-      basePrice: 50000,
-      effect: 'Adds 1 booster credit',
-      level: 1,
+      effect: 'Adds 1 tap to coin button',
+      tap: 1,
     },
   ]);
 
@@ -1113,10 +1114,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const buyItem = useCallback(
-    async (item: ShopItem | PremiumShopItem, isPremium = false) => {
-      const price = isPremium
-        ? item.basePrice * Math.pow(5, item.level - 1)
-        : item.basePrice * Math.pow(2, item.level - 1);
+    async (item: ShopItem) => {
+      const price = item.basePrice * Math.pow(2, item.level - 1);
       if (user.coins >= price) {
         try {
           const updatedUser = {
@@ -1126,38 +1125,36 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           setUser(updatedUser);
           await saveUserData(updatedUser);
 
-          if (isPremium) {
-            if (item.name === 'Booster Credit') {
-              setUser((prevUser) => ({
-                ...prevUser,
-                boosterCredits: prevUser.boosterCredits + 1,
-              }));
-            } else {
-              setPremiumShopItems((prevItems) =>
-                prevItems.map((i) => (i.id === item.id ? { ...i, level: i.level + 1 } : i))
-              );
-              setClickPower((prev) => prev * 2);
-            }
-          } else {
-            setShopItems((prevItems) =>
-              prevItems.map((i) => {
-                if (i.id === item.id) {
-                  const newLevel = i.level + 1;
-                  const newProfit = i.baseProfit * newLevel;
-                  setProfitPerHour((prev) => prev + newProfit - i.baseProfit * i.level);
-                  return { ...i, level: newLevel };
-                }
-                return i;
-              })
-            );
-          }
+          // Update shop items
+          setShopItems((prevItems) =>
+            prevItems.map((i) =>
+              i.id === item.id
+                ? {
+                    ...i,
+                    level: i.level + 1,
+                  }
+                : i
+            )
+          );
+
+          // Update profit per hour
+          const newProfitPerHour = shopItems.reduce(
+            (total, shopItem) => total + shopItem.baseProfit * shopItem.level,
+            0
+          );
+          setProfitPerHour(newProfitPerHour);
 
           setCongratulationPopup({ show: true, item: item });
           showPopup('congratulation');
 
           if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.sendData(
-              JSON.stringify({ action: 'purchase', item: item.name, cost: price, isPremium })
+              JSON.stringify({
+                action: 'purchase',
+                item: item.name,
+                cost: price,
+                isPremium: false,
+              })
             );
           }
         } catch (error) {
@@ -1168,16 +1165,58 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         showGameAlert('Not enough coins!');
       }
     },
-    [
-      user,
-      saveUserData,
-      setUser,
-      setPremiumShopItems,
-      setShopItems,
-      setProfitPerHour,
-      setClickPower,
-      setCongratulationPopup,
-    ]
+    [user, saveUserData, shopItems, setProfitPerHour]
+  );
+
+  const buyPremiumItem = useCallback(
+    async (item: PremiumShopItem) => {
+      if (user.coins >= item.basePrice) {
+        try {
+          const updatedUser = {
+            ...user,
+            coins: user.coins - item.basePrice,
+          };
+          setUser(updatedUser);
+          await saveUserData(updatedUser);
+
+          if (item.id === 1 && item.boosterCredits !== undefined) {
+            // Booster Credits
+            setUser((prevUser) => ({
+              ...prevUser,
+              boosterCredits: prevUser.boosterCredits + item.boosterCredits!,
+            }));
+          } else if (item.id === 2 && item.tap) {
+            // Cheetah Coin Corner
+            setClickPower((prev) => prev + 1);
+            setPremiumShopItems((prevItems) =>
+              prevItems.map((i) =>
+                i.id === item.id ? { ...i, basePrice: i.basePrice * 4, tap: (i.tap || 0) + 1 } : i
+              )
+            );
+          }
+
+          setCongratulationPopup({ show: true, item: item });
+          showPopup('congratulation');
+
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.sendData(
+              JSON.stringify({
+                action: 'purchase',
+                item: item.name,
+                cost: item.basePrice,
+                isPremium: true,
+              })
+            );
+          }
+        } catch (error) {
+          console.error('Error purchasing item:', error);
+          showGameAlert('Failed to purchase item. Please try again.');
+        }
+      } else {
+        showGameAlert('Not enough coins!');
+      }
+    },
+    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup]
   );
 
   const claimPPH = useCallback(() => {
@@ -1986,7 +2025,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         {currentShopTab === 'regular' && (
           <>
-            {/* <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4> */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {shopItems.map((item, index) => (
                 <NeonGradientCard
@@ -2054,7 +2092,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         {currentShopTab === 'premium' && (
           <>
-            {/* <h4 className="text-4xl font-bold mb-8 text-center text-white">Premium Shop</h4> */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {premiumShopItems.map((item) => (
                 <NeonGradientCard
@@ -2083,22 +2120,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       height={13}
                       className="inline mr-1"
                     />
-                    Effect: {item.effect}
-                  </p>
-                  <p className="text-xs text-white mb-2 flex items-center">
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
-                      alt="Level"
-                      width={13}
-                      height={13}
-                      className="inline mr-1"
-                    />
-                    Level: {item.level}
+                    {item.id === 1 ? 'Boost:' : 'Tap:'}{' '}
+                    {item.id === 1 ? item.boosterCredits : item.tap}
                   </p>
                   <Button
                     className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center"
                     onClick={() => {
-                      buyItem(item, true);
+                      buyPremiumItem(item);
                     }}
                   >
                     <Image
@@ -2108,7 +2136,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       height={16}
                       className="mr-1"
                     />
-                    {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
+                    {formatNumber(item.basePrice, true)}
                   </Button>
                 </NeonGradientCard>
               ))}
@@ -2289,7 +2317,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src =
-                          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
+                          'https://hebbkx1anhila5yf.public.blob.vercel-storagecom/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
                       }}
                       draggable="false"
                       onContextMenu={(e) => e.preventDefault()}

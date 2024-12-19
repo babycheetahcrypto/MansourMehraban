@@ -56,7 +56,8 @@ export interface PremiumShopItem {
   image: string;
   basePrice: number;
   effect: string;
-  level: number;
+  boosterCredits?: number;
+  tap?: number;
 }
 
 export interface Task {
