@@ -1965,8 +1965,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
-              <p className="text-xs text-white mb-1">Level: {item.level}</p>
-              <p className="text-xs text-white mb-2">
+              <p className="text-xs text-white mb-1 flex items-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
+                  alt="Level"
+                  width={12}
+                  height={12}
+                  className="inline"
+                />
+                Level: {item.level}
+              </p>
+              <p className="text-xs text-white mb-2 flex items-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Profit%203D%20ICON-LxqAu2YW7MazlwuZhOdC4RpqnczhU3.png"
+                  alt="Profit"
+                  width={12}
+                  height={12}
+                  className="inline"
+                />
                 Profit: {formatNumber(item.baseProfit * item.level, true)}/h
               </p>
               <Button
@@ -2003,8 +2019,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     onContextMenu={(e) => e.preventDefault()}
                   />
                 </div>
-                <p className="text-sm text-white mb-1">Level: {item.level}</p>
-                <p className="text-sm text-white mb-3">Effect: {item.effect}</p>
+                <p className="text-sm text-white mb-3 flex items-center">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Upgrade%203D%20ICON-2OXsGEXI0RlBAXXF1uInbd0ay4uavs.png"
+                    alt="Effect"
+                    width={12}
+                    height={12}
+                    className="inline"
+                  />
+                  Effect: {item.effect}
+                </p>
                 <Button
                   className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center font-bold"
                   onClick={() => {
