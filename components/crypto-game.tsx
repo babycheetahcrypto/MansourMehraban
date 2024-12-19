@@ -401,7 +401,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
       >
         <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
-          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white`}
+          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white font-bold`}
         >
           {text}
         </span>
@@ -1597,10 +1597,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
             </div>
             <div>
-              <h2 className="font-black text-sm text-white">
+              <h2 className="font-black text-sm text-white font-bold">
                 {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 12) + '...'}
               </h2>
-              <div className="text-xs text-white flex items-center font-bold">
+              <div className="text-xs text-white font-bold flex items-center font-bold">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Coin"
@@ -1610,14 +1610,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                {formatNumber(user.coins, false)} coins
+                <span className="font-bold">{formatNumber(user.coins, false)}</span> coins
               </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
-              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10"
+              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10 font-bold"
               onClick={() => {
                 setCurrentPage('trophies');
               }}
@@ -1633,7 +1633,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </Button>
             <Button
               variant="ghost"
-              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10"
+              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10 font-bold"
               onClick={() => {
                 setCurrentPage('levels');
               }}
@@ -1649,7 +1649,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </Button>
             <Button
               variant="ghost"
-              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10"
+              className="bg-white/5 backdrop-blur-xl text-white p-1 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/10 font-bold"
               onClick={() => {
                 setCurrentPage('settings');
               }}
@@ -1742,7 +1742,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                <span className="text-sm font-bold text-white">Level {level}</span>
+                <span className="text-sm font-bold text-white font-bold">Level {level}</span>
               </div>
             </div>
             <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
@@ -1757,9 +1757,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
               </div>
             </div>
-            <div className="text-xs text-white flex justify-between mt-1">
-              <span>{formatNumber(user.coins - levelRequirements[level - 1], true)}</span>
-              <span>
+            <div className="text-xs text-white font-bold flex justify-between mt-1">
+              <span className="font-bold">
+                {formatNumber(user.coins - levelRequirements[level - 1], true)}
+              </span>
+              <span className="font-bold">
                 {formatNumber(nextLevelRequirement - levelRequirements[level - 1], true)} coins
               </span>
             </div>
@@ -1768,7 +1770,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <Button
               variant="ghost"
               onClick={() => setCurrentPage('wallet')}
-              className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button"
+              className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
             >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WALLET%203D%20ICON-TUMu6jfnFGYG3DhXtOUXGzFEd9Klbr.png"
@@ -1789,14 +1791,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
-              <span className="text-xs text-white">{formatNumber(profitPerHour, true)}/h</span>
+              <span className="text-xs text-white font-bold">
+                {formatNumber(profitPerHour, true)}/h
+              </span>
             </div>
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1
-            className={`font-black text-white overflow-hidden ${
+            className={`font-black text-white font-bold overflow-hidden ${
               formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'
             }`}
           >
@@ -1805,7 +1809,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               .map((digit, index) => (
                 <span
                   key={index}
-                  className="inline-block"
+                  className="inline-block font-bold"
                   style={{
                     animation: `countUp 0.5s ${index * 0.1}s backwards`,
                   }}
@@ -1851,8 +1855,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
 
           <div className="w-full max-w-md mb-4">
-            <div className="flex justify-between text-sm mb-2 text-white">
-              <span className="font-semibold flex items-center gap-2">
+            <div className="flex justify-between text-sm mb-2 text-white font-bold">
+              <span className="font-bold flex items-center gap-2">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Energy%203D%20ICON-4zZaqZ94OWxLZYPRzSYsS1bpecFsCS.png"
                   alt="Energy"
@@ -1864,7 +1868,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 />
                 Energy
               </span>
-              <span>
+              <span className="font-bold">
                 {Math.floor(energy)}/{maxEnergy}
               </span>
             </div>
@@ -1888,7 +1892,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               onClick={() => {
                 setCurrentPage('dailyReward');
               }}
-              className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold daily-reward-button"
+              className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-bold daily-reward-button"
             >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
@@ -1898,11 +1902,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
-              <span>Daily Reward</span>
+              <span className="font-bold">Daily Reward</span>
             </Button>
             <Button
               onClick={activateMultiplier}
-              className={`flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-semibold ${
+              className={`flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-bold ${
                 user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
               }`}
               disabled={user.boosterCredits === 0 || !!multiplierEndTime}
@@ -1916,7 +1920,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
-              <span>
+              <span className="font-bold">
                 {multiplierEndTime
                   ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
                   : user.boosterCredits === 0
@@ -1936,14 +1940,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <StarryBackground />
       </div>
       <div className="max-w-7xl mx-auto">
-        <h4 className="text-4xl font-bold mb-8 text-center text-white">Emporium Shop</h4>
+        <h4 className="text-4xl font-bold mb-8 text-center text-white font-bold">Emporium Shop</h4>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {shopItems.map((item, index) => (
             <NeonGradientCard
               key={item.id}
               className="transform transition-all duration-300 hover:shadow-2xl group"
             >
-              <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300">
+              <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 font-bold">
                 {item.name}
               </h3>
               <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
@@ -1961,12 +1965,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
-              <p className="text-xs text-white mb-1">Level: {item.level}</p>
-              <p className="text-xs text-white mb-2">
+              <p className="text-xs text-white font-bold mb-1">Level: {item.level}</p>
+              <p className="text-xs text-white font-bold mb-2">
                 Profit: {formatNumber(item.baseProfit * item.level, true)}/h
               </p>
               <Button
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-700 group-hover:to-blue-900 transition-all duration-300 flex items-center justify-center font-bold"
                 onClick={() => {
                   buyItem(item);
                 }}
@@ -1977,7 +1981,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           ))}
         </div>
 
-        <h4 className="text-3xl font-bold my-8 text-center text-white">Booster Shop</h4>
+        <h4 className="text-3xl font-bold my-8 text-center text-white font-bold">Booster Shop</h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {premiumShopItems.map((item) => (
             <div
@@ -1985,7 +1989,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               className="bg-gradient-to-br from-yellow-600/30 to-yellow-800/30 backdrop-blur-md text-white rounded-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-yellow-500/50 hover:border-yellow-400 group"
             >
               <div className="p-4">
-                <h3 className="text-lg font-bold text-center mb-3 group-hover:text-yellow-400 transition-colors duration-300">
+                <h3 className="text-lg font-bold text-center mb-3 group-hover:text-yellow-400 transition-colors duration-300 font-bold">
                   {item.name}
                 </h3>
                 <div className="relative w-full h-32 mb-3 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
@@ -1999,10 +2003,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     onContextMenu={(e) => e.preventDefault()}
                   />
                 </div>
-                <p className="text-sm text-white mb-1">Level: {item.level}</p>
-                <p className="text-sm text-white mb-3">Effect: {item.effect}</p>
+                <p className="text-sm text-white font-bold mb-1">Level: {item.level}</p>
+                <p className="text-sm text-white font-bold mb-3">Effect: {item.effect}</p>
                 <Button
-                  className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center"
+                  className="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white py-2 rounded-md text-sm font-bold group-hover:from-yellow-500 group-hover:to-yellow-700 transition-all duration-300 flex items-center justify-center font-bold"
                   onClick={() => {
                     buyItem(item, true);
                   }}
@@ -2026,10 +2030,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             className="transform transition-all duration-300 hover:shadow-2xl"
           >
             <CardHeader className="p-3">
-              <CardTitle className="flex items-center justify-between z-10 text-base">
-                <span className="flex items-center">
+              <CardTitle className="flex items-center justify-between z-10 text-base font-bold">
+                <span className="flex items-center font-bold">
                   {task.icon}
-                  <span className="ml-2 text-white">{task.description}</span>
+                  <span className="ml-2 text-white font-bold">{task.description}</span>
                 </span>
                 <span className="text-white font-bold">
                   {formatNumber(task.reward, true)} coins
@@ -2044,21 +2048,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 />
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white">
+                <span className="text-white font-bold">
                   {task.progress}/{task.maxProgress || 1} complete
                 </span>
                 {task.completed ? (
                   task.claimed ? (
                     <Button
-                      className="bg-green-600 text-white px-4 py-2 rounded-full text-xs"
+                      className="bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold"
                       disabled
                     >
                       <CheckCircle className="w-4 h-4 mr-1" />
-                      <span>Claimed</span>
+                      <span className="font-bold">Claimed</span>
                     </Button>
                   ) : (
                     <Button
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700 font-bold"
                       onClick={() => {
                         setUser((prevUser) => ({
                           ...prevUser,
@@ -2071,18 +2075,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       }}
                     >
                       <Star className="w-4 h-4 mr-1" />
-                      <span>Claim</span>
+                      <span className="font-bold">Claim</span>
                     </Button>
                   )
                 ) : (
                   <Button
-                    className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                    className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700 font-bold"
                     onClick={() => {
                       task.action();
                     }}
                   >
                     <ArrowRight className="w-4 h-4 mr-1" />
-                    <span>Start</span>
+                    <span className="font-bold">Start</span>
                   </Button>
                 )}
               </div>
@@ -2129,21 +2133,26 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   {index + 1}
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">{player.name}</h3>
-                  <p className="text-sm text-white">{formatNumber(player.coins, true)} coins</p>
+                  <h3 className="font-bold text-white font-bold">{player.name}</h3>
+                  <p className="text-sm text-white font-bold">
+                    {formatNumber(player.coins, true)} coins
+                  </p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm text-white">Profit/h</p>
-                <p className="font-bold text-white">{formatNumber(player.profitPerHour, true)}</p>
+                <p className="text-sm text-white font-bold">Profit/h</p>
+                <p className="font-bold text-white font-bold">
+                  {formatNumber(player.profitPerHour, true)}
+                </p>
               </div>
             </NeonGradientCard>
           ))}
         </div>
         {currentUserRank > 0 && (
           <div className="mt-8 p-4 bg-gradient-to-r from-primary/30 to-primary-foreground/30 rounded-lg shadow-lg backdrop-blur-md">
-            <p className="text-white text-xl">
-              Your current rank: <span className="font-bold text-white">{currentUserRank}</span>
+            <p className="text-white text-xl font-bold">
+              Your current rank:{' '}
+              <span className="font-bold text-white font-bold">{currentUserRank}</span>
             </p>
           </div>
         )}
@@ -2167,7 +2176,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${isUnlocked ? 'border-2 border-primary' : ''}`}
               >
                 <CardHeader className="relative p-2">
-                  <CardTitle className="z-10 text-center text-xs text-white">
+                  <CardTitle className="z-10 text-center text-xs text-white font-bold">
                     Level {index + 1}
                   </CardTitle>
                 </CardHeader>
@@ -2188,7 +2197,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       onContextMenu={(e) => e.preventDefault()}
                     />
                   </div>
-                  <p className="text-xs text-center text-white mb-2">
+                  <p className="text-xs text-center text-white font-bold mb-2">
                     {isUnlocked
                       ? 'Unlocked'
                       : `Unlock at ${formatNumber(levelRequirements[index], true)} coins`}
@@ -2206,14 +2215,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         selectedCoinImage === image
                           ? 'bg-gradient-to-r from-green-400 to-blue-500'
                           : 'bg-gradient-to-r from-blue-400 to-purple-500'
-                      } flex items-center justify-center`}
+                      } flex items-center justify-center font-bold`}
                     >
                       {selectedCoinImage === image ? (
                         <Check className="w-4 h-4 mr-1" />
                       ) : (
                         <Zap className="w-4 h-4 mr-1" />
                       )}
-                      {selectedCoinImage === image ? 'Current' : 'Use'}
+                      <span className="font-bold">
+                        {selectedCoinImage === image ? 'Current' : 'Use'}
+                      </span>
                     </Button>
                   )}
                 </CardContent>
@@ -2233,15 +2244,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setShownLevelUnlocks((prev) => new Set(prev).add(unlockedLevel));
       }}
     >
-      <p className="mb-6 text-xl text-center text-white">
-        Congratulations! You've unlocked <span className="font-bold">Level {unlockedLevel}</span>!
+      <p className="mb-6 text-xl text-center text-white font-bold">
+        Congratulations! You've unlocked{' '}
+        <span className="font-bold text-white font-bold">Level {unlockedLevel}</span>!
       </p>
       <Button
         onClick={() => {
           hidePopup('levelUnlock');
           setShownLevelUnlocks((prev) => new Set(prev).add(unlockedLevel));
         }}
-        className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-3 transition-all duration-300 shadow-lg hover:shadow-xl font-bold text-base"
+        className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-3 transition-all duration-300 shadow-lg hover:shadow-xl font-bold text-base font-bold"
       >
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Awesome%203D%20ICON-HN2tr353wye3DLusQa15XU8aM36j8U.png"
@@ -2261,7 +2273,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex items-center justify-center p-6">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative p-6 pb-2">
-          <CardTitle className="z-10 text-3xl text-center text-white">Settings</CardTitle>
+          <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
@@ -2296,8 +2308,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-sm font-medium text-white">{label}</h3>
-                  <p className="text-xs text-gray-400">{description}</p>
+                  <h3 className="text-sm font-medium text-white font-bold">{label}</h3>
+                  <p className="text-xs text-gray-400 font-bold">{description}</p>
                 </div>
               </div>
               <Switch
@@ -2339,7 +2351,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
-          <CardTitle className="z-10 text-3xl text-center text-white">Daily Rewards</CardTitle>
+          <CardTitle className="z-10 text-3xl text-center text-white font-bold">
+            Daily Rewards
+          </CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6">
@@ -2359,13 +2373,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       : 'bg-gradient-to-br from-gray-800 to-gray-900'
                   }`}
                 >
-                  <span className="text-sm font-bold text-white mb-1">{day}</span>
+                  <span className="text-sm font-bold text-white mb-1 font-bold">{day}</span>
                   <Gift
                     className={`w-6 h-6 ${
                       isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
                     }`}
                   />
-                  <div className="mt-1 text-xs font-semibold text-white">
+                  <div className="mt-1 text-xs font-semibold text-white font-bold">
                     {formatNumber(reward, true)}
                   </div>
                   {isPastDay && (
@@ -2376,16 +2390,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             })}
           </div>
           <div className="mt-6 text-center">
-            <p className="text-xl mb-4 text-white">Current Streak: {dailyReward.streak} days</p>
+            <p className="text-xl mb-4 text-white font-bold">
+              Current Streak: {dailyReward.streak} days
+            </p>
             <Button
               onClick={() => {
                 claimDailyReward();
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite font-bold"
               disabled={dailyReward.completed}
             >
               <Gift className="w-6 h-6 mr-2" />
-              Claim Reward{' '}
+              <span className="font-bold">Claim Reward </span>
             </Button>
           </div>
         </CardContent>
@@ -2397,14 +2413,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
-          <CardTitle className="z-10 text-3xl text-center text-white">Invite Friends</CardTitle>
+          <CardTitle className="z-10 text-3xl text-center text-white font-bold">
+            Invite Friends
+          </CardTitle>
           <div className="absolute inset-0 bg-gradient-to-brfrom-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
-            <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
+            <h3 className="text-xl font-bold mb-2 text-center text-white font-bold">
+              Your Referral Link
+            </h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
-              <span className="text-sm text-white truncate mr-2">
+              <span className="text-sm text-white truncate mr-2 font-bold">
                 https://t.me/BabyCheetah_Bot/?startapp={user.telegramId}
               </span>
               <Button
@@ -2414,7 +2434,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   );
                   showGameAlert('Referral link copied to clipboard!');
                 }}
-                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white text-xs py-1 px-4 rounded-full transition-all duration-300 flex items-center justify-center"
+                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white text-xs py-1 px-4 rounded-full transition-all duration-300 flex items-center justify-center font-bold"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-qVagBixv3Uacicht1qeEubKtLUwh6W.png"
@@ -2426,13 +2446,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <span className="font-extrabold">Copy</span>
               </Button>
             </div>
-            <p className="text-xs text-center mt-2 text-white">
+            <p className="text-xs text-center mt-2 text-white font-bold">
               Share this link to earn 2000 coins for each friend who joins!
             </p>
           </div>
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
-            className="w-full bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
+            className="w-full bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center font-bold"
           >
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friends%20Activity%203D%20ICON-MuArgoDXJUAr5rEz9VgjF4KmRcHPy9.png"
@@ -2452,7 +2472,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
-          <CardTitle className="z-10 text-3xl text-center text-white">Friends Activity</CardTitle>
+          <CardTitle className="z-10 text-3xl text-center text-white font-bold">
+            Friends Activity
+          </CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
@@ -2461,12 +2483,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               key={friendId}
               className="flex justify-between items-center bg-gray-700 bg-opacity-50 p-4 rounded-lg backdrop-blur-md"
             >
-              <span className="font-bold text-white">Friend {friendId}</span>
-              <span className="text-white">{formatNumber(coins, true)} coins</span>
+              <span className="font-bold text-white font-bold">Friend {friendId}</span>
+              <span className="text-white font-bold">{formatNumber(coins, true)} coins</span>
             </div>
           ))}
           {Object.keys(friendsCoins).length === 0 && (
-            <p className="text-center text-white">
+            <p className="text-center text-white font-bold">
               No friends invited yet. Share your referral link to get started!
             </p>
           )}
@@ -2485,7 +2507,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }`}
           >
             <CardHeader className="relative">
-              <CardTitle className="z-10 text-center text-white">{trophy.name}</CardTitle>
+              <CardTitle className="z-10 text-center text-white font-bold">{trophy.name}</CardTitle>
               <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform skew-y-3"></div>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-4">
@@ -2504,30 +2526,30 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
-              <p className="text-sm text-center text-white">{trophy.description}</p>
-              <p className="text-sm text-center text-white mt-2">
+              <p className="text-sm text-center text-white font-bold">{trophy.description}</p>
+              <p className="text-sm text-center text-white font-bold mt-2">
                 Requirement: {formatNumber(trophy.requirement, true)} coins
               </p>
-              <p className="text-sm text-center text-white">
+              <p className="text-sm text-center text-white font-bold">
                 Prize: {formatNumber(trophy.prize, true)} coins
               </p>
               {user.coins >= trophy.requirement && !trophy.claimed ? (
                 <Button
                   onClick={() => claimTrophy(trophy)}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button font-bold text-base"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button font-bold text-base font-bold"
                 >
                   <Gift className="w-5 h-5 mr-2" />
-                  Claim
+                  <span className="font-bold">Claim</span>
                 </Button>
               ) : trophy.claimed ? (
-                <div className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base">
+                <div className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base font-bold">
                   <Check className="w-5 h-5 mr-2" />
-                  Claimed
+                  <span className="font-bold">Claimed</span>
                 </div>
               ) : (
-                <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center">
+                <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center font-bold">
                   <Lock className="w-5 h-5 mr-2" />
-                  Locked
+                  <span className="font-bold">Locked</span>
                 </div>
               )}
             </CardContent>
@@ -2678,7 +2700,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
+          <h2 className="text-3xl font-bold text-white mb-4 animate-pulse font-bold">Loading...</h2>
         </div>
       </div>
     );
@@ -2696,7 +2718,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="fixed inset-0 flex items-center justify-center z-[60]">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-lg" onClick={onClose}></div>
       <div className="bg-gradient-to-br from-gray-900/50 to-black/50 text-white p-8 rounded-3xl shadow-2xl z-10 max-w-md w-full mx-4 border border-gray-700/30 backdrop-blur-xl">
-        <h2 className="text-3xl font-bold mb-6 text-center text-white">{title}</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-white font-bold">{title}</h2>
         <div className="space-y-4">{children}</div>
       </div>
     </div>
@@ -2709,18 +2731,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         hidePopup('congratulation');
       }}
     >
-      <p className="mb-6 text-xl text-center text-white">
+      <p className="mb-6 text-xl text-center text-white font-bold">
         You've acquired the legendary{' '}
-        <span className="font-bold text-yellow-400">{congratulationPopup.item?.name}</span>!
+        <span className="font-bold text-yellow-400 font-bold">
+          {congratulationPopup.item?.name}
+        </span>
+        !
       </p>
-      <p className="mb-6 text-center text-white">
+      <p className="mb-6 text-center text-white font-bold">
         This cosmic upgrade will supercharge your crypto earnings and propel you to new heights!
       </p>
       <Button
         onClick={() => {
           hidePopup('congratulation');
         }}
-        className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-3 transition-all duration-300 shadow-lg hover:shadow-xl font-bold text-base"
+        className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-3 transition-all duration-300 shadow-lg hover:shadow-xl font-bold text-base font-bold"
       >
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Achievement%203D%20ICON-uPsT5t3TZ9lrkjkpSqlgwfiFaEKn4K.png"
@@ -2811,8 +2836,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 claimPPH();
               }}
             >
-              <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
-              <p className="mb-5 text-sm text-center text-white">
+              <p className="mb-2 text-xl text-center text-white font-bold">
+                While you were away, you earned
+              </p>
+              <p className="mb-5 text-sm text-center text-white font-bold">
                 To keep earning, enter the game every 3 hours.
               </p>
               <div className="flex items-center justify-center mb-3">
@@ -2834,7 +2861,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   claimPPH();
                   hidePopup('pph');
                 }}
-                className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-3 transition-all duration-300 shadow-lg hover:shadow-xl font-bold text-base"
+                className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-3 transition-all duration-300 shadow-lg hover:shadow-xl font-bold text-base font-bold"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cliam%203D%20ICON-4TAt1mqi8cGSkOxrY2VHngEEFJGyRi.png"
@@ -2843,7 +2870,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={34}
                   className="w-6 h-6 relative z-10"
                 />
-                <span className="font-extrabold text-lg relative z-10">Claim Now!</span>
+                <span className="font-extrabold text-lg relative z-10 font-bold">Claim Now!</span>
               </Button>
             </Popup>
           )}
@@ -2856,11 +2883,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 claimNewLevel();
               }}
             >
-              <p className="mb-6 text-xl text-center text-white">
+              <p className="mb-6 text-xl text-center text-white font-bold">
                 Stellar Achievement Unlocked! You've rocketed to{' '}
-                <span className="font-bold text-yellow-400">Level {newLevel}</span>!
+                <span className="font-bold text-yellow-400 font-bold">Level {newLevel}</span>!
               </p>
-              <p className="mb-6 text-center text-white">
+              <p className="mb-6 text-center text-white font-bold">
                 Your crypto prowess is reaching new galaxies. Prepare for unprecedented powers and
                 cosmic riches!
               </p>
