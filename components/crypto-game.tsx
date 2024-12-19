@@ -1941,23 +1941,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <StarryBackground />
       </div>
       <div className="max-w-7xl mx-auto w-full">
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-8">
           <div className="bg-gray-800 rounded-full p-1 flex">
             <button
-              className={`px-4 py-2 rounded-full text-sm font-medium ${
+              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                 currentShopTab === 'regular'
                   ? 'bg-blue-500 text-white'
-                  : 'text-gray-300 hover:text-white'
+                  : 'text-gray-300 hover:text-white hover:bg-gray-700'
               }`}
               onClick={() => setCurrentShopTab('regular')}
             >
               Regular Shop
             </button>
             <button
-              className={`px-4 py-2 rounded-full text-sm font-medium ${
+              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                 currentShopTab === 'premium'
                   ? 'bg-blue-500 text-white'
-                  : 'text-gray-300 hover:text-white'
+                  : 'text-gray-300 hover:text-white hover:bg-gray-700'
               }`}
               onClick={() => setCurrentShopTab('premium')}
             >
@@ -1966,7 +1966,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
         </div>
 
-        {currentShopTab === 'regular' ? (
+        {currentShopTab === 'regular' && (
           <>
             <h4 className="text-4xl font-bold mb-8 text-center text-white font-bold">
               Emporium Shop
@@ -2034,7 +2034,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               ))}
             </div>
           </>
-        ) : (
+        )}
+
+        {currentShopTab === 'premium' && (
           <>
             <h4 className="text-4xl font-bold mb-8 text-center text-white font-bold">
               Premium Shop
