@@ -1991,7 +1991,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   buyItem(item);
                 }}
               >
-                Buy {formatNumber(item.basePrice * Math.pow(5, item.level - 0.2), true)}
+                Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
               </Button>
             </NeonGradientCard>
           ))}
@@ -2035,7 +2035,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     buyItem(item, true);
                   }}
                 >
-                  Upgrade for {formatNumber(item.basePrice * Math.pow(10, item.level - 1), true)}
+                  Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
                 </Button>
               </div>
             </div>
