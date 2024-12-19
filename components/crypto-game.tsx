@@ -1570,7 +1570,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + profitPerHour / 3600,
       }));
-    }, 1000);
+    }, 1000); // Check every second
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
 
