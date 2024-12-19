@@ -2197,7 +2197,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       onContextMenu={(e) => e.preventDefault()}
                     />
                   </div>
-                  <p className="text-xs text-center text-white font-bold mb-2">
+                  <p className="text-xs text-center text-white mb-2">
                     {isUnlocked
                       ? 'Unlocked'
                       : `Unlock at ${formatNumber(levelRequirements[index], true)} coins`}
@@ -2525,7 +2525,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <p className="text-sm text-center text-white mt-2">
                 Requirement: {formatNumber(trophy.requirement, true)} coins
               </p>
-              <p className="text-sm text-center text-yellow font-bold">
+              <p className="text-sm text-center text-white">
                 Prize: {formatNumber(trophy.prize, true)} coins
               </p>
               {user.coins >= trophy.requirement && !trophy.claimed ? (
