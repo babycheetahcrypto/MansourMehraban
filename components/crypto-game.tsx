@@ -1969,8 +1969,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
                   alt="Level"
-                  width={12}
-                  height={12}
+                  width={13}
+                  height={13}
                   className="inline"
                 />
                 Level: {item.level}
@@ -1979,8 +1979,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Profit%203D%20ICON-LxqAu2YW7MazlwuZhOdC4RpqnczhU3.png"
                   alt="Profit"
-                  width={12}
-                  height={12}
+                  width={13}
+                  height={13}
                   className="inline"
                 />
                 Profit: {formatNumber(item.baseProfit * item.level, true)}/h
@@ -1991,7 +1991,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   buyItem(item);
                 }}
               >
-                Buy {formatNumber(item.basePrice * Math.pow(2, item.level - 1), true)}
+                Buy {formatNumber(item.basePrice * Math.pow(5, item.level - 0.2), true)}
               </Button>
             </NeonGradientCard>
           ))}
@@ -2023,8 +2023,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <Image
                     src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Upgrade%203D%20ICON-2OXsGEXI0RlBAXXF1uInbd0ay4uavs.png"
                     alt="Effect"
-                    width={12}
-                    height={12}
+                    width={13}
+                    height={13}
                     className="inline"
                   />
                   Effect: {item.effect}
@@ -2035,7 +2035,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     buyItem(item, true);
                   }}
                 >
-                  Upgrade for {formatNumber(item.basePrice * Math.pow(5, item.level - 1), true)}
+                  Upgrade for {formatNumber(item.basePrice * Math.pow(10, item.level - 1), true)}
                 </Button>
               </div>
             </div>
