@@ -1637,7 +1637,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [user]);
 
   const renderHeader = () => (
-    <div className="sticky top-0 z-10 bg-black/10 backdrop-blur-xl p-2 rounded-full border border-white/10">
+    <div className="z-10 bg-black/10 backdrop-blur-xl p-2 rounded-full border border-white/10">
       <Card className="bg-transparent border-0 overflow-hidden">
         <CardContent className="p-2 flex items-center justify-between relative flex-wrap">
           <div className="flex items-center space-x-2">
@@ -2039,7 +2039,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       src={item.image}
                       alt={item.name}
                       layout="fill"
-                      objectFit="cover"
+                      objectFit="contain"
                       className={`relative z-10 ${
                         !unlockedLevels.includes(index + 1)
                           ? 'group-hover:opacity-80 transition-opacity duration-300'
@@ -2106,7 +2106,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       src={item.image}
                       alt={item.name}
                       layout="fill"
-                      objectFit="cover"
+                      objectFit="contain"
                       className="group-hover:opacity-80 transition-opacity duration-300"
                       draggable="false"
                       onContextMenu={(e) => e.preventDefault()}
