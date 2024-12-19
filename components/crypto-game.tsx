@@ -2252,7 +2252,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
-        <span className="font-bold text-lg relative z-10">Awesome!</span>
+        <span className="font-extrabold text-lg relative z-10">Awesome!</span>
       </Button>
     </Popup>
   );
@@ -2441,7 +2441,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               height={34}
               className="w-8 h-8 mr-2"
             />
-            <span className="font-bold">Friends Activity</span>
+            <span className="font-extrabold">Friends Activity</span>
           </Button>
         </CardContent>
       </NeonGradientCard>
@@ -2729,7 +2729,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           height={34}
           className="w-6 h-6 relative z-10"
         />
-        <span className="font-bold text-lg relative z-10">Embrace the Power!</span>
+        <span className="font-extrabold text-lg relative z-10">Embrace the Power!</span>
       </Button>
     </Popup>
   );
@@ -2816,7 +2816,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 To keep earning, enter the game every 3 hours.
               </p>
               <div className="flex items-center justify-center mb-3">
-                <span className="text-4xl font-bold text-white">
+                <span className="text-4xl font-extrabold text-white">
                   {formatNumber(pphAccumulated, true)}
                 </span>
                 <Image
@@ -2843,7 +2843,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={34}
                   className="w-6 h-6 relative z-10"
                 />
-                <span className="font-bold text-lg relative z-10">Claim Now!</span>
+                <span className="font-extrabold text-lg relative z-10">Claim Now!</span>
               </Button>
             </Popup>
           )}
@@ -2878,7 +2878,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   height={34}
                   className="w-6 h-6 relative z-10"
                 />
-                <span className="font-bold text-lg relative z-10">Level Up</span>
+                <span className="font-extrabold text-lg relative z-10">Level Up</span>
               </Button>
             </Popup>
           )}
