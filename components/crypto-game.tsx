@@ -2417,7 +2417,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white text-xs py-1 px-2 rounded-full transition-all duration-300"
               >
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-mpRp7dJyIT5j6Rk4N9khP3KO4uhMMM.png"
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-qVagBixv3Uacicht1qeEubKtLUwh6W.png"
                   alt="Copy"
                   width={24}
                   height={24}
@@ -2434,7 +2434,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             className="w-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 hover:from-green-500 hover:via-blue-600 hover:to-purple-700 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center"
           >
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friends%203D%20ICON-CH6D4MacLd14dlM6kXELnEpbg2TrEQ.png"
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friends%20Activity%203D%20ICON-MuArgoDXJUAr5rEz9VgjF4KmRcHPy9.png"
               alt="Friends Activity"
               width={34}
               height={34}
