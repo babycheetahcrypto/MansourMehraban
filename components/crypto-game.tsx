@@ -2381,10 +2381,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       onContextMenu={(e) => e.preventDefault()}
                     />
                   </div>
-                  <p className="text-xs text-center text-white mb-2">
-                    {isUnlocked
-                      ? 'Unlocked'
-                      : `Unlock at ${formatNumber(levelRequirements[index], true)} coins`}
+                  <p
+                    className={`text-xs text-center ${isUnlocked ? 'text-blue-500 font-bold' : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-transparent bg-clip-text'} mb-2`}
+                  >
+                    {isUnlocked ? (
+                      <>
+                        <Image
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Unlocked%203D%20ICON-F9DnOWD7XNAVmHCrNYHPlZZ3Iyg6qP.png"
+                          alt="Unlocked Icon"
+                          width={16}
+                          height={16}
+                          className="inline-block mr-1"
+                        />
+                        <span>Unlocked</span>
+                      </>
+                    ) : (
+                      `Unlock at ${formatNumber(levelRequirements[index], true)} coins`
+                    )}
                   </p>
                   {isUnlocked && (
                     <Button
