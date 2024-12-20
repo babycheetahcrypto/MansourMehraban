@@ -2303,7 +2303,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           return (
             <div key={index}>
               <NeonGradientCard
-                className={`bg-gradient-to-br from-gray-900to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${isUnlocked ? 'border-2 border-primary' : ''}`}
+                className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${
+                  isUnlocked ? 'border-2 border-primary' : ''
+                }`}
               >
                 <CardHeader className="relative p-2">
                   <CardTitle className="z-10 text-center text-xs text-white font-bold">
@@ -2321,7 +2323,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src =
-                          'https://hebbkx1anhila5yf.public.blob.vercel-storagecom/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
+                          'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-level-YQMxTHGDxhTgRoTxhFxSRZxNxNxNxN.png';
                       }}
                       draggable="false"
                       onContextMenu={(e) => e.preventDefault()}
@@ -2343,21 +2345,27 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       }}
                       className={`w-full text-white text-xs py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 level-button ${
                         selectedCoinImage === image
-                          ? 'bg-gradient-to-r from-green-400 to-blue-500'
-                          : 'bg-gradient-to-r from-blue-400 to-purple-500'
+                          ? getGradientClass(index, true)
+                          : getGradientClass(index, false)
                       } flex items-center justify-center font-bold`}
                     >
-                      <Image
-                        src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${
-                          selectedCoinImage === image
-                            ? 'Current%203D%20ICON-XlI3WOlLsZZYFbbQXzBDAl6pWl8H81.png'
-                            : 'Use%203D%20ICON-v45FnFKLV9CZdk918x5UG4dSufQB2z.png'
-                        }`}
-                        alt={selectedCoinImage === image ? 'Current' : 'Use'}
-                        width={20}
-                        height={20}
-                        className="mr-2"
-                      />
+                      {selectedCoinImage === image ? (
+                        <Image
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Current%203D%20ICON-XlI3WOlLsZZYFbbQXzBDAl6pWl8H81.png"
+                          alt="Current"
+                          width={20}
+                          height={20}
+                          className="mr-2"
+                        />
+                      ) : (
+                        <Image
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Use%203D%20ICON-v45FnFKLV9CZdk918x5UG4dSufQB2z.png"
+                          alt="Use"
+                          width={20}
+                          height={20}
+                          className="mr-2"
+                        />
+                      )}
                       <span className="font-bold">
                         {selectedCoinImage === image ? 'Current' : 'Use'}
                       </span>
@@ -2371,6 +2379,28 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </div>
     </div>
   );
+
+  // Add this function to generate different gradient classes for each button
+  const getGradientClass = (index: number, isSelected: boolean) => {
+    const gradients = [
+      'from-red-500 to-yellow-500',
+      'from-yellow-500 to-green-500',
+      'from-green-500 to-blue-500',
+      'from-blue-500 to-indigo-500',
+      'from-indigo-500 to-purple-500',
+      'from-purple-500 to-pink-500',
+      'from-pink-500 to-red-500',
+      'from-teal-500 to-cyan-500',
+      'from-orange-500 to-amber-500',
+      'from-lime-500 to-emerald-500',
+    ];
+
+    const baseClass = 'bg-gradient-to-r';
+    const selectedClass = isSelected ? 'opacity-80' : '';
+    const gradientClass = gradients[index % gradients.length];
+
+    return `${baseClass} ${gradientClass} ${selectedClass}`;
+  };
 
   const renderLevelUnlockPopup = () => (
     <Popup
