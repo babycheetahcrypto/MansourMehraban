@@ -2034,12 +2034,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
                     {item.name}
                   </h3>
-                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-[5px] group-hover:scale-105 transition-transform duration-300">
+                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-[3px] group-hover:scale-105 transition-transform duration-300">
                     <Image
                       src={item.image}
                       alt={item.name}
                       layout="fill"
-                      objectFit="contain rounded-[5px]"
+                      objectFit="contain rounded-[3px]"
                       className={`relative z-10 ${
                         !unlockedLevels.includes(index + 1)
                           ? 'group-hover:opacity-80 transition-opacity duration-300'
@@ -2101,12 +2101,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
                     {item.name}
                   </h3>
-                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-[5px] group-hover:scale-105 transition-transform duration-300">
+                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-[3px] group-hover:scale-105 transition-transform duration-300">
                     <Image
                       src={item.image}
                       alt={item.name}
                       layout="fill"
-                      objectFit="contain rounded-[5px]"
+                      objectFit="contain rounded-[3px]"
                       className="group-hover:opacity-80 transition-opacity duration-300"
                       draggable="false"
                       onContextMenu={(e) => e.preventDefault()}
