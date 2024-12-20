@@ -2661,7 +2661,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               {user.coins >= trophy.requirement && !trophy.claimed ? (
                 <Button
                   onClick={() => claimTrophy(trophy)}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button font-bold text-base font-bold"
+                  className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-purple-600 hover:via-pink-600 hover:to-red-600 hover:scale-105 active:scale-95 trophy-button font-bold text-base"
                 >
                   <a href="#" className="flex items-center justify-center">
                     <Image
@@ -2675,7 +2675,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   </a>
                 </Button>
               ) : trophy.claimed ? (
-                <div className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base font-bold">
+                <div className="w-full bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base">
                   <a href="#" className="flex items-center justify-center">
                     <Image
                       src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-TiYmc8wajOladsY7nfqhbrWuZYckFp.png"
@@ -2688,7 +2688,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   </a>
                 </div>
               ) : (
-                <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center font-bold">
+                <div className="w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base">
                   <a href="#" className="flex items-center justify-center">
                     <Image
                       src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lock%203D%20ICON-tSADoa2jMYhydtsWHFQcTlvhAShAK6.png"
