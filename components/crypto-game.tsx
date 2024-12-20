@@ -196,13 +196,13 @@ const styles = `
                 0 0 10px rgba(255, 69, 0, 0.5);
   }
   50% {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
-                0 0 20px rgba(255, 255, 255, 0.8),
-                0 0 30px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8),
+                0 0 20px rgba(255, 69, 0, 0.8),
+                0 0 30px rgba(255, 165, 0, 0.8);
   }
   100% {
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
-                0 0 10px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 5px rgba(255, 69, 0, 0.5),
+                0 0 10px rgba(255, 69, 0, 0.5);
   }
 }
 
@@ -221,9 +221,9 @@ const styles = `
   }
 
   @keyframes fire-pulse {
-  0% { transform: scale(1); background-color: rgba(246, 241, 241, 0.2); }
-  50% { transform: scale(0.95); background-color: rgba(255, 255, 255, 0.3); }
-  100% { transform: scale(1); background-color: rgba(247, 246, 246, 0.2); }
+  0% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
+  50% { transform: scale(0.95); background-color: rgba(255, 165, 0, 0.3); }
+  100% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
 }
 
 .animate-button-click {
