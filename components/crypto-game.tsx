@@ -2505,6 +2505,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               const isPastDay = day < dailyReward.day;
               const reward = getDailyReward(day);
 
+              // Array of unique icon URLs for each day
+              const iconUrls = [
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%201%203D%20ICON-B9zVEw3i39gIu7Sj1L4ujelb7ZhbEu.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%202%203D%20ICON-JkuZGy30eYcLlZCAxVeVmWXAF1z9DR.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%203%203D%20ICON-staviwV2Ywni7SxZltnz8jC15E3rUL.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%204%203D%20ICON-FfBDQmuZOdrfyEg5Uv79vDiocdjUzX.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%205%203D%20ICON-pfPc2tlISCb7JdA89fqagvaQ6aJMEn.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%206%203D%20ICON-PBmm3pdX2tBYcPAhqCoFPaoDDWbmdA.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%207%203D%20ICON-jHI7hKoYms2LUXzBitB6CR6T4F9054.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%208%203D%20ICON-Q98CtOGxE9cIiCEMJCHFoJfhbYT8zd.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%209%203D%20ICON-F2nrRqa77tUBK75tUBRD7lWKB5TbC3.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%2010%203D%20ICON-UBW0RWBt8PMD5jEndraJ3ar3a0V4Xt.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%2011%203D%20ICON-tZ0YGQ4KjMaBlSUA7wUwdzUGPmdVTM.png',
+                'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Day%2012%203D%20ICON-giH2mPm3abxND2CUC4a5RrcC0enYvd.png',
+              ];
+
               return (
                 <div
                   key={i}
@@ -2515,7 +2531,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   }`}
                 >
                   <span className="text-sm font-bold text-white mb-1 font-bold">{day}</span>
-                  <Gift
+                  <Image
+                    src={iconUrls[i]}
+                    alt={`Day ${day} Icon`}
+                    width={24}
+                    height={24}
                     className={`w-6 h-6 ${
                       isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
                     }`}
@@ -2539,8 +2559,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite font-bold"
               disabled={dailyReward.completed}
             >
-              <Gift className="w-6 h-6 mr-2" />
-              <span className="font-bold">Claim Reward </span>
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%20Reward%203D%20ICON-XyBdXZwO7OnLf5Zuj0Ivp7PNjc1YIp.png"
+                alt="Claim Reward"
+                width={24}
+                height={24}
+                className="w-6 h-6 mr-2"
+              />
+              <span className="font-bold">Claim Reward</span>
             </Button>
           </div>
         </CardContent>
