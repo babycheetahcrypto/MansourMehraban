@@ -2351,8 +2351,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 }`}
               >
                 <CardHeader className="relative p-2">
-                  <CardTitle className="z-10 text-center text-xs text-white font-bold">
-                    Level {index + 1}
+                  <CardTitle className="z-10 text-center text-[#F8DC70] font-bold text-lg">
+                    {index === 0 && 'Level 1: Broke Cheetah'}
+                    {index === 1 && 'Level 2: Mr Cheetah'}
+                    {index === 2 && 'Level 3: Sparrow Cheetah'}
+                    {index === 3 && 'Level 4: Viking Cheetah'}
+                    {index === 4 && 'Level 5: Samurai Cheetah'}
+                    {index === 5 && 'Level 6: Alien Cheetah'}
+                    {index === 6 && 'Level 7: Robot Cheetah'}
+                    {index === 7 && 'Level 8: Space Cheetah'}
+                    {index === 8 && 'Level 9: Pop Cheetah'}
+                    {index === 9 && 'Level 10: Super Cheetah'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center p-2">
