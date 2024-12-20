@@ -2534,8 +2534,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <Image
                     src={iconUrls[i]}
                     alt={`Day ${day} Icon`}
-                    width={24}
-                    height={24}
+                    width={34}
+                    height={34}
                     className={`w-6 h-6 ${
                       isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
                     }`}
