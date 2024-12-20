@@ -2303,7 +2303,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           return (
             <div key={index}>
               <NeonGradientCard
-                className={`bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${isUnlocked ? 'border-2 border-primary' : ''}`}
+                className={`bg-gradient-to-br from-gray-900to-black text-white overflow-hidden transform transition-all duration-300 hover:shadow-2xl ${isUnlocked ? 'border-2 border-primary' : ''}`}
               >
                 <CardHeader className="relative p-2">
                   <CardTitle className="z-10 text-center text-xs text-white font-bold">
@@ -2347,11 +2347,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           : 'bg-gradient-to-r from-blue-400 to-purple-500'
                       } flex items-center justify-center font-bold`}
                     >
-                      {selectedCoinImage === image ? (
-                        <Check className="w-4 h-4 mr-1" />
-                      ) : (
-                        <Zap className="w-4 h-4 mr-1" />
-                      )}
+                      <Image
+                        src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${
+                          selectedCoinImage === image
+                            ? 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Current%203D%20ICON-XlI3WOlLsZZYFbbQXzBDAl6pWl8H81.png'
+                            : 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Use%203D%20ICON-v45FnFKLV9CZdk918x5UG4dSufQB2z.png'
+                        }`}
+                        alt={selectedCoinImage === image ? 'Current' : 'Use'}
+                        width={20}
+                        height={20}
+                        className="mr-2"
+                      />
                       <span className="font-bold">
                         {selectedCoinImage === image ? 'Current' : 'Use'}
                       </span>
