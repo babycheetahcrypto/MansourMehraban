@@ -2350,8 +2350,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       <Image
                         src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${
                           selectedCoinImage === image
-                            ? 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Current%203D%20ICON-XlI3WOlLsZZYFbbQXzBDAl6pWl8H81.png'
-                            : 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Use%203D%20ICON-v45FnFKLV9CZdk918x5UG4dSufQB2z.png'
+                            ? 'Current%203D%20ICON-XlI3WOlLsZZYFbbQXzBDAl6pWl8H81.png'
+                            : 'Use%203D%20ICON-v45FnFKLV9CZdk918x5UG4dSufQB2z.png'
                         }`}
                         alt={selectedCoinImage === image ? 'Current' : 'Use'}
                         width={20}
