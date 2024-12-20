@@ -190,25 +190,25 @@ const styles = `
     animation: float 1s ease-in-out infinite;
   }
 
-  @keyframes fire-glow {
-  0% {
-    box-shadow: 0 0 5px rgba(255, 69, 0, 0.5),
-                0 0 10px rgba(255, 69, 0, 0.5);
+    @keyframes glow {
+    0% {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
+                  0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                  0 0 20px rgba(255, 255, 255, 0.8),
+                  0 0 30px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
+                  0 0 10px rgba(255, 255, 255, 0.5);
+    }
   }
-  50% {
-    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8),
-                0 0 20px rgba(255, 69, 0, 0.8),
-                0 0 30px rgba(255, 165, 0, 0.8);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(255, 69, 0, 0.5),
-                0 0 10px rgba(255, 69, 0, 0.5);
-  }
-}
 
-.animate-fire-glow {
-  animation: fire-glow 2s infinite;
-}
+  .animate-glow {
+    animation: glow 2s infinite;
+  }
 
   @keyframes button-click {
     0% { transform: scale(1); }
@@ -219,16 +219,6 @@ const styles = `
   .animate-button-click {
     animation: button-click 0.3s ease-in-out;
   }
-
-  @keyframes fire-pulse {
-  0% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
-  50% { transform: scale(0.95); background-color: rgba(255, 165, 0, 0.3); }
-  100% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
-}
-
-.animate-button-click {
-  animation: fire-pulse 0.3s ease-in-out;
-}
 
   .filter-grayscale {
     filter: grayscale(100%);
