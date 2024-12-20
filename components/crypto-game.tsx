@@ -444,7 +444,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         onClick={handleClick}
       >
         <Icon
-          className={`w-7 h-7 mb-1 ${isActive ? 'text-yellow-500' : 'text-white filter grayscale'}`}
+          className={`w-6 h-6 mb-1 ${isActive ? 'text-yellow-500' : 'text-white filter grayscale'}`}
         />
         <span
           className={`text-xs ${isActive ? 'text-yellow-500' : 'text-gray-400'} group-hover:text-yellow-300 font-bold`}
