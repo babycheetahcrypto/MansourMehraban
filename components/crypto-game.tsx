@@ -189,25 +189,6 @@ const styles = `
   .daily-reward-button:hover, .wallet-button:hover {
     animation: float 1s ease-in-out infinite;
   }
-
-    @keyframes fiery-border {
-    0% {
-      border-color: transparent;
-      box-shadow: 0 0 0 0 rgba(255, 165, 0, 0);
-    }
-    50% {
-      border-color: #FFA500;
-      box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.7);
-    }
-    100% {
-      border-color: transparent;
-      box-shadow: 0 0 0 0 rgba(255, 165, 0, 0);
-    }
-  }
-  
-  .animate-fiery-border {
-    animation: fiery-border 0.3s ease-out;
-  }
 `;
 
 // Telegram WebApp type definition
@@ -410,13 +391,13 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
+        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
         } backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white ${
           isClicked ? 'ring-2 ring-primary ring-offset-2 ring-offset-black' : ''
-        } overflow-hidden`}
+        }`}
         onClick={handleClick}
       >
         <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
@@ -428,9 +409,6 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
         {isActive && (
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
         )}
-        <div
-          className={`absolute inset-0 border-2 border-transparent ${isClicked ? 'animate-fiery-border' : ''}`}
-        />
       </Button>
     </div>
   );
@@ -1749,7 +1727,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderbottom = () => (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
+      className="fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
@@ -1787,8 +1765,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={page === 'home' ? 40 : 35}
-                height={page === 'home' ? 40 : 35}
+                width={35}
+                height={35}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
