@@ -2530,13 +2530,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       : 'bg-gradient-to-br from-gray-800 to-gray-900'
                   }`}
                 >
-                  <span className="text-sm font-bold text-white mb-1 font-bold">{day}</span>
+                  <span className="text-lg font-bold text-white mb-1 font-bold">{day}</span>
                   <Image
                     src={iconUrls[i]}
                     alt={`Day ${day} Icon`}
-                    width={100}
-                    height={100}
-                    className={`w-6 h-6 ${
+                    width={50}
+                    height={50}
+                    className={`w-12 h-12 ${
                       isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
                     }`}
                   />
@@ -2556,7 +2556,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               onClick={() => {
                 claimDailyReward();
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite font-bold"
+              className="w-full bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:from-blue-500 hover:via-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md text-white font-bold"
               disabled={dailyReward.completed}
             >
               <Image
