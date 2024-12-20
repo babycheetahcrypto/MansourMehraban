@@ -2540,7 +2540,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
                     }`}
                   />
-                  <div className="mt-1 text-xs font-semibold text-yellow font-bold">
+                  <div className="mt-2 text-sm font-extrabold bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 bg-clip-text text-transparent">
                     {formatNumber(reward, true)}
                   </div>
                   {isPastDay && (
