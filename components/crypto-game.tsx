@@ -2762,10 +2762,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
               <p className="text-sm text-center text-white">{trophy.description}</p>
               <p className="text-sm text-center text-white mt-2">
-                Requirement: {formatNumber(trophy.requirement, true)} coins
+                Requirement:{' '}
+                <span className="text-yellow-500">{formatNumber(trophy.requirement, true)}</span>{' '}
+                coins
               </p>
               <p className="text-sm text-center text-white">
-                Prize: {formatNumber(trophy.prize, true)} coins
+                Prize: <span className="text-yellow-500">{formatNumber(trophy.prize, true)}</span>{' '}
+                coins
               </p>
               {user.coins >= trophy.requirement && !trophy.claimed ? (
                 <Button
