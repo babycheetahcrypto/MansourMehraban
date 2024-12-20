@@ -465,16 +465,16 @@ const levelRequirements = [
 ];
 
 const levelImages = [
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-mfQad24heT9NXiGkAtdtySK6kW3ckg.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Mr%20Cheetah-LQNHkNYRGFwOsBe7cI5LZEAPSpHQqf.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sparrow%20Cheetah-Nu0r4mL7h66teqnW635fgdnh72qbPG.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Viking%20Cheetah-uz86xzjdQRfvU7xJvVXnV38cE7eiKf.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Samurai%20Cheetah-ZoJCFeKcYjvGCkPblWR0Xt8lC9nRBu.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Alien%20Cheetah-kmedszmENPL9BHlch9YFAs4KEYG83T.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Robot%20Cheetah-RtDUCiMHH7pf5DixHvOQPp0pA3OKfR.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Space%20Cheetah-R5bx9tMOZBh1hUi2eBSYWGFuTZ5VA3.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Pop%20Cheetah-5t0vR9hwENFVLCV9UYVOWjTpqab4G1.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Super%20Cheetah-tdGq9AazL8DHJwsc05NrrWMjCInhsE.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-hJ4ExQNBTd2M9Eo3k9yF4wrYZscd4A.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Mr%20Cheetah-WSPFt8x1rZnfLezVh98UqesDdmErK1.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sparrow%20Cheetah-hbWbWkz0VSM3TKQaXZd5uZ5Bg3h19Y.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Viking%20Cheetah-Zl3EpOQLVHHSAwNkLR8znwKzcxcxdB.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Samurai%20Cheetah-CnJy2AhIkMP9caMJS1OdU4byfyUFdq.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Alien%20Cheetah-PBsRCwJMKaQ5hevB6eoUcZ4hQ9Qrue.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Robot%20Cheetah-RGHwWoSrC0wqnamoVQQN1V1FH7LwCa.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Space%20Cheetah-epcdKAAaXbwEizI2XUXGCyj6lz3mBw.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Pop%20Cheetah-53RrHndbc69zbXBn49kDvoqXTgZIyY.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Super%20Cheetah-mUfYDbD5uF0mH6XECxr4CVvQ0bV3K5.png',
 ];
 
 const trophies = [
