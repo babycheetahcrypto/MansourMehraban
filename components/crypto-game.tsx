@@ -422,27 +422,29 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div
+      className={`flex flex-col items-center ${href === 'home' ? 'transform -translate-y-2' : ''}`}
+    >
       <button
         className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
           isActive
-            ? 'bg-gradient-to-t from-orange-600/20 to-transparent border-2 border-orange-500 shadow-lg shadow-orange-500/50'
+            ? 'bg-gradient-to-t from-primary/20 to-transparent border-2 border-primary shadow-lg shadow-primary/50'
             : 'border border-gray-700/30'
         } ${
           isClicked ? 'animate-button-click' : ''
-        } backdrop-blur-md text-white active:bg-gray-800/50 hover:bg-orange-500/10`}
+        } backdrop-blur-md text-white active:bg-gray-800/50 hover:bg-white/10`}
         onClick={handleClick}
       >
         <Icon
-          className={`w-6 h-6 mb-1 ${isActive ? 'text-orange-500' : 'text-white filter grayscale'}`}
+          className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white filter grayscale'}`}
         />
         <span
-          className={`text-xs ${isActive ? 'text-orange-500' : 'text-gray-400'} group-hover:text-orange-300 font-bold`}
+          className={`text-xs ${isActive ? 'text-primary' : 'text-gray-400'} group-hover:text-white font-bold`}
         >
           {text}
         </span>
         {isActive && (
-          <div className="absolute inset-0 rounded-2xl border-2 border-orange-500 animate-fire-glow"></div>
+          <div className="absolute inset-0 rounded-2xl border-2 border-primary animate-glow"></div>
         )}
       </button>
     </div>
