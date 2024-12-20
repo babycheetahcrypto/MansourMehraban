@@ -1802,8 +1802,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={35}
-                height={35}
+                width={28}
+                height={28}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
