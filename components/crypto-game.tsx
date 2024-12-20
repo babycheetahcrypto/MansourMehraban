@@ -189,6 +189,25 @@ const styles = `
   .daily-reward-button:hover, .wallet-button:hover {
     animation: float 1s ease-in-out infinite;
   }
+
+  @keyframes fire-border {
+  0% { transform: translateY(100%) rotate(0deg); }
+  100% { transform: translateY(-100%) rotate(360deg); }
+}
+
+.animate-fire-border {
+  animation: fire-border 3s linear infinite;
+}
+
+.animate-button-click {
+  animation: button-click 0.3s ease-in-out;
+}
+
+@keyframes button-click {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
 `;
 
 // Telegram WebApp type definition
@@ -370,6 +389,7 @@ interface CryptoButtonProps {
   text: string;
   isActive: boolean;
   setCurrentPage: (page: string) => void;
+  isHome: boolean;
 }
 
 const CryptoButton: React.FC<CryptoButtonProps> = ({
@@ -378,6 +398,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   text,
   isActive,
   setCurrentPage,
+  isHome,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
 
@@ -388,26 +409,24 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className={`flex flex-col items-center ${isHome ? '-mt-6' : ''}`}>
       <Button
         variant="ghost"
-        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
+        className={`relative w-${isHome ? '20' : '17'} h-${isHome ? '20' : '17'} bg-transparent flex flex-col items-center justify-center rounded-full ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
-        } ${
-          isClicked ? 'animate-button-click' : ''
-        } backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white ${
-          isClicked ? 'ring-2 ring-primary ring-offset-2 ring-offset-black' : ''
-        }`}
+        } ${isClicked ? 'animate-button-click' : ''} backdrop-blur-md transition-all duration-300 ${
+          isActive ? 'text-white' : 'text-gray-400'
+        } ${isHome ? 'shadow-lg' : ''}`}
         onClick={handleClick}
       >
-        <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
-        <span
-          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white font-bold`}
-        >
+        <Icon className={`w-${isHome ? '9' : '7'} h-${isHome ? '9' : '7'} mb-1`} />
+        <span className={`text-xs ${isActive ? 'text-white' : 'text-gray-400'} font-bold`}>
           {text}
         </span>
         {isActive && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
+          <div className="absolute inset-0 rounded-full overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-red-500 via-orange-500 to-yellow-500 animate-fire-border" />
+          </div>
         )}
       </Button>
     </div>
@@ -1727,11 +1746,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderbottom = () => (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-800/30 to-blue-900/30 rounded-full blur-xl"></div>
         {[
           {
             page: 'tasks',
@@ -1758,15 +1776,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             text: 'Invite',
             icon: 'FRIEND%20INVITE%203D%20ICON-GyAxv2xoA7fZeN65uJ60ILc6RQxxXN.png',
           },
-        ].map(({ page, text, icon }) => (
+        ].map(({ page, text, icon }, index) => (
           <CryptoButton
             key={page}
             icon={(props) => (
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={35}
-                height={35}
+                width={page === 'home' ? 45 : 35}
+                height={page === 'home' ? 45 : 35}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
@@ -1776,6 +1794,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             text={text}
             isActive={currentPage === page}
             setCurrentPage={setCurrentPage}
+            isHome={page === 'home'}
           />
         ))}
       </div>
