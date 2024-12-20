@@ -221,9 +221,9 @@ const styles = `
   }
 
   @keyframes cheetah-pulse {
-  0% { transform: scale(1); background-color: rgba(248, 220, 112, 0.2); }
-  50% { transform: scale(0.95); background-color: rgba(248, 220, 112, 0.3); }
-  100% { transform: scale(1); background-color: rgba(248, 220, 112, 0.2); }
+  0% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
+  50% { transform: scale(0.95); background-color: rgba(255, 165, 0, 0.3); }
+  100% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
 }
 
 .animate-button-click {
