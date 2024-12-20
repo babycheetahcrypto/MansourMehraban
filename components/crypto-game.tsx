@@ -189,6 +189,40 @@ const styles = `
   .daily-reward-button:hover, .wallet-button:hover {
     animation: float 1s ease-in-out infinite;
   }
+
+    @keyframes glow {
+    0% {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
+                  0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                  0 0 20px rgba(255, 255, 255, 0.8),
+                  0 0 30px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
+                  0 0 10px rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  .animate-glow {
+    animation: glow 2s infinite;
+  }
+
+  @keyframes button-click {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+  }
+
+  .animate-button-click {
+    animation: button-click 0.3s ease-in-out;
+  }
+
+  .filter-grayscale {
+    filter: grayscale(100%);
+  }
 `;
 
 // Telegram WebApp type definition
@@ -388,28 +422,31 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <Button
-        variant="ghost"
-        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
-          isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
+    <div
+      className={`flex flex-col items-center ${href === 'home' ? 'transform -translate-y-2' : ''}`}
+    >
+      <button
+        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
+          isActive
+            ? 'bg-gradient-to-t from-primary/20 to-transparent border-2 border-primary shadow-lg shadow-primary/50'
+            : 'border border-gray-700/30'
         } ${
           isClicked ? 'animate-button-click' : ''
-        } backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white ${
-          isClicked ? 'ring-2 ring-primary ring-offset-2 ring-offset-black' : ''
-        }`}
+        } backdrop-blur-md text-white active:bg-gray-800/50 hover:bg-white/10`}
         onClick={handleClick}
       >
-        <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
+        <Icon
+          className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white filter grayscale'}`}
+        />
         <span
-          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white font-bold`}
+          className={`text-xs ${isActive ? 'text-primary' : 'text-gray-400'} group-hover:text-white font-bold`}
         >
           {text}
         </span>
         {isActive && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
+          <div className="absolute inset-0 rounded-2xl border-2 border-primary animate-glow"></div>
         )}
-      </Button>
+      </button>
     </div>
   );
 };
@@ -1727,7 +1764,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderbottom = () => (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
