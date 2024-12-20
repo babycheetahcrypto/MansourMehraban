@@ -434,7 +434,7 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   return (
     <div className="flex flex-col items-center">
       <button
-        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
+        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
           isActive
             ? 'bg-gradient-to-t from-yellow-400/20 to-transparent border-2 border-yellow-500 shadow-lg shadow-yellow-500/50'
             : 'border border-gray-700/30'
