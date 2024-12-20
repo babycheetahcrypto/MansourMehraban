@@ -2106,7 +2106,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       src={item.image}
                       alt={item.name}
                       layout="fill"
-                      objectFit="contain"
+                      objectFit="contain rounded-[10px]"
                       className="group-hover:opacity-80 transition-opacity duration-300"
                       draggable="false"
                       onContextMenu={(e) => e.preventDefault()}
