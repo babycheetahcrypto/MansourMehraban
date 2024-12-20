@@ -2663,18 +2663,42 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   onClick={() => claimTrophy(trophy)}
                   className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-blue-600 hover:to-purple-700 hover:scale-105 active:scale-95 trophy-button font-bold text-base font-bold"
                 >
-                  <Gift className="w-5 h-5 mr-2" />
-                  <span className="font-bold">Claim</span>
+                  <a href="#" className="flex items-center justify-center">
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-ddItyvxb6SR8lfphuvhK6P2snlkJqt.png](https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-ddItyvxb6SR8lfphuvhK6P2snlkJqt.png"
+                      alt="Claim Trophy"
+                      width={20}
+                      height={20}
+                      className="mr-2"
+                    />
+                    <span className="font-bold">Claim</span>
+                  </a>
                 </Button>
               ) : trophy.claimed ? (
                 <div className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base font-bold">
-                  <Check className="w-5 h-5 mr-2" />
-                  <span className="font-bold">Claimed</span>
+                  <a href="#" className="flex items-center justify-center">
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-TiYmc8wajOladsY7nfqhbrWuZYckFp.png](https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-TiYmc8wajOladsY7nfqhbrWuZYckFp.png"
+                      alt="Claimed Trophy"
+                      width={20}
+                      height={20}
+                      className="mr-2"
+                    />
+                    <span className="font-bold">Claimed</span>
+                  </a>
                 </div>
               ) : (
                 <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center font-bold">
-                  <Lock className="w-5 h-5 mr-2" />
-                  <span className="font-bold">Locked</span>
+                  <a href="#" className="flex items-center justify-center">
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lock%203D%20ICON-tSADoa2jMYhydtsWHFQcTlvhAShAK6.png](https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lock%203D%20ICON-tSADoa2jMYhydtsWHFQcTlvhAShAK6.png"
+                      alt="Locked Trophy"
+                      width={20}
+                      height={20}
+                      className="mr-2"
+                    />
+                    <span className="font-bold">Locked</span>
+                  </a>
                 </div>
               )}
             </CardContent>
