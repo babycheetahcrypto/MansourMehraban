@@ -2498,7 +2498,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6">
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-4">
             {Array.from({ length: 12 }, (_, i) => {
               const day = i + 1;
               const isCurrentDay = day === dailyReward.day;
@@ -2524,47 +2524,53 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               return (
                 <div
                   key={i}
-                  className={`p-2 rounded-lg flex flex-col items-center justify-center relative overflow-hidden ${
+                  className={`p-4 rounded-lg flex flex-col items-center justify-center relative overflow-hidden ${
                     isCurrentDay
                       ? 'bg-gradient-to-br from-gray-800 to-gray-900'
                       : 'bg-gradient-to-br from-gray-800 to-gray-900'
                   }`}
                 >
-                  <span className="text-sm font-bold text-white mb-1 font-bold">{day}</span>
+                  <span className="text-2xl font-extrabold text-white mb-2">{day}</span>
                   <Image
                     src={iconUrls[i]}
                     alt={`Day ${day} Icon`}
                     width={100}
                     height={100}
-                    className={`w-6 h-6 ${
-                      isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
+                    className={`w-24 h-24 ${
+                      isCurrentDay ? 'opacity-100' : isPastDay ? 'opacity-50' : 'opacity-75'
                     }`}
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
                   />
-                  <div className="mt-1 text-xs font-semibold text-yellow font-bold">
+                  <div className="mt-2 text-sm font-semibold text-yellow-400">
                     {formatNumber(reward, true)}
                   </div>
                   {isPastDay && (
-                    <CheckCircle className="absolute top-1 right-1 w-4 h-4 text-green-400" />
+                    <CheckCircle className="absolute top-2 right-2 w-6 h-6 text-green-400" />
                   )}
                 </div>
               );
             })}
           </div>
-          <div className="mt-6 text-center">
-            <p className="text-xl mb-4 text-white">Current Streak: {dailyReward.streak} days</p>
+          <div className="mt-8 text-center">
+            <p className="text-2xl mb-4 text-white font-bold">
+              Current Streak: {dailyReward.streak} days
+            </p>
             <Button
               onClick={() => {
                 claimDailyReward();
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 backdrop-blur-md textwhite font-bold"
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-6 py-3 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 backdrop-blur-md text-lg font-bold"
               disabled={dailyReward.completed}
             >
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%20Reward%203D%20ICON-XyBdXZwO7OnLf5Zuj0Ivp7PNjc1YIp.png"
                 alt="Claim Reward"
-                width={24}
-                height={24}
-                className="w-6 h-6 mr-2"
+                width={28}
+                height={28}
+                className="w-7 h-7 mr-2"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
               />
               <span className="font-bold">Claim Reward</span>
             </Button>
