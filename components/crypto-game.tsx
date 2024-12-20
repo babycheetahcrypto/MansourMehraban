@@ -192,17 +192,17 @@ const styles = `
 
   @keyframes cheetah-glow {
     0% {
-      box-shadow: 0 0 5px rgba(255, 215, 0, 0.5),
-                  0 0 10px rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 5px rgba(248, 220, 112, 0.5),
+                  0 0 10px rgba(248, 220, 112, 0.5);
     }
     50% {
-      box-shadow: 0 0 10px rgba(255, 223, 0, 0.8),
-                  0 0 20px rgba(255, 223, 0, 0.8),
-                  0 0 30px rgba(255, 255, 0, 0.8);
+      box-shadow: 0 0 10px rgba(248, 220, 112, 0.8),
+                  0 0 20px rgba(248, 220, 112, 0.8),
+                  0 0 30px rgba(248, 220, 112, 0.8);
     }
     100% {
-      box-shadow: 0 0 5px rgba(255, 215, 0, 0.5),
-                  0 0 10px rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 5px rgba(248, 220, 112, 0.5),
+                  0 0 10px rgba(248, 220, 112, 0.5);
     }
   }
 
@@ -221,9 +221,9 @@ const styles = `
   }
 
   @keyframes cheetah-pulse {
-  0% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
-  50% { transform: scale(0.95); background-color: rgba(255, 165, 0, 0.3); }
-  100% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
+  0% { transform: scale(1); background-color: rgba(248, 220, 112, 0.2); }
+  50% { transform: scale(0.95); background-color: rgba(248, 220, 112, 0.3); }
+  100% { transform: scale(1); background-color: rgba(248, 220, 112, 0.2); }
 }
 
 .animate-button-click {
@@ -436,23 +436,23 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
       <button
         className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
           isActive
-            ? 'bg-gradient-to-t from-yellow-400/20 to-transparent border-2 border-yellow-500 shadow-lg shadow-yellow-500/50'
+            ? 'bg-gradient-to-t from-[#F8DC70]/20 to-transparent border-2 border-[#F8DC70] shadow-lg shadow-[#F8DC70]/50'
             : 'border border-gray-700/30'
         } ${
           isClicked ? 'animate-button-click' : ''
-        } backdrop-blur-md text-white active:bg-gray-800/50 hover:bg-yellow-400/10`}
+        } backdrop-blur-md text-white active:bg-gray-800/50 hover:bg-[#F8DC70]/10`}
         onClick={handleClick}
       >
         <Icon
-          className={`w-6 h-6 mb-1 ${isActive ? 'text-yellow-500' : 'text-white filter grayscale'}`}
+          className={`w-6 h-6 mb-1 ${isActive ? 'text-[#F8DC70]' : 'text-white filter grayscale'}`}
         />
         <span
-          className={`text-xs ${isActive ? 'text-yellow-500' : 'text-gray-400'} group-hover:text-yellow-300 font-bold`}
+          className={`text-xs ${isActive ? 'text-[#F8DC70]' : 'text-gray-400'} group-hover:text-[#F8DC70] font-bold`}
         >
           {text}
         </span>
         {isActive && (
-          <div className="absolute inset-0 rounded-2xl border-2 border-yellow-500 animate-cheetah-glow"></div>
+          <div className="absolute inset-0 rounded-2xl border-2 border-[#F8DC70] animate-cheetah-glow"></div>
         )}
       </button>
     </div>
