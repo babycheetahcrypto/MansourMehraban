@@ -2345,8 +2345,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       }}
                       className={`w-full text-white text-xs py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 level-button ${
                         selectedCoinImage === image
-                          ? getGradientClass(index, true)
-                          : getGradientClass(index, false)
+                          ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                          : 'bg-gradient-to-r from-blue-500 to-indigo-500'
                       } flex items-center justify-center font-bold`}
                     >
                       {selectedCoinImage === image ? (
@@ -2379,28 +2379,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </div>
     </div>
   );
-
-  // Add this function to generate different gradient classes for each button
-  const getGradientClass = (index: number, isSelected: boolean) => {
-    const gradients = [
-      'from-red-500 to-yellow-500',
-      'from-yellow-500 to-green-500',
-      'from-green-500 to-blue-500',
-      'from-blue-500 to-indigo-500',
-      'from-indigo-500 to-purple-500',
-      'from-purple-500 to-pink-500',
-      'from-pink-500 to-red-500',
-      'from-teal-500 to-cyan-500',
-      'from-orange-500 to-amber-500',
-      'from-lime-500 to-emerald-500',
-    ];
-
-    const baseClass = 'bg-gradient-to-r';
-    const selectedClass = isSelected ? 'opacity-80' : '';
-    const gradientClass = gradients[index % gradients.length];
-
-    return `${baseClass} ${gradientClass} ${selectedClass}`;
-  };
 
   const renderLevelUnlockPopup = () => (
     <Popup
