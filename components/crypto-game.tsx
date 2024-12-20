@@ -190,25 +190,25 @@ const styles = `
     animation: float 1s ease-in-out infinite;
   }
 
-    @keyframes glow {
-    0% {
-      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
-                  0 0 10px rgba(255, 255, 255, 0.5);
-    }
-    50% {
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
-                  0 0 20px rgba(255, 255, 255, 0.8),
-                  0 0 30px rgba(255, 255, 255, 0.8);
-    }
-    100% {
-      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
-                  0 0 10px rgba(255, 255, 255, 0.5);
-    }
+  @keyframes fire-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 69, 0, 0.5),
+                0 0 10px rgba(255, 69, 0, 0.5);
   }
+  50% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8),
+                0 0 20px rgba(255, 69, 0, 0.8),
+                0 0 30px rgba(255, 165, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 69, 0, 0.5),
+                0 0 10px rgba(255, 69, 0, 0.5);
+  }
+}
 
-  .animate-glow {
-    animation: glow 2s infinite;
-  }
+.animate-fire-glow {
+  animation: fire-glow 2s infinite;
+}
 
   @keyframes button-click {
     0% { transform: scale(1); }
@@ -219,6 +219,16 @@ const styles = `
   .animate-button-click {
     animation: button-click 0.3s ease-in-out;
   }
+
+  @keyframes fire-pulse {
+  0% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
+  50% { transform: scale(0.95); background-color: rgba(255, 165, 0, 0.3); }
+  100% { transform: scale(1); background-color: rgba(255, 69, 0, 0.2); }
+}
+
+.animate-button-click {
+  animation: fire-pulse 0.3s ease-in-out;
+}
 
   .filter-grayscale {
     filter: grayscale(100%);
@@ -422,29 +432,27 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
   };
 
   return (
-    <div
-      className={`flex flex-col items-center ${href === 'home' ? 'transform -translate-y-2' : ''}`}
-    >
+    <div className="flex flex-col items-center">
       <button
         className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
           isActive
-            ? 'bg-gradient-to-t from-primary/20 to-transparent border-2 border-primary shadow-lg shadow-primary/50'
+            ? 'bg-gradient-to-t from-orange-600/20 to-transparent border-2 border-orange-500 shadow-lg shadow-orange-500/50'
             : 'border border-gray-700/30'
         } ${
           isClicked ? 'animate-button-click' : ''
-        } backdrop-blur-md text-white active:bg-gray-800/50 hover:bg-white/10`}
+        } backdrop-blur-md text-white active:bg-gray-800/50 hover:bg-orange-500/10`}
         onClick={handleClick}
       >
         <Icon
-          className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white filter grayscale'}`}
+          className={`w-6 h-6 mb-1 ${isActive ? 'text-orange-500' : 'text-white filter grayscale'}`}
         />
         <span
-          className={`text-xs ${isActive ? 'text-primary' : 'text-gray-400'} group-hover:text-white font-bold`}
+          className={`text-xs ${isActive ? 'text-orange-500' : 'text-gray-400'} group-hover:text-orange-300 font-bold`}
         >
           {text}
         </span>
         {isActive && (
-          <div className="absolute inset-0 rounded-2xl border-2 border-primary animate-glow"></div>
+          <div className="absolute inset-0 rounded-2xl border-2 border-orange-500 animate-fire-glow"></div>
         )}
       </button>
     </div>
@@ -1802,8 +1810,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
                 alt={text}
-                width={28}
-                height={28}
+                width={35}
+                height={35}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
