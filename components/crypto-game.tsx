@@ -2381,9 +2381,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       onContextMenu={(e) => e.preventDefault()}
                     />
                   </div>
-                  <p
-                    className={`text-xs text-center ${isUnlocked ? 'text-blue-500 font-bold' : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-transparent bg-clip-text'} mb-2`}
-                  >
+                  <p className="text-xs text-center text-white mb-2">
                     {isUnlocked ? (
                       <>
                         <Image
@@ -2396,7 +2394,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                         <span>Unlocked</span>
                       </>
                     ) : (
-                      `Unlock at ${formatNumber(levelRequirements[index], true)} coins`
+                      <>
+                        Unlock at{' '}
+                        <span className="text-yellow-400">
+                          {formatNumber(levelRequirements[index], true)}
+                        </span>{' '}
+                        coins
+                      </>
                     )}
                   </p>
                   {isUnlocked && (
