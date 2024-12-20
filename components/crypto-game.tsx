@@ -2029,12 +2029,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               {shopItems.map((item, index) => (
                 <NeonGradientCard
                   key={item.id}
-                  className="transform transition-all duration-300 hover:shadow-2xl group"
+                  className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
                 >
                   <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
                     {item.name}
                   </h3>
-                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
+                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-lg group-hover:scale-105 transition-transform duration-300">
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -2096,12 +2096,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               {premiumShopItems.map((item) => (
                 <NeonGradientCard
                   key={item.id}
-                  className="transform transition-all duration-300 hover:shadow-2xl group"
+                  className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
                 >
                   <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
                     {item.name}
                   </h3>
-                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-md group-hover:scale-105 transition-transform duration-300">
+                  <div className="relative w-full h-24 mb-2 overflow-hidden rounded-lg group-hover:scale-105 transition-transform duration-300">
                     <Image
                       src={item.image}
                       alt={item.name}
