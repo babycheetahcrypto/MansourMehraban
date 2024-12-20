@@ -582,7 +582,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 10000000000,
+      coins: 0,
       level: 1,
       exp: 0,
       profilePhoto: '',
