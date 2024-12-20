@@ -2665,7 +2665,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 >
                   <a href="#" className="flex items-center justify-center">
                     <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-ddItyvxb6SR8lfphuvhK6P2snlkJqt.png](https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-ddItyvxb6SR8lfphuvhK6P2snlkJqt.png"
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-ddItyvxb6SR8lfphuvhK6P2snlkJqt.png"
                       alt="Claim Trophy"
                       width={20}
                       height={20}
@@ -2678,7 +2678,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <div className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base font-bold">
                   <a href="#" className="flex items-center justify-center">
                     <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-TiYmc8wajOladsY7nfqhbrWuZYckFp.png](https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-TiYmc8wajOladsY7nfqhbrWuZYckFp.png"
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-TiYmc8wajOladsY7nfqhbrWuZYckFp.png"
                       alt="Claimed Trophy"
                       width={20}
                       height={20}
@@ -2691,7 +2691,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <div className="w-full bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold mt-4 flex items-center justify-center font-bold">
                   <a href="#" className="flex items-center justify-center">
                     <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lock%203D%20ICON-tSADoa2jMYhydtsWHFQcTlvhAShAK6.png](https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lock%203D%20ICON-tSADoa2jMYhydtsWHFQcTlvhAShAK6.png"
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lock%203D%20ICON-tSADoa2jMYhydtsWHFQcTlvhAShAK6.png"
                       alt="Locked Trophy"
                       width={20}
                       height={20}
