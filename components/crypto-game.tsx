@@ -2039,7 +2039,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       src={item.image}
                       alt={item.name}
                       layout="fill"
-                      objectFit="contain rounded-[10px]"
+                      objectFit="cover rounded-[10px]"
                       className={`relative z-10 ${
                         !unlockedLevels.includes(index + 1)
                           ? 'group-hover:opacity-80 transition-opacity duration-300'
