@@ -2351,7 +2351,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 }`}
               >
                 <CardHeader className="relative p-2">
-                  <CardTitle className="z-10 text-center text-[#FFFFFF] font-extrabold text-lg">
+                  <CardTitle className="z-10 text-center text-[#FFFFFF] font-extrabold text-sm">
                     {index === 0 && 'Broke Cheetah'}
                     {index === 1 && 'Mr Cheetah'}
                     {index === 2 && 'Sparrow Cheetah'}
