@@ -391,30 +391,23 @@ const CryptoButton: React.FC<CryptoButtonProps> = ({
     <div className="flex flex-col items-center">
       <Button
         variant="ghost"
-        className={`relative w-16 h-16 bg-transparent flex flex-col items-center justify-center rounded-full ${
+        className={`relative w-17 h-17 bg-transparent flex flex-col items-center justify-center rounded-2xl ${
           isActive ? 'bg-gradient-to-t from-primary/20 to-transparent' : ''
         } ${
           isClicked ? 'animate-button-click' : ''
         } backdrop-blur-md text-white active:bg-gray-800/50 transition-all duration-300 active:text-white ${
           isClicked ? 'ring-2 ring-primary ring-offset-2 ring-offset-black' : ''
-        } ${href === 'home' ? 'w-20 h-20 -mt-8 bg-gradient-to-r from-blue-500 to-purple-500' : ''}`}
+        }`}
         onClick={handleClick}
       >
-        <Icon
-          className={`w-6 h-6 mb-1 ${isActive ? 'text-primary' : 'text-white'} ${
-            href === 'home' ? 'w-8 h-8' : ''
-          }`}
-        />
+        <Icon className={`w-7 h-7 mb-1 ${isActive ? 'text-primary' : 'text-white'}`} />
         <span
-          className={`text-[10px] ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white font-bold`}
+          className={`text-xs ${isActive ? 'text-white' : 'text-gray-300'} group-hover:text-white font-bold`}
         >
           {text}
         </span>
-        {isActive && href !== 'home' && (
-          <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
-        )}
-        {href === 'home' && (
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-50 blur-md -z-10"></div>
+        {isActive && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
         )}
       </Button>
     </div>
@@ -1734,76 +1727,57 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderbottom = () => (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-xl p-2 rounded-t-[2rem] z-50 border-t border-gray-700/30"
+      className="fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-800/30 to-blue-900/30 rounded-full blur-xl"></div>
-        <div className="relative flex items-center justify-center w-full h-20">
-          <div className="absolute inset-x-0 -top-6 h-16 bg-gradient-to-b from-black/0 to-black/50 blur-md"></div>
-          <div className="flex items-center justify-between w-full px-4">
-            {[
-              {
-                page: 'tasks',
-                text: 'Tasks',
-                icon: 'TASKS%203D%20ICON-TdX24HYmqD0KAnug5YsjXN8t6qMRDr.png',
-              },
-              {
-                page: 'shop',
-                text: 'Shop',
-                icon: 'SHOP%203D%20ICON-02YxP35Bd9AC8hMPGjqzUQylpXOHRS.png',
-              },
-              {
-                page: 'ranking',
-                text: 'Ranking',
-                icon: 'RATING%203D%20ICON-fc1CF0mncViyB8MTFT7iisKtLfBKoA.png',
-              },
-              {
-                page: 'invite',
-                text: 'Invite',
-                icon: 'FRIEND%20INVITE%203D%20ICON-GyAxv2xoA7fZeN65uJ60ILc6RQxxXN.png',
-              },
-            ].map(({ page, text, icon }, index) => (
-              <CryptoButton
-                key={page}
-                icon={(props) => (
-                  <Image
-                    src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
-                    alt={text}
-                    width={28}
-                    height={28}
-                    draggable="false"
-                    onContextMenu={(e) => e.preventDefault()}
-                    {...props}
-                  />
-                )}
-                href={page}
-                text={text}
-                isActive={currentPage === page}
-                setCurrentPage={setCurrentPage}
+        {[
+          {
+            page: 'tasks',
+            text: 'Tasks',
+            icon: 'TASKS%203D%20ICON-TdX24HYmqD0KAnug5YsjXN8t6qMRDr.png',
+          },
+          {
+            page: 'shop',
+            text: 'Shop',
+            icon: 'SHOP%203D%20ICON-02YxP35Bd9AC8hMPGjqzUQylpXOHRS.png',
+          },
+          {
+            page: 'home',
+            text: 'Home',
+            icon: 'Home%203D%20ICON-lq4p7b3umu25lmHYmoI2AyAjriJJl5.png',
+          },
+          {
+            page: 'ranking',
+            text: 'Ranking',
+            icon: 'RATING%203D%20ICON-fc1CF0mncViyB8MTFT7iisKtLfBKoA.png',
+          },
+          {
+            page: 'invite',
+            text: 'Invite',
+            icon: 'FRIEND%20INVITE%203D%20ICON-GyAxv2xoA7fZeN65uJ60ILc6RQxxXN.png',
+          },
+        ].map(({ page, text, icon }) => (
+          <CryptoButton
+            key={page}
+            icon={(props) => (
+              <Image
+                src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
+                alt={text}
+                width={35}
+                height={35}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+                {...props}
               />
-            ))}
-          </div>
-          <div className="absolute left-1/2 -translate-x-1/2 -top-6">
-            <CryptoButton
-              icon={(props) => (
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Home%203D%20ICON-lq4p7b3umu25lmHYmoI2AyAjriJJl5.png"
-                  alt="Home"
-                  width={40}
-                  height={40}
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                  {...props}
-                />
-              )}
-              href="home"
-              text="Home"
-              isActive={currentPage === 'home'}
-              setCurrentPage={setCurrentPage}
-            />
-          </div>
-        </div>
+            )}
+            href={page}
+            text={text}
+            isActive={currentPage === page}
+            setCurrentPage={setCurrentPage}
+          />
+        ))}
       </div>
     </div>
   );
