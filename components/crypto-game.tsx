@@ -1856,9 +1856,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1
-            className={`font-black text-white font-bold overflow-hidden ${
-              formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'
-            }`}
+            className={`font-black text-white font-extrabold overflow-hidden ${formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'}`}
           >
             {formatNumber(user.coins, false)
               .split('')
@@ -1910,7 +1908,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </button>
           </div>
 
-          <div className="w-full max-w-md mb-4">
+          <div className="w-full max-w-md mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
                 <Image
