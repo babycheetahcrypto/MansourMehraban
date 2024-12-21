@@ -233,28 +233,6 @@ const styles = `
   .filter-grayscale {
     filter: grayscale(100%);
   }
-
-  @keyframes spin-slow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 10s linear infinite;
-}
-
-.bg-gradient-radial {
-  background: radial-gradient(
-    circle,
-    var(--tw-gradient-from),
-    var(--tw-gradient-via),
-    var(--tw-gradient-to)
-  );
-}
 `;
 
 // Telegram WebApp type definition
