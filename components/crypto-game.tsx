@@ -2655,7 +2655,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div className="mt-6 p-4 bg-gradient-to-r from-purple-800/60 to-pink-800/60 rounded-lg backdrop-blur-md">
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg backdrop-blur-md">
             <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
               <span className="text-sm text-white truncate mr-2">
