@@ -561,10 +561,10 @@ const trophies = [
 ];
 
 const formatNumberWithSuffix = (num: number): string => {
-  if (num >= 1e9) return Math.floor(num / 1e9).toFixed(1) + 'b';
-  if (num >= 1e6) return Math.floor(num / 1e6).toFixed(1) + 'm';
-  if (num >= 1e3) return Math.floor(num / 1e3).toFixed(1) + 'k';
-  return Math.floor(num).toString();
+  if (num >= 1e9) return (num / 1e9).toFixed(1) + 'b';
+  if (num >= 1e6) return (num / 1e6).toFixed(1) + 'm';
+  if (num >= 1e3) return (num / 1e3).toFixed(1) + 'k';
+  return num.toString();
 };
 
 const formatNumber = (num: number, useShortFormat: boolean = true): string => {
@@ -582,7 +582,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 1000,
+      coins: 0,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -1711,7 +1711,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                <span className="font-bold">{formatNumberWithSuffix(Math.floor(user.coins))}</span>
+                <span className="font-bold">{formatNumberWithSuffix(user.coins)}</span>
               </div>
             </div>
           </div>
