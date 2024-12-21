@@ -814,7 +814,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => shareToSocialMedia('facebook'),
+      action: () => {
+        shareToSocialMedia('facebook');
+        updateTaskProgress(1);
+      },
     },
     {
       id: 2,
@@ -833,7 +836,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => shareToSocialMedia('x'),
+      action: () => {
+        shareToSocialMedia('x');
+        updateTaskProgress(2);
+      },
     },
     {
       id: 3,
@@ -852,7 +858,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => shareToSocialMedia('instagram'),
+      action: () => {
+        shareToSocialMedia('instagram');
+        updateTaskProgress(3);
+      },
     },
     {
       id: 4,
@@ -871,7 +880,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => openYouTubeChannel(),
+      action: () => {
+        openYouTubeChannel();
+        updateTaskProgress(4);
+      },
     },
     {
       id: 5,
@@ -890,7 +902,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => watchYouTubeVideos(),
+      action: () => {
+        watchYouTubeVideos();
+        updateTaskProgress(5);
+      },
     },
     {
       id: 6,
@@ -909,7 +924,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => joinTelegramChannel(),
+      action: () => {
+        joinTelegramChannel();
+        updateTaskProgress(6);
+      },
     },
     {
       id: 7,
@@ -929,7 +947,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => inviteFriends(),
+      action: () => {
+        inviteFriends();
+        updateTaskProgress(7);
+      },
     },
     {
       id: 8,
@@ -988,7 +1009,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => followX(),
+      action: () => {
+        followX();
+        updateTaskProgress(10);
+      },
     },
     {
       id: 11,
@@ -1007,7 +1031,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => followInstagram(),
+      action: () => {
+        followInstagram();
+        updateTaskProgress(11);
+      },
     },
     {
       id: 12,
@@ -1026,9 +1053,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           onContextMenu={(e) => e.preventDefault()}
         />
       ),
-      action: () => followWhatsApp(),
+      action: () => {
+        followWhatsApp();
+        updateTaskProgress(12);
+      },
     },
   ]);
+
+  const updateTaskProgress = useCallback((taskId: number) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === taskId) {
+          const newProgress = task.progress + 1;
+          const completed = newProgress >= (task.maxProgress || 1);
+          return { ...task, progress: newProgress, completed };
+        }
+        return task;
+      })
+    );
+  }, []);
 
   const inviteFriend = useCallback(
     async (friendId: string) => {
