@@ -271,6 +271,9 @@ const styles = `
   67% {
     content: "..";
   }
+  100% {
+    content: "...";
+  }
 }
 
 .animate-spin-slow {
@@ -286,11 +289,7 @@ const styles = `
 }
 
 .animate-dots::after {
-  animation: dots 1.5s steps(3, end) infinite;
-}
-
-.animate-fade {
-  animation: fade 3s ease-in-out infinite;
+  animation: dots 1.5s steps(4, end) infinite;
 }
 `;
 
@@ -2999,15 +2998,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-blue-900">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
+          {/* 3D Spinning Loader */}
           <div className="relative w-40 h-40 mx-auto mb-8">
             <div className="absolute inset-0 animate-spin-slow">
+              {/* Outer rotating gradient ring */}
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-sm"></div>
             </div>
             <div className="absolute inset-0 animate-spin-reverse">
+              {/* Inner ring with reverse animation */}
               <div className="absolute inset-2 w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full blur-md"></div>
             </div>
+            {/* Central glowing orb */}
             <div className="absolute inset-4 flex items-center justify-center bg-black rounded-full shadow-xl animate-glow">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
@@ -3021,7 +3024,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
           {/* Loading text with a dynamic ellipsis */}
-          <h2 className="text-3xl font-extrabold text-white mb-2 animate-pulse">
+          <h2 className="text-3xl font-extrabold text-white mb-2">
             Loading<span className="animate-dots">...</span>
           </h2>
         </div>
