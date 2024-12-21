@@ -2946,7 +2946,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <div className="absolute inset-0 border-t-4 border-b-4 border-[#f8dc70] rounded-full animate-spin"></div>
             <div
               className="absolute inset-0 border-r-4 border-l-4 border-yellow-500 rounded-full animate-spin"
-              style={{ animationDirection: 'reverse', animationDuration: '10.5s' }}
+              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
             ></div>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center shadow-lg">
@@ -2962,6 +2962,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
+          <h2 className="text-3xl font-bold text-[#f8dc70] mb-4">
+            <span className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-yellow-500">
+              Loading<span className="dot-animation">...</span>
+            </span>
+          </h2>
         </div>
       </div>
     );
