@@ -2647,15 +2647,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gray-500 text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Invite Friends
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-brfrom-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+          <div className="absolute inset-0 bg-gray-500 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div className="mt-6 p-4 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg backdrop-blur-md">
+          <div className="mt-6 p-4 bg-gradient-to-r from-green-600/50 to-teal-600/50 rounded-lg backdrop-blur-md">
             <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
               <span className="text-sm text-white truncate mr-2">
@@ -2681,7 +2681,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </Button>
             </div>
             <p className="text-xs text-center mt-2 text-white">
-              Share this link to earn 2000 coins for each friend who joins!
+              Share this link to earn <span className="text-yellow-400 font-bold">2000</span> coins
+              for each friend who joins!
             </p>
           </div>
           <Button
