@@ -243,7 +243,7 @@ const styles = `
   }
 }
 
-@keyframes spin-reverse {
+@keyframes spin-fast {
   from {
     transform: rotate(360deg);
   }
@@ -252,17 +252,8 @@ const styles = `
   }
 }
 
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(0, 0, 255, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 0 60px rgba(0, 0, 255, 0.7);
-  }
-}
-
 @keyframes dots {
-  0%, 100% {
+  0% {
     content: "";
   }
   33% {
@@ -271,26 +262,21 @@ const styles = `
   67% {
     content: "..";
   }
+  100% {
+    content: "...";
+  }
 }
 
 .animate-spin-slow {
   animation: spin-slow 4s linear infinite;
 }
 
-.animate-spin-reverse {
-  animation: spin-reverse 2s linear infinite;
-}
-
-.animate-glow {
-  animation: glow 2s ease-in-out infinite;
+.animate-spin-fast {
+  animation: spin-fast 1.5s linear infinite;
 }
 
 .animate-dots::after {
   animation: dots 1.5s steps(3, end) infinite;
-}
-
-.animate-fade {
-  animation: fade 3s ease-in-out infinite;
 }
 `;
 
@@ -2999,32 +2985,35 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-blue-900">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
+          {/* Spinning Loader */}
           <div className="relative w-40 h-40 mx-auto mb-8">
+            {/* Outer spinning circle */}
             <div className="absolute inset-0 animate-spin-slow">
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-sm"></div>
+              <div className="absolute inset-0 w-full h-full border-t-4 border-blue-500 rounded-full"></div>
             </div>
-            <div className="absolute inset-0 animate-spin-reverse">
-              <div className="absolute inset-2 w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full blur-md"></div>
+            {/* Inner spinning circle */}
+            <div className="absolute inset-4 animate-spin-fast">
+              <div className="absolute inset-0 w-full h-full border-l-4 border-purple-500 rounded-full"></div>
             </div>
-            <div className="absolute inset-4 flex items-center justify-center bg-black rounded-full shadow-xl animate-glow">
+            {/* Central glowing orb */}
+            <div className="absolute inset-8 flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-lg">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                 alt="Game Logo"
-                width={200}
-                height={200}
-                className="w-24 h-24"
+                width={100}
+                height={100}
+                className="w-20 h-20"
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
             </div>
           </div>
-          {/* Loading text with a dynamic ellipsis */}
-          <h2 className="text-3xl font-extrabold text-white mb-2 animate-pulse">
+          {/* Static Loading text with dynamic (...) */}
+          <h2 className="text-3xl font-extrabold text-white">
             Loading<span className="animate-dots">...</span>
           </h2>
-          <p className="text-lg text-gray-300 animate-fade">Preparing your experience...</p>
         </div>
       </div>
     );
