@@ -233,6 +233,28 @@ const styles = `
   .filter-grayscale {
     filter: grayscale(100%);
   }
+
+  @keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}
+
+.bg-gradient-radial {
+  background: radial-gradient(
+    circle,
+    var(--tw-gradient-from),
+    var(--tw-gradient-via),
+    var(--tw-gradient-to)
+  );
+}
 `;
 
 // Telegram WebApp type definition
@@ -2486,7 +2508,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative p-6 pb-2">
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full opacity-80 scale-95 shadow-xl">
+            <div className="absolute inset-0 bg-gradient-radial from-transparent via-gray-700 to-gray-900 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-dashed border-gray-700 rounded-full animate-spin-slow"></div>
+            <div className="absolute inset-0 w-3/4 h-3/4 bg-gradient-to-br from-gray-900 via-gray-800 to-transparent rounded-full blur-xl"></div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           {[
@@ -2566,7 +2592,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Daily Rewards
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full opacity-80 scale-95 shadow-xl">
+            <div className="absolute inset-0 bg-gradient-radial from-transparent via-gray-700 to-gray-900 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-dashed border-gray-700 rounded-full animate-spin-slow"></div>
+            <div className="absolute inset-0 w-3/4 h-3/4 bg-gradient-to-br from-gray-900 via-gray-800 to-transparent rounded-full blur-xl"></div>
+          </div>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-3 gap-2">
@@ -2652,7 +2682,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Invite Friends
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full opacity-80 scale-95 shadow-xl">
+            <div className="absolute inset-0 bg-gradient-radial from-transparent via-gray-700 to-gray-900 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-dashed border-gray-700 rounded-full animate-spin-slow"></div>
+            <div className="absolute inset-0 w-3/4 h-3/4 bg-gradient-to-br from-gray-900 via-gray-800 to-transparent rounded-full blur-xl"></div>
+          </div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-800/60 to-pink-800/60 rounded-lg backdrop-blur-md">
@@ -2743,7 +2777,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           >
             <CardHeader className="relative">
               <CardTitle className="z-10 text-center text-white font-bold">{trophy.name}</CardTitle>
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full opacity-80 scale-95 shadow-xl">
+                <div className="absolute inset-0 bg-gradient-radial from-transparent via-gray-700 to-gray-900 rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-dashed border-gray-700 rounded-full animate-spin-slow"></div>
+                <div className="absolute inset-0 w-3/4 h-3/4 bg-gradient-to-br from-gray-900 via-gray-800 to-transparent rounded-full blur-xl"></div>
+              </div>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-4">
               <div className="w-24 h-24 mb-4 relative flex items-center justify-center">
