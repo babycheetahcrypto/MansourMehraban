@@ -2367,12 +2367,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 </CardContent>
               </NeonGradientCard>
               {task.type === 'video' && !task.completed && (
-                <div className="mt-2 bg-gray-800 p-4 rounded-lg">
-                  <p className="text-sm text-white mb-2">Enter the code!</p>
+                <div className="mt-2">
                   <input
                     type="text"
                     placeholder="Enter secret code"
-                    className="w-full p-2 rounded-lg bg-gray-700 text-white"
+                    className="w-full p-2 rounded-lg bg-gray-800 text-white"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         checkVideoSecretCode(task.id, e.currentTarget.value);
