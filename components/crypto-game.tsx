@@ -2486,7 +2486,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative p-6 pb-2">
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-40 transform skew-y-6 rounded-lg blur-sm"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 transform scale-105 rotate-2 shadow-md border-t border-gray-700"></div>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           {[
@@ -2566,7 +2566,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Daily Rewards
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-40 transform skew-y-6 rounded-lg blur-sm"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 transform scale-105 rotate-2 shadow-md border-t border-gray-700"></div>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-3 gap-2">
@@ -2652,7 +2652,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Invite Friends
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-40 transform skew-y-6 rounded-lg blur-sm"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 transform scale-105 rotate-2 shadow-md border-t border-gray-700"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-800/60 to-pink-800/60 rounded-lg backdrop-blur-md">
@@ -2743,7 +2743,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           >
             <CardHeader className="relative">
               <CardTitle className="z-10 text-center text-white font-bold">{trophy.name}</CardTitle>
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-40 transform skew-y-6 rounded-lg blur-sm"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 transform scale-105 rotate-2 shadow-md border-t border-gray-700"></div>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-4">
               <div className="w-24 h-24 mb-4 relative flex items-center justify-center">
