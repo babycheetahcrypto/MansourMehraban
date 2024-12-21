@@ -2962,11 +2962,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-[#f8dc70] mb-4">
-            <span className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-yellow-500">
-              Loading<span className="dot-animation">...</span>
-            </span>
-          </h2>
         </div>
       </div>
     );
