@@ -234,30 +234,35 @@ const styles = `
     filter: grayscale(100%);
   }
 
-  @keyframes gradient-border {
+  @keyframes border-gradient {
   0% {
     border-color: #ff7eb3; /* Pink */
   }
   25% {
-    border-color: #ff758c; /* Peach */
+    border-color: #f7c948; /* Yellow */
   }
   50% {
-    border-color: #ff7eb3; /* Back to Pink */
+    border-color: #82e3ff; /* Blue */
   }
   75% {
-    border-color: #ffaf7b; /* Orange */
+    border-color: #d58cff; /* Purple */
   }
   100% {
-    border-color: #ff758c; /* Peach */
+    border-color: #ff7eb3; /* Pink */
   }
 }
 
-.animate-gradient-border {
-  animation: gradient-border 6s linear infinite;
-  border-image-source: linear-gradient(90deg, #ff7eb3, #ff758c, #ffaf7b, #ff758c);
-  border-image-slice: 1;
-  border-width: 4px;
+.animate-border-gradient {
+  animation: border-gradient 5s infinite alternate;
   border-style: solid;
+}
+
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-from), var(--tw-gradient-to));
+}
+
+.shadow-inner {
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 `;
 
@@ -2512,10 +2517,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative p-6 pb-2">
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
-          <div className="relative w-full h-full bg-gray-900/50 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute inset-0 rounded-2xl border-4 animate-gradient-border" />
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black opacity-50 rounded-2xl"></div>
-            <div className="absolute inset-0 mx-auto w-3/4 h-3/4 bg-gradient-radial from-transparent via-gray-800 to-gray-900 opacity-60 rounded-full blur-xl"></div>
+          <div className="relative w-full h-full bg-gray-900/70 rounded-3xl p-6 shadow-xl overflow-hidden">
+            {/* Animated Gradient Border */}
+            <div className="absolute inset-0 rounded-3xl border-[6px] animate-border-gradient" />
+
+            {/* Inner Layers */}
+            <div className="absolute inset-1 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-3xl shadow-inner"></div>
+
+            {/* Highlight Strip */}
+            <div className="absolute top-0 left-1/4 w-1/2 h-2 bg-gradient-to-r from-pink-500 via-yellow-500 to-purple-500 rounded-full opacity-70 animate-pulse"></div>
+
+            {/* Glowing Accent Circle */}
+            <div className="absolute bottom-8 right-8 w-24 h-24 bg-gradient-radial from-blue-500 to-transparent rounded-full opacity-50 blur-lg"></div>
           </div>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
@@ -2596,10 +2609,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Daily Rewards
           </CardTitle>
-          <div className="relative w-full h-full bg-gray-900/50 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute inset-0 rounded-2xl border-4 animate-gradient-border" />
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black opacity-50 rounded-2xl"></div>
-            <div className="absolute inset-0 mx-auto w-3/4 h-3/4 bg-gradient-radial from-transparent via-gray-800 to-gray-900 opacity-60 rounded-full blur-xl"></div>
+          <div className="relative w-full h-full bg-gray-900/70 rounded-3xl p-6 shadow-xl overflow-hidden">
+            {/* Animated Gradient Border */}
+            <div className="absolute inset-0 rounded-3xl border-[6px] animate-border-gradient" />
+
+            {/* Inner Layers */}
+            <div className="absolute inset-1 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-3xl shadow-inner"></div>
+
+            {/* Highlight Strip */}
+            <div className="absolute top-0 left-1/4 w-1/2 h-2 bg-gradient-to-r from-pink-500 via-yellow-500 to-purple-500 rounded-full opacity-70 animate-pulse"></div>
+
+            {/* Glowing Accent Circle */}
+            <div className="absolute bottom-8 right-8 w-24 h-24 bg-gradient-radial from-blue-500 to-transparent rounded-full opacity-50 blur-lg"></div>
           </div>
         </CardHeader>
         <CardContent className="p-6">
@@ -2686,10 +2707,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Invite Friends
           </CardTitle>
-          <div className="relative w-full h-full bg-gray-900/50 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute inset-0 rounded-2xl border-4 animate-gradient-border" />
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black opacity-50 rounded-2xl"></div>
-            <div className="absolute inset-0 mx-auto w-3/4 h-3/4 bg-gradient-radial from-transparent via-gray-800 to-gray-900 opacity-60 rounded-full blur-xl"></div>
+          <div className="relative w-full h-full bg-gray-900/70 rounded-3xl p-6 shadow-xl overflow-hidden">
+            {/* Animated Gradient Border */}
+            <div className="absolute inset-0 rounded-3xl border-[6px] animate-border-gradient" />
+
+            {/* Inner Layers */}
+            <div className="absolute inset-1 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-3xl shadow-inner"></div>
+
+            {/* Highlight Strip */}
+            <div className="absolute top-0 left-1/4 w-1/2 h-2 bg-gradient-to-r from-pink-500 via-yellow-500 to-purple-500 rounded-full opacity-70 animate-pulse"></div>
+
+            {/* Glowing Accent Circle */}
+            <div className="absolute bottom-8 right-8 w-24 h-24 bg-gradient-radial from-blue-500 to-transparent rounded-full opacity-50 blur-lg"></div>
           </div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
@@ -2781,10 +2810,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           >
             <CardHeader className="relative">
               <CardTitle className="z-10 text-center text-white font-bold">{trophy.name}</CardTitle>
-              <div className="relative w-full h-full bg-gray-900/50 rounded-2xl overflow-hidden shadow-lg">
-                <div className="absolute inset-0 rounded-2xl border-4 animate-gradient-border" />
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black opacity-50 rounded-2xl"></div>
-                <div className="absolute inset-0 mx-auto w-3/4 h-3/4 bg-gradient-radial from-transparent via-gray-800 to-gray-900 opacity-60 rounded-full blur-xl"></div>
+              <div className="relative w-full h-full bg-gray-900/70 rounded-3xl p-6 shadow-xl overflow-hidden">
+                {/* Animated Gradient Border */}
+                <div className="absolute inset-0 rounded-3xl border-[6px] animate-border-gradient" />
+
+                {/* Inner Layers */}
+                <div className="absolute inset-1 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-3xl shadow-inner"></div>
+
+                {/* Highlight Strip */}
+                <div className="absolute top-0 left-1/4 w-1/2 h-2 bg-gradient-to-r from-pink-500 via-yellow-500 to-purple-500 rounded-full opacity-70 animate-pulse"></div>
+
+                {/* Glowing Accent Circle */}
+                <div className="absolute bottom-8 right-8 w-24 h-24 bg-gradient-radial from-blue-500 to-transparent rounded-full opacity-50 blur-lg"></div>
               </div>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-4">
