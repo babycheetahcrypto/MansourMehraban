@@ -233,6 +233,30 @@ const styles = `
   .filter-grayscale {
     filter: grayscale(100%);
   }
+
+  @keyframes gradient-border {
+  0% {
+    border-color: #ff9a9e; /* Pink */
+  }
+  25% {
+    border-color: #fad0c4; /* Light Peach */
+  }
+  50% {
+    border-color: #fbc2eb; /* Lavender */
+  }
+  75% {
+    border-color: #a1c4fd; /* Light Blue */
+  }
+  100% {
+    border-color: #ff9a9e; /* Back to Pink */
+  }
+}
+
+.animate-gradient-border {
+  animation: gradient-border 4s infinite alternate;
+  border-image-source: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb, #a1c4fd);
+  border-image-slice: 1;
+}
 `;
 
 // Telegram WebApp type definition
@@ -2486,7 +2510,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative p-6 pb-2">
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
+          <div className="absolute inset-0 bg-gray-900/50 rounded-xl border-4 border-transparent animate-gradient-border">
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-transparent to-gray-900 opacity-50 rounded-xl"></div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           {[
@@ -2566,7 +2592,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Daily Rewards
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
+          <div className="absolute inset-0 bg-gray-900/50 rounded-xl border-4 border-transparent animate-gradient-border">
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-transparent to-gray-900 opacity-50 rounded-xl"></div>
+          </div>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-3 gap-2">
@@ -2652,7 +2680,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Invite Friends
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
+          <div className="absolute inset-0 bg-gray-900/50 rounded-xl border-4 border-transparent animate-gradient-border">
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-transparent to-gray-900 opacity-50 rounded-xl"></div>
+          </div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-800/60 to-pink-800/60 rounded-lg backdrop-blur-md">
@@ -2743,7 +2773,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           >
             <CardHeader className="relative">
               <CardTitle className="z-10 text-center text-white font-bold">{trophy.name}</CardTitle>
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
+              <div className="absolute inset-0 bg-gray-900/50 rounded-xl border-4 border-transparent animate-gradient-border">
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-transparent to-gray-900 opacity-50 rounded-xl"></div>
+              </div>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-4">
               <div className="w-24 h-24 mb-4 relative flex items-center justify-center">
