@@ -233,6 +233,65 @@ const styles = `
   .filter-grayscale {
     filter: grayscale(100%);
   }
+
+  @keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(0, 0, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 0 60px rgba(0, 0, 255, 0.7);
+  }
+}
+
+@keyframes dots {
+  0%, 100% {
+    content: "";
+  }
+  33% {
+    content: ".";
+  }
+  67% {
+    content: "..";
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 4s linear infinite;
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 2s linear infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-dots::after {
+  animation: dots 1.5s steps(3, end) infinite;
+}
+
+.animate-fade {
+  animation: fade 3s ease-in-out infinite;
+}
 `;
 
 // Telegram WebApp type definition
@@ -2940,29 +2999,31 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-blue-900">
         <div className="text-center">
           <div className="relative w-40 h-40 mx-auto mb-8">
-            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
-            <div
-              className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
-              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
-            ></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                  alt="Game Logo"
-                  width={200}
-                  height={200}
-                  className="animate-pulse"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-              </div>
+            <div className="absolute inset-0 animate-spin-slow">
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-sm"></div>
+            </div>
+            <div className="absolute inset-0 animate-spin-reverse">
+              <div className="absolute inset-2 w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full blur-md"></div>
+            </div>
+            <div className="absolute inset-4 flex items-center justify-center bg-black rounded-full shadow-xl animate-glow">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                alt="Game Logo"
+                width={200}
+                height={200}
+                className="w-24 h-24"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
+          {/* Loading text with a dynamic ellipsis */}
+          <h2 className="text-3xl font-extrabold text-white mb-2 animate-pulse">
+            Loading<span className="animate-dots">...</span>
+          </h2>
         </div>
       </div>
     );
