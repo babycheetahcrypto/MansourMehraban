@@ -2113,7 +2113,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     Profit: {formatNumber(item.baseProfit * (1 + 0.1 * (item.level - 1)), true)}/h
                   </p>
                   <Button
-                    className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-md text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
+                    className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
                     onClick={() => {
                       buyItem(item);
                     }}
@@ -2171,7 +2171,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     {item.id === 1 ? item.boosterCredits : item.tap}
                   </p>
                   <Button
-                    className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-md text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
+                    className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
                     onClick={() => {
                       buyPremiumItem(item);
                     }}
@@ -2412,7 +2412,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           showGameAlert(`Congratulations! You've unlocked Level ${index + 1}!`);
                         }
                       }}
-                      className={`w-full text-white text-xs py-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 level-button ${
+                      className={`w-full text-white text-xs py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 level-button ${
                         selectedCoinImage === image
                           ? 'bg-gradient-to-r from-purple-500 to-pink-500'
                           : 'bg-gradient-to-r from-blue-500 to-indigo-500'
@@ -2668,7 +2668,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   );
                   showGameAlert('Referral link copied to clipboard!');
                 }}
-                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white text-xs py-1 px-4 rounded-full transition-all duration-300 flex items-center justify-center font-bold"
+                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white text-xs py-1 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center font-bold"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-qVagBixv3Uacicht1qeEubKtLUwh6W.png"
@@ -2686,7 +2686,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
-            className="w-full bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white py-3 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center font-bold"
+            className="w-full bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white py-3 rounded-2xl text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center font-bold"
           >
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friends%20Activity%203D%20ICON-MuArgoDXJUAr5rEz9VgjF4KmRcHPy9.png"
@@ -2773,7 +2773,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               {user.coins >= trophy.requirement && !trophy.claimed ? (
                 <Button
                   onClick={() => claimTrophy(trophy)}
-                  className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-purple-600 hover:via-pink-600 hover:to-red-600 hover:scale-105 active:scale-95 trophy-button font-bold text-base"
+                  className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-4 py-2 rounded-2xl shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center hover:from-purple-600 hover:via-pink-600 hover:to-red-600 hover:scale-105 active:scale-95 trophy-button font-bold text-base"
                 >
                   <a href="#" className="flex items-center justify-center">
                     <Image
@@ -2787,7 +2787,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   </a>
                 </Button>
               ) : trophy.claimed ? (
-                <div className="w-full bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base">
+                <div className="w-full bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 text-white px-4 py-2 rounded-2xl shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base">
                   <a href="#" className="flex items-center justify-center">
                     <Image
                       src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-TiYmc8wajOladsY7nfqhbrWuZYckFp.png"
@@ -2800,7 +2800,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   </a>
                 </div>
               ) : (
-                <div className="w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 text-white px-4 py-2 rounded-full shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base">
+                <div className="w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 text-white px-4 py-2 rounded-2xl shadow-lg transform transition-all duration-300 mt-4 flex items-center justify-center font-bold text-base">
                   <a href="#" className="flex items-center justify-center">
                     <Image
                       src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Lock%203D%20ICON-tSADoa2jMYhydtsWHFQcTlvhAShAK6.png"
