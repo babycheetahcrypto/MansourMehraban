@@ -582,7 +582,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       username: '',
       firstName: '',
       lastName: '',
-      coins: 0,
+      coins: 1000,
       level: 1,
       exp: 0,
       profilePhoto: '',
@@ -2943,13 +2943,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
           <div className="relative w-40 h-40 mx-auto mb-8">
-            <div className="absolute inset-0 border-t-4 border-b-4 border-[#f8dc70] rounded-full animate-spin"></div>
+            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
             <div
-              className="absolute inset-0 border-r-4 border-l-4 border-yellow-500 rounded-full animate-spin"
+              className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
               style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
             ></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
@@ -2962,11 +2962,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-[#f8dc70] mb-4">
-            <span className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-yellow-500">
-              Loading<span className="dot-animation">...</span>
-            </span>
-          </h2>
+          <h2 className="text-2xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
         </div>
       </div>
     );
