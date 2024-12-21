@@ -2943,11 +2943,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
           <div className="relative w-40 h-40 mx-auto mb-8">
-            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
-            <div
-              className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
-              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
-            ></div>
+            {/* Game Logo */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
                 <Image
@@ -2961,8 +2957,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 />
               </div>
             </div>
+
+            {/* Colorful Dynamic Loading Animation */}
+            <div className="absolute inset-0">
+              <div
+                className="w-full h-full border-4 border-transparent rounded-full animate-spin"
+                style={{
+                  borderTopColor: '#ff4d4d',
+                  borderRightColor: '#4dff4d',
+                  borderBottomColor: '#4d4dff',
+                  borderLeftColor: '#ffdb4d',
+                  animationDuration: '1s',
+                }}
+              ></div>
+            </div>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
         </div>
       </div>
     );
