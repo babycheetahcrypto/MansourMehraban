@@ -783,6 +783,30 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const [tasks, setTasks] = useState<Task[]>([
     {
+      id: 14,
+      description: 'Watch Video 2',
+      reward: 1000,
+      progress: 0,
+      completed: false,
+      claimed: false,
+      icon: (
+        <Image
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20ICON-n3DFRVp9JnkM0qQcysyNK18eaDTZQ9.png"
+          alt="YouTube"
+          width={36}
+          height={36}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
+        />
+      ),
+      action: () => {
+        watchVideoTask(14);
+      },
+      type: 'video',
+      videoLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      secretCode: '1234',
+    },
+    {
       id: 13,
       description: 'Watch Video 1',
       reward: 1000,
