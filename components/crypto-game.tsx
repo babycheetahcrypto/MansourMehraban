@@ -2242,8 +2242,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <ul className="w-full max-w-md space-y-4">
         {tasks
           .sort((a, b) => {
-            if (a.completed && !b.completed) return 1;
+            if (a.claimed && !b.claimed) return 1;
+            if (!a.claimed && b.claimed) return -1;
             if (!a.completed && b.completed) return -1;
+            if (a.completed && !b.completed) return 1;
             return 0;
           })
           .map((task) => (
