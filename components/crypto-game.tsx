@@ -52,6 +52,9 @@ type Task = {
   claimed: boolean;
   icon: React.ReactNode;
   action: () => void;
+  type?: 'video';
+  videoLink?: string;
+  secretCode?: string;
 };
 
 type LeaderboardEntry = {
@@ -780,6 +783,30 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const [tasks, setTasks] = useState<Task[]>([
     {
+      id: 13,
+      description: 'Watch Video 1',
+      reward: 1000,
+      progress: 0,
+      completed: false,
+      claimed: false,
+      icon: (
+        <Image
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20ICON-n3DFRVp9JnkM0qQcysyNK18eaDTZQ9.png"
+          alt="YouTube"
+          width={36}
+          height={36}
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
+        />
+      ),
+      action: () => {
+        watchVideoTask(13);
+      },
+      type: 'video',
+      videoLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      secretCode: 'CRYPTO123',
+    },
+    {
       id: 1,
       description: 'Share on Facebook',
       reward: 500,
@@ -1041,6 +1068,32 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       },
     },
   ]);
+
+  const watchVideoTask = useCallback(
+    (taskId: number) => {
+      const task = tasks.find((t) => t.id === taskId);
+      if (task && task.type === 'video' && task.videoLink) {
+        window.open(task.videoLink, '_blank');
+        showGameAlert('Watch the video and remember the secret code!');
+      }
+    },
+    [tasks]
+  );
+
+  const checkVideoSecretCode = useCallback(
+    (taskId: number, enteredCode: string) => {
+      const task = tasks.find((t) => t.id === taskId);
+      if (task && task.type === 'video' && task.secretCode) {
+        if (enteredCode.toUpperCase() === task.secretCode.toUpperCase()) {
+          updateTaskProgress(taskId);
+          showGameAlert('Correct code! Task completed.');
+        } else {
+          showGameAlert('Incorrect code. Try again!');
+        }
+      }
+    },
+    [tasks]
+  );
 
   const updateTaskProgress = useCallback((taskId: number) => {
     setTasks((prevTasks) =>
@@ -2295,7 +2348,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       <Button
                         className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
                         onClick={() => {
-                          task.action();
+                          if (task.type === 'video') {
+                            task.action();
+                          } else {
+                            task.action();
+                          }
                         }}
                       >
                         <Image
@@ -2309,6 +2366,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   </div>
                 </CardContent>
               </NeonGradientCard>
+              {task.type === 'video' && !task.completed && (
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    placeholder="Enter secret code"
+                    className="w-full p-2 rounded-lg bg-gray-800 text-white"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        checkVideoSecretCode(task.id, e.currentTarget.value);
+                      }
+                    }}
+                  />
+                </div>
+              )}
             </li>
           ))}
       </ul>
