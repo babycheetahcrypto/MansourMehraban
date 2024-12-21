@@ -2942,11 +2942,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          {/* Enhanced loading animation */}
           <div className="relative w-40 h-40 mx-auto mb-8">
-            <div className="absolute inset-0 border-t-4 border-b-4 border-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 border-t-4 border-b-4 border-[#f8dc70] rounded-full animate-spin"></div>
             <div
-              className="absolute inset-0 border-r-4 border-l-4 border-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-full animate-spin"
+              className="absolute inset-0 border-r-4 border-l-4 border-yellow-500 rounded-full animate-spin"
               style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
             ></div>
             <div className="absolute inset-0 flex items-center justify-center">
@@ -2963,9 +2962,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-          {/* Enhanced text with glow effect */}
-          <h2 className="text-3xl font-bold text-white mb-4 animate-pulse">
-            <span className="text-shadow-md">Loading...</span>
+          <h2 className="text-3xl font-bold text-[#f8dc70] mb-4">
+            <span className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-yellow-500">
+              Loading<span className="dot-animation">...</span>
+            </span>
           </h2>
         </div>
       </div>
