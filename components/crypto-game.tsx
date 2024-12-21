@@ -2412,7 +2412,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           showGameAlert(`Congratulations! You've unlocked Level ${index + 1}!`);
                         }
                       }}
-                      className={`w-full text-white text-xs py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 level-button ${
+                      className={`w-full text-white text-xs py-2 rounded-md shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 level-button ${
                         selectedCoinImage === image
                           ? 'bg-gradient-to-r from-purple-500 to-pink-500'
                           : 'bg-gradient-to-r from-blue-500 to-indigo-500'
