@@ -233,45 +233,6 @@ const styles = `
   .filter-grayscale {
     filter: grayscale(100%);
   }
-
-  @keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes spin-fast {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes fade {
-  0%, 100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 3s linear infinite;
-}
-
-.animate-spin-fast {
-  animation: spin-fast 1.5s linear infinite;
-}
-
-.animate-fade {
-  animation: fade 2s ease-in-out infinite;
-}
 `;
 
 // Telegram WebApp type definition
@@ -2979,30 +2940,29 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-blue-900">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
           <div className="relative w-40 h-40 mx-auto mb-8">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-spin-slow"></div>
+            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
             <div
-              className="absolute inset-2 border-t-4 border-b-4 border-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-spin-fast"
-              style={{ animationDirection: 'reverse' }}
+              className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
+              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
             ></div>
-            <div className="absolute inset-4 flex items-center justify-center bg-black rounded-full shadow-lg">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                alt="Game Logo"
-                width={200}
-                height={200}
-                className="animate-pulse"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                  alt="Game Logo"
+                  width={200}
+                  height={200}
+                  className="animate-pulse"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </div>
             </div>
           </div>
-          <h2 className="text-3xl font-extrabold text-white mb-4 animate-pulse">
-            Loading, please wait...
-          </h2>
-          <p className="text-lg text-gray-300 animate-fade">Bringing you the best experience!</p>
+          <h2 className="text-2xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
         </div>
       </div>
     );
