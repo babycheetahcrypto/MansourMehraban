@@ -233,62 +233,40 @@ const styles = `
   .filter-grayscale {
     filter: grayscale(100%);
   }
-
-  @keyframes spin-slow {
-  from {
+  
+  @keyframes spin-glow {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes spin-reverse {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
-
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(0, 0, 255, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 0 60px rgba(0, 0, 255, 0.7);
   }
 }
 
 @keyframes dots {
-  0%, 100% {
+  0% {
     content: "";
   }
-  33% {
+  25% {
     content: ".";
   }
-  67% {
+  50% {
     content: "..";
   }
-  100% {
+  75% {
     content: "...";
+  }
+  100% {
+    content: "";
   }
 }
 
-.animate-spin-slow {
-  animation: spin-slow 4s linear infinite;
-}
-
-.animate-spin-reverse {
-  animation: spin-reverse 2s linear infinite;
-}
-
-.animate-glow {
-  animation: glow 2s ease-in-out infinite;
+.animate-spin-glow {
+  animation: spin-glow 2s linear infinite;
 }
 
 .animate-dots::after {
+  display: inline-block;
   animation: dots 1.5s steps(4, end) infinite;
 }
 `;
@@ -3000,20 +2978,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          {/* 3D Spinning Loader */}
+          {/* Circular Spinning Loader */}
           <div className="relative w-40 h-40 mx-auto mb-8">
-            <div className="absolute inset-0 animate-spin-slow">
-              {/* Outer rotating gradient ring */}
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-sm"></div>
+            {/* Spinning Glow Effect */}
+            <div className="absolute inset-0 animate-spin-glow">
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-lg"></div>
             </div>
-            <div className="absolute inset-0 animate-spin-reverse">
-              {/* Inner ring with reverse animation */}
-              <div className="absolute inset-2 w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full blur-md"></div>
-            </div>
-            {/* Central glowing orb */}
-            <div className="absolute inset-4 flex items-center justify-center bg-black rounded-full shadow-xl animate-glow">
+            {/* Inner Core */}
+            <div className="absolute inset-8 flex items-center justify-center bg-black rounded-full shadow-xl">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgQ7RP1.png"
                 alt="Game Logo"
                 width={200}
                 height={200}
@@ -3023,8 +2997,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
             </div>
           </div>
-          {/* Loading text with a dynamic ellipsis */}
-          <h2 className="text-3xl font-extrabold text-white mb-2">
+          {/* Static Loading Text with Dynamic Dots */}
+          <h2 className="text-3xl font-extrabold text-white">
             Loading<span className="animate-dots">...</span>
           </h2>
         </div>
