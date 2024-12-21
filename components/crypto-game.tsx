@@ -2488,35 +2488,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderSettings = () => {
-    const [settings, setSettings] = useState<SettingsType>({
+    // Initialize default settings if not already defined
+    const [settings, setSettings] = useState({
       vibration: false,
       backgroundMusic: false,
-      backgroundMusicAudio: new Audio(
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Music%203D%20ICON-xQYRmibKIf540A6WMxNsmfjcc3S3J6.png'
-      ), // Replace with your audio path
+      backgroundMusicAudio: new Audio('path/to/your/audio/file.mp3'), // Replace with a valid audio file path
     });
-
-    // Helper function to safely update settings
-    const updateSettings = (key: keyof SettingsType, value: boolean) => {
-      setSettings((prev) => {
-        const newSettings = { ...prev, [key]: value };
-
-        if (key === 'vibration' && value && navigator.vibrate) {
-          navigator.vibrate([100, 30, 100, 30, 100]);
-        } else if (key === 'backgroundMusic') {
-          const audio = newSettings.backgroundMusicAudio;
-          if (value) {
-            audio.play().catch((error) => console.error('Error playing audio:', error));
-            audio.loop = true;
-          } else {
-            audio.pause();
-            audio.currentTime = 0;
-          }
-        }
-
-        return newSettings;
-      });
-    };
 
     return (
       <div className="flex-grow flex items-center justify-center p-6">
@@ -2565,17 +2542,34 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 </div>
                 <Switch
                   id={id}
-                  checked={settings[id as keyof SettingsType] as boolean} // Type-safe access
+                  checked={settings[id] || false} // Safely handle undefined settings
                   onCheckedChange={(checked) => {
-                    updateSettings(id as keyof SettingsType, checked);
+                    setSettings((prev) => {
+                      const newSettings = { ...prev, [id]: checked };
+                      if (id === 'vibration' && checked && navigator.vibrate) {
+                        navigator.vibrate([100, 30, 100, 30, 100]);
+                      } else if (id === 'backgroundMusic') {
+                        const audio = newSettings.backgroundMusicAudio;
+                        if (checked && audio) {
+                          audio
+                            .play()
+                            .catch((error) => console.error('Error playing audio:', error));
+                          audio.loop = true;
+                        } else if (audio) {
+                          audio.pause();
+                          audio.currentTime = 0;
+                        }
+                      }
+                      return newSettings;
+                    });
                   }}
                   className={`${
-                    settings[id as keyof SettingsType] ? 'bg-green-400' : 'bg-gray-600'
+                    settings[id] ? 'bg-green-400' : 'bg-gray-600'
                   } relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300`}
                 >
                   <span
                     className={`${
-                      settings[id as keyof SettingsType] ? 'translate-x-6' : 'translate-x-1'
+                      settings[id] ? 'translate-x-6' : 'translate-x-1'
                     } inline-block h-4 w-4 transform bg-white rounded-full transition-transform duration-300`}
                   />
                 </Switch>
