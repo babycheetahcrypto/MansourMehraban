@@ -561,10 +561,10 @@ const trophies = [
 ];
 
 const formatNumberWithSuffix = (num: number): string => {
-  if (num >= 1e9) return (num / 1e9).toFixed(1) + 'b';
-  if (num >= 1e6) return (num / 1e6).toFixed(1) + 'm';
-  if (num >= 1e3) return (num / 1e3).toFixed(1) + 'k';
-  return num.toString();
+  if (num >= 1e9) return Math.floor(num / 1e9).toFixed(1) + 'b';
+  if (num >= 1e6) return Math.floor(num / 1e6).toFixed(1) + 'm';
+  if (num >= 1e3) return Math.floor(num / 1e3).toFixed(1) + 'k';
+  return Math.floor(num).toString();
 };
 
 const formatNumber = (num: number, useShortFormat: boolean = true): string => {
@@ -681,6 +681,33 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       handleWalletConnect(wallet.address);
     }
   }, [connected, wallet, user.walletAddress, handleWalletConnect]);
+
+  const completeTask = useCallback((taskId: number) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, completed: true, progress: task.maxProgress || 1 } : task
+      )
+    );
+  }, []);
+
+  const claimTaskReward = useCallback(
+    (taskId: number) => {
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => {
+          if (task.id === taskId && task.completed && !task.claimed) {
+            setUser((prevUser) => ({
+              ...prevUser,
+              coins: prevUser.coins + task.reward,
+            }));
+            showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
+            return { ...task, claimed: true };
+          }
+          return task;
+        })
+      );
+    },
+    [setUser]
+  );
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -1364,38 +1391,43 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [user.boosterCredits, multiplierEndTime]);
 
-  const shareToSocialMedia = useCallback((platform: string) => {
-    const message =
-      "🏆 Just claimed some coins in Baby Cheetah! 🚀 Join me in this exciting crypto game and start earning too! 🤑 Complete tasks, invite friends, and rise in the ranks. Let's get those coins together! 💰🐾";
-    if (platform === 'facebook') {
-      window.Telegram.WebApp.openLink(
-        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(message)}`
-      );
-    } else if (platform === 'x') {
-      window.Telegram.WebApp.openLink(
-        `https://x.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.href)}`
-      );
-    } else if (platform === 'instagram') {
-      window.Telegram.WebApp.openLink(`https://www.instagram.com/`);
-      showGameAlert('Copy and paste the message to your Instagram post!');
-    } else if (platform === 'whatsapp') {
-      window.Telegram.WebApp.openLink(
-        `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`
-      );
-    }
-  }, []);
+  const shareToSocialMedia = useCallback(
+    (platform: string) => {
+      const message =
+        "🏆 Just claimed some coins in Baby Cheetah! 🚀 Join me in this exciting crypto game and start earning too! 🤑 Complete tasks, invite friends, and rise in the ranks. Let's get those coins together! 💰🐾";
+      if (platform === 'facebook') {
+        window.Telegram.WebApp.openLink(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(message)}`
+        );
+        completeTask(1); // Complete Facebook share task
+      } else if (platform === 'x') {
+        window.Telegram.WebApp.openLink(
+          `https://x.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.href)}`
+        );
+        completeTask(2); // Complete X share task
+      } else if (platform === 'instagram') {
+        window.Telegram.WebApp.openLink(`https://www.instagram.com/`);
+        showGameAlert('Copy and paste the message to your Instagram post!');
+        completeTask(3); // Complete Instagram share task
+      }
+    },
+    [completeTask]
+  );
 
   const openYouTubeChannel = useCallback(() => {
     window.Telegram.WebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
-  }, []);
+    completeTask(4); // Complete YouTube subscribe task
+  }, [completeTask]);
 
   const watchYouTubeVideos = useCallback(() => {
     window.Telegram.WebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
-  }, []);
+    completeTask(5); // Complete watch YouTube video task
+  }, [completeTask]);
 
   const joinTelegramChannel = useCallback(() => {
     window.Telegram.WebApp.openTelegramLink('https://t.me/babycheetahcrypto');
-  }, []);
+    completeTask(6); // Complete join Telegram channel task
+  }, [completeTask]);
 
   const inviteFriends = useCallback(() => {
     const referralLink = `https://t.me/BabyCheetah_Bot/?startapp=${user.telegramId}`;
@@ -1403,21 +1435,31 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       if (confirmed) {
         navigator.clipboard.writeText(referralLink);
         showGameAlert('Referral link copied to clipboard!');
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === 7
+              ? { ...task, progress: Math.min((task.progress || 0) + 1, task.maxProgress || 10) }
+              : task
+          )
+        );
       }
     });
   }, [user.telegramId]);
 
   const followX = useCallback(() => {
     window.Telegram.WebApp.openLink('https://x.com/BabyCheetahTeam');
-  }, []);
+    completeTask(10); // Complete follow X task
+  }, [completeTask]);
 
   const followInstagram = useCallback(() => {
     window.Telegram.WebApp.openLink('https://www.instagram.com/babycheetahcrypto/');
-  }, []);
+    completeTask(11); // Complete follow Instagram task
+  }, [completeTask]);
 
   const followWhatsApp = useCallback(() => {
     window.Telegram.WebApp.openLink('https://whatsapp.com/channel/0029VasnzUPAO7RJkehdu43p');
-  }, []);
+    completeTask(12); // Complete follow WhatsApp task
+  }, [completeTask]);
 
   const useUserData = () => {
     const fetchUserData = useCallback(async () => {
@@ -1711,7 +1753,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-                <span className="font-bold">{formatNumberWithSuffix(user.coins)}</span>
+                <span className="font-bold">{formatNumberWithSuffix(Math.floor(user.coins))}</span>
               </div>
             </div>
           </div>
@@ -2197,84 +2239,69 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderTasks = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <ul className="w-full max-w-md space-y-4">
-        {tasks
-          .sort((a, b) => {
-            if (a.completed && !b.completed) return 1;
-            if (!a.completed && b.completed) return -1;
-            return 0;
-          })
-          .map((task) => (
-            <li key={task.id}>
-              <NeonGradientCard className="transform transition-all duration-300 hover:shadow-2xl">
-                <CardContent className="p-3 flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    {task.icon}
-                    <div>
-                      <h3 className="text-sm font-medium text-white">{task.description}</h3>
-                      <p className="text-xs text-gray-400">
-                        {task.progress}/{task.maxProgress || 1} complete
-                      </p>
-                    </div>
+        {tasks.map((task) => (
+          <li key={task.id}>
+            <NeonGradientCard className="transform transition-all duration-300 hover:shadow-2xl">
+              <CardContent className="p-3 flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  {task.icon}
+                  <div>
+                    <h3 className="text-sm font-medium text-white">{task.description}</h3>
+                    <p className="text-xs text-gray-400">
+                      {task.progress}/{task.maxProgress || 1} complete
+                    </p>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-white font-bold">
-                      {formatNumber(task.reward, true)} coins
-                    </span>
-                    {task.completed ? (
-                      task.claimed ? (
-                        <Button
-                          className="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-bold"
-                          disabled
-                        >
-                          <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-pKk9apZAaBerKobwTucpDnE2dGQWeU.png"
-                            alt="Claimed"
-                            width={16}
-                            height={16}
-                          />
-                        </Button>
-                      ) : (
-                        <Button
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
-                          onClick={() => {
-                            setUser((prevUser) => ({
-                              ...prevUser,
-                              coins: prevUser.coins + task.reward,
-                            }));
-                            setTasks((prevTasks) =>
-                              prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
-                            );
-                            showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
-                          }}
-                        >
-                          <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-wHxauvG0CLpFFOE24y4qRTTCovqpO2.png"
-                            alt="Claim"
-                            width={16}
-                            height={16}
-                          />
-                        </Button>
-                      )
-                    ) : (
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-white font-bold">
+                    {formatNumber(task.reward, true)} coins
+                  </span>
+                  {task.completed ? (
+                    task.claimed ? (
                       <Button
-                        className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
-                        onClick={() => {
-                          task.action();
-                        }}
+                        className="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-bold"
+                        disabled
                       >
                         <Image
-                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%203D%20ICON-9CWchVJuEVriDDrmjReCcQt7e8SEjo.png"
-                          alt="Start"
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-pKk9apZAaBerKobwTucpDnE2dGQWeU.png"
+                          alt="Claimed"
                           width={16}
                           height={16}
                         />
                       </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </NeonGradientCard>
-            </li>
-          ))}
+                    ) : (
+                      <Button
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                        onClick={() => claimTaskReward(task.id)}
+                      >
+                        <Image
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-wHxauvG0CLpFFOE24y4qRTTCovqpO2.png"
+                          alt="Claim"
+                          width={16}
+                          height={16}
+                        />
+                      </Button>
+                    )
+                  ) : (
+                    <Button
+                      className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                      onClick={() => {
+                        task.action();
+                      }}
+                    >
+                      <Image
+                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%203D%20ICON-9CWchVJuEVriDDrmjReCcQt7e8SEjo.png"
+                        alt="Start"
+                        width={16}
+                        height={16}
+                      />
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </NeonGradientCard>
+          </li>
+        ))}
       </ul>
     </div>
   );
