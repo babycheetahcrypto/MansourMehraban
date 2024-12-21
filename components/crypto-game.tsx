@@ -2652,7 +2652,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Invite Friends
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 opacity-50 transform -skew-y-3"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 opacity-50 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-800/60 to-pink-800/60 rounded-lg backdrop-blur-md">
