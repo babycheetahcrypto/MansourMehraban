@@ -2647,15 +2647,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderInvite = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <NeonGradientCard className="bg-gray-500 text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative">
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Invite Friends
           </CardTitle>
-          <div className="absolute inset-0 bg-gray-500 opacity-30 transform -skew-y-3"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 opacity-50 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div className="mt-6 p-4 bg-gradient-to-r from-green-600/50 to-teal-600/50 rounded-lg backdrop-blur-md">
+          <div className="mt-6 p-4 bg-gradient-to-r from-purple-800/60 to-pink-800/60 rounded-lg backdrop-blur-md">
             <h3 className="text-xl font-bold mb-2 text-center text-white">Your Referral Link</h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
               <span className="text-sm text-white truncate mr-2">
