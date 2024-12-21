@@ -2486,11 +2486,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative p-6 pb-2">
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4 shadow-lg overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-transparent rounded-xl transform rotate-1 scale-105"></div>
-            <div className="absolute top-4 left-8 w-32 h-8 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full shadow-inner"></div>
-            <div className="absolute bottom-4 right-4 w-2/3 h-2/3 border-t-4 border-l-4 border-gray-700 rounded-xl opacity-50"></div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           {[
@@ -2570,11 +2566,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Daily Rewards
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4 shadow-lg overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-transparent rounded-xl transform rotate-1 scale-105"></div>
-            <div className="absolute top-4 left-8 w-32 h-8 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full shadow-inner"></div>
-            <div className="absolute bottom-4 right-4 w-2/3 h-2/3 border-t-4 border-l-4 border-gray-700 rounded-xl opacity-50"></div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-3 gap-2">
@@ -2660,11 +2652,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">
             Invite Friends
           </CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4 shadow-lg overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-transparent rounded-xl transform rotate-1 scale-105"></div>
-            <div className="absolute top-4 left-8 w-32 h-8 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full shadow-inner"></div>
-            <div className="absolute bottom-4 right-4 w-2/3 h-2/3 border-t-4 border-l-4 border-gray-700 rounded-xl opacity-50"></div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="mt-6 p-4 bg-gradient-to-r from-purple-800/60 to-pink-800/60 rounded-lg backdrop-blur-md">
@@ -2755,11 +2743,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           >
             <CardHeader className="relative">
               <CardTitle className="z-10 text-center text-white font-bold">{trophy.name}</CardTitle>
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4 shadow-lg overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-transparent rounded-xl transform rotate-1 scale-105"></div>
-                <div className="absolute top-4 left-8 w-32 h-8 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full shadow-inner"></div>
-                <div className="absolute bottom-4 right-4 w-2/3 h-2/3 border-t-4 border-l-4 border-gray-700 rounded-xl opacity-50"></div>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-70 rounded-2xl border border-gray-700 shadow-lg"></div>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center p-4">
               <div className="w-24 h-24 mb-4 relative flex items-center justify-center">
