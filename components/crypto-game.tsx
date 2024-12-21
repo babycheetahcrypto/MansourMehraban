@@ -233,51 +233,6 @@ const styles = `
   .filter-grayscale {
     filter: grayscale(100%);
   }
-
-  @keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes spin-reverse {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
-
-@keyframes dots {
-  0% {
-    content: "";
-  }
-  33% {
-    content: ".";
-  }
-  67% {
-    content: "..";
-  }
-  100% {
-    content: "...";
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 3s linear infinite;
-}
-
-.animate-spin-reverse {
-  animation: spin-reverse 2s linear infinite;
-}
-
-.animate-dots::after {
-  animation: dots 1.5s steps(3, end) infinite;
-}
 `;
 
 // Telegram WebApp type definition
@@ -2987,34 +2942,27 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          {/* Dynamic Loading Spinner */}
-          <div className="relative w-48 h-48 mx-auto mb-8">
-            {/* Outer glowing ring */}
-            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin-slow"></div>
-            {/* Middle glowing ring */}
+          <div className="relative w-40 h-40 mx-auto mb-8">
+            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
             <div
-              className="absolute inset-2 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin-reverse"
-              style={{ animationDuration: '1.8s' }}
+              className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
+              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
             ></div>
-            {/* Inner glowing core */}
-            <div className="absolute inset-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-xl animate-pulse"></div>
-            {/* Central logo */}
-            <div className="absolute inset-12 flex items-center justify-center bg-black rounded-full">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                alt="Game Logo"
-                width={100}
-                height={100}
-                className="w-20 h-20 animate-bounce"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                  alt="Game Logo"
+                  width={200}
+                  height={200}
+                  className="animate-pulse"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </div>
             </div>
           </div>
-          {/* Static Loading Text with Animated Dots */}
-          <h2 className="text-3xl font-extrabold text-white tracking-wide">
-            Loading<span className="animate-dots">...</span>
-          </h2>
+          <h2 className="text-2xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
         </div>
       </div>
     );
