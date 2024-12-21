@@ -10,25 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import {
-  Users,
-  ShoppingBag,
-  Star,
-  CheckCircle,
-  Gift,
-  Volume2,
-  Coins,
-  ArrowRight,
-  Copy,
-  Vibrate,
-  Music,
-  Eye,
-  Check,
-  X,
-  Award,
-  Zap,
-  Lock,
-} from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
@@ -1407,26 +1389,37 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [user.boosterCredits, multiplierEndTime]);
 
-  const shareToSocialMedia = useCallback((platform: string) => {
-    const message =
-      "🏆 Just claimed some coins in Baby Cheetah! 🚀 Join me in this exciting crypto game and start earning too! 🤑 Complete tasks, invite friends, and rise in the ranks. Let's get those coins together! 💰🐾";
-    if (platform === 'facebook') {
-      window.Telegram.WebApp.openLink(
-        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(message)}`
-      );
-    } else if (platform === 'x') {
-      window.Telegram.WebApp.openLink(
-        `https://x.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.href)}`
-      );
-    } else if (platform === 'instagram') {
-      window.Telegram.WebApp.openLink(`https://www.instagram.com/`);
-      showGameAlert('Copy and paste the message to your Instagram post!');
-    } else if (platform === 'whatsapp') {
-      window.Telegram.WebApp.openLink(
-        `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`
-      );
-    }
-  }, []);
+  const shareToSocialMedia = useCallback(
+    (platform: string) => {
+      const message =
+        "🏆 Just claimed some coins in Baby Cheetah! 🚀 Join me in this exciting crypto game and start earning too! 🤑 Complete tasks, invite friends, and rise in the ranks. Let's get those coins together! 💰🐾";
+      const shareLink = `https://t.me/BabyCheetah_Bot/?startapp=${user.telegramId}`;
+
+      if (platform === 'facebook') {
+        window.Telegram.WebApp.openLink(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareLink)}&quote=${encodeURIComponent(message)}`
+        );
+      } else if (platform === 'x') {
+        window.Telegram.WebApp.openLink(
+          `https://x.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(shareLink)}`
+        );
+      } else if (platform === 'instagram') {
+        window.Telegram.WebApp.openLink(`https://www.instagram.com/`);
+        showGameAlert('Copy and paste the message to your Instagram post!');
+      }
+
+      // Copy link to clipboard
+      navigator.clipboard
+        .writeText(shareLink)
+        .then(() => {
+          showGameAlert('Share link copied to clipboard!');
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err);
+        });
+    },
+    [user.telegramId]
+  );
 
   const openYouTubeChannel = useCallback(() => {
     window.Telegram.WebApp.openLink('https://www.youtube.com/channel/UC-pGiivNfXNXS3DQLblwisg');
