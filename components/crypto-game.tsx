@@ -2113,7 +2113,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     Profit: {formatNumber(item.baseProfit * (1 + 0.1 * (item.level - 1)), true)}/h
                   </p>
                   <Button
-                    className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center"
+                    className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-md text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
                     onClick={() => {
                       buyItem(item);
                     }}
@@ -2171,7 +2171,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     {item.id === 1 ? item.boosterCredits : item.tap}
                   </p>
                   <Button
-                    className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 rounded-full text-xs font-bold group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-300 flex items-center justify-center"
+                    className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-md text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
                     onClick={() => {
                       buyPremiumItem(item);
                     }}
