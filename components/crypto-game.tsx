@@ -1075,16 +1075,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       if (task && task.type === 'video' && task.videoLink) {
         window.open(task.videoLink, '_blank');
         showGameAlert('Watch the video and remember the secret code!');
-
-        // Show popup for entering secret code
-        showGameConfirm('Enter the secret code:', (confirmed) => {
-          if (confirmed) {
-            const enteredCode = prompt('Enter the secret code:');
-            if (enteredCode) {
-              checkVideoSecretCode(taskId, enteredCode);
-            }
-          }
-        });
       }
     },
     [tasks]
