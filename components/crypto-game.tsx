@@ -1907,7 +1907,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <input
                     type="text"
                     placeholder="Enter secret code"
-                    className="flex-grow p-2 rounded-lg bg-gray-800 text-white"
+                    className="flex-grow p-2 rounded-lg bg-gray-800 text-yellow-400 placeholder-gray-500"
                     value={secretCode}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSecretCode(e.target.value)
@@ -1915,7 +1915,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   />
                   <Button
                     onClick={() => checkVideoSecretCode(task.id, secretCode)}
-                    className="bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-2xl"
+                    className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-4 py-2 rounded-2xl flex items-center space-x-2"
                   >
                     <Image
                       src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Check%203D%20ICON-jo9nXVXpJxnFiisgH3VVuMgqw5E5VC.png"
@@ -1923,6 +1923,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       width={24}
                       height={24}
                     />
+                    <span>Check</span>
                   </Button>
                 </div>
               )}
