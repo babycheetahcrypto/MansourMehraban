@@ -1192,72 +1192,77 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (currentPage === 'settings') return; // Add this line to prevent updates on the settings page
+      if (currentPage === 'settings') return;
 
-      if (energy >= 1) {
-        const clickValue = clickPower * multiplier;
-        const newCoins = user.coins + clickValue;
-        const newExp = user.exp + 1;
-        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
+      setUser((prevUser) => {
+        if (energy >= 1) {
+          const clickValue = clickPower * multiplier;
+          const newCoins = prevUser.coins + clickValue;
+          const newExp = prevUser.exp + 1;
+          const newLevel = newExp >= 100 ? prevUser.level + 1 : prevUser.level;
 
-        const updatedUser = {
-          ...user,
-          coins: newCoins,
-          exp: newExp % 100,
-          level: newLevel,
-        };
+          const updatedUser = {
+            ...prevUser,
+            coins: newCoins,
+            exp: newExp % 100,
+            level: newLevel,
+          };
 
-        setUser(updatedUser);
-        saveUserData(updatedUser);
+          // Move saveUserData outside of this function to avoid potential race conditions
+          setTimeout(() => saveUserData(updatedUser), 0);
 
-        setEnergy((prev) => Math.max(prev - 1, 0));
-
-        const rect = event.currentTarget.getBoundingClientRect();
-        let clientX, clientY;
-        if ('touches' in event) {
-          clientX = event.touches[0].clientX;
-          clientY = event.touches[0].clientY;
-        } else {
-          clientX = event.clientX;
-          clientY = event.clientY;
+          return updatedUser;
         }
-        const x = clientX;
-        const y = clientY;
-        const clickEffect = {
-          id: Date.now(),
-          x,
-          y,
-          value: clickValue,
-          color: 'white',
-          text: formatNumber(clickValue, true),
-        };
-        setClickEffects((prev) => [...prev, clickEffect]);
-        setTimeout(() => {
-          setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-        }, 700);
+        return prevUser;
+      });
 
-        // Trigger haptic feedback
-        if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
-          window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-        }
+      setEnergy((prev) => Math.max(prev - 1, 0));
 
-        // Send tap data to Telegram Mini App
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
-          );
-        }
-
-        // Add pulse effect for touch events
-        if ('touches' in event) {
-          const button = event.currentTarget;
-          button.classList.add('pulse');
-          setTimeout(() => button.classList.remove('pulse'), 300);
-        }
-        setLastActiveTime(Date.now()); // Update last active time
+      const rect = event.currentTarget.getBoundingClientRect();
+      let clientX, clientY;
+      if ('touches' in event) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+      } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
       }
+      const x = clientX;
+      const y = clientY;
+      const clickEffect = {
+        id: Date.now(),
+        x,
+        y,
+        value: clickPower * multiplier,
+        color: 'white',
+        text: formatNumber(clickPower * multiplier, true),
+      };
+      setClickEffects((prev) => [...prev, clickEffect]);
+      setTimeout(() => {
+        setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
+      }, 700);
+
+      // Trigger haptic feedback
+      if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+      }
+
+      // Send tap data to Telegram Mini App
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.sendData(
+          JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
+        );
+      }
+
+      // Add pulse effect for touch events
+      if ('touches' in event) {
+        const button = event.currentTarget;
+        button.classList.add('pulse');
+        setTimeout(() => button.classList.remove('pulse'), 300);
+      }
+      setLastActiveTime(Date.now());
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage] // Add currentPage to the dependency array
+    [clickPower, multiplier, energy, settings.vibration, currentPage]
   );
 
   const buyItem = useCallback(
