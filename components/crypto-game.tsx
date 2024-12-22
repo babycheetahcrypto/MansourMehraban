@@ -47,7 +47,6 @@ type Task = {
   description: string;
   reward: number;
   progress: number;
-  maxProgress?: number;
   completed: boolean;
   claimed: boolean;
   icon: React.ReactNode;
@@ -56,6 +55,7 @@ type Task = {
   videoLink?: string;
   secretCode?: string;
   videoWatched?: boolean;
+  maxProgress?: number;
 };
 
 type LeaderboardEntry = {
@@ -1072,6 +1072,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   ]);
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<{ [key: number]: boolean }>({});
   const [secretCode, setSecretCode] = useState<string>('');
+  const [currentTaskTab, setCurrentTaskTab] = useState<'active' | 'completed'>('active');
 
   const watchVideoTask = useCallback(
     (taskId: number) => {
@@ -1778,16 +1779,43 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [user]);
 
-  const renderTasks = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <ul className="w-full max-w-md space-y-4">
-        {tasks
-          .sort((a, b) => {
-            if (a.completed && !b.completed) return 1;
-            if (!a.completed && b.completed) return -1;
-            return 0;
-          })
-          .map((task) => (
+  const renderTaskTabs = () => (
+    <div className="flex justify-center mb-4">
+      <div className="bg-gray-800 rounded-full p-1">
+        <Button
+          className={`px-4 py-2 rounded-full text-sm font-medium ${
+            currentTaskTab === 'active'
+              ? 'bg-blue-600 text-white'
+              : 'bg-transparent text-gray-300 hover:text-white'
+          }`}
+          onClick={() => setCurrentTaskTab('active')}
+        >
+          Active Tasks
+        </Button>
+        <Button
+          className={`px-4 py-2 rounded-full text-sm font-medium ${
+            currentTaskTab === 'completed'
+              ? 'bg-blue-600 text-white'
+              : 'bg-transparent text-gray-300 hover:text-white'
+          }`}
+          onClick={() => setCurrentTaskTab('completed')}
+        >
+          Completed Tasks
+        </Button>
+      </div>
+    </div>
+  );
+
+  const renderTasks = () => {
+    const filteredTasks = tasks.filter((task) =>
+      currentTaskTab === 'active' ? !task.completed : task.completed
+    );
+
+    return (
+      <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+        {renderTaskTabs()}
+        <ul className="w-full max-w-md space-y-4">
+          {filteredTasks.map((task) => (
             <li key={task.id}>
               <NeonGradientCard className="transform transition-all duration-300 hover:shadow-2xl">
                 <CardContent className="p-3 flex items-center justify-between">
@@ -1895,9 +1923,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               )}
             </li>
           ))}
-      </ul>
-    </div>
-  );
+        </ul>
+      </div>
+    );
+  };
 
   const renderHeader = () => (
     <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
