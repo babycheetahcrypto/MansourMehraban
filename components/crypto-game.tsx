@@ -451,16 +451,16 @@ const levelRequirements = [
 ];
 
 const levelImages = [
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-zvEupxSYmiG3d6uvTTqyRofP7LirFr.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Mr%20Cheetah-EIrU0m585VzcYQNNqIY2G9gT6XvPCY.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sparrow%20Cheetah-CZ58OLVJc3fTjY9mvhctjCNQAXmOid.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Viking%20Cheetah-TqYGnwW4l2saCU1o08TJy86burO8jD.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Viking%20Cheetah-iiFlpJVRAxJHKHV1C9pO7M5pkLCdn0.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Samurai%20Cheetah-oE9slMQwRtFkED0CBCBrFORyGTjbsj.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Alien%20Cheetah-gekxahjmUSh9DgbK8dfeXPVAaYu9Jr.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Robot%20Cheetah-ZQDisjjWuvNoOkx8wAd7J1SR7Zyw3T.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Space%20Cheetah-vLKxS5HHFCBo00goi6JcYVcy8p9Gkg.png',
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Pop%20Cheetah-lGLaeaUe3rnhR1qmaYahCHyVhA0pht.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Super%20Cheetah-xWVCW1Ty2TCnklNy3Z1WDhcuRmylb0.png',
+  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Super%20Cheetah-492fmR9x2zlRg1v3xVMP6hVu9bkWM4.png',
 ];
 
 const trophies = [
