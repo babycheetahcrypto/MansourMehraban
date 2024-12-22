@@ -614,11 +614,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<{
+    vibration: boolean;
+    backgroundMusic: boolean;
+  }>({
     vibration: true,
     backgroundMusic: false,
   });
-
+  
   const [backgroundMusicAudio, setBackgroundMusicAudio] = useState<HTMLAudioElement | null>(null);
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
@@ -1794,13 +1797,26 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderSettings = () => (
     <div className="flex-grow flex items-center justify-center p-6">
-      <Card className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative p-6 pb-2">
           <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          {settingsConfig.map(({ id, icon, label, description }) => (
+          {[
+            {
+              id: 'vibration',
+              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-2n53zEIwaFDSD3Bl9GWULb8slR8d6c.png',
+              label: 'Vibration',
+              description: 'Enable haptic feedback when tapping',
+            },
+            {
+              id: 'backgroundMusic',
+              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Music%203D%20ICON-xQYRmibKIf540A6WMxNsmfjcc3S3J6.png',
+              label: 'Background Music',
+              description: 'Play game music in the background',
+            },
+          ].map(({ id, icon, label, description }) => (
             <div
               key={id}
               className="flex items-center justify-between py-4 px-4 rounded-xl bg-gradient-to-r from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/30"
@@ -1825,13 +1841,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Switch
                 id={id}
                 checked={settings[id as keyof typeof settings]}
-                onCheckedChange={(checked) => handleSettingChange(id, checked)}
+                onCheckedChange={(checked) => {
+                  setSettings((prev) => ({ ...prev, [id]: checked }));
+                  if (id === 'backgroundMusic') {
+                    if (checked && backgroundMusicAudio) {
+                      backgroundMusicAudio.play().catch((error) => console.error('Error playing audio:', error));
+                      backgroundMusicAudio.loop = true;
+                    } else if (backgroundMusicAudio) {
+                      backgroundMusicAudio.pause();
+                      backgroundMusicAudio.currentTime = 0;
+                    }
+                  }
+                }}
                 className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
               />
             </div>
           ))}
         </CardContent>
-      </Card>
+      </NeonGradientCard>
     </div>
   );
 
@@ -3060,28 +3087,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     audio.preload = 'auto';
     audio.load();
     setBackgroundMusicAudio(audio);
-
+  
     return () => {
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    };
-  }, []);
-
-  const handleSettingChange = useCallback((id: string, checked: boolean) => {
-    setSettings(prev => ({ ...prev, [id]: checked }));
-    if (id === 'backgroundMusic') {
-      if (checked && backgroundMusicAudio) {
-        backgroundMusicAudio.play().catch(error => console.error('Error playing audio:', error));
-        backgroundMusicAudio.loop = true;
-      } else if (backgroundMusicAudio) {
+      if (backgroundMusicAudio) {
         backgroundMusicAudio.pause();
         backgroundMusicAudio.currentTime = 0;
       }
-    }
-  }, [backgroundMusicAudio]);
-
+    };
+  }, []);
 
   const fetchData = async () => {
     setIsLoading(true);
