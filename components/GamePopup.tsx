@@ -14,18 +14,6 @@ const gradientAnimation = `
     background-position: 0% 50%;
   }
 }
-
-@keyframes glow {
-  0% {
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 16px rgba(255, 255, 255, 0.4);
-  }
-  50% {
-    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
-  }
-  100% {
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 16px rgba(255, 255, 255, 0.4);
-  }
-}
 `;
 
 interface GamePopupProps {
@@ -40,7 +28,7 @@ const GamePopup: React.FC<GamePopupProps> = ({ message, onConfirm, onCancel }) =
       <style>{gradientAnimation}</style>
       <div className="fixed inset-0 flex items-center justify-center z-[70] bg-black bg-opacity-30 backdrop-blur-lg">
         <div className="bg-gradient-to-br from-gray-900/80 to-black/80 text-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 border border-gray-600/50 backdrop-blur-xl">
-          <p className="text-xl mb-6 text-center bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent animate-glow">
+          <p className="text-xl mb-6 text-center bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
             {message}
           </p>
           <div className="flex justify-end space-x-4">
