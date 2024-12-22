@@ -1213,19 +1213,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           // Then save to backend
           await saveUserData(updatedUser);
 
-          // Handle click effects with animation
+          // Handle click effects
           const rect = event.currentTarget.getBoundingClientRect();
           const x = 'touches' in event ? event.touches[0].clientX : event.clientX;
           const y = 'touches' in event ? event.touches[0].clientY : event.clientY;
 
-          // Add floating text effect
           const clickEffect = {
             id: Date.now(),
             x,
             y,
             value: clickValue,
             color: 'white',
-            text: `+${formatNumber(clickValue, true)}`,
+            text: formatNumber(clickValue, true),
           };
 
           setClickEffects((prev) => [...prev, clickEffect]);
@@ -1248,16 +1247,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             }));
           }
 
-          // Add pulse animation to the button
-          const button = event.currentTarget;
-          button.classList.add('coin-button', 'pulse');
-          setTimeout(() => button.classList.remove('pulse'), 300);
-
-          // Add scale animation
-          button.style.transform = 'scale(0.95)';
-          setTimeout(() => {
-            button.style.transform = 'scale(1)';
-          }, 100);
+          // Handle touch animation
+          if ('touches' in event) {
+            const button = event.currentTarget;
+            button.classList.add('pulse');
+            setTimeout(() => button.classList.remove('pulse'), 300);
+          }
 
           setLastActiveTime(Date.now());
         } catch (error) {
