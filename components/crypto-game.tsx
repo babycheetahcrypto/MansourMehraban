@@ -1785,7 +1785,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Button
           className={`px-4 py-2 rounded-2xl text-sm font-medium ${
             currentTaskTab === 'active'
-              ? 'bg-indigo-600 text-white'
+              ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
               : 'bg-transparent text-gray-300 hover:text-white'
           }`}
           onClick={() => setCurrentTaskTab('active')}
@@ -1795,7 +1795,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <Button
           className={`px-4 py-2 rounded-2xl text-sm font-medium ${
             currentTaskTab === 'completed'
-              ? 'bg-indigo-600 text-white'
+              ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
               : 'bg-transparent text-gray-300 hover:text-white'
           }`}
           onClick={() => setCurrentTaskTab('completed')}
@@ -1907,7 +1907,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <input
                     type="text"
                     placeholder="Enter secret code"
-                    className="flex-grow p-2 rounded-lg bg-gray-800 text-yellow-400 placeholder-gray-500"
+                    className="flex-grow p-2 rounded-lg bg-gray-800 text-yellow-400 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 shadow-[0_0_10px_rgba(245,158,11,0.5)]"
                     value={secretCode}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSecretCode(e.target.value)
@@ -1915,7 +1915,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   />
                   <Button
                     onClick={() => checkVideoSecretCode(task.id, secretCode)}
-                    className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-4 py-2 rounded-2xl flex items-center space-x-2"
+                    className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-4 py-2 rounded-2xl flex items-center space-x-2 transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
                   >
                     <Image
                       src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Check%203D%20ICON-jo9nXVXpJxnFiisgH3VVuMgqw5E5VC.png"
