@@ -1188,33 +1188,31 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level]);
 
   const clickCoin = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    async (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
-  
+
       if (currentPage === 'settings') return;
-  
+
       if (energy >= 1) {
         try {
           const clickValue = clickPower * multiplier;
           
-          // Update local state
-          setUser((prevUser) => ({
-            ...prevUser,
-            coins: prevUser.coins + clickValue,
-            exp: (prevUser.exp + 1) % 100,
-            level: prevUser.exp + 1 >= 100 ? prevUser.level + 1 : prevUser.level
-          }));
-          setEnergy((prev) => Math.max(prev - 1, 0));
-  
-          // Save to backend
-          saveUserData({
+          // First update local state
+          const updatedUser = {
             ...user,
             coins: user.coins + clickValue,
             exp: (user.exp + 1) % 100,
             level: user.exp + 1 >= 100 ? user.level + 1 : user.level
-          });
-  
-          // Handle click effects
+          };
+
+          // Update state first
+          setUser(updatedUser);
+          setEnergy((prev) => Math.max(prev - 1, 0));
+
+          // Then save to backend
+          await saveUserData(updatedUser);
+
+          // Handle click effects with animation
           const rect = event.currentTarget.getBoundingClientRect();
           let clientX, clientY;
           if ('touches' in event) {
@@ -1232,39 +1230,58 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             y,
             value: clickValue,
             color: 'white',
-            text: formatNumber(clickValue, true),
+            text: `+${formatNumber(clickValue, true)}`,
           };
+
           setClickEffects((prev) => [...prev, clickEffect]);
+          
+          // Remove click effect after animation
           setTimeout(() => {
             setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
           }, 700);
-  
-          // Trigger haptic feedback
+
+          // Handle haptic feedback
           if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
             window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
           }
-  
-          // Send tap data to Telegram Mini App
-          if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.sendData(
-              JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
-            );
+
+          // Handle Telegram data
+          if (window.Telegram?.WebApp) {
+            window.Telegram.WebApp.sendData(JSON.stringify({ 
+              action: 'tap', 
+              amount: clickValue 
+            }));
           }
-  
-          // Add pulse effect for touch events
-          if ('touches' in event) {
-            const button = event.currentTarget;
-            button.classList.add('pulse');
-            setTimeout(() => button.classList.remove('pulse'), 300);
-          }
+
+          // Add pulse animation to the button
+          const button = event.currentTarget;
+          button.classList.add('coin-button', 'pulse');
+          setTimeout(() => button.classList.remove('pulse'), 300);
+
+          // Add scale animation
+          button.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            button.style.transform = 'scale(1)';
+          }, 100);
+
           setLastActiveTime(Date.now());
         } catch (error) {
           console.error('Error updating game state:', error);
         }
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage]
+    [
+      clickPower,
+      multiplier,
+      energy,
+      settings.vibration,
+      currentPage,
+      user,
+      saveUserData
+    ]
   );
+
+
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
