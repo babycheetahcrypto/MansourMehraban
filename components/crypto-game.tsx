@@ -1966,30 +1966,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
         </div>
-        <div className="flex justify-center mb-4">
-          <div className="bg-gray-800 rounded-2xl p-1">
-            <Button
-              className={`px-4 py-2 rounded-2xl text-sm font-medium ${
-                currentShopTab === 'regular'
-                  ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
-                  : 'bg-transparent text-gray-300 hover:text-white'
-              }`}
-              onClick={() => setCurrentShopTab('regular')}
-            >
-              Regular Shop
-            </Button>
-            <Button
-              className={`px-4 py-2 rounded-2xl text-sm font-medium ${
-                currentShopTab === 'premium'
-                  ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
-                  : 'bg-transparent text-gray-300 hover:text-white'
-              }`}
-              onClick={() => setCurrentShopTab('premium')}
-            >
-              Premium Shop
-            </Button>
-          </div>
-        </div>
 
         {currentShopTab === 'regular' && (
           <>
