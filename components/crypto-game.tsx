@@ -1191,33 +1191,42 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const clickCoin = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
-
+  
       if (currentPage === 'settings') return;
-
+  
       if (energy >= 1) {
         try {
           const clickValue = clickPower * multiplier;
           
-          // First update local state
-          const updatedUser = {
+          // Update local state
+          setUser((prevUser) => ({
+            ...prevUser,
+            coins: prevUser.coins + clickValue,
+            exp: (prevUser.exp + 1) % 100,
+            level: prevUser.exp + 1 >= 100 ? prevUser.level + 1 : prevUser.level
+          }));
+          setEnergy((prev) => Math.max(prev - 1, 0));
+  
+          // Save to backend
+          saveUserData({
             ...user,
             coins: user.coins + clickValue,
             exp: (user.exp + 1) % 100,
             level: user.exp + 1 >= 100 ? user.level + 1 : user.level
-          };
-
-          // Update state first
-          setUser(updatedUser);
-          setEnergy((prev) => Math.max(prev - 1, 0));
-
-          // Then save to backend
-          await saveUserData(updatedUser);
-
+          });
+  
           // Handle click effects
           const rect = event.currentTarget.getBoundingClientRect();
-          const x = 'touches' in event ? event.touches[0].clientX : event.clientX;
-          const y = 'touches' in event ? event.touches[0].clientY : event.clientY;
-
+          let clientX, clientY;
+          if ('touches' in event) {
+            clientX = event.touches[0].clientX;
+            clientY = event.touches[0].clientY;
+          } else {
+            clientX = event.clientX;
+            clientY = event.clientY;
+          }
+          const x = clientX;
+          const y = clientY;
           const clickEffect = {
             id: Date.now(),
             x,
@@ -1226,50 +1235,37 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             color: 'white',
             text: formatNumber(clickValue, true),
           };
-
           setClickEffects((prev) => [...prev, clickEffect]);
-          
-          // Remove click effect after animation
           setTimeout(() => {
             setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
           }, 700);
-
-          // Handle haptic feedback
+  
+          // Trigger haptic feedback
           if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
             window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
           }
-
-          // Handle Telegram data
-          if (window.Telegram?.WebApp) {
-            window.Telegram.WebApp.sendData(JSON.stringify({ 
-              action: 'tap', 
-              amount: clickValue 
-            }));
+  
+          // Send tap data to Telegram Mini App
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.sendData(
+              JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
+            );
           }
-
-          // Handle touch animation
+  
+          // Add pulse effect for touch events
           if ('touches' in event) {
             const button = event.currentTarget;
             button.classList.add('pulse');
             setTimeout(() => button.classList.remove('pulse'), 300);
           }
-
           setLastActiveTime(Date.now());
         } catch (error) {
           console.error('Error updating game state:', error);
         }
       }
     },
-    [
-      clickPower,
-      multiplier,
-      energy,
-      settings.vibration,
-      currentPage,
-      user,
-      saveUserData
-    ]
-  );
+    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage]
+  );  
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
