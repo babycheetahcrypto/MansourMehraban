@@ -1940,8 +1940,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <StarryBackground />
       </div>
       <div className="w-full max-w-7xl mx-auto">
-        <div className="sticky top-0 z-10 py-4 mb-8">
-          <div className="flex justify-center mb-4">
+        <div className="sticky top-0 z-0 py-4 mb-4">
+          <div className="flex justify-center">
             <div className="bg-gray-800 rounded-2xl p-1">
               <Button
                 className={`px-4 py-2 rounded-2xl text-sm font-medium ${
@@ -1968,128 +1968,128 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         {currentShopTab === 'regular' && (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {shopItems.map((item, index) => (
-                <NeonGradientCard
-                  key={item.id}
-                  className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
+            {' '}
+            {/* Reduced margin */}
+            {shopItems.map((item, index) => (
+              <NeonGradientCard
+                key={item.id}
+                className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
+              >
+                <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
+                  {item.name}
+                </h3>
+                <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-[15px] group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className={`relative z-10 rounded-[15px] ${
+                      !unlockedLevels.includes(index + 1)
+                        ? 'group-hover:opacity-80 transition-opacity duration-300'
+                        : ''
+                    }`}
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
+                <p className="text-xs text-white mb-1 flex items-center">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
+                    alt="Level"
+                    width={14}
+                    height={14}
+                    className="inline mr-1"
+                  />
+                  Level: {item.level}
+                </p>
+                <p className="text-xs text-white mb-2 flex items-center">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Profit%203D%20ICON-LxqAu2YW7MazlwuZhOdC4RpqnczhU3.png"
+                    alt="Profit"
+                    width={14}
+                    height={14}
+                    className="inline mr-1"
+                  />
+                  Profit: {formatNumber(item.baseProfit * (1 + 0.1 * (item.level - 1)), true)}/h
+                </p>
+                <Button
+                  className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
+                  onClick={() => {
+                    buyItem(item);
+                  }}
                 >
-                  <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
-                    {item.name}
-                  </h3>
-                  <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-[15px] group-hover:scale-105 transition-transform duration-300">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className={`relative z-10 rounded-[15px] ${
-                        !unlockedLevels.includes(index + 1)
-                          ? 'group-hover:opacity-80 transition-opacity duration-300'
-                          : ''
-                      }`}
-                      draggable="false"
-                      onContextMenu={(e) => e.preventDefault()}
-                    />
-                  </div>
-                  <p className="text-xs text-white mb-1 flex items-center">
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
-                      alt="Level"
-                      width={14}
-                      height={14}
-                      className="inline mr-1"
-                    />
-                    Level: {item.level}
-                  </p>
-                  <p className="text-xs text-white mb-2 flex items-center">
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Profit%203D%20ICON-LxqAu2YW7MazlwuZhOdC4RpqnczhU3.png"
-                      alt="Profit"
-                      width={14}
-                      height={14}
-                      className="inline mr-1"
-                    />
-                    Profit: {formatNumber(item.baseProfit * (1 + 0.1 * (item.level - 1)), true)}/h
-                  </p>
-                  <Button
-                    className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
-                    onClick={() => {
-                      buyItem(item);
-                    }}
-                  >
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
-                      alt="Crypto Coin"
-                      width={16}
-                      height={16}
-                      className="mr-1"
-                    />
-                    {formatNumber(item.basePrice * Math.pow(1.5, item.level - 1), true)}
-                  </Button>
-                </NeonGradientCard>
-              ))}
-            </div>
-          </>
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                    alt="Crypto Coin"
+                    width={16}
+                    height={16}
+                    className="mr-1"
+                  />
+                  {formatNumber(item.basePrice * Math.pow(1.5, item.level - 1), true)}
+                </Button>
+              </NeonGradientCard>
+            ))}
+          </div>
         )}
 
         {currentShopTab === 'premium' && (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {premiumShopItems.map((item) => (
-                <NeonGradientCard
-                  key={item.id}
-                  className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
+            {' '}
+            {/* Reduced margin */}
+            {premiumShopItems.map((item) => (
+              <NeonGradientCard
+                key={item.id}
+                className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
+              >
+                <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
+                  {item.name}
+                </h3>
+                <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-[15px] group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-[15px] group-hover:opacity-80 transition-opacity duration-300"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
+                <p className="text-xs text-white mb-1 flex items-center">
+                  <Image
+                    src={
+                      item.id === 1
+                        ? 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Boost%203D%20ICON-4b947I4OluagHe9yjdro9LLmy0s41A.png'
+                        : 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tap%203D%20ICON-c6aHeRV1j8uaDFXdyjcROOXZmpi7Ei.png'
+                    }
+                    alt={item.id === 1 ? 'Boost' : 'Tap'}
+                    width={14}
+                    height={14}
+                    className="inline mr-1"
+                  />
+                  {item.id === 1 ? 'Boost:' : 'Tap:'}{' '}
+                  {item.id === 1 ? item.boosterCredits : item.tap}
+                </p>
+                <Button
+                  className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
+                  onClick={() => {
+                    buyPremiumItem(item);
+                  }}
                 >
-                  <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
-                    {item.name}
-                  </h3>
-                  <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-[15px] group-hover:scale-105 transition-transform duration-300">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-[15px] group-hover:opacity-80 transition-opacity duration-300"
-                      draggable="false"
-                      onContextMenu={(e) => e.preventDefault()}
-                    />
-                  </div>
-                  <p className="text-xs text-white mb-1 flex items-center">
-                    <Image
-                      src={
-                        item.id === 1
-                          ? 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Boost%203D%20ICON-4b947I4OluagHe9yjdro9LLmy0s41A.png'
-                          : 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tap%203D%20ICON-c6aHeRV1j8uaDFXdyjcROOXZmpi7Ei.png'
-                      }
-                      alt={item.id === 1 ? 'Boost' : 'Tap'}
-                      width={14}
-                      height={14}
-                      className="inline mr-1"
-                    />
-                    {item.id === 1 ? 'Boost:' : 'Tap:'}{' '}
-                    {item.id === 1 ? item.boosterCredits : item.tap}
-                  </p>
-                  <Button
-                    className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
-                    onClick={() => {
-                      buyPremiumItem(item);
-                    }}
-                  >
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
-                      alt="Crypto Coin"
-                      width={16}
-                      height={16}
-                      className="mr-1"
-                    />
-                    {formatNumber(item.basePrice, true)}
-                  </Button>
-                </NeonGradientCard>
-              ))}
-            </div>
-          </>
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                    alt="Crypto Coin"
+                    width={16}
+                    height={16}
+                    className="mr-1"
+                  />
+                  {formatNumber(item.basePrice, true)}
+                </Button>
+              </NeonGradientCard>
+            ))}
+          </div>
         )}
       </div>
     </div>
