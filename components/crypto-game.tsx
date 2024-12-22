@@ -55,6 +55,7 @@ type Task = {
   type?: 'video';
   videoLink?: string;
   secretCode?: string;
+  videoWatched?: boolean;
 };
 
 type LeaderboardEntry = {
@@ -805,6 +806,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       type: 'video',
       videoLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       secretCode: 'CRYPTO123',
+      videoWatched: false,
     },
     {
       id: 1,
@@ -1068,12 +1070,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       },
     },
   ]);
+  const [showSecretCodeInput, setShowSecretCodeInput] = useState<{ [key: number]: boolean }>({});
+  const [secretCode, setSecretCode] = useState<string>('');
 
   const watchVideoTask = useCallback(
     (taskId: number) => {
       const task = tasks.find((t) => t.id === taskId);
       if (task && task.type === 'video' && task.videoLink) {
         window.open(task.videoLink, '_blank');
+        setTasks((prevTasks) =>
+          prevTasks.map((t) => (t.id === taskId ? { ...t, videoWatched: true } : t))
+        );
         showGameAlert('Watch the video and remember the secret code!');
       }
     },
@@ -1087,6 +1094,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         if (enteredCode.toUpperCase() === task.secretCode.toUpperCase()) {
           updateTaskProgress(taskId);
           showGameAlert('Correct code! Task completed.');
+          setShowSecretCodeInput((prev) => ({ ...prev, [taskId]: false }));
         } else {
           showGameAlert('Incorrect code. Try again!');
         }
@@ -1770,6 +1778,127 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [user]);
 
+  const renderTasks = () => (
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <ul className="w-full max-w-md space-y-4">
+        {tasks
+          .sort((a, b) => {
+            if (a.completed && !b.completed) return 1;
+            if (!a.completed && b.completed) return -1;
+            return 0;
+          })
+          .map((task) => (
+            <li key={task.id}>
+              <NeonGradientCard className="transform transition-all duration-300 hover:shadow-2xl">
+                <CardContent className="p-3 flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {task.icon}
+                    <div>
+                      <h3 className="text-sm font-medium text-white">{task.description}</h3>
+                      <p className="text-xs text-gray-400">
+                        {task.progress}/{task.maxProgress || 1} complete
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-white font-bold">
+                      {formatNumber(task.reward, true)} coins
+                    </span>
+                    {task.completed ? (
+                      task.claimed ? (
+                        <Button
+                          className="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-bold"
+                          disabled
+                        >
+                          <Image
+                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-pKk9apZAaBerKobwTucpDnE2dGQWeU.png"
+                            alt="Claimed"
+                            width={16}
+                            height={16}
+                          />
+                        </Button>
+                      ) : (
+                        <Button
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                          onClick={() => {
+                            setUser((prevUser) => ({
+                              ...prevUser,
+                              coins: prevUser.coins + task.reward,
+                            }));
+                            setTasks((prevTasks) =>
+                              prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
+                            );
+                            showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
+                          }}
+                        >
+                          <Image
+                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-wHxauvG0CLpFFOE24y4qRTTCovqpO2.png"
+                            alt="Claim"
+                            width={16}
+                            height={16}
+                          />
+                        </Button>
+                      )
+                    ) : (
+                      <>
+                        {task.type === 'video' && task.videoWatched ? (
+                          <Button
+                            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                            onClick={() =>
+                              setShowSecretCodeInput((prev) => ({ ...prev, [task.id]: true }))
+                            }
+                          >
+                            Enter Code
+                          </Button>
+                        ) : (
+                          <Button
+                            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                            onClick={() => {
+                              if (task.type === 'video') {
+                                task.action();
+                              } else {
+                                task.action();
+                              }
+                            }}
+                          >
+                            <Image
+                              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%203D%20ICON-9CWchVJuEVriDDrmjReCcQt7e8SEjo.png"
+                              alt="Start"
+                              width={16}
+                              height={16}
+                            />
+                          </Button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </CardContent>
+              </NeonGradientCard>
+              {task.type === 'video' && showSecretCodeInput[task.id] && (
+                <div className="mt-2 flex items-center space-x-2">
+                  <input
+                    type="text"
+                    placeholder="Enter secret code"
+                    className="flex-grow p-2 rounded-lg bg-gray-800 text-white"
+                    value={secretCode}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setSecretCode(e.target.value)
+                    }
+                  />
+                  <Button
+                    onClick={() => checkVideoSecretCode(task.id, secretCode)}
+                    className="bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-lg"
+                  >
+                    Check
+                  </Button>
+                </div>
+              )}
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+
   const renderHeader = () => (
     <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
       <Card className="bg-transparent border-0 overflow-hidden">
@@ -2280,109 +2409,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </>
         )}
       </div>
-    </div>
-  );
-
-  const renderTasks = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <ul className="w-full max-w-md space-y-4">
-        {tasks
-          .sort((a, b) => {
-            if (a.completed && !b.completed) return 1;
-            if (!a.completed && b.completed) return -1;
-            return 0;
-          })
-          .map((task) => (
-            <li key={task.id}>
-              <NeonGradientCard className="transform transition-all duration-300 hover:shadow-2xl">
-                <CardContent className="p-3 flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    {task.icon}
-                    <div>
-                      <h3 className="text-sm font-medium text-white">{task.description}</h3>
-                      <p className="text-xs text-gray-400">
-                        {task.progress}/{task.maxProgress || 1} complete
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-white font-bold">
-                      {formatNumber(task.reward, true)} coins
-                    </span>
-                    {task.completed ? (
-                      task.claimed ? (
-                        <Button
-                          className="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-bold"
-                          disabled
-                        >
-                          <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-pKk9apZAaBerKobwTucpDnE2dGQWeU.png"
-                            alt="Claimed"
-                            width={16}
-                            height={16}
-                          />
-                        </Button>
-                      ) : (
-                        <Button
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
-                          onClick={() => {
-                            setUser((prevUser) => ({
-                              ...prevUser,
-                              coins: prevUser.coins + task.reward,
-                            }));
-                            setTasks((prevTasks) =>
-                              prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
-                            );
-                            showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
-                          }}
-                        >
-                          <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-wHxauvG0CLpFFOE24y4qRTTCovqpO2.png"
-                            alt="Claim"
-                            width={16}
-                            height={16}
-                          />
-                        </Button>
-                      )
-                    ) : (
-                      <Button
-                        className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
-                        onClick={() => {
-                          if (task.type === 'video') {
-                            task.action();
-                          } else {
-                            task.action();
-                          }
-                        }}
-                      >
-                        <Image
-                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%203D%20ICON-9CWchVJuEVriDDrmjReCcQt7e8SEjo.png"
-                          alt="Start"
-                          width={16}
-                          height={16}
-                        />
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </NeonGradientCard>
-              {task.type === 'video' && !task.completed && (
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    placeholder="Enter secret code"
-                    className="w-full p-2 rounded-lg bg-gray-800 text-white"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        checkVideoSecretCode(task.id, e.currentTarget.value);
-                      }
-                    }}
-                  />
-                </div>
-              )}
-            </li>
-          ))}
-      </ul>
     </div>
   );
 
