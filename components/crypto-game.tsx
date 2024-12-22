@@ -1781,11 +1781,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderTaskTabs = () => (
     <div className="flex justify-center mb-4">
-      <div className="bg-gray-800 rounded-full p-1">
+      <div className="bg-gray-800 rounded-2xl p-1">
         <Button
-          className={`px-4 py-2 rounded-full text-sm font-medium ${
+          className={`px-4 py-2 rounded-2xl text-sm font-medium ${
             currentTaskTab === 'active'
-              ? 'bg-blue-600 text-white'
+              ? 'bg-indigo-600 text-white'
               : 'bg-transparent text-gray-300 hover:text-white'
           }`}
           onClick={() => setCurrentTaskTab('active')}
@@ -1793,9 +1793,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           Active Tasks
         </Button>
         <Button
-          className={`px-4 py-2 rounded-full text-sm font-medium ${
+          className={`px-4 py-2 rounded-2xl text-sm font-medium ${
             currentTaskTab === 'completed'
-              ? 'bg-blue-600 text-white'
+              ? 'bg-indigo-600 text-white'
               : 'bg-transparent text-gray-300 hover:text-white'
           }`}
           onClick={() => setCurrentTaskTab('completed')}
@@ -1835,19 +1835,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     {task.completed ? (
                       task.claimed ? (
                         <Button
-                          className="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-bold"
+                          className="bg-green-600 text-white px-2 py-1 rounded-2xl text-xs font-bold"
                           disabled
                         >
                           <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-pKk9apZAaBerKobwTucpDnE2dGQWeU.png"
+                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-XJu5nYjYqoWR3QqoWqpLfVdsvBOaTd.png"
                             alt="Claimed"
-                            width={16}
-                            height={16}
+                            width={24}
+                            height={24}
                           />
                         </Button>
                       ) : (
                         <Button
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
                           onClick={() => {
                             setUser((prevUser) => ({
                               ...prevUser,
@@ -1860,10 +1860,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           }}
                         >
                           <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-wHxauvG0CLpFFOE24y4qRTTCovqpO2.png"
+                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-ROnhac8K00pigpGOe0Ehx9loVrNhDs.png"
                             alt="Claim"
-                            width={16}
-                            height={16}
+                            width={24}
+                            height={24}
                           />
                         </Button>
                       )
@@ -1871,7 +1871,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       <>
                         {task.type === 'video' && task.videoWatched ? (
                           <Button
-                            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                            className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-indigo-700 hover:to-blue-700"
                             onClick={() =>
                               setShowSecretCodeInput((prev) => ({ ...prev, [task.id]: true }))
                             }
@@ -1880,7 +1880,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           </Button>
                         ) : (
                           <Button
-                            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-2 py-1 rounded-full text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-cyan-700"
+                            className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-indigo-700 hover:to-blue-700"
                             onClick={() => {
                               if (task.type === 'video') {
                                 task.action();
@@ -1890,10 +1890,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                             }}
                           >
                             <Image
-                              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%203D%20ICON-9CWchVJuEVriDDrmjReCcQt7e8SEjo.png"
+                              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Start%203D%20ICON-dkmy1LaOYty8aIYK6x9wDhcfSSSlgK.png"
                               alt="Start"
-                              width={16}
-                              height={16}
+                              width={24}
+                              height={24}
                             />
                           </Button>
                         )}
@@ -1915,9 +1915,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   />
                   <Button
                     onClick={() => checkVideoSecretCode(task.id, secretCode)}
-                    className="bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-lg"
+                    className="bg-gradient-to-r from-green-500 to-green-700 text-white px-4 py-2 rounded-2xl"
                   >
-                    Check
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Check%203D%20ICON-jo9nXVXpJxnFiisgH3VVuMgqw5E5VC.png"
+                      alt="Check"
+                      width={24}
+                      height={24}
+                    />
                   </Button>
                 </div>
               )}
