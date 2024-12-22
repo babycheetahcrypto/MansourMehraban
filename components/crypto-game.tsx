@@ -1189,75 +1189,91 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level]);
 
   const clickCoin = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    async (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (currentPage === 'settings') return; // Add this line to prevent updates on the settings page
+      if (currentPage === 'settings') return;
 
       if (energy >= 1) {
-        const clickValue = clickPower * multiplier;
-        const newCoins = user.coins + clickValue;
-        const newExp = user.exp + 1;
-        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
+        try {
+          const clickValue = clickPower * multiplier;
+          
+          // First update local state
+          const updatedUser = {
+            ...user,
+            coins: user.coins + clickValue,
+            exp: (user.exp + 1) % 100,
+            level: user.exp + 1 >= 100 ? user.level + 1 : user.level
+          };
 
-        const updatedUser = {
-          ...user,
-          coins: newCoins,
-          exp: newExp % 100,
-          level: newLevel,
-        };
+          // Update state first
+          setUser(updatedUser);
+          setEnergy((prev) => Math.max(prev - 1, 0));
 
-        setUser(updatedUser);
-        saveUserData(updatedUser);
+          // Then save to backend
+          await saveUserData(updatedUser);
 
-        setEnergy((prev) => Math.max(prev - 1, 0));
+          // Handle click effects with animation
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = 'touches' in event ? event.touches[0].clientX : event.clientX;
+          const y = 'touches' in event ? event.touches[0].clientY : event.clientY;
 
-        const rect = event.currentTarget.getBoundingClientRect();
-        let clientX, clientY;
-        if ('touches' in event) {
-          clientX = event.touches[0].clientX;
-          clientY = event.touches[0].clientY;
-        } else {
-          clientX = event.clientX;
-          clientY = event.clientY;
-        }
-        const x = clientX;
-        const y = clientY;
-        const clickEffect = {
-          id: Date.now(),
-          x,
-          y,
-          value: clickValue,
-          color: 'white',
-          text: formatNumber(clickValue, true),
-        };
-        setClickEffects((prev) => [...prev, clickEffect]);
-        setTimeout(() => {
-          setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-        }, 700);
+          // Add floating text effect
+          const clickEffect = {
+            id: Date.now(),
+            x,
+            y,
+            value: clickValue,
+            color: 'white',
+            text: `+${formatNumber(clickValue, true)}`,
+          };
 
-        // Trigger haptic feedback
-        if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
-          window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-        }
+          setClickEffects((prev) => [...prev, clickEffect]);
+          
+          // Remove click effect after animation
+          setTimeout(() => {
+            setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
+          }, 700);
 
-        // Send tap data to Telegram Mini App
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
-          );
-        }
+          // Handle haptic feedback
+          if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+          }
 
-        // Add pulse effect for touch events
-        if ('touches' in event) {
+          // Handle Telegram data
+          if (window.Telegram?.WebApp) {
+            window.Telegram.WebApp.sendData(JSON.stringify({ 
+              action: 'tap', 
+              amount: clickValue 
+            }));
+          }
+
+          // Add pulse animation to the button
           const button = event.currentTarget;
-          button.classList.add('pulse');
+          button.classList.add('coin-button', 'pulse');
           setTimeout(() => button.classList.remove('pulse'), 300);
+
+          // Add scale animation
+          button.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            button.style.transform = 'scale(1)';
+          }, 100);
+
+          setLastActiveTime(Date.now());
+        } catch (error) {
+          console.error('Error updating game state:', error);
         }
-        setLastActiveTime(Date.now()); // Update last active time
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage] // Add currentPage to the dependency array
+    [
+      clickPower,
+      multiplier,
+      energy,
+      settings.vibration,
+      currentPage,
+      user,
+      saveUserData
+    ]
   );
 
   const buyItem = useCallback(
