@@ -1630,8 +1630,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       console.error('Error fetching user data:', error);
     } finally {
       setIsLoading(false);
-    }
-  }, []);
+      }
+    }, []);
 
   useEffect(() => {
     fetchUserData();
@@ -1779,322 +1779,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [user]);
 
-  const renderTaskTabs = () => (
-    <div className="flex justify-center mb-4">
-      <div className="bg-gray-800 rounded-2xl p-1">
-        <Button
-          className={`px-4 py-2 rounded-2xl text-sm font-medium ${
-            currentTaskTab === 'active'
-              ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
-              : 'bg-transparent text-gray-300 hover:text-white'
-          }`}
-          onClick={() => setCurrentTaskTab('active')}
-        >
-          Active Tasks
-        </Button>
-        <Button
-          className={`px-4 py-2 rounded-2xl text-sm font-medium ${
-            currentTaskTab === 'completed'
-              ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
-              : 'bg-transparent text-gray-300 hover:text-white'
-          }`}
-          onClick={() => setCurrentTaskTab('completed')}
-        >
-          Completed Tasks
-        </Button>
-      </div>
-    </div>
-  );
-
-  const renderTasks = () => {
-    const filteredTasks = tasks.filter((task) =>
-      currentTaskTab === 'active' ? !task.completed : task.completed
-    );
-
-    return (
-      <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-        {renderTaskTabs()}
-        <ul className="w-full max-w-md space-y-4">
-          {filteredTasks.map((task) => (
-            <li key={task.id}>
-              <NeonGradientCard className="transform transition-all duration-300 hover:shadow-2xl">
-                <CardContent className="p-3 flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    {task.icon}
-                    <div>
-                      <h3 className="text-sm font-medium text-white">{task.description}</h3>
-                      <p className="text-xs text-gray-400">
-                        {task.progress}/{task.maxProgress || 1} complete
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-white font-bold">
-                      {formatNumber(task.reward, true)} coins
-                    </span>
-                    {task.completed ? (
-                      task.claimed ? (
-                        <Button
-                          className="bg-green-600 text-white px-2 py-1 rounded-2xl text-xs font-bold"
-                          disabled
-                        >
-                          <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-9tlmXylhu9C9Of2sasMDMpvs3Tds2n.png"
-                            alt="Claimed"
-                            width={24}
-                            height={24}
-                          />
-                        </Button>
-                      ) : (
-                        <Button
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
-                          onClick={() => {
-                            setUser((prevUser) => ({
-                              ...prevUser,
-                              coins: prevUser.coins + task.reward,
-                            }));
-                            setTasks((prevTasks) =>
-                              prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
-                            );
-                            showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
-                          }}
-                        >
-                          <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-ROnhac8K00pigpGOe0Ehx9loVrNhDs.png"
-                            alt="Claim"
-                            width={24}
-                            height={24}
-                          />
-                        </Button>
-                      )
-                    ) : (
-                      <>
-                        {task.type === 'video' && task.videoWatched ? (
-                          <Button
-                            className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-indigo-700 hover:to-blue-700"
-                            onClick={() =>
-                              setShowSecretCodeInput((prev) => ({ ...prev, [task.id]: true }))
-                            }
-                          >
-                            Enter Code
-                          </Button>
-                        ) : (
-                          <Button
-                            className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-indigo-700 hover:to-blue-700"
-                            onClick={() => {
-                              if (task.type === 'video') {
-                                task.action();
-                              } else {
-                                task.action();
-                              }
-                            }}
-                          >
-                            <Image
-                              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Start%203D%20ICON-dkmy1LaOYty8aIYK6x9wDhcfSSSlgK.png"
-                              alt="Start"
-                              width={24}
-                              height={24}
-                            />
-                          </Button>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </CardContent>
-              </NeonGradientCard>
-              {task.type === 'video' && showSecretCodeInput[task.id] && (
-                <div className="mt-2 flex items-center space-x-2">
-                  <input
-                    type="text"
-                    placeholder="Enter secret code"
-                    className="flex-grow p-2 rounded-lg bg-gray-800 text-yellow-400 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 shadow-[0_0_10px_rgba(245,158,11,0.5)]"
-                    value={secretCode}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setSecretCode(e.target.value)
-                    }
-                  />
-                  <Button
-                    onClick={() => checkVideoSecretCode(task.id, secretCode)}
-                    className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-4 py-2 rounded-2xl flex items-center space-x-2 transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                  >
-                    <Image
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Check%203D%20ICON-jo9nXVXpJxnFiisgH3VVuMgqw5E5VC.png"
-                      alt="Check"
-                      width={24}
-                      height={24}
-                    />
-                    <span>Check</span>
-                  </Button>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
-
-  const renderShop = () => (
-    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <StarryBackground />
-      </div>
-      <div className="w-full max-w-7xl mx-auto">
-        <div className="sticky top-0 z-0 py-4 mb-4">
-          <div className="flex justify-center">
-            <div className="bg-gray-800 rounded-2xl p-1">
-              <Button
-                className={`px-4 py-2 rounded-2xl text-sm font-medium ${
-                  currentShopTab === 'regular'
-                    ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
-                    : 'bg-transparent text-gray-300 hover:text-white'
-                }`}
-                onClick={() => setCurrentShopTab('regular')}
-              >
-                Regular Shop
-              </Button>
-              <Button
-                className={`px-4 py-2 rounded-2xl text-sm font-medium ${
-                  currentShopTab === 'premium'
-                    ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
-                    : 'bg-transparent text-gray-300 hover:text-white'
-                }`}
-                onClick={() => setCurrentShopTab('premium')}
-              >
-                Premium Shop
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {currentShopTab === 'regular' && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
-            {' '}
-            {/* Reduced margin */}
-            {shopItems.map((item, index) => (
-              <NeonGradientCard
-                key={item.id}
-                className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
-              >
-                <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
-                  {item.name}
-                </h3>
-                <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-[15px] group-hover:scale-105 transition-transform duration-300">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className={`relative z-10 rounded-[15px] ${
-                      !unlockedLevels.includes(index + 1)
-                        ? 'group-hover:opacity-80 transition-opacity duration-300'
-                        : ''
-                    }`}
-                    draggable="false"
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
-                </div>
-                <p className="text-xs text-white mb-1 flex items-center">
-                  <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
-                    alt="Level"
-                    width={14}
-                    height={14}
-                    className="inline mr-1"
-                  />
-                  Level: {item.level}
-                </p>
-                <p className="text-xs text-white mb-2 flex items-center">
-                  <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Profit%203D%20ICON-LxqAu2YW7MazlwuZhOdC4RpqnczhU3.png"
-                    alt="Profit"
-                    width={14}
-                    height={14}
-                    className="inline mr-1"
-                  />
-                  Profit: {formatNumber(item.baseProfit * (1 + 0.1 * (item.level - 1)), true)}/h
-                </p>
-                <Button
-                  className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
-                  onClick={() => {
-                    buyItem(item);
-                  }}
-                >
-                  <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
-                    alt="Crypto Coin"
-                    width={16}
-                    height={16}
-                    className="mr-1"
-                  />
-                  {formatNumber(item.basePrice * Math.pow(1.5, item.level - 1), true)}
-                </Button>
-              </NeonGradientCard>
-            ))}
-          </div>
-        )}
-
-        {currentShopTab === 'premium' && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
-            {' '}
-            {/* Reduced margin */}
-            {premiumShopItems.map((item) => (
-              <NeonGradientCard
-                key={item.id}
-                className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
-              >
-                <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
-                  {item.name}
-                </h3>
-                <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-[15px] group-hover:scale-105 transition-transform duration-300">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-[15px] group-hover:opacity-80 transition-opacity duration-300"
-                    draggable="false"
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
-                </div>
-                <p className="text-xs text-white mb-1 flex items-center">
-                  <Image
-                    src={
-                      item.id === 1
-                        ? 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Boost%203D%20ICON-4b947I4OluagHe9yjdro9LLmy0s41A.png'
-                        : 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tap%203D%20ICON-c6aHeRV1j8uaDFXdyjcROOXZmpi7Ei.png'
-                    }
-                    alt={item.id === 1 ? 'Boost' : 'Tap'}
-                    width={14}
-                    height={14}
-                    className="inline mr-1"
-                  />
-                  {item.id === 1 ? 'Boost:' : 'Tap:'}{' '}
-                  {item.id === 1 ? item.boosterCredits : item.tap}
-                </p>
-                <Button
-                  className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
-                  onClick={() => {
-                    buyPremiumItem(item);
-                  }}
-                >
-                  <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
-                    alt="Crypto Coin"
-                    width={16}
-                    height={16}
-                    className="mr-1"
-                  />
-                  {formatNumber(item.basePrice, true)}
-                </Button>
-              </NeonGradientCard>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
   const renderHeader = () => (
     <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
       <Card className="bg-transparent border-0 overflow-hidden">
@@ -2113,7 +1797,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div>
               <h2 className="font-black text-base text-white">
-                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 12) + '...'}
+                {user.username ? user.username : `${user.firstName || ''} ${user.lastName || ''}`.trim()}
+                {user.username && user.username.length > 12 ? '...' : ''}
               </h2>
               <div className="text-sm text-white font-bold flex items-center">
                 <Image
@@ -2443,6 +2128,322 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </Button>
           </div>
         </div>
+      </div>
+    </div>
+  );
+
+  const renderTaskTabs = () => (
+    <div className="flex justify-center mb-4">
+      <div className="bg-gray-800 rounded-2xl p-1">
+        <Button
+          className={`px-4 py-2 rounded-2xl text-sm font-medium ${
+            currentTaskTab === 'active'
+              ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
+              : 'bg-transparent text-gray-300 hover:text-white'
+          }`}
+          onClick={() => setCurrentTaskTab('active')}
+        >
+          Active Tasks
+        </Button>
+        <Button
+          className={`px-4 py-2 rounded-2xl text-sm font-medium ${
+            currentTaskTab === 'completed'
+              ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
+              : 'bg-transparent text-gray-300 hover:text-white'
+          }`}
+          onClick={() => setCurrentTaskTab('completed')}
+        >
+          Completed Tasks
+        </Button>
+      </div>
+    </div>
+  );
+
+  const renderTasks = () => {
+    const filteredTasks = tasks.filter((task) =>
+      currentTaskTab === 'active' ? !task.completed : task.completed
+    );
+
+    return (
+      <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+        {renderTaskTabs()}
+        <ul className="w-full max-w-md space-y-4">
+          {filteredTasks.map((task) => (
+            <li key={task.id}>
+              <NeonGradientCard className="transform transition-all duration-300 hover:shadow-2xl">
+                <CardContent className="p-3 flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {task.icon}
+                    <div>
+                      <h3 className="text-sm font-medium text-white">{task.description}</h3>
+                      <p className="text-xs text-gray-400">
+                        {task.progress}/{task.maxProgress || 1} complete
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-white font-bold">
+                      {formatNumber(task.reward, true)} coins
+                    </span>
+                    {task.completed ? (
+                      task.claimed ? (
+                        <Button
+                          className="bg-green-600 text-white px-2 py-1 rounded-2xl text-xs font-bold"
+                          disabled
+                        >
+                          <Image
+                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claimed%203D%20ICON-9tlmXylhu9C9Of2sasMDMpvs3Tds2n.png"
+                            alt="Claimed"
+                            width={24}
+                            height={24}
+                          />
+                        </Button>
+                      ) : (
+                        <Button
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700"
+                          onClick={() => {
+                            setUser((prevUser) => ({
+                              ...prevUser,
+                              coins: prevUser.coins + task.reward,
+                            }));
+                            setTasks((prevTasks) =>
+                              prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
+                            );
+                            showGameAlert(`Claimed ${formatNumber(task.reward, true)} coins!`);
+                          }}
+                        >
+                          <Image
+                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Claim%203D%20ICON-ROnhac8K00pigpGOe0Ehx9loVrNhDs.png"
+                            alt="Claim"
+                            width={24}
+                            height={24}
+                          />
+                        </Button>
+                      )
+                    ) : (
+                      <>
+                        {task.type === 'video' && task.videoWatched ? (
+                          <Button
+                            className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-indigo-700 hover:to-blue-700"
+                            onClick={() =>
+                              setShowSecretCodeInput((prev) => ({ ...prev, [task.id]: true }))
+                            }
+                          >
+                            Enter Code
+                          </Button>
+                        ) : (
+                          <Button
+                            className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-2 py-1 rounded-2xl text-xs font-bold transform transition-all duration-300 hover:scale-105 hover:from-indigo-700 hover:to-blue-700"
+                            onClick={() => {
+                              if (task.type === 'video') {
+                                task.action();
+                              } else {
+                                task.action();
+                              }
+                            }}
+                          >
+                            <Image
+                              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Start%203D%20ICON-dkmy1LaOYty8aIYK6x9wDhcfSSSlgK.png"
+                              alt="Start"
+                              width={24}
+                              height={24}
+                            />
+                          </Button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </CardContent>
+              </NeonGradientCard>
+              {task.type === 'video' && showSecretCodeInput[task.id] && (
+                <div className="mt-2 flex items-center space-x-2">
+                  <input
+                    type="text"
+                    placeholder="Enter secret code"
+                    className="flex-grow p-2 rounded-lg bg-gray-800 text-yellow-400 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 shadow-[0_0_10px_rgba(245,158,11,0.5)]"
+                    value={secretCode}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setSecretCode(e.target.value)
+                    }
+                  />
+                  <Button
+                    onClick={() => checkVideoSecretCode(task.id, secretCode)}
+                    className="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-4 py-2 rounded-2xl flex items-center space-x-2 transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  >
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Check%203D%20ICON-jo9nXVXpJxnFiisgH3VVuMgqw5E5VC.png"
+                      alt="Check"
+                      width={24}
+                      height={24}
+                    />
+                    <span>Check</span>
+                  </Button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  const renderShop = () => (
+    <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <StarryBackground />
+      </div>
+      <div className="w-full max-w-7xl mx-auto">
+        <div className="sticky top-0 z-0 py-4 mb-4">
+          <div className="flex justify-center">
+            <div className="bg-gray-800 rounded-2xl p-1">
+              <Button
+                className={`px-4 py-2 rounded-2xl text-sm font-medium ${
+                  currentShopTab === 'regular'
+                    ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
+                    : 'bg-transparent text-gray-300 hover:text-white'
+                }`}
+                onClick={() => setCurrentShopTab('regular')}
+              >
+                Regular Shop
+              </Button>
+              <Button
+                className={`px-4 py-2 rounded-2xl text-sm font-medium ${
+                  currentShopTab === 'premium'
+                    ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white'
+                    : 'bg-transparent text-gray-300 hover:text-white'
+                }`}
+                onClick={() => setCurrentShopTab('premium')}
+              >
+                Premium Shop
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {currentShopTab === 'regular' && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
+            {' '}
+            {/* Reduced margin */}
+            {shopItems.map((item, index) => (
+              <NeonGradientCard
+                key={item.id}
+                className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
+              >
+                <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
+                  {item.name}
+                </h3>
+                <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-[15px] group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className={`relative z-10 rounded-[15px] ${
+                      !unlockedLevels.includes(index + 1)
+                        ? 'group-hover:opacity-80 transition-opacity duration-300'
+                        : ''
+                    }`}
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
+                <p className="text-xs text-white mb-1 flex items-center">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
+                    alt="Level"
+                    width={14}
+                    height={14}
+                    className="inline mr-1"
+                  />
+                  Level: {item.level}
+                </p>
+                <p className="text-xs text-white mb-2 flex items-center">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Profit%203D%20ICON-LxqAu2YW7MazlwuZhOdC4RpqnczhU3.png"
+                    alt="Profit"
+                    width={14}
+                    height={14}
+                    className="inline mr-1"
+                  />
+                  Profit: {formatNumber(item.baseProfit * (1 + 0.1 * (item.level - 1)), true)}/h
+                </p>
+                <Button
+                  className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
+                  onClick={() => {
+                    buyItem(item);
+                  }}
+                >
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                    alt="Crypto Coin"
+                    width={16}
+                    height={16}
+                    className="mr-1"
+                  />
+                  {formatNumber(item.basePrice * Math.pow(1.5, item.level - 1), true)}
+                </Button>
+              </NeonGradientCard>
+            ))}
+          </div>
+        )}
+
+        {currentShopTab === 'premium' && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
+            {' '}
+            {/* Reduced margin */}
+            {premiumShopItems.map((item) => (
+              <NeonGradientCard
+                key={item.id}
+                className="transform transition-all duration-300 hover:shadow-2xl group rounded-xl overflow-hidden"
+              >
+                <h3 className="text-sm font-bold text-center mb-2 group-hover:text-primary transition-colors duration-300 text-white">
+                  {item.name}
+                </h3>
+                <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-[15px] group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-[15px] group-hover:opacity-80 transition-opacity duration-300"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
+                <p className="text-xs text-white mb-1 flex items-center">
+                  <Image
+                    src={
+                      item.id === 1
+                        ? 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Boost%203D%20ICON-4b947I4OluagHe9yjdro9LLmy0s41A.png'
+                        : 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tap%203D%20ICON-c6aHeRV1j8uaDFXdyjcROOXZmpi7Ei.png'
+                    }
+                    alt={item.id === 1 ? 'Boost' : 'Tap'}
+                    width={14}
+                    height={14}
+                    className="inline mr-1"
+                  />
+                  {item.id === 1 ? 'Boost:' : 'Tap:'}{' '}
+                  {item.id === 1 ? item.boosterCredits : item.tap}
+                </p>
+                <Button
+                  className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white py-2 rounded-2xl text-sm font-bold hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center"
+                  onClick={() => {
+                    buyPremiumItem(item);
+                  }}
+                >
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                    alt="Crypto Coin"
+                    width={16}
+                    height={16}
+                    className="mr-1"
+                  />
+                  {formatNumber(item.basePrice, true)}
+                </Button>
+              </NeonGradientCard>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
