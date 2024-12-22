@@ -617,11 +617,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [settings, setSettings] = useState<{
     vibration: boolean;
     backgroundMusic: boolean;
-  }>({
-    vibration: true,
-    backgroundMusic: false,
-  });
-  
+  }>(() => ({
+    vibration: user.settings?.vibration ?? true,
+    backgroundMusic: user.settings?.backgroundMusic ?? false,
+  }));
   const [backgroundMusicAudio, setBackgroundMusicAudio] = useState<HTMLAudioElement | null>(null);
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
@@ -1189,7 +1188,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level]);
 
   const clickCoin = useCallback(
-    async (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
   
       if (currentPage === 'settings') return;
@@ -1790,21 +1789,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
 
   useEffect(() => {
-    if (!user.settings) {
-      setUser((prevUser) => ({
-        ...prevUser,
-        settings: {
-          vibration: true,
-          backgroundMusic: false,
-        },
-      }));
-    } else {
+    if (user.settings) {
       setSettings(user.settings);
     }
-  }, [user]);
+  }, [user.settings]);
 
 
-  const renderSettings = () => (
+  const renderSettings = useCallback(() => (
     <div className="flex-grow flex items-center justify-center p-6">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <CardHeader className="relative p-6 pb-2">
@@ -1851,7 +1842,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 id={id}
                 checked={settings[id as keyof typeof settings]}
                 onCheckedChange={(checked) => {
-                  setSettings((prev) => ({ ...prev, [id]: checked }));
+                  const newSettings = { ...settings, [id]: checked };
+                  setSettings(newSettings);
+                  saveUserData({ ...user, settings: newSettings });
                   if (id === 'backgroundMusic') {
                     if (checked && backgroundMusicAudio) {
                       backgroundMusicAudio.play().catch((error) => console.error('Error playing audio:', error));
@@ -1869,7 +1862,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </CardContent>
       </NeonGradientCard>
     </div>
-  );
+  ), [settings, user, saveUserData, backgroundMusicAudio]);
 
 
   const renderHeader = () => (
