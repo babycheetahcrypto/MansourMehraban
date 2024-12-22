@@ -617,12 +617,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [settings, setSettings] = useState<{
     vibration: boolean;
     backgroundMusic: boolean;
-    backgroundMusicAudio: HTMLAudioElement | null;
   }>({
     vibration: true,
     backgroundMusic: false,
-    backgroundMusicAudio: null,
   });
+  
+  const [backgroundMusicAudio, setBackgroundMusicAudio] = useState<HTMLAudioElement | null>(null);
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
@@ -1630,8 +1630,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       console.error('Error fetching user data:', error);
     } finally {
       setIsLoading(false);
-    }
-  }, []);
+      }
+    }, []);
 
   useEffect(() => {
     fetchUserData();
@@ -1778,6 +1778,75 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       }));
     }
   }, [user]);
+
+
+  const renderSettings = () => (
+    <div className="flex-grow flex items-center justify-center p-6">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+        <CardHeader className="relative p-6 pb-2">
+          <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          {[
+            {
+              id: 'vibration',
+              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-2n53zEIwaFDSD3Bl9GWULb8slR8d6c.png',
+              label: 'Vibration',
+              description: 'Enable haptic feedback when tapping',
+            },
+            {
+              id: 'backgroundMusic',
+              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Music%203D%20ICON-xQYRmibKIf540A6WMxNsmfjcc3S3J6.png',
+              label: 'Background Music',
+              description: 'Play game music in the background',
+            },
+          ].map(({ id, icon, label, description }) => (
+            <div
+              key={id}
+              className="flex items-center justify-between py-4 px-4 rounded-xl bg-gradient-to-r from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/30"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-gray-700/50 to-gray-800/50">
+                  <Image
+                    src={icon}
+                    alt={label}
+                    width={32}
+                    height={32}
+                    className="text-primary"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-medium text-white">{label}</h3>
+                  <p className="text-xs text-gray-400">{description}</p>
+                </div>
+              </div>
+              <Switch
+                id={id}
+                checked={settings[id as keyof typeof settings]}
+                onCheckedChange={(checked) => {
+                  setSettings((prev) => ({ ...prev, [id]: checked }));
+                  if (id === 'backgroundMusic') {
+                    if (checked && backgroundMusicAudio) {
+                      backgroundMusicAudio.play().catch((error) => console.error('Error playing audio:', error));
+                      backgroundMusicAudio.loop = true;
+                    } else if (backgroundMusicAudio) {
+                      backgroundMusicAudio.pause();
+                      backgroundMusicAudio.currentTime = 0;
+                    }
+                  }
+                }}
+                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
+              />
+            </div>
+          ))}
+        </CardContent>
+      </NeonGradientCard>
+    </div>
+  );
+
 
   const renderHeader = () => (
     <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
@@ -2658,84 +2727,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     </Popup>
   );
 
-  const renderSettings = () => (
-    <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
-        <CardHeader className="relative p-6 pb-2">
-          <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          {[
-            {
-              id: 'vibration',
-              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-2n53zEIwaFDSD3Bl9GWULb8slR8d6c.png',
-              label: 'Vibration',
-              description: 'Enable haptic feedback when tapping',
-            },
-            {
-              id: 'backgroundMusic',
-              icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Music%203D%20ICON-xQYRmibKIf540A6WMxNsmfjcc3S3J6.png',
-              label: 'Background Music',
-              description: 'Play game music in the background',
-            },
-          ].map(({ id, icon, label, description }) => (
-            <div
-              key={id}
-              className="flex items-center justify-between py-4 px-4 rounded-xl bg-gradient-to-r from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/30"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-gray-700/50 to-gray-800/50">
-                  <Image
-                    src={icon}
-                    alt={label}
-                    width={32}
-                    height={32}
-                    className="text-primary"
-                    draggable="false"
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-sm font-medium text-white">{label}</h3>
-                  <p className="text-xs text-gray-400">{description}</p>
-                </div>
-              </div>
-              <Switch
-                id={id}
-                checked={
-                  typeof settings[id as keyof typeof settings] === 'boolean'
-                    ? (settings[id as keyof typeof settings] as boolean)
-                    : false
-                }
-                onCheckedChange={(checked) => {
-                  setSettings((prev) => {
-                    const newSettings = { ...prev, [id]: checked };
-                    if (id === 'vibration' && checked && navigator.vibrate) {
-                      navigator.vibrate([100, 30, 100, 30, 100]);
-                    } else if (id === 'backgroundMusic') {
-                      if (checked && newSettings.backgroundMusicAudio) {
-                        newSettings.backgroundMusicAudio
-                          .play()
-                          .catch((error: Error) => console.error('Error playing audio:', error));
-                        newSettings.backgroundMusicAudio.loop = true;
-                      } else if (newSettings.backgroundMusicAudio) {
-                        newSettings.backgroundMusicAudio.pause();
-                        newSettings.backgroundMusicAudio.currentTime = 0;
-                      }
-                    }
-                    return newSettings;
-                  });
-                }}
-                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
-              />
-            </div>
-          ))}
-        </CardContent>
-      </NeonGradientCard>
-    </div>
-  );
-
   const renderDailyReward = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
@@ -3080,12 +3071,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     );
     audio.preload = 'auto';
     audio.load();
-    setSettings((prev) => ({ ...prev, backgroundMusicAudio: audio }));
-
+    setBackgroundMusicAudio(audio);
+  
     return () => {
-      if (settings.backgroundMusicAudio) {
-        settings.backgroundMusicAudio.pause();
-        settings.backgroundMusicAudio.currentTime = 0;
+      if (backgroundMusicAudio) {
+        backgroundMusicAudio.pause();
+        backgroundMusicAudio.currentTime = 0;
       }
     };
   }, []);
