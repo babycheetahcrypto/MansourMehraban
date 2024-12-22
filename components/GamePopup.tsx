@@ -28,7 +28,7 @@ const GamePopup: React.FC<GamePopupProps> = ({ message, onConfirm, onCancel }) =
       <style>{gradientAnimation}</style>
       <div className="fixed inset-0 flex items-center justify-center z-[70] bg-black bg-opacity-30 backdrop-blur-lg">
         <div className="bg-gradient-to-br from-gray-900/80 to-black/80 text-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 border border-gray-600/50 backdrop-blur-xl">
-          <p className="text-2xl mb-6 text-center font-bold bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
+          <p className="text-2xl mb-6 text-center bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
             {message}
           </p>
           <div className="flex justify-end space-x-4">
