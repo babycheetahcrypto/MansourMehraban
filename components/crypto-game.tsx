@@ -1192,7 +1192,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (energy >= 1) {
+      if (energy >= 1 && currentPage === 'home') {  // Only allow clicks on the home page
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
         const newExp = user.exp + 1;
@@ -1252,10 +1252,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           button.classList.add('pulse');
           setTimeout(() => button.classList.remove('pulse'), 300);
         }
-        setLastActiveTime(Date.now()); // Update last active time
+        setLastActiveTime(Date.now());
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage] // Add currentPage to the dependency array
+    [clickPower, multiplier, energy, saveUserData, user, currentPage]
   );
 
   const buyItem = useCallback(
@@ -2101,27 +2101,27 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
   
         <div className="flex-grow flex flex-col items-center justify-center">
-          <button
-            className="w-[310px] h-[310px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
-            onClick={clickCoin}
-            onTouchStart={clickCoin}
-            onTouchEnd={(e) => e.preventDefault()}
-          >
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Image
-                src={selectedCoinImage}
-                alt={`Level ${level} Cheetah`}
-                width={310}
-                height={310}
-                objectFit="contain"
-                className="relative z-10"
-                priority
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </div>
-          </button>
-        </div>
+        <button
+          className="w-[310px] h-[310px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+          onClick={clickCoin}
+          onTouchStart={clickCoin}
+          onTouchEnd={(e) => e.preventDefault()}
+        >
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Image
+              src={selectedCoinImage}
+              alt={`Level ${level} Cheetah`}
+              width={310}
+              height={310}
+              objectFit="contain"
+              className="relative z-10"
+              priority
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
+            />
+          </div>
+        </button>
+      </div>
   
         <div className="w-full">
           <div className="w-full mb-2">
@@ -3348,7 +3348,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             />
           )}
           {activePopups.has('levelUnlock') && renderLevelUnlockPopup()}
-          {clickEffects.map((effect) => (
+          {currentPage === 'home' && clickEffects.map((effect) => (
             <div
               key={effect.id}
               className="click-effect"
