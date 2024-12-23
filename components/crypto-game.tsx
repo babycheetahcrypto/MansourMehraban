@@ -3133,9 +3133,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 />
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 mb-4 animate-pulse">
-              Loading...
-            </h2>
             <div className="flex justify-center space-x-2">
               {[0, 1, 2].map((index) => (
                 <div
