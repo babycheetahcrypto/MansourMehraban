@@ -3114,29 +3114,38 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="text-center">
-          <div className="relative w-40 h-40 mx-auto mb-8">
-            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
-            <div
-              className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
-              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
-            ></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
+        <div className="text-center relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 opacity-20 blur-3xl"></div>
+          <div className="relative z-10">
+            <div className="w-48 h-48 mx-auto mb-8 relative">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 animate-spin"></div>
+              <div className="absolute inset-2 rounded-full bg-black"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
-                  width={200}
-                  height={200}
+                  width={160}
+                  height={160}
                   className="animate-pulse"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
             </div>
+            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 mb-4 animate-pulse">
+              Loading...
+            </h2>
+            <div className="flex justify-center space-x-2">
+              {[0, 1, 2].map((index) => (
+                <div
+                  key={index}
+                  className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 animate-bounce"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                ></div>
+              ))}
+            </div>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
         </div>
       </div>
     );
