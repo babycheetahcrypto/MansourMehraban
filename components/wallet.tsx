@@ -163,7 +163,7 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                 />
               </div>
             </CardTitle>
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/30 to-gray-900/30 opacity-30 transform -skew-y-3"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
             <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
