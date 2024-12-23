@@ -111,7 +111,7 @@ const PCMessage = () => {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="mb-6 text-center"
           >
-            <h1 className="mb-2 bg-gradient-to-r from-yellow-400 via-cyan-400 to-pink-500 bg-clip-text text-4xl font-extrabold text-transparent">
+            <h1 className="mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-4xl font-extrabold text-transparent">
               Baby Cheetah
             </h1>
             <div className="flex items-center justify-center space-x-2">
@@ -128,13 +128,13 @@ const PCMessage = () => {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="relative mx-auto mb-8 w-64"
           >
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-yellow-400 via-cyan-400 to-pink-500 opacity-75 blur-lg" />
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 opacity-75 blur-lg" />
             <div className="relative rounded-2xl bg-black p-4">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-5daMHpbE4plJU279gF3EvfMmog45CK.png"
+                src="/path-to-your-new-qr-code.png"
                 alt="Telegram QR Code"
-                width={350}
-                height={350}
+                width={400}
+                height={400}
                 className="rounded-2xl"
               />
             </div>
