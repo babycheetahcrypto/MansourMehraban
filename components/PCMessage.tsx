@@ -28,8 +28,8 @@ const PCMessage = () => {
       y: Math.random() * canvas.height,
       radius: Math.random() * 2 + 1,
       speed: Math.random() * 0.5 + 0.1,
-      color: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 80 + 175}, ${
-        Math.random() * 50 + 100
+      color: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, ${
+        Math.random() * 200 + 55
       }, ${Math.random() * 0.5 + 0.5})`,
     }));
 
@@ -111,13 +111,13 @@ const PCMessage = () => {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="mb-6 text-center"
           >
-            <h1 className="mb-2 bg-gradient-to-r from-yellow-400 via-orange-400 to-coral-500 bg-clip-text text-4xl font-extrabold text-transparent">
+            <h1 className="mb-2 bg-gradient-to-r from-yellow-400 via-cyan-400 to-pink-500 bg-clip-text text-4xl font-extrabold text-transparent">
               Baby Cheetah
             </h1>
             <div className="flex items-center justify-center space-x-2">
-              <Sparkles className="h-5 w-5 text-yellow-400" />
+              <Sparkles className="h-5 w-5 text-cyan-400" />
               <p className="text-lg font-semibold text-gray-200">Play on your mobile</p>
-              <Sparkles className="h-5 w-5 text-yellow-400" />
+              <Sparkles className="h-5 w-5 text-pink-400" />
             </div>
           </motion.div>
 
@@ -128,19 +128,19 @@ const PCMessage = () => {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="relative mx-auto mb-8 w-64"
           >
-            <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-yellow-400 via-orange-400 to-coral-500 opacity-75 blur-lg" />
-            <div className="relative rounded-lg bg-black p-4">
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-yellow-400 via-cyan-400 to-pink-500 opacity-75 blur-lg" />
+            <div className="relative rounded-2xl bg-black p-4">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kNdqfrNMxccUh09XxDMT20QBuUViob.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-5daMHpbE4plJU279gF3EvfMmog45CK.png"
                 alt="Telegram QR Code"
                 width={240}
                 height={240}
-                className="rounded-lg"
+                className="rounded-2xl"
               />
             </div>
           </motion.div>
           {/* Animated Border Effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-coral-500/20 opacity-50 blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 via-cyan-500/20 to-pink-500/20 opacity-50 blur-3xl" />
         </div>
       </div>
     </div>
