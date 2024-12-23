@@ -157,7 +157,7 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                   alt="Airdrop"
                   width={150}
                   height={150}
-                  className="relative z-10 rounded-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 blur-md"
+                  className="relative z-10 transition-all duration-300 transform hover:scale-110"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
