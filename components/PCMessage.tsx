@@ -35,7 +35,7 @@ const PCMessage = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 1)'; // Update 1: Changed background color of canvas
+      ctx.fillStyle = 'rgba(0, 0, 0, 1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       stars.forEach((star) => {
@@ -64,7 +64,7 @@ const PCMessage = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[rgba(0,0,0,1)] text-white"> {/* Update 2: Changed background color of main div */}
+    <div className="relative min-h-screen w-full overflow-hidden bg-[rgba(0,0,0,1)] text-white">
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
         <div className="w-full max-w-sm">
@@ -77,8 +77,8 @@ const PCMessage = () => {
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
               alt="Game Logo"
-              width={150}
-              height={150}
+              width={120}
+              height={120}
               className="rounded-full drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
             />
           </motion.div>
@@ -89,13 +89,13 @@ const PCMessage = () => {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="mb-8 text-center"
           >
-            <h1 className="mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-5xl font-extrabold text-transparent">
+            <h1 className="mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-4xl font-extrabold text-transparent">
               Baby Cheetah
             </h1>
             <div className="flex items-center justify-center space-x-2">
-              <Sparkles className="h-5 w-5 text-purple-400" />
-              <p className="text-xl font-medium text-gray-200">Play on your mobile</p>
-              <Sparkles className="h-5 w-5 text-pink-400" />
+              <Sparkles className="h-4 w-4 text-purple-400" />
+              <p className="text-lg font-medium text-gray-200">Play on your mobile</p>
+              <Sparkles className="h-4 w-4 text-pink-400" />
             </div>
           </motion.div>
 
@@ -104,10 +104,10 @@ const PCMessage = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="relative mx-auto mb-8 w-80"
+            className="relative mx-auto mb-8 w-64"
           >
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 opacity-75 blur-lg" />
-            <div className="relative rounded-2xl bg-black p-4">
+            <div className="relative rounded-2xl bg-black p-3">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-yw5nm8zqwa8SBmzRVEGZ5c4lPpa2Af.png"
                 alt="Telegram QR Code"
