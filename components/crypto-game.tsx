@@ -1255,7 +1255,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setLastActiveTime(Date.now()); // Update last active time
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage] // Add currentPage to the dependency array
+    [clickPower, multiplier, energy, saveUserData, user, currentPage] // Add currentPage to the dependency array
   );
 
   const buyItem = useCallback(
