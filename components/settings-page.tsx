@@ -1,16 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+import { useSettings } from './contexts/SettingsContext';
 
-interface SettingsProps {
-  initialSettings: {
-    vibration: boolean;
-    backgroundMusic: boolean;
-  };
-  onSettingsChange: (newSettings: { vibration: boolean; backgroundMusic: boolean }) => void;
+interface SettingsPageProps {
   backgroundMusicAudio: HTMLAudioElement | null;
 }
 
@@ -42,33 +38,17 @@ const NeonGradientCard: React.FC<React.ComponentProps<'div'>> = ({
   </div>
 );
 
-const SettingsPage: React.FC<SettingsProps> = ({
-  initialSettings,
-  onSettingsChange,
-  backgroundMusicAudio,
-}) => {
-  const [localSettings, setLocalSettings] = useState(initialSettings);
+const SettingsPage: React.FC<SettingsPageProps> = ({ backgroundMusicAudio }) => {
+  const { settings, updateSettings } = useSettings();
 
-  useEffect(() => {
-    setLocalSettings(initialSettings);
-  }, [initialSettings]);
-
-  const handleSettingChange = (settingKey: keyof typeof initialSettings, value: boolean) => {
-    const newSettings = {
-      ...localSettings,
-      [settingKey]: value,
-    };
-    setLocalSettings(newSettings);
-    onSettingsChange(newSettings);
+  const handleSettingChange = (settingKey: keyof typeof settings, value: boolean) => {
+    updateSettings({ [settingKey]: value });
 
     if (settingKey === 'backgroundMusic' && backgroundMusicAudio) {
       if (value) {
-        const playPromise = backgroundMusicAudio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            console.error('Error playing audio:', error);
-          });
-        }
+        backgroundMusicAudio.play().catch((error) => {
+          console.error('Error playing audio:', error);
+        });
         backgroundMusicAudio.loop = true;
       } else {
         backgroundMusicAudio.pause();
@@ -109,9 +89,9 @@ const SettingsPage: React.FC<SettingsProps> = ({
               </div>
               <Switch
                 id={id}
-                checked={localSettings[id as keyof typeof localSettings]}
+                checked={settings[id as keyof typeof settings]}
                 onCheckedChange={(checked) => {
-                  handleSettingChange(id as keyof typeof initialSettings, checked);
+                  handleSettingChange(id as keyof typeof settings, checked);
                 }}
                 className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
               />

@@ -15,6 +15,7 @@ import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
 import SettingsPage from '../components/settings-page';
+import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 
 interface User extends UserType {}
 
@@ -1193,7 +1194,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      // Check if the current page is 'settings' and return early if it is
       if (currentPage === 'settings') return;
 
       if (energy >= 1) {
@@ -1798,11 +1798,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
 
   const renderSettings = () => (
-    <SettingsPage
-      initialSettings={settings}
-      onSettingsChange={setSettings}
-      backgroundMusicAudio={backgroundMusicAudio}
-    />
+    <SettingsPage backgroundMusicAudio={backgroundMusicAudio} />
   );
 
   const renderHeader = () => (
