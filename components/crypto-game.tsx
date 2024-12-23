@@ -14,7 +14,6 @@ import { CheckCircle } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
-import { motion } from 'framer-motion';
 
 interface User extends UserType {}
 
@@ -3113,90 +3112,35 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     fetchData();
   }, []);
 
-  const LoadingScreen: React.FC = () => {
-    const [progress, setProgress] = useState(0);
-    const [loadingText, setLoadingText] = useState('Initializing...');
-  
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setProgress((prevProgress) => {
-          if (prevProgress >= 100) {
-            clearInterval(interval);
-            return 100;
-          }
-          return prevProgress + 1;
-        });
-      }, 50);
-  
-      const texts = [
-        'Warming up the cheetah...',
-        'Polishing crypto coins...',
-        'Revving up the engines...',
-        'Preparing for liftoff...',
-        'Almost there...',
-      ];
-  
-      const textInterval = setInterval(() => {
-        setLoadingText(texts[Math.floor(Math.random() * texts.length)]);
-      }, 2000);
-  
-      return () => {
-        clearInterval(interval);
-        clearInterval(textInterval);
-      };
-    }, []);
-  
+  if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-black to-gray-900 text-white">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <motion.div
-            className="relative w-48 h-48 mx-auto mb-8"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          >
-            <div className="absolute inset-0 border-t-4 border-b-4 border-yellow-400 rounded-full"></div>
+          <div className="relative w-40 h-40 mx-auto mb-8">
+            <div className="absolute inset-0 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
             <div
-              className="absolute inset-0 border-r-4 border-l-4 border-blue-500 rounded-full"
-              style={{ transform: 'rotate(45deg)' }}
+              className="absolute inset-0 border-r-4 border-l-4 border-purple-500 rounded-full animate-spin"
+              style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
             ></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
-                className="w-32 h-32 bg-black rounded-full flex items-center justify-center"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
+              <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
-                  width={100}
-                  height={100}
-                  className="drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+                  width={200}
+                  height={200}
+                  className="animate-pulse"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
-          <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-            Baby Cheetah
-          </h2>
-          <p className="text-lg mb-4">{loadingText}</p>
-          <div className="w-64 h-3 bg-gray-700 rounded-full overflow-hidden mx-auto">
-            <motion.div
-              className="h-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"
-              style={{ width: `${progress}%` }}
-              initial={{ width: '0%' }}
-              animate={{ width: `${progress}%` }}
-            />
           </div>
-          <p className="mt-2 text-yellow-400 font-bold">{progress}%</p>
-        </div>
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-400">Tip: Invite friends to earn more coins!</p>
+          <h2 className="text-2xl font-bold text-white mb-4 animate-pulse">Loading...</h2>
         </div>
       </div>
     );
-  };
+  }
 
   const Popup = ({
     title,
