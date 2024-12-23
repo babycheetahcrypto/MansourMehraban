@@ -133,8 +133,8 @@ const PCMessage = () => {
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-5daMHpbE4plJU279gF3EvfMmog45CK.png"
                 alt="Telegram QR Code"
-                width={280}
-                height={280}
+                width={350}
+                height={350}
                 className="rounded-2xl"
               />
             </div>
