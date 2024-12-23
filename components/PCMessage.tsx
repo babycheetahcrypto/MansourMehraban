@@ -35,7 +35,7 @@ const PCMessage = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      ctx.fillStyle = 'rgba(0, 0, 25, 1)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 1)'; // Update 1: Changed background color of canvas
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       stars.forEach((star) => {
@@ -64,7 +64,7 @@ const PCMessage = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[rgba(0,0,25,1)] text-white">
+    <div className="relative min-h-screen w-full overflow-hidden bg-[rgba(0,0,0,1)] text-white"> {/* Update 2: Changed background color of main div */}
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
         <div className="w-full max-w-sm">
@@ -117,8 +117,6 @@ const PCMessage = () => {
               />
             </div>
           </motion.div>
-          {/* Animated Border Effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 via-cyan-500/20 to-pink-500/20 opacity-50 blur-3xl" />
         </div>
       </div>
     </div>
