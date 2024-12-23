@@ -2101,27 +2101,27 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex-grow flex flex-col items-center justify-center">
-        <button
-          className="w-[310px] h-[310px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
-          onClick={clickCoin}
-          onTouchStart={clickCoin}
-          onTouchEnd={(e) => e.preventDefault()}
-        >
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Image
-              src={selectedCoinImage}
-              alt={`Level ${level} Cheetah`}
-              width={310}
-              height={310}
-              objectFit="contain"
-              className="relative z-10"
-              priority
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-          </div>
-        </button>
-      </div>
+          <button
+            className="w-[310px] h-[310px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+            onClick={clickCoin}
+            onTouchStart={clickCoin}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <Image
+                src={selectedCoinImage}
+                alt={`Level ${level} Cheetah`}
+                width={310}
+                height={310}
+                objectFit="contain"
+                className="relative z-10"
+                priority
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+          </button>
+        </div>
 
         <div className="w-full">
           <div className="w-full mb-2">
