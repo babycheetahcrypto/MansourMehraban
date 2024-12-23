@@ -1995,7 +1995,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 pb-0 relative overflow-hidden">
+    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
       <div className="text-center w-full max-w-md flex flex-col justify-end h-full">
         <div className="flex space-x-2 mb-4 w-full">
           <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
@@ -2065,7 +2065,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
         </div>
-
+  
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1
             className={`font-black text-white font-extrabold overflow-hidden ${formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'}`}
@@ -2095,11 +2095,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             />
           </div>
         </div>
-
+  
         <div className="flex flex-col items-center justify-center w-full mx-auto">
           <div className="relative">
             <button
-              className="w-[335px] h-[335px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
+              className="w-[335px] h-[335px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
               onClick={clickCoin}
               onTouchStart={clickCoin}
               onTouchEnd={(e) => e.preventDefault()}
@@ -2119,7 +2119,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </button>
           </div>
-
+  
           <div className="w-full max-w-md mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
@@ -2152,8 +2152,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-
-          <div className="flex gap-2 w-full mb-4">
+  
+          <div className="flex gap-2 w-full">
             <Button
               onClick={() => {
                 setCurrentPage('dailyReward');
@@ -2198,7 +2198,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
       </div>
     </div>
-  );
+  );  
 
   const renderTaskTabs = () => (
     <div className="flex justify-center mb-4">
