@@ -1192,8 +1192,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (currentPage === 'settings') return; // Add this line to prevent updates on the settings page
-
       if (energy >= 1) {
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
