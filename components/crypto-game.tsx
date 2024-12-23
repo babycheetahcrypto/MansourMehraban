@@ -1219,8 +1219,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           clientX = event.clientX;
           clientY = event.clientY;
         }
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
+        const x = clientX;
+        const y = clientY;
         const clickEffect = {
           id: Date.now(),
           x,
@@ -1252,10 +1252,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           button.classList.add('pulse');
           setTimeout(() => button.classList.remove('pulse'), 300);
         }
-        setLastActiveTime(Date.now());
+        setLastActiveTime(Date.now()); // Update last active time
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, settings.vibration]
+    [clickPower, multiplier, energy, saveUserData, user, currentPage] // Add currentPage to the dependency array
   );
 
   const buyItem = useCallback(
@@ -2101,39 +2101,26 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
   
         <div className="flex-grow flex flex-col items-center justify-center">
-        <button
-          className="w-[310px] h-[310px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
-          onClick={clickCoin}
-          onTouchStart={clickCoin}
-          onTouchEnd={(e) => e.preventDefault()}
-        >
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Image
-              src={selectedCoinImage}
-              alt={`Level ${level} Cheetah`}
-              width={310}
-              height={310}
-              objectFit="contain"
-              className="relative z-10"
-              priority
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-          </div>
-          {clickEffects.map((effect) => (
-            <div
-              key={effect.id}
-              className="absolute pointer-events-none text-white font-bold text-lg animate-float-up"
-              style={{
-                left: `${effect.x}px`,
-                top: `${effect.y}px`,
-                animation: 'float-up 0.7s ease-out forwards',
-              }}
-            >
-              +{effect.text}
+          <button
+            className="w-[310px] h-[310px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+            onClick={clickCoin}
+            onTouchStart={clickCoin}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <Image
+                src={selectedCoinImage}
+                alt={`Level ${level} Cheetah`}
+                width={310}
+                height={310}
+                objectFit="contain"
+                className="relative z-10"
+                priority
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
             </div>
-          ))}
-        </button>
+          </button>
         </div>
   
         <div className="w-full">
@@ -3245,15 +3232,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-          <style>{`
-            @keyframes float-up {
-              0% { transform: translateY(0) scale(1); opacity: 1; }
-              100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
-            }
-            .animate-float-up {
-              animation: float-up 0.7s ease-out forwards;
-            }
-          `}</style>
+          <style>{styles}</style>
           <div className="fixed inset-0 z-0 overflow-hidden">
             <StarryBackground />
           </div>
