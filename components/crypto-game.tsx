@@ -1192,7 +1192,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (currentPage === 'settings') return; // Add this line to prevent updates on the settings page
+      // Check if the current page is 'settings' and return early if it is
+      if (currentPage === 'settings') return;
 
       if (energy >= 1) {
         const clickValue = clickPower * multiplier;
@@ -1254,10 +1255,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           button.classList.add('pulse');
           setTimeout(() => button.classList.remove('pulse'), 300);
         }
-        setLastActiveTime(Date.now()); // Update last active time
+        setLastActiveTime(Date.now());
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage] // Add currentPage to the dependency array
+    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage]
   );
 
   const buyItem = useCallback(
@@ -2099,28 +2100,28 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex flex-col items-center justify-center w-full mx-auto">
-          <div className="relative">
-            <button
-              className="w-[335px] h-[335px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
-              onClick={clickCoin}
-              onTouchStart={clickCoin}
-              onTouchEnd={(e) => e.preventDefault()}
-            >
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <Image
-                  src={selectedCoinImage}
-                  alt={`Level ${level} Cheetah`}
-                  width={335}
-                  height={335}
-                  objectFit="contain"
-                  className="relative z-10"
-                  priority
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-              </div>
-            </button>
-          </div>
+        <div className="relative">
+          <button
+            className="w-[335px] h-[335px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
+            onClick={clickCoin}
+            onTouchStart={clickCoin}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <Image
+                src={selectedCoinImage}
+                alt={`Level ${level} Cheetah`}
+                width={335}
+                height={335}
+                objectFit="contain"
+                className="relative z-10"
+                priority
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+          </button>
+        </div>
 
           <div className="w-full max-w-md mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
