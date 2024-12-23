@@ -1940,7 +1940,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderbottom = () => (
     <div
       className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
-      style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
+      style={{
+        paddingBottom: 'max(env(safe-area-inset-bottom), 16px)',
+      }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-800/30 to-blue-900/30 rounded-full blur-xl"></div>
@@ -1996,131 +1998,133 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const renderHome = () => (
     <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
-      <div className="text-center w-full max-w-md flex flex-col justify-end h-full">
-        <div className="flex space-x-2 mb-4 w-full">
-          <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
-            <div className="flex justify-between items-center mb-1">
-              <div className="flex items-center">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
-                  alt="Level Icon"
-                  width={18}
-                  height={18}
-                  className="inline-block"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <span className="text-sm font-bold text-white font-bold">Level {level}</span>
+      <div className="w-full max-w-md flex flex-col justify-between h-full">
+        <div>
+          <div className="flex space-x-2 mb-4 w-full">
+            <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
+              <div className="flex justify-between items-center mb-1">
+                <div className="flex items-center">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
+                    alt="Level Icon"
+                    width={18}
+                    height={18}
+                    className="inline-block"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                  <span className="text-sm font-bold text-white font-bold">Level {level}</span>
+                </div>
               </div>
-            </div>
-            <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out animate-pulse"
-                style={{
-                  width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
-                  boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
-                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-              </div>
-            </div>
-            <div className="text-xs text-white font-bold flex justify-between mt-1">
-              <span className="font-bold">
-                {formatNumber(user.coins - levelRequirements[level - 1], true)}
-              </span>
-              <span className="font-bold">
-                {formatNumber(nextLevelRequirement - levelRequirements[level - 1], true)} coins
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              onClick={() => setCurrentPage('wallet')}
-              className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-i45iGLhTQldoCi8pzRNLinRlgHiofn.png"
-                alt="Wallet"
-                width={32}
-                height={32}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Button>
-            <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
-                alt="Profit Per Hour"
-                width={22}
-                height={22}
-                className="mb-1"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-              <span className="text-xs text-white font-bold">
-                {formatNumber(profitPerHour, true)}/h
-              </span>
-            </div>
-          </div>
-        </div>
-  
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <h1
-            className={`font-black text-white font-extrabold overflow-hidden ${formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'}`}
-          >
-            {formatNumber(user.coins, false)
-              .split('')
-              .map((digit, index) => (
-                <span
-                  key={index}
-                  className="inline-block font-bold"
+              <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out animate-pulse"
                   style={{
-                    animation: `countUp 0.5s ${index * 0.1}s backwards`,
+                    width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
+                    boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
                   }}
                 >
-                  {digit}
+                  <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
+                  <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                </div>
+              </div>
+              <div className="text-xs text-white font-bold flex justify-between mt-1">
+                <span className="font-bold">
+                  {formatNumber(user.coins - levelRequirements[level - 1], true)}
                 </span>
-              ))}
-          </h1>
-          <div className="w-12 h-12">
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
-              alt="Crypto Coin"
-              width={48}
-              height={48}
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-          </div>
-        </div>
-  
-        <div className="flex flex-col items-center justify-center w-full mx-auto">
-          <div className="relative">
-            <button
-              className="w-[335px] h-[335px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
-              onClick={clickCoin}
-              onTouchStart={clickCoin}
-              onTouchEnd={(e) => e.preventDefault()}
-            >
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span className="font-bold">
+                  {formatNumber(nextLevelRequirement - levelRequirements[level - 1], true)} coins
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                onClick={() => setCurrentPage('wallet')}
+                className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
+              >
                 <Image
-                  src={selectedCoinImage}
-                  alt={`Level ${level} Cheetah`}
-                  width={335}
-                  height={335}
-                  objectFit="contain"
-                  className="relative z-10"
-                  priority
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-i45iGLhTQldoCi8pzRNLinRlgHiofn.png"
+                  alt="Wallet"
+                  width={32}
+                  height={32}
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
+              </Button>
+              <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
+                  alt="Profit Per Hour"
+                  width={22}
+                  height={22}
+                  className="mb-1"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+                <span className="text-xs text-white font-bold">
+                  {formatNumber(profitPerHour, true)}/h
+                </span>
               </div>
-            </button>
+            </div>
           </div>
   
-          <div className="w-full max-w-md mb-2">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <h1
+              className={`font-black text-white font-extrabold overflow-hidden ${formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'}`}
+            >
+              {formatNumber(user.coins, false)
+                .split('')
+                .map((digit, index) => (
+                  <span
+                    key={index}
+                    className="inline-block font-bold"
+                    style={{
+                      animation: `countUp 0.5s ${index * 0.1}s backwards`,
+                    }}
+                  >
+                    {digit}
+                  </span>
+                ))}
+            </h1>
+            <div className="w-12 h-12">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                alt="Crypto Coin"
+                width={48}
+                height={48}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+          </div>
+        </div>
+  
+        <div className="flex-grow flex flex-col items-center justify-center">
+          <button
+            className="w-[330px] h-[330px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+            onClick={clickCoin}
+            onTouchStart={clickCoin}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <Image
+                src={selectedCoinImage}
+                alt={`Level ${level} Cheetah`}
+                width={330}
+                height={330}
+                objectFit="contain"
+                className="relative z-10"
+                priority
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+          </button>
+        </div>
+  
+        <div className="w-full">
+          <div className="w-full mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
                 <Image
