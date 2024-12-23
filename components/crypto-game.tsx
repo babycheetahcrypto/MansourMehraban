@@ -1827,10 +1827,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 id={id}
                 checked={settings[id as keyof typeof settings]}
                 onCheckedChange={(checked) => {
-                  setSettings((prev) => ({ ...prev, [id]: checked }));
+                  const newSettings = {
+                    ...settings,
+                    [id]: checked
+                  };
+                  setSettings(newSettings);
+                  saveUserData({ ...user, settings: newSettings });
+
                   if (id === 'backgroundMusic') {
                     if (checked && backgroundMusicAudio) {
-                      backgroundMusicAudio.play().catch((error) => console.error('Error playing audio:', error));
+                      backgroundMusicAudio.play().catch(console.error);
                       backgroundMusicAudio.loop = true;
                     } else if (backgroundMusicAudio) {
                       backgroundMusicAudio.pause();
