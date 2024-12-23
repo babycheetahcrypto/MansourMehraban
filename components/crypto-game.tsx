@@ -617,10 +617,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [settings, setSettings] = useState<{
     vibration: boolean;
     backgroundMusic: boolean;
-  }>(() => ({
-    vibration: user?.settings?.vibration ?? true,
-    backgroundMusic: user?.settings?.backgroundMusic ?? false,
-  }));
+  }>({
+    vibration: true,
+    backgroundMusic: false,
+  });
   
   const [backgroundMusicAudio, setBackgroundMusicAudio] = useState<HTMLAudioElement | null>(null);
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
@@ -1827,25 +1827,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 id={id}
                 checked={settings[id as keyof typeof settings]}
                 onCheckedChange={(checked) => {
-                  const newSettings = { ...settings, [id]: checked };
+                  const newSettings = {
+                    ...settings,
+                    [id]: checked
+                  };
                   setSettings(newSettings);
+                  saveUserData({ ...user, settings: newSettings });
 
-                  if (id === 'backgroundMusic' && backgroundMusicAudio) {
-                    if (checked) {
+                  if (id === 'backgroundMusic') {
+                    if (checked && backgroundMusicAudio) {
                       backgroundMusicAudio.play().catch(console.error);
                       backgroundMusicAudio.loop = true;
-                    } else {
+                    } else if (backgroundMusicAudio) {
                       backgroundMusicAudio.pause();
                       backgroundMusicAudio.currentTime = 0;
                     }
                   }
-
-                  // Debounce the save operation
-                  const timeoutId = setTimeout(() => {
-                    saveUserData({ ...user, settings: newSettings });
-                  }, 500);
-
-                  return () => clearTimeout(timeoutId);
                 }}
                 className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
               />
@@ -1855,6 +1852,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </NeonGradientCard>
     </div>
   );
+
 
   const renderHeader = () => (
     <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
