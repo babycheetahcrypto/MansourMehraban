@@ -1783,17 +1783,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
 
   useEffect(() => {
-    if (!user.settings) {
-      setUser((prevUser) => ({
-        ...prevUser,
-        settings: {
-          vibration: true,
-          backgroundMusic: false,
-        },
-      }));
-    }
-  }, [user]);
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      ...(user.settings || { vibration: true, backgroundMusic: false }),
+    }));
+  }, [user.settings]);
 
+  useEffect(() => {
+    saveUserData({ ...user, settings });
+  }, [settings]);
 
   const renderSettings = () => (
     <div className="flex-grow flex items-center justify-center p-6">
@@ -2070,7 +2068,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-  
+
           <div className="flex items-center justify-center gap-2 mb-2">
             <h1
               className={`font-black text-white font-extrabold overflow-hidden ${formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'}`}
@@ -2101,7 +2099,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
         </div>
-  
+
         <div className="flex-grow flex flex-col items-center justify-center">
         <button
           className="w-[310px] h-[310px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
@@ -2124,7 +2122,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
         </button>
       </div>
-  
+
         <div className="w-full">
           <div className="w-full mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
@@ -2158,7 +2156,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-  
+
           <div className="flex gap-2 w-full">
             <Button
               onClick={() => {
