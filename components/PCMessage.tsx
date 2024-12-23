@@ -8,7 +8,6 @@ import { Sparkles } from 'lucide-react';
 const PCMessage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Starry background animation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -26,11 +25,9 @@ const PCMessage = () => {
     const stars = Array.from({ length: 200 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      radius: Math.random() * 2 + 1,
-      speed: Math.random() * 0.5 + 0.1,
-      color: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, ${
-        Math.random() * 200 + 55
-      }, ${Math.random() * 0.5 + 0.5})`,
+      radius: Math.random() * 1.5 + 0.5,
+      speed: Math.random() * 0.3 + 0.1,
+      color: `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.5})`,
     }));
 
     let animationFrameId: number;
@@ -38,21 +35,7 @@ const PCMessage = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Create a radial gradient
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        0,
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width / 2
-      );
-      gradient.addColorStop(0, 'rgba(0, 0, 25, 1)');
-      gradient.addColorStop(1, 'rgba(0, 0, 25, 1)');
-
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = 'rgba(0, 0, 25, 1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       stars.forEach((star) => {
@@ -81,14 +64,10 @@ const PCMessage = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-black text-white">
-      {/* Background Canvas */}
+    <div className="relative min-h-screen w-full overflow-hidden bg-[rgba(0,0,25,1)] text-white">
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
-
-      {/* Content Container */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
-        <div className="w-full max-w-2xl">
-          {/* Logo Section */}
+        <div className="w-full max-w-sm">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -100,23 +79,22 @@ const PCMessage = () => {
               alt="Game Logo"
               width={150}
               height={150}
-              className="drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+              className="rounded-full drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
             />
           </motion.div>
 
-          {/* Title Section */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="mb-6 text-center"
+            className="mb-8 text-center"
           >
-            <h1 className="mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-4xl font-extrabold text-transparent">
+            <h1 className="mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-5xl font-extrabold text-transparent">
               Baby Cheetah
             </h1>
             <div className="flex items-center justify-center space-x-2">
-              <Sparkles className="h-5 w-5 text-cyan-400" />
-              <p className="text-lg font-semibold text-gray-200">Play on your mobile</p>
+              <Sparkles className="h-5 w-5 text-purple-400" />
+              <p className="text-xl font-medium text-gray-200">Play on your mobile</p>
               <Sparkles className="h-5 w-5 text-pink-400" />
             </div>
           </motion.div>
@@ -126,12 +104,12 @@ const PCMessage = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="relative mx-auto mb-8 w-64"
+            className="relative mx-auto mb-8 w-80"
           >
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 opacity-75 blur-lg" />
             <div className="relative rounded-2xl bg-black p-4">
               <Image
-                src="/path-to-your-new-qr-code.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-yw5nm8zqwa8SBmzRVEGZ5c4lPpa2Af.png"
                 alt="Telegram QR Code"
                 width={400}
                 height={400}
