@@ -14,8 +14,6 @@ import { CheckCircle } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
-import SettingsPage from '../components/settings-page';
-import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 
 interface User extends UserType {}
 
@@ -1194,7 +1192,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (currentPage === 'settings') return;
+      if (currentPage === 'settings') return; // Add this line to prevent updates on the settings page
 
       if (energy >= 1) {
         const clickValue = clickPower * multiplier;
@@ -1256,10 +1254,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           button.classList.add('pulse');
           setTimeout(() => button.classList.remove('pulse'), 300);
         }
-        setLastActiveTime(Date.now());
+        setLastActiveTime(Date.now()); // Update last active time
       }
     },
-    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage]
+    [clickPower, multiplier, energy, settings.vibration, saveUserData, user, currentPage] // Add currentPage to the dependency array
   );
 
   const buyItem = useCallback(
@@ -1798,8 +1796,59 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
 
   const renderSettings = () => (
-    <SettingsPage backgroundMusicAudio={backgroundMusicAudio} />
+    <div className="flex-grow flex items-center justify-center p-6">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+        <CardHeader className="relative p-6 pb-2">
+          <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          {settingsConfig.map(({ id, icon, label, description }) => (
+            <div
+              key={id}
+              className="flex items-center justify-between py-4 px-4 rounded-xl bg-gradient-to-r from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/30"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-gray-700/50 to-gray-800/50">
+                  <Image
+                    src={icon}
+                    alt={label}
+                    width={32}
+                    height={32}
+                    className="text-primary"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-medium text-white">{label}</h3>
+                  <p className="text-xs text-gray-400">{description}</p>
+                </div>
+              </div>
+              <Switch
+                id={id}
+                checked={settings[id as keyof typeof settings]}
+                onCheckedChange={(checked) => {
+                  setSettings((prev) => ({ ...prev, [id]: checked }));
+                  if (id === 'backgroundMusic') {
+                    if (checked && backgroundMusicAudio) {
+                      backgroundMusicAudio.play().catch((error) => console.error('Error playing audio:', error));
+                      backgroundMusicAudio.loop = true;
+                    } else if (backgroundMusicAudio) {
+                      backgroundMusicAudio.pause();
+                      backgroundMusicAudio.currentTime = 0;
+                    }
+                  }
+                }}
+                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
+              />
+            </div>
+          ))}
+        </CardContent>
+      </NeonGradientCard>
+    </div>
   );
+
 
   const renderHeader = () => (
     <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
@@ -2050,28 +2099,28 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
 
         <div className="flex flex-col items-center justify-center w-full mx-auto">
-        <div className="relative">
-          <button
-            className="w-[335px] h-[335px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
-            onClick={clickCoin}
-            onTouchStart={clickCoin}
-            onTouchEnd={(e) => e.preventDefault()}
-          >
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Image
-                src={selectedCoinImage}
-                alt={`Level ${level} Cheetah`}
-                width={335}
-                height={335}
-                objectFit="contain"
-                className="relative z-10"
-                priority
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </div>
-          </button>
-        </div>
+          <div className="relative">
+            <button
+              className="w-[335px] h-[335px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-6 relative bg-transparent"
+              onClick={clickCoin}
+              onTouchStart={clickCoin}
+              onTouchEnd={(e) => e.preventDefault()}
+            >
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <Image
+                  src={selectedCoinImage}
+                  alt={`Level ${level} Cheetah`}
+                  width={335}
+                  height={335}
+                  objectFit="contain"
+                  className="relative z-10"
+                  priority
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </div>
+            </button>
+          </div>
 
           <div className="w-full max-w-md mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
