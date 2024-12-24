@@ -219,6 +219,35 @@ const styles = `
   .filter-grayscale {
     filter: grayscale(100%);
   }
+
+  @keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-dash {
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 301;
+  }
+  50% {
+    stroke-dashoffset: 70;
+  }
+  100% {
+    stroke-dashoffset: 301;
+  }
+}
 `;
 
 // Telegram WebApp type definition
@@ -3130,23 +3159,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <stop offset="100%" stopColor="#F59E0B" />
                 </linearGradient>
               </defs>
-              <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" strokeWidth="8" strokeDasharray="283" strokeDashoffset="283" className="animate-dash" />
+              <circle cx="50" cy="50" r="48" fill="none" stroke="url(#gradient)" strokeWidth="4" strokeDasharray="301" strokeDashoffset="301" className="animate-dash" />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-32 h-32 bg-gradient-to-br from-purple-500 via-pink-500 to-yellow-500 rounded-full animate-pulse opacity-50 blur-xl"></div>
+              <div className="w-48 h-48 bg-gradient-to-br from-purple-500 via-pink-500 to-yellow-500 rounded-full animate-pulse opacity-30 blur-xl"></div>
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-40 h-40 rounded-full bg-black flex items-center justify-center">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                  alt="Game Logo"
-                  width={60}
-                  height={60}
-                  className="animate-pulse"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                  style={{ filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))' }}
-                />
+              <div className="w-48 h-48 rounded-full bg-black flex items-center justify-center overflow-hidden">
+                <div className="relative w-40 h-40 animate-pulse">
+                  <Image
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                    alt="Game Logo"
+                    layout="fill"
+                    objectFit="contain"
+                    className="animate-float"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
               </div>
             </div>
           </div>
