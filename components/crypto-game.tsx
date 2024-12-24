@@ -3249,8 +3249,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             KhtmlUserSelect: 'none',
             MozUserSelect: 'none',
             msUserSelect: 'none',
-            paddingBottom: 'auto',
-            paddingTop: 'auto',
+            paddingBottom: 'env(safe-area-inset-bottom)',
+            paddingTop: 'env(safe-area-inset-top)',
           }}
         >
           <meta
@@ -3265,6 +3265,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           {renderHeader()}
           <div
+            className="flex-grow pb-24" // Increased bottom padding
+            style={{
+              paddingBottom: 'calc(6rem + env(safe-area-inset-bottom) + 16px)', // Increased padding
+              marginBottom: '16px',
+            }}
           >
             {currentPage === 'home' && renderHome()}
             {currentPage === 'shop' && renderShop()}
