@@ -1966,6 +1966,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
       style={{
         paddingBottom: 'max(env(safe-area-inset-bottom), 16px)',
+        bottom: 0,
       }}
     >
       <div className="flex justify-around items-center max-w-md mx-auto relative">
@@ -2021,7 +2022,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
+    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden h-full">
       <div className="w-full max-w-md flex flex-col justify-between h-full">
         <div>
           <div className="flex space-x-2 mb-4 w-full">
@@ -2124,7 +2125,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
         </div>
 
-        <div className="flex-grow flex flex-col items-center justify-center">
+        <div className="flex-grow flex flex-col items-center justify-center my-4">
           <button
             className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
             onClick={clickCoin}
@@ -2147,7 +2148,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
 
-        <div className="w-full mb-20"> {/* Increased bottom margin */}
+        <div className="w-full mb-24">
           <div className="w-full mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
