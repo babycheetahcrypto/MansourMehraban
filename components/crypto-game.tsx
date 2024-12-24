@@ -1898,7 +1898,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div>
               <h2 className="font-black text-base text-white">
-                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 12)}
+                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 9) + ((`${user.firstName || ''} ${user.lastName || ''}`.trim().length > 9) ? '...' : '')}
               </h2>
               <div className="text-sm text-white font-bold flex items-center">
                 <Image
@@ -1967,7 +1967,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </CardContent>
       </Card>
     </div>
-  );
+  );  
 
   const renderbottom = () => (
     <div
