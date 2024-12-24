@@ -1273,14 +1273,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
           );
         }
-
-        // Add pulse effect for touch events
-        if ('touches' in event) {
-          const button = event.currentTarget;
-          button.classList.add('pulse');
-          setTimeout(() => button.classList.remove('pulse'), 300);
-        }
-        setLastActiveTime(Date.now());
       }
     },
     [clickPower, multiplier, energy, saveUserData, user, currentPage, settings.vibration]
