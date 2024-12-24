@@ -3267,8 +3267,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div
             className="flex-grow pb-24" // Increased bottom padding
             style={{
-              paddingBottom: 'calc(6rem + env(safe-area-inset-bottom) + 16px)', // Increased padding
-              marginBottom: '16px',
+              paddingBottom: 'calc(2rem + env(safe-area-inset-bottom) + 12px)', // Increased padding
+              marginBottom: '12px',
             }}
           >
             {currentPage === 'home' && renderHome()}
