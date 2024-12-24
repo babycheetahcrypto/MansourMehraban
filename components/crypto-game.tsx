@@ -2021,7 +2021,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden h-full">
+    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
       <div className="w-full max-w-md flex flex-col justify-between h-full">
         <div>
           <div className="flex space-x-2 mb-4 w-full">
@@ -2147,7 +2147,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
 
-        <div className="w-full mt-auto">
+        <div className="w-full mb-20"> {/* Increased bottom margin */}
           <div className="w-full mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
@@ -3233,26 +3233,26 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <PCMessage />
       ) : (
         <div
-          className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
-          style={{
-            backgroundAttachment: 'fixed',
-            width: '100%',
-            height: '100vh',
-            minHeight: '-webkit-fill-available',
-            overflowY: 'hidden',
-            overflowX: 'hidden',
-            touchAction: 'pan-y',
-            WebkitOverflowScrolling: 'touch',
-            userSelect: 'none',
-            WebkitTouchCallout: 'none',
-            WebkitUserSelect: 'none',
-            KhtmlUserSelect: 'none',
-            MozUserSelect: 'none',
-            msUserSelect: 'none',
-            paddingBottom: 'env(safe-area-inset-bottom)',
-            paddingTop: 'env(safe-area-inset-top)',
-          }}
-        >
+        className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
+        style={{
+          backgroundAttachment: 'fixed',
+          width: '100%',
+          height: '100vh',
+          minHeight: '-webkit-fill-available',
+          overflowY: 'hidden',
+          overflowX: 'hidden',
+          touchAction: 'pan-y',
+          WebkitOverflowScrolling: 'touch',
+          userSelect: 'none',
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          KhtmlUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          paddingTop: 'env(safe-area-inset-top)',
+        }}
+      >
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
@@ -3265,9 +3265,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           {renderHeader()}
           <div
-            className="flex-grow flex flex-col"
+            className="flex-grow pb-24" // Increased bottom padding
             style={{
-              height: 'calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))',
+              paddingBottom: 'calc(6rem + env(safe-area-inset-bottom) + 16px)', // Increased padding
+              marginBottom: '16px',
             }}
           >
             {currentPage === 'home' && renderHome()}
