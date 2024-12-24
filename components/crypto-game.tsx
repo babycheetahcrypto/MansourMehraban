@@ -2827,8 +2827,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl rounded-2xl">
         <CardContent className="p-6 space-y-6">
-          <div className="mt-6 p-4 bg-gradient-to-r from-transparent to-transparent rounded-2xl backdrop-blur-xl shadow-lg">
-            <h3 className="text-xl font-bold mb-2 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg">
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-2xl backdrop-blur-xl shadow-lg">
+            <h3 className="text-xl font-bold mb-2 text-center text-white drop-shadow-lg">
               Your Referral Link
             </h3>
             <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
