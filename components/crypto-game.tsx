@@ -1216,92 +1216,75 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const clickCoin = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
-      try {
-        event.preventDefault();
-  
-        if (!user || !currentPage || !settings) {
-          console.error('Missing required data (user, currentPage, or settings).');
-          return;
+      event.preventDefault();
+
+      if (energy >= 1 && currentPage === 'home') {  // Only allow clicks on the home page
+        const clickValue = clickPower * multiplier;
+        const newCoins = user.coins + clickValue;
+        const newExp = user.exp + 1;
+        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
+
+        const updatedUser = {
+          ...user,
+          coins: newCoins,
+          exp: newExp % 100,
+          level: newLevel,
+        };
+
+        setUser(updatedUser);
+        saveUserData(updatedUser);
+
+        setEnergy((prev) => Math.max(prev - 1, 0));
+
+        const rect = event.currentTarget.getBoundingClientRect();
+        let clientX, clientY;
+        if ('touches' in event) {
+          clientX = event.touches[0].clientX;
+          clientY = event.touches[0].clientY;
+        } else {
+          clientX = event.clientX;
+          clientY = event.clientY;
         }
-  
-        if (energy >= 1 && currentPage === 'home') {
-          const clickValue = clickPower * multiplier;
-          const newCoins = (user.coins || 0) + clickValue;
-          const newExp = (user.exp || 0) + 1;
-          const newLevel = newExp >= 100 ? (user.level || 0) + 1 : user.level || 0;
-  
-          const updatedUser = {
-            ...user,
-            coins: newCoins,
-            exp: newExp % 100,
-            level: newLevel,
+        const x = clientX;
+        const y = clientY;
+        if (currentPage === 'home') {
+          const clickEffect = {
+            id: Date.now(),
+            x,
+            y,
+            value: clickValue,
+            color: 'white',
+            text: formatNumber(clickValue, true),
           };
-  
-          setUser(updatedUser);
-          saveUserData?.(updatedUser);
-  
-          setEnergy((prev) => Math.max(prev - 1, 0));
-  
-          const rect = event.currentTarget.getBoundingClientRect();
-          let clientX, clientY;
-          if ('touches' in event) {
-            clientX = event.touches[0].clientX;
-            clientY = event.touches[0].clientY;
-          } else {
-            clientX = event.clientX;
-            clientY = event.clientY;
-          }
-  
-          const x = clientX;
-          const y = clientY;
-          if (currentPage === 'home') {
-            const clickEffect = {
-              id: Date.now(),
-              x,
-              y,
-              value: clickValue,
-              color: 'white',
-              text: formatNumber(clickValue, true),
-            };
-            setClickEffects((prev) => [...prev, clickEffect]);
-            setTimeout(() => {
-              setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-            }, 700);
-          }
-  
-          if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
-            try {
-              window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-            } catch (e) {
-              console.error('Haptic feedback failed:', e);
-            }
-          }
-  
-          if (window.Telegram?.WebApp) {
-            try {
-              window.Telegram.WebApp.sendData(
-                JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
-              );
-            } catch (e) {
-              console.error('Failed to send tap data to Telegram Mini App:', e);
-            }
-          }
-  
-          if ('touches' in event) {
-            const button = event.currentTarget;
-            button.classList.add('pulse');
-            setTimeout(() => button.classList.remove('pulse'), 300);
-          }
-  
-          setLastActiveTime(Date.now());
+          setClickEffects((prev) => [...prev, clickEffect]);
+          setTimeout(() => {
+            setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
+          }, 700);
         }
-      } catch (error) {
-        console.error('Error in clickCoin function:', error);
+
+        // Trigger haptic feedback only for coin button click
+        if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
+          window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        }
+
+        // Send tap data to Telegram Mini App
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.sendData(
+            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
+          );
+        }
+
+        // Add pulse effect for touch events
+        if ('touches' in event) {
+          const button = event.currentTarget;
+          button.classList.add('pulse');
+          setTimeout(() => button.classList.remove('pulse'), 300);
+        }
+        setLastActiveTime(Date.now());
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage, settings]
+    [clickPower, multiplier, energy, saveUserData, user, currentPage, settings.vibration]
   );
-  
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
