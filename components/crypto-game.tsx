@@ -3123,25 +3123,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 opacity-20 blur-3xl"></div>
           <div className="relative z-10">
             <div className="w-48 h-48 mx-auto mb-8 relative">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 animate-spin"></div>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 animate-spin"></div>
               <div className="absolute inset-2 rounded-full bg-black"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                  alt="Game Logo"
-                  width={160}
-                  height={160}
-                  className="animate-pulse"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
+                <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 animate-pulse">
+                  Baby Cheetah
+                </div>
               </div>
             </div>
             <div className="flex justify-center space-x-2">
               {[0, 1, 2].map((index) => (
                 <div
                   key={index}
-                  className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 animate-bounce"
+                  className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 animate-bounce"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 ></div>
               ))}
@@ -3151,6 +3145,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </div>
     );
   }
+  
 
   const Popup = ({
     title,
