@@ -3140,8 +3140,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
-                  width={120}
-                  height={120}
+                  width={80}
+                  height={80}
                   className="animate-pulse"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
