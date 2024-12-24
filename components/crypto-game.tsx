@@ -3140,11 +3140,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                   alt="Game Logo"
-                  width={80}
-                  height={80}
+                  width={60}
+                  height={60}
                   className="animate-pulse"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
+                  style={{ filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))' }}
                 />
               </div>
             </div>
@@ -3155,7 +3156,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <div
               key={index}
               className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 animate-bounce"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              style={{ animationDelay: `${index * 0.1}s`, animationDuration: '1s' }}
             ></div>
           ))}
         </div>
