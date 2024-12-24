@@ -2827,12 +2827,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl rounded-2xl">
         <CardContent className="p-6 space-y-6">
-          <div className="mt-6 p-4 bg-gradient-to-r from-transparent to-transparent rounded-2xl backdrop-blur-xl shadow-lg">
-            <h3 className="text-xl font-bold mb-2 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg">
+          <div className="mt-6 p-8 bg-gradient-to-r from-transparent to-transparent rounded-3xl backdrop-blur-xl shadow-lg">
+            <h3 className="text-3xl font-bold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 drop-shadow-lg">
               Your Referral Link
             </h3>
-            <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
-              <span className="text-sm text-white truncate mr-2">
+            <div className="flex flex-col items-center bg-gray-800/50 rounded-2xl p-6 space-y-4">
+              <span className="text-lg text-white truncate text-center">
                 https://t.me/BabyCheetah_Bot/?startapp={user.telegramId}
               </span>
               <Button
@@ -2842,33 +2842,33 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   );
                   showGameAlert('Referral link copied to clipboard!');
                 }}
-                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white text-xs py-1 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center font-bold"
+                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white text-base py-2 px-6 rounded-3xl transition-all duration-300 flex items-center justify-center font-bold"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-qVagBixv3Uacicht1qeEubKtLUwh6W.png"
                   alt="Copy"
-                  width={24}
-                  height={24}
-                  className="w-5 h-5 mr-2"
+                  width={28}
+                  height={28}
+                  className="w-6 h-6 mr-3"
                 />
-                <span className="font-bold">Copy</span>
+                <span className="font-bold text-lg">Copy</span>
               </Button>
             </div>
-            <p className="text-xs text-center mt-2 text-white">
+            <p className="text-sm text-center mt-4 text-white">
               Share this link to earn <span className="text-yellow-400 font-bold">2000</span> coins
               for each friend who joins!
             </p>
           </div>
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
-            className="w-full bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white py-3 rounded-2xl text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center font-bold"
+            className="w-full bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white py-4 rounded-3xl text-xl font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-6 flex items-center justify-center font-bold"
           >
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Friends%20Activity%203D%20ICON-MuArgoDXJUAr5rEz9VgjF4KmRcHPy9.png"
               alt="Friends Activity"
-              width={34}
-              height={34}
-              className="w-8 h-8 mr-2"
+              width={36}
+              height={36}
+              className="w-8 h-8 mr-3"
             />
             <span className="font-bold">Friends Activity</span>
           </Button>
@@ -2876,6 +2876,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       </NeonGradientCard>
     </div>
   );
+  
   
 
   const renderFriendsActivity = () => (
