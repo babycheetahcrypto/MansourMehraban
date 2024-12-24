@@ -2826,7 +2826,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const renderInvite = () => (
     <div className="flex-grow flex flex-col items-center justify-start p-4 pb-16 relative overflow-y-auto">
       <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl rounded-2xl">
-        <CardContent className="p-10 space-y-8">
+        <CardContent className="w-full h-full p-10 space-y-8">
           <div className="mt-6 p-6 bg-gradient-to-r from-blue-400 to-blue-600 rounded-2xl backdrop-blur-xl shadow-lg">
             <h3 className="text-xl font-bold mb-4 text-center text-white drop-shadow-lg">
               Your Referral Link
@@ -2875,7 +2875,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </CardContent>
       </NeonGradientCard>
     </div>
-  );  
+  );
+  
   
 
   const renderFriendsActivity = () => (
