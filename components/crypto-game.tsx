@@ -3136,7 +3136,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <div className="w-32 h-32 bg-gradient-to-br from-purple-500 via-pink-500 to-yellow-500 rounded-full animate-pulse opacity-50 blur-xl"></div>
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 bg-white rounded-full animate-ping opacity-75"></div>
+              <div className="w-40 h-40 rounded-full bg-black flex items-center justify-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                  alt="Game Logo"
+                  width={120}
+                  height={120}
+                  className="animate-pulse"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              </div>
             </div>
           </div>
         </div>
