@@ -3119,29 +3119,35 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
-        <div className="relative w-32 h-32">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
-          <svg className="animate-spin w-full h-full" viewBox="0 0 100 100">
-            <circle
-              className="stroke-current text-gray-300 opacity-20"
-              cx="50"
-              cy="50"
-              r="45"
-              strokeWidth="8"
-              fill="none"
-            />
-            <circle
-              className="stroke-current text-blue-500"
-              cx="50"
-              cy="50"
-              r="45"
-              strokeWidth="8"
-              fill="none"
-              strokeLinecap="round"
-              strokeDasharray="283"
-              strokeDashoffset="100"
-            />
-          </svg>
+        <div className="relative w-64 h-64">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 opacity-20 blur-3xl animate-pulse"></div>
+          <div className="relative z-10">
+            <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#8B5CF6" />
+                  <stop offset="50%" stopColor="#EC4899" />
+                  <stop offset="100%" stopColor="#F59E0B" />
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" strokeWidth="8" strokeDasharray="283" strokeDashoffset="283" className="animate-dash" />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-32 h-32 bg-gradient-to-br from-purple-500 via-pink-500 to-yellow-500 rounded-full animate-pulse opacity-50 blur-xl"></div>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-16 bg-white rounded-full animate-ping opacity-75"></div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-10 left-0 right-0 flex justify-center space-x-4">
+          {[0, 1, 2].map((index) => (
+            <div
+              key={index}
+              className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 animate-bounce"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            ></div>
+          ))}
         </div>
       </div>
     );
