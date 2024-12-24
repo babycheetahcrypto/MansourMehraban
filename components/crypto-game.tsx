@@ -1967,7 +1967,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </CardContent>
       </Card>
     </div>
-  );  
+  );
 
   const renderbottom = () => (
     <div
