@@ -1218,7 +1218,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (energy >= 1) {  // Remove the currentPage check
+      if (energy >= 1 && currentPage === 'home') {  // Only allow clicks on the home page
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
         const newExp = user.exp + 1;
@@ -1247,19 +1247,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
         const x = clientX;
         const y = clientY;
-        
-        const clickEffect = {
-          id: Date.now(),
-          x,
-          y,
-          value: clickValue,
-          color: 'white',
-          text: formatNumber(clickValue, true),
-        };
-        setClickEffects((prev) => [...prev, clickEffect]);
-        setTimeout(() => {
-          setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-        }, 700);
+        if (currentPage === 'home') {
+          const clickEffect = {
+            id: Date.now(),
+            x,
+            y,
+            value: clickValue,
+            color: 'white',
+            text: formatNumber(clickValue, true),
+          };
+          setClickEffects((prev) => [...prev, clickEffect]);
+          setTimeout(() => {
+            setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
+          }, 700);
+        }
 
         // Trigger haptic feedback only for coin button click
         if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
@@ -1282,7 +1283,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setLastActiveTime(Date.now());
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, settings.vibration]
+    [clickPower, multiplier, energy, saveUserData, user, currentPage, settings.vibration]
   );
 
   const buyItem = useCallback(
@@ -1634,7 +1635,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         const savedUser = await response.json();
         setUser(savedUser);
-        console.log('Userdata saved successfully');
+        console.log('User data saved successfully');
       } catch (error) {
         console.error('Error saving user data:', error);
         showGameAlert('Failed to save user data. Please try again.');
