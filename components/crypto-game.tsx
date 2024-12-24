@@ -220,33 +220,17 @@ const styles = `
     filter: grayscale(100%);
   }
 
-  @keyframes float {
-  0%, 100% {
-    transform: translateY(0);
+  @keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
   }
-  50% {
-    transform: translateY(-10px);
+  to {
+    transform: rotate(360deg);
   }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-dash {
-  animation: dash 1.5s ease-in-out infinite;
-}
-
-@keyframes dash {
-  0% {
-    stroke-dashoffset: 301;
-  }
-  50% {
-    stroke-dashoffset: 70;
-  }
-  100% {
-    stroke-dashoffset: 301;
-  }
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
 }
 `;
 
@@ -3150,8 +3134,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
         <div className="relative w-64 h-64">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 opacity-20 blur-3xl animate-pulse"></div>
-          <div className="relative z-10">
-            <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+          <div className="relative z-10 flex items-center justify-center">
+            <div className="w-48 h-48 rounded-full bg-black flex items-center justify-center overflow-hidden">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                alt="Game Logo"
+                width={120}
+                height={120}
+                className="animate-pulse"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+            <svg className="absolute w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" strokeWidth="4" strokeLinecap="round" strokeDasharray="70 200" />
               <defs>
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#8B5CF6" />
@@ -3159,36 +3155,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <stop offset="100%" stopColor="#F59E0B" />
                 </linearGradient>
               </defs>
-              <circle cx="50" cy="50" r="48" fill="none" stroke="url(#gradient)" strokeWidth="4" strokeDasharray="301" strokeDashoffset="301" className="animate-dash" />
             </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-48 h-48 bg-gradient-to-br from-purple-500 via-pink-500 to-yellow-500 rounded-full animate-pulse opacity-30 blur-xl"></div>
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-48 h-48 rounded-full bg-black flex items-center justify-center overflow-hidden">
-                <div className="relative w-40 h-40 animate-pulse">
-                  <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                    alt="Game Logo"
-                    layout="fill"
-                    objectFit="contain"
-                    className="animate-float"
-                    draggable="false"
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-        <div className="absolute bottom-10 left-0 right-0 flex justify-center space-x-4">
-          {[0, 1, 2].map((index) => (
-            <div
-              key={index}
-              className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 animate-bounce"
-              style={{ animationDelay: `${index * 0.1}s`, animationDuration: '1s' }}
-            ></div>
-          ))}
+        <div className="absolute bottom-10 left-0 right-0 flex justify-center">
+          <p className="text-white text-xl font-bold animate-pulse">Loading...</p>
         </div>
       </div>
     );
