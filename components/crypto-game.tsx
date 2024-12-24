@@ -2021,9 +2021,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
-      <div className="w-full max-w-md flex flex-col justify-between h-full">
-        <div>
+    <div className="flex flex-col h-[calc(100vh-8rem)] justify-between p-4 relative">
+      <div className="w-full max-w-md mx-auto flex flex-col justify-between h-full">
+        <div className="flex-shrink-0">
           <div className="flex space-x-2 mb-4 w-full">
             <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
               <div className="flex justify-between items-center mb-1">
@@ -2124,9 +2124,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
         </div>
 
-        <div className="flex-grow flex flex-col items-center justify-center">
+        <div className="flex-grow flex items-center justify-center my-4">
           <button
-            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+            className="w-[min(350px,80vw)] h-[min(350px,80vw)] rounded-full overflow-hidden shadow-lg z-20 coin-button relative bg-transparent"
             onClick={clickCoin}
             onTouchStart={clickCoin}
             onTouchEnd={(e) => e.preventDefault()}
@@ -2135,8 +2135,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={selectedCoinImage}
                 alt={`Level ${level} Cheetah`}
-                width={350}
-                height={350}
+                layout="fill"
                 objectFit="contain"
                 className="relative z-10"
                 priority
@@ -2147,7 +2146,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
 
-        <div className="w-full mb-20"> {/* Increased bottom margin */}
+        <div className="flex-shrink-0 w-full">
           <div className="w-full mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
@@ -3233,15 +3232,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <PCMessage />
       ) : (
         <div
-          className="min-h-screen bg-black text-white overflow-hidden relative flex flex-col"
+          className="h-screen bg-black text-white overflow-hidden relative flex flex-col"
           style={{
-            backgroundAttachment: 'fixed',
             width: '100%',
-            height: '100vh',
-            minHeight: '-webkit-fill-available',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            touchAction: 'pan-y',
+            touchAction: 'pan-x pan-y',
             WebkitOverflowScrolling: 'touch',
             userSelect: 'none',
             WebkitTouchCallout: 'none',
@@ -3249,8 +3243,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             KhtmlUserSelect: 'none',
             MozUserSelect: 'none',
             msUserSelect: 'none',
-            paddingBottom: 'env(safe-area-inset-bottom)',
-            paddingTop: 'env(safe-area-inset-top)',
           }}
         >
           <meta
@@ -3264,13 +3256,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <StarryBackground />
           </div>
           {renderHeader()}
-          <div
-            className="flex-grow pb-24" // Increased bottom padding
-            style={{
-              paddingBottom: 'calc(6rem + env(safe-area-inset-bottom) + 16px)', // Increased padding
-              marginBottom: '16px',
-            }}
-          >
+          <div className="flex-grow overflow-hidden">
             {currentPage === 'home' && renderHome()}
             {currentPage === 'shop' && renderShop()}
             {currentPage === 'tasks' && renderTasks()}
