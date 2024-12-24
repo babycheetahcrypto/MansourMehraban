@@ -3120,22 +3120,34 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     return (
       <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
         <div className="relative w-64 h-64">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 opacity-20 blur-3xl animate-pulse"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 opacity-30 blur-3xl animate-pulse"></div>
           <div className="relative z-10">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute inset-0 border-4 border-transparent border-t-white rounded-full animate-spin"
-                style={{
-                  animationDuration: `${3 + i * 0.5}s`,
-                  animationDirection: i % 2 === 0 ? 'normal' : 'reverse',
-                }}
-              ></div>
-            ))}
+            <div className="w-full h-full flex items-center justify-center">
+              {[...Array(3)].map((_, index) => (
+                <div
+                  key={index}
+                  className="absolute w-full h-full border-4 border-transparent rounded-full animate-spin"
+                  style={{
+                    borderTopColor: index === 0 ? '#8B5CF6' : index === 1 ? '#EC4899' : '#3B82F6',
+                    animationDuration: `${3 + index * 0.5}s`,
+                    animationDirection: index % 2 === 0 ? 'normal' : 'reverse',
+                  }}
+                ></div>
+              ))}
+            </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 bg-white rounded-full animate-ping"></div>
+              <div className="w-16 h-16 bg-white rounded-full animate-ping opacity-75"></div>
             </div>
           </div>
+        </div>
+        <div className="absolute bottom-10 left-0 right-0 flex justify-center space-x-4">
+          {[...Array(3)].map((_, index) => (
+            <div
+              key={index}
+              className="w-3 h-3 bg-white rounded-full animate-bounce"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            ></div>
+          ))}
         </div>
       </div>
     );
