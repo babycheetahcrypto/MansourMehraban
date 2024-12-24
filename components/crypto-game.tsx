@@ -230,7 +230,20 @@ const styles = `
 }
 
 .animate-spin-slow {
-  animation: spin-slow 3s linear infinite;
+  animation: spin-slow 8s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 `;
 
@@ -3132,22 +3145,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden">
-        <div className="relative w-64 h-64">
+        <div className="relative w-80 h-80">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 opacity-20 blur-3xl animate-pulse"></div>
           <div className="relative z-10 flex items-center justify-center">
-            <div className="w-48 h-48 rounded-full bg-black flex items-center justify-center overflow-hidden">
+            <div className="w-64 h-64 rounded-full bg-black flex items-center justify-center overflow-hidden">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
                 alt="Game Logo"
-                width={120}
-                height={120}
+                width={160}
+                height={160}
                 className="animate-pulse"
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
             </div>
             <svg className="absolute w-full h-full animate-spin-slow" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" strokeWidth="4" strokeLinecap="round" strokeDasharray="70 200" />
+              <circle cx="50" cy="50" r="48" fill="none" stroke="url(#gradient)" strokeWidth="2" strokeLinecap="round" />
+              <circle cx="50" cy="50" r="48" fill="none" stroke="url(#gradient)" strokeWidth="2" strokeLinecap="round" strokeDasharray="0 15 30 15" className="opacity-70" />
+              <circle cx="50" cy="50" r="48" fill="none" stroke="url(#gradient)" strokeWidth="2" strokeLinecap="round" strokeDasharray="0 30 15 15" className="opacity-40" />
               <defs>
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#8B5CF6" />
@@ -3158,8 +3173,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </svg>
           </div>
         </div>
-        <div className="absolute bottom-10 left-0 right-0 flex justify-center">
-          <p className="text-white text-xl font-bold animate-pulse">Loading...</p>
+        <div className="absolute bottom-10 left-0 right-0 flex justify-center space-x-2">
+          {[0, 1, 2].map((index) => (
+            <div
+              key={index}
+              className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 animate-bounce"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            ></div>
+          ))}
         </div>
       </div>
     );
