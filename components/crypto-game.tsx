@@ -1929,7 +1929,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
   
-          <div className="flex items-center justify-center gap-2 mb-2"> {/* Reduced margin-bottom */}
+          <div className="flex items-center justify-center gap-2 mb-1"> {/* Reduced margin-bottom */}
             <h1
               className={`font-black text-white font-extrabold overflow-hidden ${formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'}`}
             >
