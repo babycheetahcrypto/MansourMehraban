@@ -1854,7 +1854,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex flex-col items-center justify-between h-full p-4 relative overflow-hidden">
       <div className="w-full max-w-md flex flex-col justify-between h-full">
         <div>
-        <div className="w-full mb-4"> 
+          <div className="flex space-x-2 mb-4 w-full">
             <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
               <div className="flex justify-between items-center mb-1">
                 <div className="flex items-center">
@@ -1986,7 +1986,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
 
-        <div className="w-full mb-6"> {/* Increased bottom margin */}
+        <div className="w-full mb-5"> {/* Increased bottom margin */}
           <div className="w-full mb-1">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
