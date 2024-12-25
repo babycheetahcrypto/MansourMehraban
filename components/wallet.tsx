@@ -7,6 +7,11 @@ import { useTonConnect } from '@/hooks/useTonConnect';
 import { formatNumber } from '../utils/formatNumber';
 import { TonConnectButton } from '@tonconnect/ui-react';
 
+interface WalletProps {
+  coins: number;
+  onWalletConnect: (address: string) => void;
+}
+
 const StarryBackground: React.FC = () => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
@@ -86,11 +91,22 @@ const StarryBackground: React.FC = () => {
   return <canvas ref={canvasRef} className="fixed inset-0 z-0" />;
 };
 
-const Wallet: React.FC<{ coins: number; onWalletConnect: (address: string) => void }> = ({
-  coins,
-  onWalletConnect,
-}) => {
-  const { connected, wallet, connect } = useTonConnect();
+// Inline NeonGradientCard component wrapper
+const NeonGradientCard: React.FC<React.ComponentProps<'div'>> = ({
+  children,
+  className,
+  ...props
+}) => (
+  <div
+    className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900/50 to-black/50 text-white border border-gray-700/30 backdrop-blur-xl animate-rainbow-border ${className}`}
+    {...props}
+  >
+    <div className="relative z-10 p-6">{children}</div>
+  </div>
+);
+
+const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
+  const { connected, wallet, connect, disconnect } = useTonConnect();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -105,7 +121,7 @@ const Wallet: React.FC<{ coins: number; onWalletConnect: (address: string) => vo
         <StarryBackground />
       </div>
       <div className="w-full max-w-md relative z-10">
-        <div className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700/30">
+        <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700/30">
           <CardHeader className="relative">
             <CardTitle className="z-10 text-2xl flex items-center justify-between">
               <span className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x">
@@ -151,7 +167,7 @@ const Wallet: React.FC<{ coins: number; onWalletConnect: (address: string) => vo
             )}
             <TonConnectButton className="w-full py-3 text-lg font-bold" />
           </CardContent>
-        </div>
+        </NeonGradientCard>
       </div>
     </div>
   );
