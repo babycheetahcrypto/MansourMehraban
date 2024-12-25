@@ -1851,88 +1851,88 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
-      <div className="w-full max-w-md flex flex-col justify-between h-full">
-        <div>
-          <div className="flex space-x-2 mb-4 w-full">
-            <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
-              <div className="flex justify-between items-center mb-1">
-                <div className="flex items-center">
-                  <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
-                    alt="Level Icon"
-                    width={18}
-                    height={18}
-                    quality={100}
-                    priority
-                    className="inline-block"
-                    draggable="false"
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
-                  <span className="text-sm font-bold text-white font-bold">Level {level}</span>
-                </div>
-              </div>
-              <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
-                <div
-                  className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out animate-pulse"
-                  style={{
-                    width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
-                    boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
-                  <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-                </div>
-              </div>
-              <div className="text-xs text-white font-bold flex justify-between mt-1">
-                <span className="font-bold">
-                  {formatNumber(user.coins - levelRequirements[level - 1], true)}
-                </span>
-                <span className="font-bold">
-                  {formatNumber(nextLevelRequirement - levelRequirements[level - 1], true)} coins
-                </span>
+    <div className="flex flex-col h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)] overflow-hidden">
+      {/* Top section */}
+      <div className="flex-shrink-0 p-4">
+        <div className="flex space-x-2 mb-4 w-full">
+          <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
+            <div className="flex justify-between items-center mb-1">
+              <div className="flex items-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Levels%203D%20ICON-OqKpsqUsCgruaYTpvTZkyMGr0gWVum.png"
+                  alt="Level Icon"
+                  width={18}
+                  height={18}
+                  quality={100}
+                  priority
+                  className="inline-block"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+                <span className="text-sm font-bold text-white ml-1">Level {level}</span>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                onClick={() => setCurrentPage('wallet')}
-                className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
+            <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
+              <div
+                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out animate-pulse"
+                style={{
+                  width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
+                  boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
+                }}
               >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-i45iGLhTQldoCi8pzRNLinRlgHiofn.png"
-                  alt="Wallet"
-                  width={32}
-                  height={32}
-                  quality={100}
-                  priority
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-              </Button>
-              <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
-                  alt="Profit Per Hour"
-                  width={22}
-                  height={22}
-                  quality={100}
-                  priority
-                  className="mb-1"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <span className="text-xs text-white font-bold">
-                  {formatNumber(profitPerHour, true)}/h
-                </span>
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
               </div>
+            </div>
+            <div className="text-xs text-white font-bold flex justify-between mt-1">
+              <span className="font-bold">
+                {formatNumber(user.coins - levelRequirements[level - 1], true)}
+              </span>
+              <span className="font-bold">
+                {formatNumber(nextLevelRequirement - levelRequirements[level - 1], true)} coins
+              </span>
             </div>
           </div>
-
-          <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => setCurrentPage('wallet')}
+              className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-i45iGLhTQldoCi8pzRNLinRlgHiofn.png"
+                alt="Wallet"
+                width={32}
+                height={32}
+                quality={100}
+                priority
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </Button>
+            <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
+                alt="Profit Per Hour"
+                width={22}
+                height={22}
+                quality={100}
+                priority
+                className="mb-1"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span className="text-xs text-white font-bold">
+                {formatNumber(profitPerHour, true)}/h
+              </span>
+            </div>
+          </div>
+        </div>
+  
+        <div className="flex items-center justify-center gap-2 mb-2">
           <h1
             className={`font-black text-white font-extrabold overflow-hidden ${
-              formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'
+              formatNumber(user.coins, false).length > 7 ? 'text-3xl' : 'text-4xl'
             }`}
           >
             {formatNumber(user.coins, false)
@@ -1949,12 +1949,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 </span>
               ))}
           </h1>
-          <div className="w-12 h-12">
+          <div className="w-10 h-10">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
               alt="Crypto Coin"
-              width={48}
-              height={48}
+              width={40}
+              height={40}
               quality={100}
               priority
               draggable="false"
@@ -1963,10 +1963,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
         </div>
       </div>
-
-      <div className="flex-grow flex flex-col items-center justify-center">
+  
+      {/* Middle section with coin button */}
+      <div className="flex-grow flex items-center justify-center">
         <button
-          className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+          className="w-[min(80vw,350px)] h-[min(80vw,350px)] rounded-full overflow-hidden shadow-lg z-20 coin-button relative bg-transparent"
           onClick={clickCoin}
           onTouchStart={clickCoin}
           onTouchEnd={(e) => e.preventDefault()}
@@ -1975,11 +1976,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             <Image
               src={selectedCoinImage}
               alt={`Level ${level} Cheetah`}
-              width={350}
-              height={350}
+              layout="fill"
+              objectFit="contain"
               quality={100}
               priority
-              objectFit="contain"
               className="relative z-10"
               draggable="false"
               onContextMenu={(e) => e.preventDefault()}
@@ -1987,8 +1987,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
         </button>
       </div>
-
-      <div className="w-full mb-4"> {/* Reduced bottom margin */}
+  
+      {/* Bottom section */}
+      <div className="flex-shrink-0 p-4 pb-6">
         <div className="w-full mb-2">
           <div className="flex justify-between text-sm mb-2 text-white font-bold">
             <span className="font-bold flex items-center gap-2">
@@ -2023,7 +2024,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
         </div>
-
+  
         <div className="flex gap-2 w-full">
           <Button
             onClick={() => {
@@ -2072,8 +2073,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
       </div>
     </div>
-  </div>
-);
+  );
 
 
 
