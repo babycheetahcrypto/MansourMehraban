@@ -338,19 +338,13 @@ const StarryBackground: React.FC = () => {
     const stars = Array.from({ length: 200 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      radius: Math.random() * 2 + 1,
-      speed: Math.random() * 0.5 + 0.1,
-      color: `rgba(${Math.random() * 200 + 55}, ${Math.random() * 200 + 55}, ${
-        Math.random() * 200 + 55
-      }, ${Math.random() * 0.5 + 0.5})`,
+      radius: Math.random() * 1.5 + 0.5,
+      speed: Math.random() * 0.2 + 0.1,
     }));
 
     let animationFrameId: number;
-    let lastScrollY = window.scrollY;
 
     const animate = () => {
-      if (!ctx || !canvas) return;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Create a radial gradient
@@ -369,21 +363,15 @@ const StarryBackground: React.FC = () => {
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const currentScrollY = window.scrollY;
-      const scrollDiff = currentScrollY - lastScrollY;
-      lastScrollY = currentScrollY;
-
       stars.forEach((star) => {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = star.color;
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.5})`;
         ctx.fill();
 
         star.y += star.speed;
         if (star.y > canvas.height) {
           star.y = 0;
-        } else if (star.y < 0) {
-          star.y = canvas.height;
         }
       });
 
@@ -392,14 +380,18 @@ const StarryBackground: React.FC = () => {
 
     animate();
 
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('scroll', () => {
-      lastScrollY = window.scrollY;
-    });
+    const handleResize = () => {
+      resizeCanvas();
+      stars.forEach(star => {
+        star.x = Math.random() * canvas.width;
+        star.y = Math.random() * canvas.height;
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('scroll', () => {});
+      window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -1811,214 +1803,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     saveUserData({ ...user, settings });
   }, [settings]);
 
-  const renderSettings = () => (
-    <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
-        <CardHeader className="relative p-6 pb-2">
-          <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          {settingsConfig.map(({ id, icon, label, description }) => (
-            <div
-              key={id}
-              className="flex items-center justify-between py-4 px-4 rounded-xl bg-gradient-to-r from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/30"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-gray-700/50 to-gray-800/50">
-                  <Image
-                    src={icon}
-                    alt={label}
-                    width={32}
-                    height={32}
-                    className="text-primary"
-                    draggable="false"
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-sm font-medium text-white">{label}</h3>
-                  <p className="text-xs text-gray-400">{description}</p>
-                </div>
-              </div>
-              <Switch
-                id={id}
-                checked={settings[id as keyof typeof settings]}
-                onCheckedChange={(checked) => {
-                  const newSettings = {
-                    ...settings,
-                    [id]: checked
-                  };
-                  setSettings(newSettings);
-                  saveUserData({ ...user, settings: newSettings });
-
-                  if (id === 'backgroundMusic') {
-                    if (checked && backgroundMusicAudio) {
-                      backgroundMusicAudio.play().catch(console.error);
-                      backgroundMusicAudio.loop = true;
-                    } else if (backgroundMusicAudio) {
-                      backgroundMusicAudio.pause();
-                      backgroundMusicAudio.currentTime = 0;
-                    }
-                  }
-                }}
-                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
-              />
-            </div>
-          ))}
-        </CardContent>
-      </NeonGradientCard>
-    </div>
-  );
-
-
-  const renderHeader = () => (
-    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
-      <Card className="bg-transparent border-0 overflow-hidden">
-        <CardContent className="p-0 flex items-center justify-between relative flex-wrap">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden border border-white/20">
-              <Image
-                src={user.profilePhoto}
-                alt={user.username}
-                width={48}
-                height={48}
-                className="rounded-full"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </div>
-            <div>
-              <h2 className="font-black text-base text-white">
-                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 9) + ((`${user.firstName || ''} ${user.lastName || ''}`.trim().length > 9) ? '...' : '')}
-              </h2>
-              <div className="text-sm text-white font-bold flex items-center">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
-                  alt="Coin"
-                  width={20}
-                  height={20}
-                  className="mr-1"
-                  draggable="false"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <span className="font-bold">{formatNumberWithSuffix(Math.floor(user.coins))}</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
-              onClick={() => {
-                setCurrentPage('trophies');
-              }}
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%203D%20ICON-OWj5E59yfxlLk1Ggf2x8o0kfMIJNVy.png"
-                alt="Trophies"
-                width={32}
-                height={32}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Button>
-            <Button
-              variant="ghost"
-              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
-              onClick={() => {
-                setCurrentPage('levels');
-              }}
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LEVEL%203D%20ICON-1QycsqYoN36yz9KyR6KM3Q7pfm2eTe.png"
-                alt="Levels"
-                width={32}
-                height={32}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Button>
-            <Button
-              variant="ghost"
-              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
-              onClick={() => {
-                setCurrentPage('settings');
-              }}
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-e5kOIT7doa350SWGGjbyEw71v4Ldhm.png"
-                alt="Settings"
-                width={32}
-                height={32}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );  
-
-  const renderbottom = () => (
-    <div
-      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
-      style={{
-        paddingBottom: 'max(env(safe-area-inset-bottom), 16px)',
-      }}
-    >
-      <div className="flex justify-around items-center max-w-md mx-auto relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-800/30 to-blue-900/30 rounded-full blur-xl"></div>
-        {[
-          {
-            page: 'tasks',
-            text: 'Tasks',
-            icon: 'TASKS%203D%20ICON-TdX24HYmqD0KAnug5YsjXN8t6qMRDr.png',
-          },
-          {
-            page: 'shop',
-            text: 'Shop',
-            icon: 'SHOP%203D%20ICON-02YxP35Bd9AC8hMPGjqzUQylpXOHRS.png',
-          },
-          {
-            page: 'home',
-            text: 'Home',
-            icon: 'Home%203D%20ICON-lq4p7b3umu25lmHYmoI2AyAjriJJl5.png',
-          },
-          {
-            page: 'ranking',
-            text: 'Ranking',
-            icon: 'RATING%203D%20ICON-fc1CF0mncViyB8MTFT7iisKtLfBKoA.png',
-          },
-          {
-            page: 'invite',
-            text: 'Invite',
-            icon: 'FRIEND%20INVITE%203D%20ICON-GyAxv2xoA7fZeN65uJ60ILc6RQxxXN.png',
-          },
-        ].map(({ page, text, icon }) => (
-          <CryptoButton
-            key={page}
-            icon={(props) => (
-              <Image
-                src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
-                alt={text}
-                width={37}
-                height={37}
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-                {...props}
-              />
-            )}
-            href={page}
-            text={text}
-            isActive={currentPage === page}
-            setCurrentPage={setCurrentPage}
-          />
-        ))}
-      </div>
-    </div>
-  );
 
   const renderHome = () => (
     <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
@@ -2224,6 +2008,216 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </Button>
           </div>
         </div>
+      </div>
+    </div>
+  );
+
+
+  const renderSettings = () => (
+    <div className="flex-grow flex items-center justify-center p-6">
+      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+        <CardHeader className="relative p-6 pb-2">
+          <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          {settingsConfig.map(({ id, icon, label, description }) => (
+            <div
+              key={id}
+              className="flex items-center justify-between py-4 px-4 rounded-xl bg-gradient-to-r from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/30"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-gray-700/50 to-gray-800/50">
+                  <Image
+                    src={icon}
+                    alt={label}
+                    width={32}
+                    height={32}
+                    className="text-primary"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-medium text-white">{label}</h3>
+                  <p className="text-xs text-gray-400">{description}</p>
+                </div>
+              </div>
+              <Switch
+                id={id}
+                checked={settings[id as keyof typeof settings]}
+                onCheckedChange={(checked) => {
+                  const newSettings = {
+                    ...settings,
+                    [id]: checked
+                  };
+                  setSettings(newSettings);
+                  saveUserData({ ...user, settings: newSettings });
+
+                  if (id === 'backgroundMusic') {
+                    if (checked && backgroundMusicAudio) {
+                      backgroundMusicAudio.play().catch(console.error);
+                      backgroundMusicAudio.loop = true;
+                    } else if (backgroundMusicAudio) {
+                      backgroundMusicAudio.pause();
+                      backgroundMusicAudio.currentTime = 0;
+                    }
+                  }
+                }}
+                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
+              />
+            </div>
+          ))}
+        </CardContent>
+      </NeonGradientCard>
+    </div>
+  );
+
+
+  const renderHeader = () => (
+    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
+      <Card className="bg-transparent border-0 overflow-hidden">
+        <CardContent className="p-0 flex items-center justify-between relative flex-wrap">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-full flex items-center justify-center transform rotate-12 shadow-lg overflow-hidden border border-white/20">
+              <Image
+                src={user.profilePhoto}
+                alt={user.username}
+                width={48}
+                height={48}
+                className="rounded-full"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+            <div>
+              <h2 className="font-black text-base text-white">
+                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 9) + ((`${user.firstName || ''} ${user.lastName || ''}`.trim().length > 9) ? '...' : '')}
+              </h2>
+              <div className="text-sm text-white font-bold flex items-center">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-Jx43bOKm7s99NARIa6gjgHp3gQ7RP1.png"
+                  alt="Coin"
+                  width={20}
+                  height={20}
+                  className="mr-1"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+                <span className="font-bold">{formatNumberWithSuffix(Math.floor(user.coins))}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
+              onClick={() => {
+                setCurrentPage('trophies');
+              }}
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%203D%20ICON-OWj5E59yfxlLk1Ggf2x8o0kfMIJNVy.png"
+                alt="Trophies"
+                width={32}
+                height={32}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
+              onClick={() => {
+                setCurrentPage('levels');
+              }}
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LEVEL%203D%20ICON-1QycsqYoN36yz9KyR6KM3Q7pfm2eTe.png"
+                alt="Levels"
+                width={32}
+                height={32}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
+              onClick={() => {
+                setCurrentPage('settings');
+              }}
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-e5kOIT7doa350SWGGjbyEw71v4Ldhm.png"
+                alt="Settings"
+                width={32}
+                height={32}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );  
+
+  const renderbottom = () => (
+    <div
+      className="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-2 rounded-t-3xl z-50 border-t border-gray-700/30"
+      style={{
+        paddingBottom: 'max(env(safe-area-inset-bottom), 16px)',
+      }}
+    >
+      <div className="flex justify-around items-center max-w-md mx-auto relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-800/30 to-blue-900/30 rounded-full blur-xl"></div>
+        {[
+          {
+            page: 'tasks',
+            text: 'Tasks',
+            icon: 'TASKS%203D%20ICON-TdX24HYmqD0KAnug5YsjXN8t6qMRDr.png',
+          },
+          {
+            page: 'shop',
+            text: 'Shop',
+            icon: 'SHOP%203D%20ICON-02YxP35Bd9AC8hMPGjqzUQylpXOHRS.png',
+          },
+          {
+            page: 'home',
+            text: 'Home',
+            icon: 'Home%203D%20ICON-lq4p7b3umu25lmHYmoI2AyAjriJJl5.png',
+          },
+          {
+            page: 'ranking',
+            text: 'Ranking',
+            icon: 'RATING%203D%20ICON-fc1CF0mncViyB8MTFT7iisKtLfBKoA.png',
+          },
+          {
+            page: 'invite',
+            text: 'Invite',
+            icon: 'FRIEND%20INVITE%203D%20ICON-GyAxv2xoA7fZeN65uJ60ILc6RQxxXN.png',
+          },
+        ].map(({ page, text, icon }) => (
+          <CryptoButton
+            key={page}
+            icon={(props) => (
+              <Image
+                src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/${icon}`}
+                alt={text}
+                width={37}
+                height={37}
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+                {...props}
+              />
+            )}
+            href={page}
+            text={text}
+            isActive={currentPage === page}
+            setCurrentPage={setCurrentPage}
+          />
+        ))}
       </div>
     </div>
   );
