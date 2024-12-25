@@ -1240,18 +1240,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const x = clientX;
         const y = clientY;
         if (currentPage === 'home') {
-          const clickEffect = {
-            id: Date.now(),
-            x,
-            y,
-            value: clickValue,
-            color: 'white',
-            text: formatNumber(clickValue, true),
-          };
-          setClickEffects((prev) => [...prev, clickEffect]);
+          const button = event.currentTarget;
+          button.classList.add('animate-button-click');
           setTimeout(() => {
-            setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
-          }, 700);
+            button.classList.remove('animate-button-click');
+          }, 300);
         }
 
         // Trigger haptic feedback only for coin button click
@@ -1910,7 +1903,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         <div className="flex-grow flex flex-col items-center justify-center">
           <button
-            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent animate-button-click"
             onClick={clickCoin}
             onTouchStart={clickCoin}
             onTouchEnd={(e) => e.preventDefault()}
