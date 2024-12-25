@@ -3412,16 +3412,17 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <style>{styles}</style>
           <div className="fixed inset-0 z-0 overflow-hidden">
-            <StarryBackground />
-          </div>
-          {renderHeader()}
-          <div
-            className="flex-grow pb-24" // Increased bottom padding
-            style={{
-              paddingBottom: 'calc(2rem + env(safe-area-inset-bottom) + 12px)', // Increased padding
-              marginBottom: '12px',
-            }}
-          >
+          <StarryBackground />
+        </div>
+        {renderHeader()}
+        <div
+          className="flex-grow pb-24"
+          style={{
+            paddingBottom: 'calc(2rem + env(safe-area-inset-bottom) + 12px)',
+            marginBottom: '0',
+            marginTop: '0', // Remove any top margin
+          }}
+        >
             {currentPage === 'home' && renderHome()}
             {currentPage === 'shop' && renderShop()}
             {currentPage === 'tasks' && renderTasks()}
