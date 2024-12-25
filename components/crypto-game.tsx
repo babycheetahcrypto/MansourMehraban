@@ -3418,7 +3418,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <div
           className="flex-grow pb-24"
           style={{
-            paddingBottom: 'calc(2rem + env(safe-area-inset-bottom) + 12px)',
+            paddingBottom: '1)',
             marginBottom: '0',
             marginTop: '0', // Remove any top margin
           }}
