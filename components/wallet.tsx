@@ -110,8 +110,8 @@ const Wallet: React.FC<{ coins: number; onWalletConnect: (address: string) => vo
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900/50 to-black/50 text-white border border-gray-700/30 backdrop-blur-xl">
           <CardHeader className="relative">
             <CardTitle className="z-10 text-2xl flex items-center justify-between">
-              <span className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x shadow-lg drop-shadow-md">
-              Airdrop Coming Soon!
+              <span className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x">
+                Airdrop Soon!
               </span>
               <div className="relative ml-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full blur-md animate-pulse"></div>
@@ -126,6 +126,7 @@ const Wallet: React.FC<{ coins: number; onWalletConnect: (address: string) => vo
                 />
               </div>
             </CardTitle>
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
             <div className="bg-gray-800/50 p-4 rounded-lg backdrop-filter backdrop-blur-sm">
