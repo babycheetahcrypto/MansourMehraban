@@ -1851,7 +1851,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
+    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden h-screen">
       <div className="w-full max-w-md flex flex-col justify-between h-full">
         <div>
           <div className="flex space-x-2 mb-4 w-full">
@@ -1986,7 +1986,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
 
-        <div className="w-full mb-20"> {/* Increased bottom margin */}
+        <div className="w-full">
           <div className="w-full mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
@@ -3416,10 +3416,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </div>
           {renderHeader()}
           <div
-            className="flex-grow pb-24" // Increased bottom padding
+            className="flex-grow"
             style={{
-              paddingBottom: 'calc(2rem + env(safe-area-inset-bottom) + 12px)', // Increased padding
-              marginBottom: '12px',
+              paddingBottom: 'calc(env(safe-area-inset-bottom) + 80px)',
             }}
           >
             {currentPage === 'home' && renderHome()}
