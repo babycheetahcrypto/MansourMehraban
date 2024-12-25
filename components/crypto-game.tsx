@@ -15,6 +15,14 @@ import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
 
+const preloadImages = (imageUrls: string[]) => {
+  imageUrls.forEach((url) => {
+    const img = new window.Image();
+    img.src = url;
+  });
+};
+
+
 interface User extends UserType {}
 
 interface CryptoGameProps {
@@ -613,7 +621,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         backgroundMusic: false,
       },
       profitPerHour: 0,
-      boosterCredits: 1, // Updated initial boosterCredits
+      boosterCredits: 1,
       lastBoosterReset: null,
     }
   );
@@ -685,6 +693,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       handleWalletConnect(wallet.address);
     }
   }, [connected, wallet, user.walletAddress, handleWalletConnect]);
+
+  useEffect(() => {
+    const allImageUrls = [
+      ...levelImages,
+      ...trophies.map((trophy) => trophy.icon),
+      ...shopItems.map((item) => item.image),
+      ...premiumShopItems.map((item) => item.image),
+      // Add any other image URLs used in the game
+    ];
+    // This ensures all images are preloaded in full quality
+    preloadImages(allImageUrls);
+  }, []);
 
   const settingsConfig = [
     {
@@ -829,6 +849,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="YouTube"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -854,6 +876,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Facebook"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -876,6 +900,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="X"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -898,6 +924,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Instagram"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -920,6 +948,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="YouTube"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -942,6 +972,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="YouTube"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -964,6 +996,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Telegram"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -987,6 +1021,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Invite Friends"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -1010,6 +1046,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Reach Level 10"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -1030,6 +1068,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Trophy's Level"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -1049,6 +1089,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="X"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -1071,6 +1113,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Instagram"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -1093,6 +1137,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="WhatsApp"
           width={36}
           height={36}
+          quality={100}
+          priority
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -1817,6 +1863,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     alt="Level Icon"
                     width={18}
                     height={18}
+                    quality={100}
+                    priority
                     className="inline-block"
                     draggable="false"
                     onContextMenu={(e) => e.preventDefault()}
@@ -1856,6 +1904,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Wallet"
                   width={32}
                   height={32}
+                  quality={100}
+                  priority
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
@@ -1866,6 +1916,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Profit Per Hour"
                   width={22}
                   height={22}
+                  quality={100}
+                  priority
                   className="mb-1"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
@@ -1902,6 +1954,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 width={48}
                 height={48}
                 quality={100}
+                priority
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -1922,9 +1975,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt={`Level ${level} Cheetah`}
                 width={350}
                 height={350}
+                quality={100}
+                priority
                 objectFit="contain"
                 className="relative z-10"
-                priority
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -1941,6 +1995,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Energy"
                   width={24}
                   height={24}
+                  quality={100}
+                  priority
                   className="animate-pulse"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
@@ -1978,6 +2034,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Daily Reward"
                 width={30}
                 height={30}
+                quality={100}
+                priority
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -1995,6 +2053,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="2x Multiplier"
                 width={30}
                 height={30}
+                quality={100}
+                priority
                 className="mr-1"
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
@@ -2034,6 +2094,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     alt={label}
                     width={32}
                     height={32}
+                    quality={100}
+                    priority
                     className="text-primary"
                     draggable="false"
                     onContextMenu={(e) => e.preventDefault()}
@@ -2086,6 +2148,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt={user.username}
                 width={48}
                 height={48}
+                quality={100}
+                priority
                 className="rounded-full"
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
@@ -2101,6 +2165,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Coin"
                   width={20}
                   height={20}
+                  quality={100}
+                  priority
                   className="mr-1"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
@@ -2122,6 +2188,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Trophies"
                 width={32}
                 height={32}
+                quality={100}
+                priority
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -2138,6 +2206,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Levels"
                 width={32}
                 height={32}
+                quality={100}
+                priority
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -2154,6 +2224,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Settings"
                 width={32}
                 height={32}
+                quality={100}
+                priority
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
@@ -2208,6 +2280,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt={text}
                 width={37}
                 height={37}
+                quality={100}
+                priority
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
                 {...props}
@@ -2287,6 +2361,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                             alt="Claimed"
                             width={24}
                             height={24}
+                            quality={100}
+                            priority
+                            draggable="false"
+                            onContextMenu={(e) => e.preventDefault()}
                           />
                         </Button>
                       ) : (
@@ -2308,6 +2386,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                             alt="Claim"
                             width={24}
                             height={24}
+                            quality={100}
+                            priority
+                            draggable="false"
+                            onContextMenu={(e) => e.preventDefault()}
                           />
                         </Button>
                       )
@@ -2338,6 +2420,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                               alt="Start"
                               width={24}
                               height={24}
+                              quality={100}
+                              priority
+                              draggable="false"
+                              onContextMenu={(e) => e.preventDefault()}
                             />
                           </Button>
                         )}
@@ -2366,6 +2452,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       alt="Check"
                       width={24}
                       height={24}
+                      quality={100}
+                      priority
+                      draggable="false"
+                      onContextMenu={(e) => e.preventDefault()}
                     />
                     <span>Check</span>
                   </Button>
@@ -2427,6 +2517,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <Image
                     src={item.image}
                     alt={item.name}
+                    width={100}
+                    height={100}
+                    quality={100}
+                    priority
                     layout="fill"
                     objectFit="cover"
                     className={`relative z-10 rounded-[15px] ${
@@ -2444,7 +2538,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     alt="Level"
                     width={14}
                     height={14}
+                    quality={100}
+                    priority
                     className="inline mr-1"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                   Level: {item.level}
                 </p>
@@ -2454,7 +2552,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     alt="Profit"
                     width={14}
                     height={14}
+                    quality={100}
+                    priority
                     className="inline mr-1"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                   Profit: {formatNumber(item.baseProfit * (1 + 0.1 * (item.level - 1)), true)}/h
                 </p>
@@ -2469,7 +2571,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     alt="Crypto Coin"
                     width={16}
                     height={16}
+                    quality={100}
+                    priority
                     className="mr-1"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                   {formatNumber(item.basePrice * Math.pow(1.5, item.level - 1), true)}
                 </Button>
@@ -2494,6 +2600,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <Image
                     src={item.image}
                     alt={item.name}
+                    width={100}
+                    height={100}
+                    quality={100}
+                    priority
                     layout="fill"
                     objectFit="cover"
                     className="rounded-[15px] group-hover:opacity-80 transition-opacity duration-300"
@@ -2511,7 +2621,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     alt={item.id === 1 ? 'Boost' : 'Tap'}
                     width={14}
                     height={14}
+                    quality={100}
+                    priority
                     className="inline mr-1"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                   {item.id === 1 ? 'Boost:' : 'Tap:'}{' '}
                   {item.id === 1 ? item.boosterCredits : item.tap}
@@ -2527,7 +2641,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     alt="Crypto Coin"
                     width={16}
                     height={16}
+                    quality={100}
+                    priority
                     className="mr-1"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                   {formatNumber(item.basePrice, true)}
                 </Button>
@@ -2640,6 +2758,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       alt={`Level ${index + 1}`}
                       layout="fill"
                       objectFit="contain"
+                      quality={100}
+                      priority
                       className={`relative z-10 ${!isUnlocked ? 'opacity-50 grayscale' : ''}`}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
@@ -2658,7 +2778,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           alt="Unlocked Icon"
                           width={16}
                           height={16}
+                          quality={100}
+                          priority
                           className="inline-block mr-1"
+                          draggable="false"
+                          onContextMenu={(e) => e.preventDefault()}
                         />
                         <span>Unlocked</span>
                       </>
@@ -2693,7 +2817,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           alt="Current"
                           width={20}
                           height={20}
+                          quality={100}
+                          priority
                           className="mr-2"
+                          draggable="false"
+                          onContextMenu={(e) => e.preventDefault()}
                         />
                       ) : (
                         <Image
@@ -2701,7 +2829,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                           alt="Use"
                           width={20}
                           height={20}
+                          quality={100}
+                          priority
                           className="mr-2"
+                          draggable="false"
+                          onContextMenu={(e) => e.preventDefault()}
                         />
                       )}
                       <span className="font-bold">
@@ -2741,6 +2873,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Awesome"
           width={34}
           height={34}
+          quality={100}
+          priority
           className="w-6 h-6 relative z-10"
           draggable="false"
           onContextMenu={(e) => e.preventDefault()}
@@ -2798,6 +2932,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     alt={`Day ${day} Icon`}
                     width={50}
                     height={50}
+                    quality={100}
+                    priority
                     className={`w-12 h-12 ${
                       isCurrentDay ? 'text-white' : isPastDay ? 'text-white' : 'text-white'
                     }`}
@@ -2826,6 +2962,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Claim Reward"
                 width={24}
                 height={24}
+                quality={100}
+                priority
                 className="w-6 h-6 mr-2"
               />
               <span className="font-bold">Claim Reward</span>
@@ -2866,6 +3004,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Copy"
                   width={24}
                   height={24}
+                  quality={100}
+                  priority
                   className="w-5 h-5 mr-2"
                 />
                 <span className="font-bold">Copy</span>
@@ -2885,6 +3025,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               alt="Friends Activity"
               width={34}
               height={34}
+              quality={100}
+              priority
               className="w-8 h-8 mr-2"
             />
             <span className="font-bold">Friends Activity</span>
@@ -2943,6 +3085,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt={trophy.name}
                   width={150}
                   height={150}
+                  quality={100}
+                  priority
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src =
@@ -2973,6 +3117,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       alt="Claim Trophy"
                       width={20}
                       height={20}
+                      quality={100}
+                      priority
                       className="mr-2"
                     />
                     <span className="font-bold">Claim</span>
@@ -2986,6 +3132,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       alt="Claimed Trophy"
                       width={20}
                       height={20}
+                      quality={100}
+                      priority
                       className="mr-2"
                     />
                     <span className="font-bold">Claimed</span>
@@ -2999,6 +3147,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                       alt="Locked Trophy"
                       width={20}
                       height={20}
+                      quality={100}
+                      priority
                       className="mr-2"
                     />
                     <span className="font-bold">Locked</span>
@@ -3141,6 +3291,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Game Logo"
                 width={80}
                 height={80}
+                quality={100}
+                priority
                 className="animate-pulse"
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
@@ -3205,6 +3357,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           alt="Achievement Icon"
           width={34}
           height={34}
+          quality={100}
+          priority
           className="w-6 h-6 relative z-10"
         />
         <span className="font-extrabold text-lg relative z-10">Embrace the Power!</span>
@@ -3302,6 +3456,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Game Logo"
                   width={40}
                   height={40}
+                  quality={100}
+                  priority
                   className="ml-3"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
@@ -3319,6 +3475,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Claim Icon"
                   width={34}
                   height={34}
+                  quality={100}
+                  priority
                   className="w-6 h-6 relative z-10"
                 />
                 <span className="font-extrabold text-lg relative z-10">Claim Now!</span>
@@ -3354,6 +3512,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   alt="Level Up Icon"
                   width={34}
                   height={34}
+                  quality={100}
+                  priority
                   className="w-6 h-6 relative z-10"
                 />
                 <span className="font-extrabold text-lg relative z-10">Level Up</span>
