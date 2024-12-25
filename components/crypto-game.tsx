@@ -1851,9 +1851,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
 
   const renderHome = () => (
-    <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
-      <div className="w-full max-w-md flex flex-col justify-between h-full">
-        <div>
+    <div className="flex flex-col h-[calc(100vh-8rem)] justify-between p-4 relative overflow-hidden">
+      <div className="w-full max-w-md mx-auto flex flex-col justify-between h-full">
+        <div className="flex-shrink-0">
           <div className="flex space-x-2 mb-4 w-full">
             <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
               <div className="flex justify-between items-center mb-1">
@@ -1869,7 +1869,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     draggable="false"
                     onContextMenu={(e) => e.preventDefault()}
                   />
-                  <span className="text-sm font-bold text-white font-bold">Level {level}</span>
+                  <span className="text-sm font-bold text-white font-bold ml-1">Level {level}</span>
                 </div>
               </div>
               <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
@@ -1928,152 +1928,151 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-
+  
           <div className="flex items-center justify-center gap-2 mb-2">
-          <h1
-            className={`font-black text-white font-extrabold overflow-hidden ${
-              formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'
-            }`}
-          >
-            {formatNumber(user.coins, false)
-              .split('')
-              .map((digit, index) => (
-                <span
-                  key={index}
-                  className="inline-block font-bold"
-                  style={{
-                    animation: `countUp 0.5s ${index * 0.1}s backwards`,
-                  }}
-                >
-                  {digit}
-                </span>
-              ))}
-          </h1>
-          <div className="w-12 h-12">
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
-              alt="Crypto Coin"
-              width={48}
-              height={48}
-              quality={100}
-              priority
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
+            <h1
+              className={`font-black text-white font-extrabold overflow-hidden ${
+                formatNumber(user.coins, false).length > 7 ? 'text-3xl' : 'text-4xl'
+              }`}
+            >
+              {formatNumber(user.coins, false)
+                .split('')
+                .map((digit, index) => (
+                  <span
+                    key={index}
+                    className="inline-block font-bold"
+                    style={{
+                      animation: `countUp 0.5s ${index * 0.1}s backwards`,
+                    }}
+                  >
+                    {digit}
+                  </span>
+                ))}
+            </h1>
+            <div className="w-10 h-10">
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Crypto%20Coin%203D%20ICON-QksBNLkNX7u1KmxGGnaVV8937NucdL.png"
+                alt="Crypto Coin"
+                width={40}
+                height={40}
+                quality={100}
+                priority
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex-grow flex flex-col items-center justify-center">
-        <button
-          className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
-          onClick={clickCoin}
-          onTouchStart={clickCoin}
-          onTouchEnd={(e) => e.preventDefault()}
-        >
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <Image
-              src={selectedCoinImage}
-              alt={`Level ${level} Cheetah`}
-              width={350}
-              height={350}
-              quality={100}
-              priority
-              objectFit="contain"
-              className="relative z-10"
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-          </div>
-        </button>
-      </div>
-
-      <div className="w-full mb-4"> {/* Reduced bottom margin */}
-        <div className="w-full mb-2">
-          <div className="flex justify-between text-sm mb-2 text-white font-bold">
-            <span className="font-bold flex items-center gap-2">
+  
+        <div className="flex-grow flex items-center justify-center">
+          <button
+            className="w-[min(80vw,350px)] h-[min(80vw,350px)] rounded-full overflow-hidden shadow-lg z-20 coin-button relative bg-transparent"
+            onClick={clickCoin}
+            onTouchStart={clickCoin}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Energy%203D%20ICON-4zZaqZ94OWxLZYPRzSYsS1bpecFsCS.png"
-                alt="Energy"
+                src={selectedCoinImage}
+                alt={`Level ${level} Cheetah`}
+                layout="fill"
+                objectFit="contain"
+                quality={100}
+                priority
+                className="relative z-10"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+          </button>
+        </div>
+  
+        <div className="w-full mt-4 flex-shrink-0">
+          <div className="w-full mb-2">
+            <div className="flex justify-between text-sm mb-1 text-white font-bold">
+              <span className="font-bold flex items-center gap-2">
+                <Image
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Energy%203D%20ICON-4zZaqZ94OWxLZYPRzSYsS1bpecFsCS.png"
+                  alt="Energy"
+                  width={20}
+                  height={20}
+                  quality={100}
+                  priority
+                  className="animate-pulse"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+                Energy
+              </span>
+              <span className="font-bold">
+                {Math.floor(energy)}/{maxEnergy}
+              </span>
+            </div>
+            <div className="h-2 bg-gray-800/50 backdrop-blur-sm rounded-full overflow-hidden relative">
+              <div
+                ref={energyRef}
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-400 via-blue-400 to-blue-600 rounded-full transition-all duration-300 ease-out"
+                style={{
+                  width: `${(energy / maxEnergy) * 100}%`,
+                  boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)',
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+  
+          <div className="flex gap-2 w-full">
+            <Button
+              onClick={() => {
+                setCurrentPage('dailyReward');
+              }}
+              className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-2 py-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 text-xs sm:text-sm font-bold daily-reward-button"
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
+                alt="Daily Reward"
                 width={24}
                 height={24}
                 quality={100}
                 priority
-                className="animate-pulse"
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
-              Energy
-            </span>
-            <span className="font-bold">
-              {Math.floor(energy)}/{maxEnergy}
-            </span>
-          </div>
-          <div className="h-3 bg-gray-800/50 backdrop-blur-sm rounded-full overflow-hidden relative">
-            <div
-              ref={energyRef}
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-400 via-blue-400 to-blue-600 rounded-full transition-all duration-300 ease-out"
-              style={{
-                width: `${(energy / maxEnergy) * 100}%`,
-                boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)',
-              }}
+              <span className="font-bold">Daily Reward</span>
+            </Button>
+            <Button
+              onClick={activateMultiplier}
+              className={`flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-2 py-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 text-xs sm:text-sm font-bold ${
+                user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
+              }`}
+              disabled={user.boosterCredits === 0 || !!multiplierEndTime}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
-              <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-            </div>
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
+                alt="2x Multiplier"
+                width={24}
+                height={24}
+                quality={100}
+                priority
+                className="mr-1"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <span className="font-bold">
+                {multiplierEndTime
+                  ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                  : user.boosterCredits === 0
+                    ? 'No credits'
+                    : `Booster (${user.boosterCredits})`}
+              </span>
+            </Button>
           </div>
-        </div>
-
-        <div className="flex gap-2 w-full">
-          <Button
-            onClick={() => {
-              setCurrentPage('dailyReward');
-            }}
-            className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-bold daily-reward-button"
-          >
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daily%20Reward%203D%20ICON-GE4oWyoZwrVMWsQY4vZGJbcJmyd2VX.png"
-              alt="Daily Reward"
-              width={30}
-              height={30}
-              quality={100}
-              priority
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-            <span className="font-bold">Daily Reward</span>
-          </Button>
-          <Button
-            onClick={activateMultiplier}
-            className={`flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-2 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 text-sm font-bold ${
-              user.boosterCredits === 0 || multiplierEndTime ? 'opacity-50' : ''
-            }`}
-            disabled={user.boosterCredits === 0 || !!multiplierEndTime}
-          >
-            <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BOOST%203D%20ICON-YhjAJUG0nQni2cUfdcWSAXtp6f5Cxo.png"
-              alt="2x Multiplier"
-              width={30}
-              height={30}
-              quality={100}
-              priority
-              className="mr-1"
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-            <span className="font-bold">
-              {multiplierEndTime
-                ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
-                : user.boosterCredits === 0
-                  ? 'No credits'
-                  : `Booster (${user.boosterCredits})`}
-            </span>
-          </Button>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
 
 
 
