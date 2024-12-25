@@ -1824,12 +1824,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <span className="text-sm font-bold text-white font-bold">Level {level}</span>
                 </div>
               </div>
-              <div className="w-full bg-gray-700/30 h-2 rounded-full overflow-hidden backdrop-blur-md">
+              <div className="w-1/2 mx-auto bg-gray-700/30 h-1 rounded-full overflow-hidden backdrop-blur-md">
                 <div
                   className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out animate-pulse"
                   style={{
                     width: `${((user.coins - levelRequirements[level - 1]) / (nextLevelRequirement - levelRequirements[level - 1])) * 100}%`,
-                    boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)',
+                    boxShadow: '0 0 10px rgba(147, 51, 234, 0.5)',
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
@@ -1849,7 +1849,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Button
                 variant="ghost"
                 onClick={() => setCurrentPage('wallet')}
-                className="flex-none w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold"
+                className="flex-none w-24 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 backdrop-blur-md text-white p-2 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 wallet-button font-bold flex flex-col items-center justify-center"
               >
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Wallet%203D%20ICON-i45iGLhTQldoCi8pzRNLinRlgHiofn.png"
@@ -1859,8 +1859,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
+                <span className="text-xs mt-1">Wallet</span>
               </Button>
-              <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <div className="flex-none w-24 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CLOCK%203D%20ICON-UUwIZcQbC3VSDZkALg1FQGG7PCsG2w.png"
                   alt="Profit Per Hour"
@@ -1873,6 +1874,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 <span className="text-xs text-white font-bold">
                   {formatNumber(profitPerHour, true)}/h
                 </span>
+                <span className="text-xs mt-1">Profit</span>
               </div>
             </div>
           </div>
