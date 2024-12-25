@@ -1253,7 +1253,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level]);
 
   const clickCoin = useCallback(
-    (event: React.TouchEvent<HTMLButtonElement>) => {
+    (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
       if (energy >= 1 && currentPage === 'home') {  // Only allow clicks on the home page
@@ -1279,6 +1279,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         if ('touches' in event) {
           clientX = event.touches[0].clientX;
           clientY = event.touches[0].clientY;
+        } else {
+          clientX = event.clientX;
+          clientY = event.clientY;
         }
         const x = clientX;
         const y = clientY;
@@ -1291,6 +1294,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             color: 'white',
             text: formatNumber(clickValue, true),
           };
+          setClickEffects((prev) => [...prev, clickEffect]);
           setTimeout(() => {
             setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
           }, 700);
@@ -1961,6 +1965,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         <div className="flex-grow flex items-center justify-center">
           <button
             className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+            onClick={clickCoin}
             onTouchStart={clickCoin}
             onTouchEnd={(e) => e.preventDefault()}
           >
