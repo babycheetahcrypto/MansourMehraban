@@ -1918,7 +1918,7 @@ setTimeout(() => {
 
         <div className="flex-grow flex flex-col items-center justify-center">
           <button
-            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent pulse-animate"
             onClick={clickCoin}
             onTouchStart={clickCoin}
             onTouchEnd={(e) => e.preventDefault()}
