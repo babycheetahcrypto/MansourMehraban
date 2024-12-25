@@ -1851,8 +1851,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
 
   const renderHome = () => (
-    <div className="flex flex-col items-center justify-between h-full p-4 relative overflow-hidden">
-      <div className="w-full max-w-md flex flex-col justify-between h-full">
+    <div className="flex flex-col items-center justify-between h-screen p-4 relative">
+      <div className="w-full max-w-md flex flex-col justify-between min-h-full flex-grow">
         <div>
           <div className="flex space-x-2 mb-1 w-full"> {/* Reduced margin-bottom */}
             <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
@@ -1964,7 +1964,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   
         <div className="flex-grow flex items-center justify-center">
           <button
-            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
+            className="w-[340px] h-[340px] rounded-full overflow-hidden shadow-lg z-20 coin-button relative bg-transparent"
             onClick={clickCoin}
             onTouchStart={clickCoin}
             onTouchEnd={(e) => e.preventDefault()}
@@ -1973,8 +1973,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={selectedCoinImage}
                 alt={`Level ${level} Cheetah`}
-                width={350}
-                height={350}
+                width={340}
+                height={340}
                 quality={100}
                 priority
                 objectFit="contain"
@@ -1986,7 +1986,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
   
-        <div className="w-full mb-1"> {/* Reduced bottom margin */}
+        <div className="w-full">
           <div className="w-full mb-1">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
@@ -2071,7 +2071,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
       </div>
     </div>
-  );
+  );  
 
 
   const renderHeader = () => (
