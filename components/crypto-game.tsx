@@ -1265,6 +1265,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
           );
         }
+        if (currentPage === 'home') {
+          const button = event.currentTarget;
+          button.classList.add('pulse');
+          setTimeout(() => {
+            button.classList.remove('pulse');
+          }, 100);
+        }
       }
     },
     [clickPower, multiplier, energy, saveUserData, user, currentPage, settings.vibration]
@@ -1859,6 +1866,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
                 />
+                <span className="text-xs mt-1">Wallet</span>
               </Button>
               <div className="flex-none w-16 h-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-md text-white p-2 rounded-xl shadow-lg flex flex-col items-center justify-center">
                 <Image
