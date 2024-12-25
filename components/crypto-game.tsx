@@ -1986,8 +1986,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
 
-        <div className="w-full mb-2"> {/* Increased bottom margin */}
-          <div className="w-full mb-2">
+        <div className="w-full mb-1"> {/* Increased bottom margin */}
+          <div className="w-full mb-1">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
                 <Image
