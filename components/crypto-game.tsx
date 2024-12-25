@@ -2022,7 +2022,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
 
-          <div className="flex gap-1 w-full"> {/* Updated margin */}
+          <div className="flex gap-2 w-full"> {/* Updated margin */}
             <Button
               onClick={() => {
                 setCurrentPage('dailyReward');
