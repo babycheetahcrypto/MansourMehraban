@@ -83,17 +83,17 @@ interface WalletProps {
 
 // Keyframe animation
 const styles = `
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-.coin-button:active, .coin-button.pulse {
-  animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
-}
-.coin-button {
-  transform-origin: center center;
-}
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  .coin-button:active, .coin-button.pulse {
+    animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
+  }
+  .coin-button {
+    transform-origin: center center;
+  }
   html, body {
     scroll-behavior: smooth;
   }
@@ -1254,14 +1254,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }, 700);
         }
 
-        // Add pop effect
-const button = event.currentTarget;
-button.classList.add('pulse');
-setTimeout(() => {
-  button.classList.remove('pulse');
-}, 100);
-
-
         // Trigger haptic feedback only for coin button click
         if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
           window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
@@ -1918,7 +1910,7 @@ setTimeout(() => {
 
         <div className="flex-grow flex flex-col items-center justify-center">
           <button
-            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent pulse-animate"
+            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button mb-4 relative bg-transparent"
             onClick={clickCoin}
             onTouchStart={clickCoin}
             onTouchEnd={(e) => e.preventDefault()}
