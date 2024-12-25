@@ -7,7 +7,6 @@ import { useTonConnect } from '@/hooks/useTonConnect';
 import { formatNumber } from '../utils/formatNumber';
 import { TonConnectButton } from '@tonconnect/ui-react';
 
-// Import the new StarryBackground
 const StarryBackground: React.FC = () => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
@@ -37,7 +36,6 @@ const StarryBackground: React.FC = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Background gradient
       const gradient = ctx.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,
@@ -103,23 +101,23 @@ const Wallet: React.FC<{ coins: number; onWalletConnect: (address: string) => vo
 
   return (
     <div className="flex-grow flex items-center justify-center p-6 relative">
-      {/* Updated background */}
-      <StarryBackground />
-
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <StarryBackground />
+      </div>
       <div className="w-full max-w-md relative z-10">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900/50 to-black/50 text-white border border-gray-700/30 backdrop-blur-xl">
+        <div className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl border border-gray-700/30">
           <CardHeader className="relative">
-            <CardTitle className="z-10 text-xl flex flex-col items-center justify-center">
-              <span className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x">
+            <CardTitle className="z-10 text-2xl flex items-center justify-between">
+              <span className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x">
                 Airdrop Soon!
               </span>
-              <div className="relative mt-2 w-16 h-16">
+              <div className="relative ml-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded-full blur-md animate-pulse"></div>
                 <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Airdrop%203D%20ICON-Tsx2ineRiNDjyKpWujizmUcch7ghwr.png"
                   alt="Airdrop"
-                  width={64}
-                  height={64}
+                  width={150}
+                  height={150}
                   className="relative z-10 transition-all duration-300 transform hover:scale-110"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()}
