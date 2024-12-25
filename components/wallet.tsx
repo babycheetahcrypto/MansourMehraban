@@ -165,7 +165,7 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
                 <p className="text-white">{error}</p>
               </div>
             )}
-<TonConnectButton className="w-3/4 mx-auto py-4 text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl shadow-lg transform transition-transform duration-300 hover:scale-105" />
+            <TonConnectButton className="w-full py-3 text-lg font-bold" />
           </CardContent>
         </NeonGradientCard>
       </div>
