@@ -1854,7 +1854,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     <div className="flex-grow flex flex-col items-center justify-between p-4 relative overflow-hidden">
       <div className="w-full max-w-md flex flex-col justify-between h-full">
         <div>
-          <div className="flex space-x-2 mb-4 w-full mt-16"> {/* Update 4 */}
+          <div className="flex space-x-2 mb-4 w-full">
             <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
               <div className="flex justify-between items-center mb-1">
                 <div className="flex items-center">
@@ -1986,7 +1986,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
 
-        <div className="w-full mb-24"> {/* Update 3 */}
+        <div className="w-full mb-20"> {/* Increased bottom margin */}
           <div className="w-full mb-2">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
@@ -2075,7 +2075,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
 
   const renderHeader = () => (
-    <div className="fixed top-0 left-0 right-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg"> {/* Update 1 */}
+    <div className="sticky top-0 z-10 bg-black/30 backdrop-blur-xl p-3 rounded-b-3xl border-b border-white/10 shadow-lg">
       <Card className="bg-transparent border-0 overflow-hidden">
         <CardContent className="p-0 flex items-center justify-between relative flex-wrap">
           <div className="flex items-center space-x-3">
