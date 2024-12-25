@@ -2083,8 +2083,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src={user.profilePhoto}
                 alt={user.username}
-                width={30}
-                height={30}
+                width={38}
+                height={38}
                 quality={100}
                 priority
                 className="rounded-full"
@@ -2094,7 +2094,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div>
               <h2 className="font-black text-base text-white">
-                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 9) + ((`${user.firstName || ''} ${user.lastName || ''}`.trim().length > 9) ? '...' : '')}
+                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 8) + ((`${user.firstName || ''} ${user.lastName || ''}`.trim().length > 8) ? '...' : '')}
               </h2>
               <div className="text-sm text-white font-bold flex items-center">
                 <Image
@@ -2123,8 +2123,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TROPHY%203D%20ICON-OWj5E59yfxlLk1Ggf2x8o0kfMIJNVy.png"
                 alt="Trophies"
-                width={24}
-                height={24}
+                width={28}
+                height={28}
                 quality={100}
                 priority
                 draggable="false"
@@ -2141,8 +2141,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LEVEL%203D%20ICON-1QycsqYoN36yz9KyR6KM3Q7pfm2eTe.png"
                 alt="Levels"
-                width={24}
-                height={24}
+                width={28}
+                height={28}
                 quality={100}
                 priority
                 draggable="false"
@@ -2159,8 +2159,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-e5kOIT7doa350SWGGjbyEw71v4Ldhm.png"
                 alt="Settings"
-                width={24}
-                height={24}
+                width={28}
+                height={28}
                 quality={100}
                 priority
                 draggable="false"
