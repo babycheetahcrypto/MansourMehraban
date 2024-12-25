@@ -38,7 +38,7 @@ interface WalletProps {
   onWalletConnect: (address: string) => void;
 }
 
-// Inline StarryBackground component
+// Updated StarryBackground component
 const StarryBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -67,11 +67,14 @@ const StarryBackground: React.FC = () => {
     }));
 
     let animationFrameId: number;
+    let lastScrollY = window.scrollY;
 
     const animate = () => {
       if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Create a radial gradient
       const gradient = ctx.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,
@@ -83,8 +86,13 @@ const StarryBackground: React.FC = () => {
       gradient.addColorStop(0, 'rgba(0, 0, 25, 1)');
       gradient.addColorStop(1, 'rgba(0, 0, 25, 1)');
 
+      // Fill the background with the gradient
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const currentScrollY = window.scrollY;
+      const scrollDiff = currentScrollY - lastScrollY;
+      lastScrollY = currentScrollY;
 
       stars.forEach((star) => {
         ctx.beginPath();
@@ -95,6 +103,8 @@ const StarryBackground: React.FC = () => {
         star.y += star.speed;
         if (star.y > canvas.height) {
           star.y = 0;
+        } else if (star.y < 0) {
+          star.y = canvas.height;
         }
       });
 
@@ -104,9 +114,13 @@ const StarryBackground: React.FC = () => {
     animate();
 
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('scroll', () => {
+      lastScrollY = window.scrollY;
+    });
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('scroll', () => {});
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -197,3 +211,4 @@ const Wallet: React.FC<WalletProps> = ({ coins, onWalletConnect }) => {
 };
 
 export default Wallet;
+
