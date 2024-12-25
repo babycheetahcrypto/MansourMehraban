@@ -1901,6 +1901,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 alt="Crypto Coin"
                 width={48}
                 height={48}
+                quality={100}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
