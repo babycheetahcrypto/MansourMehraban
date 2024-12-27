@@ -245,14 +245,22 @@ const styles = `
 
   @keyframes pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    50% { transform: scale(1.03); }
     100% { transform: scale(1); }
   }
   .coin-button:active, .coin-button.pulse {
-    animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
+    animation: pulse 0.15s cubic-bezier(.36,.07,.19,.97) both;
   }
   .coin-button {
     transform-origin: center center;
+  }
+  .coin-image {
+    pointer-events: none;
+    user-select: none;
+    transition: transform 0.15s ease;
+  }
+  .coin-button:active .coin-image, .coin-button.pulse .coin-image {
+    transform: scale(0.97);
   }
 `;
 
@@ -1305,7 +1313,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           button.classList.add('pulse');
           setTimeout(() => {
             button.classList.remove('pulse');
-          }, 100);
+          }, 150);
         }
 
         // Trigger haptic feedback
@@ -1977,21 +1985,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       onTouchStart={clickCoin}
       onTouchEnd={(e) => e.preventDefault()}
     >
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Image
-                src={selectedCoinImage}
-                alt={`Level ${level} Cheetah`}
-                width={350}
-                height={350}
-                quality={100}
-                priority
-                objectFit="contain"
-                className="relative z-10"
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </div>
-          </button>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <Image
+          src={selectedCoinImage}
+          alt={`Level ${level} Cheetah`}
+          width={350}
+          height={350}
+          quality={100}
+          priority
+          objectFit="contain"
+          className="relative z-10 coin-image"
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
+        />
+      </div>
+    </button>
         </div>
   
         <div className="w-full mb-1"> {/* Reduced bottom margin */}
