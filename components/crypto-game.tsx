@@ -657,7 +657,15 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     backgroundMusic: false,
   });
   
-  const [backgroundMusicAudio, setBackgroundMusicAudio] = useState<HTMLAudioElement | null>(null);
+  const [backgroundMusic] = useState(() => {
+    if (typeof Audio !== 'undefined') {
+      const audio = new Audio('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3');
+      audio.loop = true;
+      return audio;
+    }
+    return null;
+  });
+
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
@@ -1944,7 +1952,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-  
+
           <div className="flex items-center justify-center gap-2 mb-2"> {/* Reduced margin-bottom */}
             <h1
               className={`font-black text-white font-extrabold overflow-hidden ${formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'}`}
@@ -1977,31 +1985,31 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
         </div>
-  
+
         <div className="flex-grow flex items-center justify-center">
-        <button
-      className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button relative bg-transparent"
-      onClick={clickCoin}
-      onTouchStart={clickCoin}
-      onTouchEnd={(e) => e.preventDefault()}
-    >
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <Image
-          src={selectedCoinImage}
-          alt={`Level ${level} Cheetah`}
-          width={350}
-          height={350}
-          quality={100}
-          priority
-          objectFit="contain"
-          className="relative z-10 coin-image"
-          draggable="false"
-          onContextMenu={(e) => e.preventDefault()}
-        />
-      </div>
-    </button>
+          <button
+            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button relative bg-transparent"
+            onClick={clickCoin}
+            onTouchStart={clickCoin}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <Image
+                src={selectedCoinImage}
+                alt={`Level ${level} Cheetah`}
+                width={350}
+                height={350}
+                quality={100}
+                priority
+                objectFit="contain"
+                className="relative z-10 coin-image"
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+          </button>
         </div>
-  
+
         <div className="w-full mb-1"> {/* Reduced bottom margin */}
           <div className="w-full mb-1">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
@@ -2037,7 +2045,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               </div>
             </div>
           </div>
-  
+
           <div className="flex gap-2 w-full">
             <Button
               onClick={() => {
@@ -2296,12 +2304,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   saveUserData({ ...user, settings: newSettings });
 
                   if (id === 'backgroundMusic') {
-                    if (checked && backgroundMusicAudio) {
-                      backgroundMusicAudio.play().catch(console.error);
-                      backgroundMusicAudio.loop = true;
-                    } else if (backgroundMusicAudio) {
-                      backgroundMusicAudio.pause();
-                      backgroundMusicAudio.currentTime = 0;
+                    if (checked && backgroundMusic) {
+                      backgroundMusic.play().catch(console.error);
+                    } else if (backgroundMusic) {
+                      backgroundMusic.pause();
                     }
                   }
                 }}
@@ -3255,22 +3261,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     resetBoosterCredits();
   }, [resetBoosterCredits]);
-
-  useEffect(() => {
-    const audio = new Audio(
-      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3'
-    );
-    audio.preload = 'auto';
-    audio.load();
-    setBackgroundMusicAudio(audio);
-  
-    return () => {
-      if (backgroundMusicAudio) {
-        backgroundMusicAudio.pause();
-        backgroundMusicAudio.currentTime = 0;
-      }
-    };
-  }, []);
 
   const fetchData = async () => {
     setIsLoading(true);
