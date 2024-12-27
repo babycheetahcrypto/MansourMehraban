@@ -29,7 +29,6 @@ export interface User {
   selectedCoinImage: string;
   settings: {
     vibration: boolean;
-    backgroundMusic: boolean;
   };
   profitPerHour: number;
   boosterCredits: number;
