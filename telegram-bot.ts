@@ -1,11 +1,11 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import prisma from './lib/prisma';
+import  prisma  from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
 bot.command('start', async (ctx: Context) => {
-  const telegramUser  = ctx.from;
-  if (!telegramUser ) {
+  const telegramUser = ctx.from;
+  if (!telegramUser) {
     ctx.reply('Error: Unable to get user information.');
     return;
   }
@@ -24,40 +24,61 @@ Start earning today and be part of the next big upcoming airdrop. ✨
 Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
-try {
-  let user = await prisma.user.findUnique({
-    where: { telegramId: telegramUser .id.toString() },
-  });
-
-  if (!user) {
-    user = await prisma.user.create({
-      data: {
-        telegramId: telegramUser .id.toString(),
-        username: telegramUser .username || `user${telegramUser .id}`,
-        firstName: telegramUser .first_name,
-        lastName: telegramUser .last_name,
-        profilePhoto: '',
-        coins: 0,
-        level: 1,
-        exp: 0,
-        unlockedLevels: [1],
-        clickPower: 1,
-        friendsCoins: {},
-        energy: 2000,
-        pphAccumulated: 0,
-        multiplier: 1,
-        selectedCoinImage: '', // Add a default value for selectedCoinImage
-        profitPerHour: 0,
-      },
+  try {
+    let user = await prisma.user.findUnique({
+      where: { telegramId: telegramUser.id.toString() },
     });
-    console.log('New user created:', user);
-  }
 
-  // Continue with your logic...
-} catch (error) {
-  console.error('Error in /start command:', error);
-  ctx.reply('An error occurred while setting up your game. Please try again later.');
-}
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          telegramId: telegramUser.id.toString(),
+          username: telegramUser.username || `user${telegramUser.id}`,
+          firstName: telegramUser.first_name,
+          lastName: telegramUser.last_name,
+          profilePhoto: '',
+          coins: 0,
+          level: 1,
+          exp: 0,
+          unlockedLevels: [1],
+          clickPower: 1,
+          friendsCoins: {},
+          energy: 2000,
+          pphAccumulated: 0,
+          multiplier: 1,
+          multiplierEndTime: null,
+          boosterCooldown: null,
+          settings: {
+            vibration: true,
+            backgroundMusic: false,
+            soundEffect: true,
+          },
+          profitPerHour: 0,
+        },
+      });
+      console.log('New user created:', user);
+    }
+
+    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
+
+    // Send welcome message with photo
+    await ctx.replyWithPhoto(
+      {
+        url: 'https://i.postimg.cc/dv4DjYdW/Albedo-Base-XL-make-a-baby-cheetah-cheetah-with-wears-cloths-ho-3.jpg',
+      },
+      {
+        caption: welcomeMessage,
+        parse_mode: 'Markdown',
+        ...Markup.inlineKeyboard([
+          Markup.button.webApp('Play 🚀', gameUrl),
+          Markup.button.url('Join community', 'https://t.me/babycheetahcrypto'),
+        ]),
+      }
+    );
+  } catch (error) {
+    console.error('Error in /start command:', error);
+    ctx.reply('An error occurred while setting up your game. Please try again later.');
+  }
 });
 
 // Handle game data updates
@@ -95,21 +116,19 @@ bot.on('web_app_data', async (ctx) => {
         data: { coins: user.coins + parsedData.amount },
       });
     } else if (parsedData.action === 'purchase') {
-      // Implement purchase logic
     } else if (parsedData.action === 'claim') {
+      // Handle reward claim logic
       await prisma.user.update({
         where: { id: user.id },
         data: { coins: user.coins + parsedData.amount },
       });
     }
 
-    console.log('User data updated:', parsedData);
     ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {
     console.error('Error processing web app data:', error);
     ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
-
 export default bot;
 
