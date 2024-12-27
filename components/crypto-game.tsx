@@ -2262,8 +2262,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <Image
                     src={icon}
                     alt={label}
-                    width={36}
-                    height={36}
+                    width={42}
+                    height={42}
                     quality={100}
                     priority
                     className="text-primary"
@@ -2985,38 +2985,39 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div className="mt-6 p-4 bg-gradient-to-r from-transparent to-transparent rounded-2xl backdrop-blur-xl shadow-lg border-2 border-transparent" style={{ boxShadow: "0 0 15px 3px rgba(59, 130, 246, 0.6), inset 0 0 10px 2px rgba(59, 130, 246, 0.4)" }}>
-            <h3 className="text-xl font-bold mb-2 text-center text-white drop-shadow-lg">Your Referral Link</h3>
-            <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
-              <span className="text-sm text-white truncate mr-2">
-                https://t.me/BabyCheetah_Bot/?startapp={user.telegramId}
-              </span>
-              <Button
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    `https://t.me/BabyCheetah_Bot/?startapp=${user.telegramId}`
-                  );
-                  showGameAlert('Referral link copied to clipboard!');
-                }}
-                className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white text-xs py-1 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center font-bold"
-              >
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-qVagBixv3Uacicht1qeEubKtLUwh6W.png"
-                  alt="Copy"
-                  width={24}
-                  height={24}
-                  quality={100}
-                  priority
-                  className="w-5 h-5 mr-2"
-                />
-                <span className="font-bold">Copy</span>
-              </Button>
-            </div>
-            <p className="text-xs text-center mt-2 text-white">
-              Share this link to earn <span className="text-yellow-400 font-bold">2000</span> coins
-              for each friend who joins!
-            </p>
-          </div>
+        <div className="mt-6 p-4 bg-gradient-to-r from-transparent to-transparent rounded-2xl backdrop-blur-xl shadow-lg border-2 border-gray-700">
+  <h3 className="text-xl font-bold mb-2 text-center text-white drop-shadow-lg">Your Referral Link</h3>
+  <div className="flex items-center justify-between bg-gray-800/50 rounded-lg p-2">
+    <span className="text-sm text-white truncate mr-2">
+      https://t.me/BabyCheetah_Bot/?startapp={user.telegramId}
+    </span>
+    <Button
+      onClick={() => {
+        navigator.clipboard.writeText(
+          `https://t.me/BabyCheetah_Bot/?startapp=${user.telegramId}`
+        );
+        showGameAlert('Referral link copied to clipboard!');
+      }}
+      className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white text-xs py-1 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center font-bold"
+    >
+      <Image
+        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Copy%203D%20ICON-qVagBixv3Uacicht1qeEubKtLUwh6W.png"
+        alt="Copy"
+        width={24}
+        height={24}
+        quality={100}
+        priority
+        className="w-5 h-5 mr-2"
+      />
+      <span className="font-bold">Copy</span>
+    </Button>
+  </div>
+  <p className="text-xs text-center mt-2 text-white">
+    Share this link to earn <span className="text-yellow-400 font-bold">2000</span> coins
+    for each friend who joins!
+  </p>
+</div>
+
           <Button
             onClick={() => setCurrentPage('friendsActivity')}
             className="w-full bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white py-3 rounded-2xl text-lg font-bold transform transition-all duration-300 hover:scale-105 backdrop-blur-md mt-4 flex items-center justify-center font-bold"
