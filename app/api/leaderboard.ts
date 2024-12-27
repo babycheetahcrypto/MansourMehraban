@@ -1,38 +1,38 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextApiRequest, NextApiResponse } from 'next'
+import { PrismaClient } from '@prisma/client'
 
-export async function GET(request: NextRequest) {
-  try {
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        telegramId: true,
-        username: true,
-        coins: true,
-        profitPerHour: true,
-      },
-      orderBy: {
-        coins: 'desc',
-      },
-      take: 100,
-    });
+const prisma = new PrismaClient()
 
-    const leaderboard = users.map((user, index) => ({
-      id: user.id,
-      telegramId: user.telegramId,
-      name: user.username,
-      coins: user.coins,
-      profitPerHour: user.profitPerHour,
-      rank: index + 1,
-    }));
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'GET') {
+    try {
+      const leaderboard = await prisma.user.findMany({
+        select: {
+          id: true,
+          telegramId: true,
+          username: true,
+          firstName: true,
+          lastName: true,
+          coins: true,
+          profitPerHour: true,
+        },
+        orderBy: {
+          coins: 'desc',
+        },
+        take: 200,
+      })
 
-    return NextResponse.json(leaderboard);
-  } catch (error: unknown) {
-    console.error('Error fetching leaderboard:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return NextResponse.json(
-      { error: 'Failed to fetch leaderboard', details: errorMessage },
-      { status: 500 }
-    );
+      const leaderboardWithRanks = leaderboard.map((user, index) => ({
+        ...user,
+        rank: index + 1,
+      }))
+
+      res.status(200).json(leaderboardWithRanks)
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch leaderboard data' })
+    }
+  } else {
+    res.setHeader('Allow', ['GET'])
+    res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }

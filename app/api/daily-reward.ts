@@ -1,53 +1,45 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
+import { NextApiRequest, NextApiResponse } from 'next'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    const { userId } = req.query;
+    const { userId } = req.query
 
-    if (!userId || typeof userId !== 'string') {
-      return res.status(400).json({ error: 'Valid User ID is required' });
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' })
     }
 
     try {
       const dailyReward = await prisma.dailyReward.findUnique({
-        where: { userId },
-      });
-      res.status(200).json(dailyReward);
-    } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else if (req.method === 'POST') {
-    const { userId } = req.body;
+        where: { userId: userId as string },
+      })
 
-    if (!userId || typeof userId !== 'string') {
-      return res.status(400).json({ error: 'Valid User ID is required' });
+      res.status(200).json(dailyReward)
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch daily reward data' })
+    }
+  } else if (req.method === 'PATCH') {
+    const { userId, lastClaimed, streak, day, completed } = req.body
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' })
     }
 
     try {
       const updatedDailyReward = await prisma.dailyReward.upsert({
-        where: { userId },
-        update: {
-          lastClaimed: new Date(),
-          streak: { increment: 1 },
-          day: { increment: 1 },
-        },
-        create: {
-          userId,
-          lastClaimed: new Date(),
-          streak: 1,
-          day: 1,
-        },
-      });
+        where: { userId: userId as string },
+        update: { lastClaimed, streak, day, completed },
+        create: { userId: userId as string, lastClaimed, streak, day, completed },
+      })
 
-      res.status(200).json(updatedDailyReward);
+      res.status(200).json(updatedDailyReward)
     } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Failed to update daily reward data' })
     }
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.setHeader('Allow', ['GET', 'PATCH'])
+    res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }

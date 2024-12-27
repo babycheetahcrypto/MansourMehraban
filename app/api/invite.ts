@@ -1,80 +1,53 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
+import { NextApiRequest, NextApiResponse } from 'next'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
-  try {
-    const { userId, friendId } = req.body;
+  if (req.method === 'POST') {
+    const { userId, friendId } = req.body
 
     if (!userId || !friendId) {
-      return res.status(400).json({ message: 'Missing required fields' });
+      return res.status(400).json({ error: 'User ID and Friend ID are required' })
     }
 
-    // Check if the friend is a new user
-    const friend = await prisma.user.findUnique({
-      where: { telegramId: friendId },
-    });
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      })
 
-    if (friend) {
-      return res.status(400).json({ message: 'User has already joined the game' });
-    }
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' })
+      }
 
-    // Create a new user account for the invited friend
-    const newFriend = await prisma.user.create({
-      data: {
-        telegramId: friendId,
-        username: `user_${friendId}`, // Generate a default username
-        coins: 0,
-        level: 1,
-        exp: 0,
-        profilePhoto: '', // Add an empty string for profilePhoto
-        clickPower: 1,
-        energy: 500,
-        multiplier: 1,
-        profitPerHour: 0,
-        settings: JSON.stringify({
-          vibration: true,
-          backgroundMusic: false,
-          soundEffect: true,
-        }),
-      },
-    });
-
-    // Update the inviter's invitedFriends array
-    await prisma.user.update({
-      where: { telegramId: userId },
-      data: {
-        invitedFriends: {
-          push: friendId,
+      // Update user's friendsCoins
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          friendsCoins: {
+            ...(user.friendsCoins as object),
+            [friendId]: 0,
+          },
         },
-      },
-    });
+      })
 
-    // Award coins to the inviter
-    await prisma.user.update({
-      where: { telegramId: userId },
-      data: {
-        coins: { increment: 1000 },
-      },
-    });
+      // Add coins to the user for inviting a friend
+      const inviteReward = 2000
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          coins: {
+            increment: inviteReward,
+          },
+        },
+      })
 
-    // Create a referral reward for the inviter
-    await prisma.referralReward.create({
-      data: {
-        userId: userId,
-        referredId: newFriend.id,
-        amount: 1000,
-        claimed: true,
-        claimedAt: new Date(),
-      },
-    });
-
-    return res.status(200).json({ message: 'Invitation processed successfully' });
-  } catch (error) {
-    console.error('Error processing invitation:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+      res.status(200).json({ message: 'Friend invited successfully', user: updatedUser })
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to process invitation' })
+    }
+  } else {
+    res.setHeader('Allow', ['POST'])
+    res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }

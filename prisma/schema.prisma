@@ -1,110 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id               String            @id @default(auto()) @map("_id") @db.ObjectId
-  telegramId       String            @unique
-  username         String
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  telegramId       String   @unique
+  username         String?
   firstName        String?
   lastName         String?
-  coins            Float             @default(0)
-  level            Int               @default(1)
-  exp              Float             @default(0)
+  coins            Float    @default(0)
+  level            Int      @default(1)
+  exp              Int      @default(0)
   profilePhoto     String?
+  clickPower       Int      @default(1)
+  energy           Int      @default(2000)
+  pphAccumulated   Float    @default(0)
+  multiplier       Int      @default(1)
+  multiplierEndTime DateTime?
+  boosterCredits   Int      @default(1)
+  lastBoosterReset DateTime?
+  profitPerHour    Float    @default(0)
+  selectedCoinImage String  @default("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png")
+  walletAddress    String?
+  settings         Json?
+  dailyReward      DailyReward?
   shopItems        ShopItem[]
   premiumShopItems PremiumShopItem[]
   tasks            Task[]
-  dailyReward      DailyReward?
-  unlockedLevels   Int[]             @default([1])
-  clickPower       Int               @default(1)
-  friendsCoins     Json              @default("{}")
-  energy           Float             @default(2000)
-  pphAccumulated   Float             @default(0)
-  multiplier       Float             @default(1)
-  multiplierEndTime DateTime?
-  boosterCooldown  DateTime?
-  selectedCoinImage String?
-  settings         Json              @default("{\"vibration\": true, \"backgroundMusic\": false}")
-  profitPerHour    Float             @default(0)
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
   trophies         Trophy[]
-  referralRewards  ReferralReward[]
-  invitedFriends   String[]
+  unlockedLevels   Int[]
+  friendsCoins     Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model ShopItem {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String @db.ObjectId
-  name        String
-  image       String
-  basePrice   Float
-  baseProfit  Float
-  level       Int    @default(1)
-  user        User   @relation(fields: [userId], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  image     String
+  basePrice Float
+  baseProfit Float
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model PremiumShopItem {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String  @db.ObjectId
-  name        String
-  image       String
-  basePrice   Float
-  effect      String
-  level       Int     @default(1)
-  user        User    @relation(fields: [userId], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  image     String
+  basePrice Float
+  effect    String
+  boosterCredits Int?
+  tap       Int?
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Task {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String    @db.ObjectId
-  type         String
-  description  String
-  progress     Int       @default(0)
-  maxProgress  Int
-  reward       Float
-  completed    Boolean   @default(false)
-  claimed      Boolean   @default(false)
-  expiresAt    DateTime?
-  user         User      @relation(fields: [userId], references: [id])
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  reward      Float
+  maxProgress Int?
+  icon        String
+  type        String?
+  videoLink   String?
+  secretCode  String?
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Trophy {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String    @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  image       String
   requirement Float
-  reward      Float
-  claimed     Boolean   @default(false)
-  unlockedAt  DateTime?
-  user        User      @relation(fields: [userId], references: [id])
+  prize       Float
+  icon        String
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model DailyReward {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String    @unique @db.ObjectId
-  lastClaimed DateTime?
-  streak      Int       @default(0)
-  day         Int       @default(1)
-  completed   Boolean   @default(false)
-  user        User      @relation(fields: [userId], references: [id])
-}
-
-model ReferralReward {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String    @db.ObjectId
-  referredId  String
-  amount      Float
-  claimed     Boolean   @default(false)
-  claimedAt   DateTime?
-  user        User      @relation(fields: [userId], references: [id])
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String   @unique @db.ObjectId
+  lastClaimed  DateTime?
+  streak       Int      @default(0)
+  day          Int      @default(1)
+  completed    Boolean  @default(false)
 }
 

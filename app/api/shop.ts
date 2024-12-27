@@ -1,58 +1,50 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    try {
-      const shopItems = await prisma.shopItem.findMany();
-      const premiumShopItems = await prisma.premiumShopItem.findMany();
-      res.status(200).json({ shopItems, premiumShopItems });
-    } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else if (req.method === 'POST') {
-    const { userId, itemId, isPremium, price } = req.body;
+const prisma = new PrismaClient();
 
-    if (!userId || !itemId || typeof userId !== 'string' || typeof itemId !== 'string') {
-      return res.status(400).json({ error: 'Valid User ID and Item ID are required' });
-    }
+async function purchaseItem(userId: string, itemName: string, itemImage: string, itemPrice: number, isPremium: boolean, itemEffect?: string, itemProfit?: number) {
+  let purchasedItem;
 
-    try {
-      const user = await prisma.user.findUnique({ where: { id: userId } });
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      if (user.coins < price) {
-        return res.status(400).json({ error: 'Not enough coins' });
-      }
-
-      let updatedItem;
-      if (isPremium) {
-        updatedItem = await prisma.premiumShopItem.update({
-          where: { id: itemId },
-          data: { level: { increment: 1 } },
-        });
-      } else {
-        updatedItem = await prisma.shopItem.update({
-          where: { id: itemId },
-          data: { level: { increment: 1 } },
-        });
-      }
-
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: { coins: { decrement: price } },
-      });
-
-      res.status(200).json({ updatedItem, updatedCoins: updatedUser.coins });
-    } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
+  if (isPremium) {
+    purchasedItem = await prisma.premiumShopItem.create({
+      data: {
+        user: { connect: { id: userId } },
+        name: itemName,
+        image: itemImage,
+        basePrice: itemPrice,
+        effect: itemEffect || '',
+      },
+    })
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    purchasedItem = await prisma.shopItem.create({
+      data: {
+        user: { connect: { id: userId } },
+        name: itemName,
+        image: itemImage,
+        basePrice: itemPrice,
+        baseProfit: itemProfit || 0,
+        level: 1,
+      },
+    })
   }
+
+  return purchasedItem;
 }
+
+// Example usage
+async function main() {
+  const premiumItem = await purchaseItem("user1", "Premium Sword", "premium_sword.png", 100, true, "Increased damage");
+  console.log("Premium Item:", premiumItem);
+
+  const regularItem = await purchaseItem("user1", "Wooden Sword", "wooden_sword.png", 10, false, undefined, 5);
+  console.log("Regular Item:", regularItem);
+}
+
+main()
+  .catch((e) => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+

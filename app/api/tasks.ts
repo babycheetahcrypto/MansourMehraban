@@ -1,49 +1,57 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    const { userId } = req.query;
+const prisma = new PrismaClient();
 
-    if (!userId || typeof userId !== 'string') {
-      return res.status(400).json({ error: 'Valid User ID is required' });
-    }
+export const createTask = async (userId: string, taskData: any) => {
+  const task = await prisma.task.create({
+    data: {
+      ...taskData,
+      userId: userId,
+    },
+  });
+  return task;
+};
 
-    try {
-      const tasks = await prisma.task.findMany({
-        where: { userId },
-      });
-      res.status(200).json(tasks);
-    } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else if (req.method === 'POST') {
-    const { userId, taskId, progress } = req.body;
 
-    if (
-      !userId ||
-      !taskId ||
-      typeof userId !== 'string' ||
-      typeof taskId !== 'string' ||
-      typeof progress !== 'number'
-    ) {
-      return res.status(400).json({ error: 'Valid User ID, Task ID, and progress are required' });
-    }
+export const getTasks = async (userId: string) => {
+  const tasks = await prisma.task.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+  return tasks;
+};
 
-    try {
-      const updatedTask = await prisma.task.update({
-        where: { id: taskId },
-        data: { progress, completed: progress >= 100 },
-      });
+export const getTaskById = async (userId: string, taskId: string) => {
+  const task = await prisma.task.findUnique({
+    where: {
+      id: taskId,
+      userId: userId,
+    },
+  });
+  return task;
+};
 
-      res.status(200).json(updatedTask);
-    } catch (error) {
-      console.error('Database error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+export const updateTask = async (userId: string, taskId: string, taskData: any) => {
+  const task = await prisma.task.update({
+    data: {
+      ...taskData,
+    },
+    where: {
+      id: taskId,
+      userId: userId,
+    },
+  });
+  return task;
+};
+
+export const deleteTask = async (userId: string, taskId: string) => {
+  const task = await prisma.task.delete({
+    where: {
+      id: taskId,
+      userId: userId,
+    },
+  });
+  return task;
+};
+
