@@ -37,6 +37,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           firstName: telegramUser.first_name,
           lastName: telegramUser.last_name,
           profilePhoto: '',
+          selectedCoinImage: '',
           coins: 0,
           level: 1,
           exp: 0,
