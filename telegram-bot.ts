@@ -1,5 +1,5 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import {prisma} from './lib/prisma';
+import prisma from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 

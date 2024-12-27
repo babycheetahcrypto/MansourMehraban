@@ -11,15 +11,15 @@ datasource db {
 }
 
 model User {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  telegramId       String   @unique
-  username         String?
-  firstName        String?
-  lastName         String?
-  coins            Float    @default(0)
-  level            Int      @default(1)
-  exp              Int      @default(0)
-  profilePhoto     String?
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  telegramId  String   @unique
+  username    String
+  firstName   String?
+  lastName    String?
+  coins       Int      @default(0)
+  level       Int      @default(1)
+  exp         Int      @default(0)
+  profilePhoto String?
   clickPower       Int      @default(1)
   energy           Int      @default(2000)
   pphAccumulated   Float    @default(0)
@@ -28,7 +28,7 @@ model User {
   boosterCredits   Int      @default(1)
   lastBoosterReset DateTime?
   profitPerHour    Float    @default(0)
-  selectedCoinImage String  @default("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png")
+  selectedCoinImage String  @default(0)
   walletAddress    String?
   settings         Json?
   dailyReward      DailyReward?
