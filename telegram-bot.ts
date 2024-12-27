@@ -64,7 +64,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
     // Send welcome message with photo
     await ctx.replyWithPhoto(
       {
-        url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cheetah%20Gold.jpg-OdHziynrnMi0QpKbKmf2PYsca015qE.jpeg',
+        url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-RpXAYR7185vyOV4nosAjuLG9RelZcD.jpeg',
       },
       {
         caption: welcomeMessage,
