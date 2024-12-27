@@ -836,33 +836,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const [tasks, setTasks] = useState<Task[]>([
     {
-      id: 13,
-      description: 'Watch Video 1',
-      reward: 1000,
-      progress: 0,
-      completed: false,
-      claimed: false,
-      icon: (
-        <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Youtube%203D%20ICON-n3DFRVp9JnkM0qQcysyNK18eaDTZQ9.png"
-          alt="YouTube"
-          width={36}
-          height={36}
-          quality={100}
-          priority
-          draggable="false"
-          onContextMenu={(e) => e.preventDefault()}
-        />
-      ),
-      action: () => {
-        watchVideoTask(13);
-      },
-      type: 'video',
-      videoLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      secretCode: 'CRYPTO123',
-      videoWatched: false,
-    },
-    {
       id: 1,
       description: 'Share on Facebook',
       reward: 500,
@@ -937,7 +910,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     {
       id: 4,
       description: 'Subscribe Channel',
-      reward: 2000,
+      reward: 5000,
       progress: 0,
       completed: false,
       claimed: false,
@@ -961,7 +934,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     {
       id: 5,
       description: 'Watch video',
-      reward: 1000,
+      reward: 3000,
       progress: 0,
       completed: false,
       claimed: false,
@@ -985,7 +958,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     {
       id: 6,
       description: 'Join TG News',
-      reward: 1000,
+      reward: 2000,
       progress: 0,
       completed: false,
       claimed: false,
@@ -1078,7 +1051,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     {
       id: 10,
       description: 'Follow X',
-      reward: 1000,
+      reward: 2000,
       progress: 0,
       completed: false,
       claimed: false,
@@ -1102,7 +1075,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     {
       id: 11,
       description: 'Follow Instagram',
-      reward: 1000,
+      reward: 2000,
       progress: 0,
       completed: false,
       claimed: false,
@@ -1126,7 +1099,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     {
       id: 12,
       description: 'Follow WhatsApp',
-      reward: 1000,
+      reward: 2000,
       progress: 0,
       completed: false,
       claimed: false,
