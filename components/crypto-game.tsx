@@ -627,7 +627,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       selectedCoinImage: levelImages[0],
       settings: {
         vibration: true,
-        backgroundMusic: false,
       },
       profitPerHour: 0,
       boosterCredits: 1,
@@ -651,19 +650,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [showPPHPopup, setShowPPHPopup] = useState(false);
   const [settings, setSettings] = useState<{
     vibration: boolean;
-    backgroundMusic: boolean;
   }>({
     vibration: true,
-    backgroundMusic: false,
-  });
-  
-  const [backgroundMusic] = useState(() => {
-    if (typeof Audio !== 'undefined') {
-      const audio = new Audio('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Riches%20in%20the%20Shadows-8jIfTBhDiLVL55LWoh4M55lq2PNpf9.MP3');
-      audio.loop = true;
-      return audio;
-    }
-    return null;
   });
 
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
@@ -729,12 +717,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-2n53zEIwaFDSD3Bl9GWULb8slR8d6c.png',
       label: 'Vibration',
       description: 'Enable haptic feedback when tapping',
-    },
-    {
-      id: 'backgroundMusic',
-      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Music%203D%20ICON-xQYRmibKIf540A6WMxNsmfjcc3S3J6.png',
-      label: 'Background Music',
-      description: 'Play game music in the background',
     },
   ];
 
@@ -1865,7 +1847,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     setSettings((prevSettings) => ({
       ...prevSettings,
-      ...(user.settings || { vibration: true, backgroundMusic: false }),
+      ...(user.settings || { vibration: true }),
     }));
   }, [user.settings]);
 
@@ -2302,14 +2284,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   };
                   setSettings(newSettings);
                   saveUserData({ ...user, settings: newSettings });
-
-                  if (id === 'backgroundMusic') {
-                    if (checked && backgroundMusic) {
-                      backgroundMusic.play().catch(console.error);
-                    } else if (backgroundMusic) {
-                      backgroundMusic.pause();
-                    }
-                  }
                 }}
                 className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
               />
