@@ -2262,8 +2262,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                   <Image
                     src={icon}
                     alt={label}
-                    width={42}
-                    height={42}
+                    width={36}
+                    height={36}
                     quality={100}
                     priority
                     className="text-primary"
