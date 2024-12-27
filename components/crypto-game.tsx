@@ -716,7 +716,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       id: 'vibration',
       icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-2n53zEIwaFDSD3Bl9GWULb8slR8d6c.png',
       label: 'Vibration',
-      description: 'Enable haptic feedback when tapping',
+      description: 'Enable haptic feedback when tapping (works on supported devices)',
     },
   ];
 
@@ -1309,6 +1309,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         // Trigger haptic feedback
         if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
           window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        } else if (settings.vibration && navigator.vibrate) {
+          navigator.vibrate(50);
         }
 
         // Send tap data to Telegram Mini App
@@ -2736,6 +2738,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 }`}
               >
                 <CardHeader className="relative p-2">
+
                   <CardTitle className="z-10 text-center text-[#FFFFFF] font-extrabold text-sm">
                     {index === 0 && 'Broke Cheetah'}
                     {index === 1 && 'Mr Cheetah'}
