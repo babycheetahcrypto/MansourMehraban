@@ -28,7 +28,7 @@ model User {
   boosterCredits   Int      @default(1)
   lastBoosterReset DateTime?
   profitPerHour    Float    @default(0)
-  selectedCoinImage String  @default(0)
+  selectedCoinImage String
   walletAddress    String?
   settings         Json?
   dailyReward      DailyReward?
