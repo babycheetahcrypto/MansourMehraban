@@ -1257,7 +1257,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
-      if (energy >= 1 && currentPage === 'home') {  // Only allow clicks on the home page
+      if (energy >= 1 && currentPage === 'home') {
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
         const newExp = user.exp + 1;
@@ -1275,22 +1275,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
-        const rect = event.currentTarget.getBoundingClientRect();
         let clientX, clientY;
         if ('touches' in event) {
+          // Touch event
           clientX = event.touches[0].clientX;
           clientY = event.touches[0].clientY;
         } else {
+          // Mouse event
           clientX = event.clientX;
           clientY = event.clientY;
         }
-        const x = clientX;
-        const y = clientY;
+
         if (currentPage === 'home') {
           const clickEffect = {
             id: Date.now(),
-            x,
-            y,
+            x: clientX,
+            y: clientY,
             value: clickValue,
             color: 'white',
             text: formatNumber(clickValue, true),
@@ -1301,7 +1301,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }, 700);
         }
 
-        // Trigger haptic feedback only for coin button click
+        // Trigger haptic feedback
         if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
           window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
         }
@@ -1964,12 +1964,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         </div>
   
         <div className="flex-grow flex items-center justify-center">
-          <button
-            className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button relative bg-transparent"
-            onClick={clickCoin}
-            onTouchStart={clickCoin}
-            onTouchEnd={(e) => e.preventDefault()}
-          >
+        <button
+      className="w-[350px] h-[350px] rounded-full overflow-hidden shadow-lg z-20 coin-button relative bg-transparent"
+      onClick={clickCoin}
+      onTouchStart={clickCoin}
+      onTouchEnd={(e) => e.preventDefault()}
+    >
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Image
                 src={selectedCoinImage}
