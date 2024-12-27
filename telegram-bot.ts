@@ -47,7 +47,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           pphAccumulated: 0,
           multiplier: 1,
           multiplierEndTime: null,
-          boosterCooldown: null,
           settings: {
             vibration: true,
             backgroundMusic: false,
