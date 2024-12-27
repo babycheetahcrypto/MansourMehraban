@@ -91,17 +91,6 @@ interface WalletProps {
 
 // Keyframe animation
 const styles = `
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
-  .coin-button:active, .coin-button.pulse {
-    animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
-  }
-  .coin-button {
-    transform-origin: center center;
-  }
   html, body {
     scroll-behavior: smooth;
   }
@@ -252,6 +241,18 @@ const styles = `
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.coin-button:active, .coin-button.pulse {
+  animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
+}
+.coin-button {
+  transform-origin: center center;
 }
 `;
 
