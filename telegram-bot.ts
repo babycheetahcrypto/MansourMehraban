@@ -46,8 +46,6 @@ try {
         energy: 2000,
         pphAccumulated: 0,
         multiplier: 1,
-        multiplierEndTime: null,
-        boosterCooldown: null,
         selectedCoinImage: '', // Add a default value for selectedCoinImage
         profitPerHour: 0,
       },
