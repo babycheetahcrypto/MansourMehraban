@@ -46,6 +46,8 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           energy: 2000,
           pphAccumulated: 0,
           multiplier: 1,
+          multiplierEndTime: null,
+          boosterCooldown: null,
           settings: {
             vibration: true,
             backgroundMusic: false,
