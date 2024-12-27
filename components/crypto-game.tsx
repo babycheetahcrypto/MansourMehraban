@@ -243,17 +243,17 @@ const styles = `
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-.coin-button:active, .coin-button.pulse {
-  animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
-}
-.coin-button {
-  transform-origin: center center;
-}
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  .coin-button:active, .coin-button.pulse {
+    animation: pulse 0.1s cubic-bezier(.36,.07,.19,.97) both;
+  }
+  .coin-button {
+    transform-origin: center center;
+  }
 `;
 
 // Telegram WebApp type definition
@@ -1299,6 +1299,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           setTimeout(() => {
             setClickEffects((prev) => prev.filter((effect) => effect.id !== clickEffect.id));
           }, 700);
+
+          // Add pulse effect
+          const button = event.currentTarget;
+          button.classList.add('pulse');
+          setTimeout(() => {
+            button.classList.remove('pulse');
+          }, 100);
         }
 
         // Trigger haptic feedback
