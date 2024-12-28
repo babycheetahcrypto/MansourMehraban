@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 
-const prisma = new PrismaClient();
 
 export const updateTrophy = async (userId: string, trophyId: string, data: any) => {
   try {

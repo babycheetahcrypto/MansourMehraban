@@ -1169,11 +1169,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              userId: user.telegramId,
+              userId: user.id,
               friendId: friendId,
             }),
           });
-
+  
           if (response.ok) {
             setInvitedFriends((prev) => [...prev, friendId]);
             setUser((prevUser) => ({
@@ -1638,11 +1638,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           },
           body: JSON.stringify(updatedUser),
         });
-
+    
         if (!response.ok) {
           throw new Error('Failed to save user data');
         }
-
+    
         const savedUser = await response.json();
         setUser(savedUser);
         console.log('User data saved successfully');
@@ -1660,7 +1660,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         const webApp = window.Telegram.WebApp;
         const telegramUser = webApp.initDataUnsafe.user;
         console.log('Telegram user data:', telegramUser);
-
+  
         if (telegramUser) {
           const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
           if (response.ok) {

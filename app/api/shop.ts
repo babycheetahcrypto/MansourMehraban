@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 
-const prisma = new PrismaClient();
 
 async function purchaseItem(userId: string, itemName: string, itemImage: string, itemPrice: number, isPremium: boolean, itemEffect?: string, itemProfit?: number) {
   let purchasedItem;
@@ -30,21 +29,4 @@ async function purchaseItem(userId: string, itemName: string, itemImage: string,
 
   return purchasedItem;
 }
-
-// Example usage
-async function main() {
-  const premiumItem = await purchaseItem("user1", "Premium Sword", "premium_sword.png", 100, true, "Increased damage");
-  console.log("Premium Item:", premiumItem);
-
-  const regularItem = await purchaseItem("user1", "Wooden Sword", "wooden_sword.png", 10, false, undefined, 5);
-  console.log("Regular Item:", regularItem);
-}
-
-main()
-  .catch((e) => {
-    throw e;
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
 

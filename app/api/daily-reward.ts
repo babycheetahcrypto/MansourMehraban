@@ -1,4 +1,3 @@
-// app/api/daily-reward.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/prisma';
 
