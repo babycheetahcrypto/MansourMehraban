@@ -1,8 +1,9 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import axios from 'axios';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
+
+const API_URL = process.env.API_URL || 'http://localhost:3000/api';
 
 bot.command('start', async (ctx: Context) => {
   const telegramUser = ctx.from;
@@ -26,23 +27,19 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    let user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
-    });
+    let user = await axios.get(`${API_URL}/user?telegramId=${telegramUser.id}`);
 
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          telegramId: telegramUser.id.toString(),
-          username: telegramUser.username || `user${telegramUser.id}`,
-          firstName: telegramUser.first_name,
-          lastName: telegramUser.last_name,
-        },
+    if (!user.data) {
+      user = await axios.post(`${API_URL}/user`, {
+        telegramId: telegramUser.id.toString(),
+        username: telegramUser.username || `user${telegramUser.id}`,
+        firstName: telegramUser.first_name,
+        lastName: telegramUser.last_name,
       });
-      console.log('New user created:', user);
+      console.log('New user created:', user.data);
     }
 
-    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
+    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.data.telegramId}`;
 
     // Send welcome message with photo
     await ctx.replyWithPhoto(
@@ -60,7 +57,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
     );
   } catch (error) {
     console.error('Error in /start command:', error);
-    await prisma.$disconnect()
     ctx.reply('An error occurred while setting up your game. Please try again later.');
   }
 });
@@ -84,28 +80,26 @@ bot.on('web_app_data', async (ctx) => {
 
   try {
     const parsedData = JSON.parse(data.text());
-    const user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
-    });
+    const user = await axios.get(`${API_URL}/user?telegramId=${telegramUser.id}`);
 
-    if (!user) {
+    if (!user.data) {
       ctx.reply('Error: User not found.');
       return;
     }
 
     // Update user data based on game actions
     if (parsedData.action === 'tap') {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: { increment: parsedData.amount } },
+      await axios.patch(`${API_URL}/user`, {
+        telegramId: telegramUser.id.toString(),
+        coins: user.data.coins + parsedData.amount,
       });
     } else if (parsedData.action === 'purchase') {
       // Implement purchase logic here
     } else if (parsedData.action === 'claim') {
       // Handle reward claim logic
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: { increment: parsedData.amount } },
+      await axios.patch(`${API_URL}/user`, {
+        telegramId: telegramUser.id.toString(),
+        coins: user.data.coins + parsedData.amount,
       });
     }
 
@@ -115,11 +109,6 @@ bot.on('web_app_data', async (ctx) => {
     ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
-
-process.on('SIGINT', async () => {
-  await prisma.$disconnect()
-  process.exit(0)
-})
 
 export default bot;
 
