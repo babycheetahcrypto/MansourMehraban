@@ -1,5 +1,5 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import axios from 'axios';
+import  prisma  from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
@@ -25,18 +25,25 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-      telegramId: telegramUser.id.toString(),
-      username: telegramUser.username || `user${telegramUser.id}`,
-      firstName: telegramUser.first_name,
-      lastName: telegramUser.last_name,
+    let user = await prisma.user.findUnique({
+      where: { telegramId: telegramUser.id.toString() },
     });
 
-    const user = response.data;
-    console.log('User data:', user);
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          telegramId: telegramUser.id.toString(),
+          username: telegramUser.username || `user${telegramUser.id}`,
+          firstName: telegramUser.first_name,
+          lastName: telegramUser.last_name,
+        },
+      });
+      console.log('New user created:', user);
+    }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
 
+    // Send welcome message with photo
     await ctx.replyWithPhoto(
       {
         url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
@@ -56,11 +63,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
   }
 });
 
-interface GameData {
-  action: string;
-  amount: number;
-}
-
+// Handle game data updates
 bot.on('web_app_data', async (ctx) => {
   const telegramUser = ctx.from;
   const webAppData = ctx.webAppData;
@@ -70,14 +73,38 @@ bot.on('web_app_data', async (ctx) => {
     return;
   }
 
+  const data = webAppData.data;
+
+  if (!data) {
+    ctx.reply('Error: Unable to process game data.');
+    return;
+  }
+
   try {
-    // Convert the WebAppData to a string before parsing
-    const parsedData: GameData = JSON.parse(webAppData.data.toString());
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/game-action`, {
-      telegramId: telegramUser.id.toString(),
-      action: parsedData.action,
-      amount: parsedData.amount,
+    const parsedData = JSON.parse(data.text());
+    const user = await prisma.user.findUnique({
+      where: { telegramId: telegramUser.id.toString() },
     });
+
+    if (!user) {
+      ctx.reply('Error: User not found.');
+      return;
+    }
+
+    // Update user data based on game actions
+    if (parsedData.action === 'tap') {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { coins: user.coins + parsedData.amount },
+      });
+    } else if (parsedData.action === 'purchase') {
+    } else if (parsedData.action === 'claim') {
+      // Handle reward claim logic
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { coins: user.coins + parsedData.amount },
+      });
+    }
 
     ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {
@@ -85,5 +112,5 @@ bot.on('web_app_data', async (ctx) => {
     ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
-
 export default bot;
+
