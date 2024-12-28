@@ -2236,8 +2236,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                     quality={100}
                     priority
                     className="text-primary"
-                    draggable="false"
-                    onContextMenu={(e) => e.preventDefault()}
+                    draggable="false"    
                   />
                 </div>
                 <div className="space-y-1">
@@ -2248,14 +2247,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               <Switch
                 id={id}
                 checked={settings[id as keyof typeof settings]}
-                onCheckedChange={(checked) => {
-                  const newSettings = {
-                    ...settings,
-                    [id]: checked
-                  };
-                  setSettings(newSettings);
-                  saveUserData({ ...user, settings: newSettings });
-                }}
                 className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
               />
             </div>
