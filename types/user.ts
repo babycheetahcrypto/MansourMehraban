@@ -27,9 +27,6 @@ export interface User {
   multiplierEndTime: Date | null;
   boosterCooldown: Date | null;
   selectedCoinImage: string;
-  settings: {
-    vibration: boolean;
-  };
   profitPerHour: number;
   boosterCredits: number;
   lastBoosterReset: string | null;

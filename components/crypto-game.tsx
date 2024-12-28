@@ -625,9 +625,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       multiplierEndTime: null,
       boosterCooldown: null,
       selectedCoinImage: levelImages[0],
-      settings: {
-        vibration: true,
-      },
       profitPerHour: 0,
       boosterCredits: 1,
       lastBoosterReset: null,
@@ -648,11 +645,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);
-  const [settings, setSettings] = useState<{
-    vibration: boolean;
-  }>({
-    vibration: true,
-  });
 
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
@@ -710,15 +702,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     // This ensures all images are preloaded in full quality
     preloadImages(allImageUrls);
   }, []);
-
-  const settingsConfig = [
-    {
-      id: 'vibration',
-      icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-2n53zEIwaFDSD3Bl9GWULb8slR8d6c.png',
-      label: 'Vibration',
-      description: 'Enable haptic feedback when tapping (works on supported devices)',
-    },
-  ];
 
   const [shopItems, setShopItems] = useState<ShopItem[]>([
     {
@@ -1279,13 +1262,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           }, 150);
         }
 
-        // Trigger haptic feedback
-        if (settings.vibration && window.Telegram?.WebApp?.HapticFeedback) {
-          window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-        } else if (settings.vibration && navigator.vibrate) {
-          navigator.vibrate(50);
-        }
-
         // Send tap data to Telegram Mini App
         if (window.Telegram && window.Telegram.WebApp) {
           window.Telegram.WebApp.sendData(
@@ -1294,7 +1270,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage, settings.vibration]
+    [clickPower, multiplier, energy, saveUserData, user, currentPage]
   );
 
   const buyItem = useCallback(
@@ -1815,17 +1791,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     );
   }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
 
-  useEffect(() => {
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      ...(user.settings || { vibration: true }),
-    }));
-  }, [user.settings]);
-
-  useEffect(() => {
-    saveUserData({ ...user, settings });
-  }, [settings]);
-
 
   const renderHome = () => (
     <div className="flex flex-col items-center justify-between h-full p-4 relative overflow-hidden">
@@ -2126,24 +2091,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 onContextMenu={(e) => e.preventDefault()}
               />
             </Button>
-            <Button
-              variant="ghost"
-              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
-              onClick={() => {
-                setCurrentPage('settings');
-              }}
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SETTING%203D%20ICON-e5kOIT7doa350SWGGjbyEw71v4Ldhm.png"
-                alt="Settings"
-                width={28}
-                height={28}
-                quality={100}
-                priority
-                draggable="false"
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -2208,51 +2155,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           />
         ))}
       </div>
-    </div>
-  );
-
-
-
-  const renderSettings = () => (
-    <div className="flex-grow flex items-center justify-center p-6">
-      <NeonGradientCard className="bg-gradient-to-br from-gray-900 to-black text-white w-full max-w-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
-        <CardHeader className="relative p-6 pb-2">
-          <CardTitle className="z-10 text-3xl text-center text-white font-bold">Settings</CardTitle>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 opacity-30 transform -skew-y-3"></div>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          {settingsConfig.map(({ id, icon, label, description }) => (
-            <div
-              key={id}
-              className="flex items-center justify-between py-4 px-4 rounded-xl bg-gradient-to-r from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/30"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-gray-700/50 to-gray-800/50">
-                  <Image
-                    src={icon}
-                    alt={label}
-                    width={36}
-                    height={36}
-                    quality={100}
-                    priority
-                    className="text-primary"
-                    draggable="false"    
-                  />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-sm font-medium text-white">{label}</h3>
-                  <p className="text-xs text-gray-400">{description}</p>
-                </div>
-              </div>
-              <Switch
-                id={id}
-                checked={settings[id as keyof typeof settings]}
-                className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-gray-600"
-              />
-            </div>
-          ))}
-        </CardContent>
-      </NeonGradientCard>
     </div>
   );
 
@@ -3349,7 +3251,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             {currentPage === 'invite' && renderInvite()}
             {currentPage === 'friendsActivity' && renderFriendsActivity()}
             {currentPage === 'levels' && renderLevels()}
-            {currentPage === 'settings' && renderSettings()}
             {currentPage === 'dailyReward' && renderDailyReward()}
             {currentPage === 'trophies' && renderTrophies()}
           </div>
