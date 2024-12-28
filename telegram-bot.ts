@@ -1,5 +1,5 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import  prisma  from './lib/prisma';
+import axios from 'axios';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
@@ -25,34 +25,16 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    let user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
+    // Instead of directly accessing the database, make an API call
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+      telegramId: telegramUser.id.toString(),
+      username: telegramUser.username || `user${telegramUser.id}`,
+      firstName: telegramUser.first_name,
+      lastName: telegramUser.last_name,
     });
 
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          telegramId: telegramUser.id.toString(),
-          username: telegramUser.username || `user${telegramUser.id}`,
-          firstName: telegramUser.first_name,
-          lastName: telegramUser.last_name,
-          profilePhoto: '',
-          selectedCoinImage: '',
-          coins: 0,
-          level: 1,
-          exp: 0,
-          unlockedLevels: [1],
-          clickPower: 1,
-          friendsCoins: {},
-          energy: 2000,
-          pphAccumulated: 0,
-          multiplier: 1,
-          multiplierEndTime: null,
-          profitPerHour: 0,
-        },
-      });
-      console.log('New user created:', user);
-    }
+    const user = response.data;
+    console.log('User data:', user);
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
 
@@ -95,29 +77,13 @@ bot.on('web_app_data', async (ctx) => {
 
   try {
     const parsedData = JSON.parse(data.text());
-    const user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
+
+    // Instead of directly updating the database, make an API call
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/game-action`, {
+      telegramId: telegramUser.id.toString(),
+      action: parsedData.action,
+      amount: parsedData.amount,
     });
-
-    if (!user) {
-      ctx.reply('Error: User not found.');
-      return;
-    }
-
-    // Update user data based on game actions
-    if (parsedData.action === 'tap') {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
-      });
-    } else if (parsedData.action === 'purchase') {
-    } else if (parsedData.action === 'claim') {
-      // Handle reward claim logic
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
-      });
-    }
 
     ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {
@@ -125,5 +91,5 @@ bot.on('web_app_data', async (ctx) => {
     ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
-export default bot;
 
+export default bot;
