@@ -1,5 +1,6 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import  prisma  from './lib/prisma';
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
@@ -59,6 +60,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
     );
   } catch (error) {
     console.error('Error in /start command:', error);
+    await prisma.$disconnect()
     ctx.reply('An error occurred while setting up your game. Please try again later.');
   }
 });
@@ -95,14 +97,15 @@ bot.on('web_app_data', async (ctx) => {
     if (parsedData.action === 'tap') {
       await prisma.user.update({
         where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
+        data: { coins: { increment: parsedData.amount } },
       });
     } else if (parsedData.action === 'purchase') {
+      // Implement purchase logic here
     } else if (parsedData.action === 'claim') {
       // Handle reward claim logic
       await prisma.user.update({
         where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
+        data: { coins: { increment: parsedData.amount } },
       });
     }
 
@@ -112,5 +115,11 @@ bot.on('web_app_data', async (ctx) => {
     ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
+
+process.on('SIGINT', async () => {
+  await prisma.$disconnect()
+  process.exit(0)
+})
+
 export default bot;
 
