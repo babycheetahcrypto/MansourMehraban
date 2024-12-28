@@ -28,8 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             energy: 2000,
             pphAccumulated: 0,
             multiplier: 1,
-            multiplierEndTime: null,
             profitPerHour: 0,
+            boosterCredits: 1,
           },
         });
         console.log('New user created:', user);

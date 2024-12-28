@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (action === 'tap' || action === 'claim') {
         await prisma.user.update({
           where: { id: user.id },
-          data: { coins: user.coins + amount },
+          data: { coins: { increment: amount } },
         });
       } else if (action === 'purchase') {
         // Handle purchase logic here

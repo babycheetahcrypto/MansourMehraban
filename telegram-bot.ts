@@ -25,7 +25,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    // Instead of directly accessing the database, make an API call
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
       telegramId: telegramUser.id.toString(),
       username: telegramUser.username || `user${telegramUser.id}`,
@@ -38,7 +37,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
 
-    // Send welcome message with photo
     await ctx.replyWithPhoto(
       {
         url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
@@ -58,7 +56,11 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
   }
 });
 
-// Handle game data updates
+interface GameData {
+  action: string;
+  amount: number;
+}
+
 bot.on('web_app_data', async (ctx) => {
   const telegramUser = ctx.from;
   const webAppData = ctx.webAppData;
@@ -68,17 +70,9 @@ bot.on('web_app_data', async (ctx) => {
     return;
   }
 
-  const data = webAppData.data;
-
-  if (!data) {
-    ctx.reply('Error: Unable to process game data.');
-    return;
-  }
-
   try {
-    const parsedData = JSON.parse(data.text());
-
-    // Instead of directly updating the database, make an API call
+    // Convert the WebAppData to a string before parsing
+    const parsedData: GameData = JSON.parse(webAppData.data.toString());
     await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/game-action`, {
       telegramId: telegramUser.id.toString(),
       action: parsedData.action,
