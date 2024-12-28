@@ -673,6 +673,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
   const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
+  const [vibrationEnabled, setVibrationEnabled] = useState(true); // Added vibrationEnabled state
+
   const handleWalletConnect = useCallback(
     (address: string) => {
       setUser((prevUser) => ({
@@ -1108,6 +1110,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [secretCode, setSecretCode] = useState<string>('');
   const [currentTaskTab, setCurrentTaskTab] = useState<'active' | 'completed'>('active');
 
+  const vibrate = (pattern: number | number[]) => { // Added vibrate function
+    if (typeof navigator !== 'undefined' && navigator.vibrate && vibrationEnabled) {
+      navigator.vibrate(pattern);
+    }
+  };
+
   const watchVideoTask = useCallback(
     (taskId: number) => {
       const task = tasks.find((t) => t.id === taskId);
@@ -1212,6 +1220,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       event.preventDefault();
 
       if (energy >= 1 && currentPage === 'home') {
+        // Add vibration at the start
+        vibrate(50);
+
         const clickValue = clickPower * multiplier;
         const newCoins = user.coins + clickValue;
         const newExp = user.exp + 1;
@@ -1270,7 +1281,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage]
+    [clickPower, multiplier, energy, saveUserData, user, currentPage, vibrationEnabled] // Added vibrationEnabled
   );
 
   const buyItem = useCallback(
@@ -1279,6 +1290,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1)); // Changed to 0.10x (10% increase)
 
       if (user.coins >= currentPrice) {
+        // Add vibration feedback
+        vibrate([50, 50, 100]);
+
         try {
           const updatedUser = {
             ...user,
@@ -1322,15 +1336,20 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           showGameAlert('Failed to purchase item. Please try again.');
         }
       } else {
+        // Add error vibration
+        vibrate([100, 50, 100]);
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup]
+    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, vibrationEnabled] // Added vibrationEnabled
   );
 
   const buyPremiumItem = useCallback(
     async (item: PremiumShopItem) => {
       if (user.coins >= item.basePrice) {
+        // Add vibration feedback
+        vibrate([50, 50, 100]);
+
         try {
           const updatedUser = {
             ...user,
@@ -1373,10 +1392,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           showGameAlert('Failed to purchase item. Please try again.');
         }
       } else {
+        // Add error vibration
+        vibrate([100, 50, 100]);
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup]
+    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, vibrationEnabled] // Added vibrationEnabled
   );
 
   const claimPPH = useCallback(() => {
@@ -1413,6 +1434,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         now.getMonth() !== lastClaimed.getMonth() ||
         now.getFullYear() !== lastClaimed.getFullYear())
     ) {
+      // Add success vibration
+      vibrate([50, 100, 50]);
+
       const newStreak =
         lastClaimed && (now.getTime() - lastClaimed.getTime()) / (1000 * 60 * 60 * 24) <= 1
           ? dailyReward.streak + 1
@@ -1440,9 +1464,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     } else if (dailyReward.completed) {
       showGameAlert('You have completed the 12-day reward cycle!');
     } else {
+      // Add error vibration
+      vibrate([100, 50, 100]);
       showGameAlert('You have already claimed your daily reward today!');
     }
-  }, [dailyReward, user, saveUserData]);
+  }, [dailyReward, user, saveUserData, vibrationEnabled]); // Added vibrationEnabled
 
   const getDailyReward = (day: number) => {
     const rewards = [100, 500, 700, 10000, 15000, 17000, 20000, 25000, 27000, 30000, 35000, 50000];
@@ -2087,6 +2113,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 height={28}
                 quality={100}
                 priority
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              className="bg-white/10 backdrop-blur-xl text-white p-2 rounded-full shadow-lg transform transition-all duration-300 hover:scale-110 hover:rotate-3 active:scale-95 active:rotate-0 border border-white/20"
+              onClick={() => {
+                setVibrationEnabled(!vibrationEnabled);
+              }}
+            >
+              <Image
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Vibrate%203D%20ICON-ZIkmXkpSZTbeMh9NbtpqH75B0aNCD9.png"
+                alt="Vibration"
+                width={28}
+                height={28}
+                quality={100}
+                priority
+                className={vibrationEnabled ? "" : "opacity-50"}
                 draggable="false"
                 onContextMenu={(e) => e.preventDefault()}
               />
