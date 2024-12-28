@@ -46,7 +46,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
     // Send welcome message with photo
     await ctx.replyWithPhoto(
       {
-        url: 'https://i.postimg.cc/dv4DjYdW/Albedo-Base-XL-make-a-baby-cheetah-cheetah-with-wears-cloths-ho-3.jpg',
+        url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
       },
       {
         caption: welcomeMessage,
