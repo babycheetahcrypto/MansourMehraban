@@ -1296,7 +1296,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     },
     [clickPower, multiplier, energy, saveUserData, user, currentPage, settings.vibration]
   );
-  
+
   const buyItem = useCallback(
     async (item: ShopItem) => {
       const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1); // Changed multiplier to 1.5x (50% increase)
@@ -1584,10 +1584,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             if (response.ok) {
               const userData = await response.json();
               console.log('Fetched user data:', userData);
-              setUser(userData);
-            } else {
-              console.error('Failed to fetch user data:', await response.text());
-              throw new Error('Failed to fetch user data');
+              setUser(userData)
             }
           } else {
             console.error('No Telegram user data available');
@@ -1649,7 +1646,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         console.log('User data saved successfully');
       } catch (error) {
         console.error('Error saving user data:', error);
-        showGameAlert('Failed to save user data. Please try again.');
       }
     }, []);
 
@@ -3212,31 +3208,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     resetBoosterCredits();
   }, [resetBoosterCredits]);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/game-data');
-      if (!response.ok) {
-        throw new Error('Failed to fetch game data');
-      }
-      const data = await response.json();
-      setUser(data.user);
-      setShopItems(data.shopItems);
-      setPremiumShopItems(data.premiumShopItems);
-      setTasks(data.tasks);
-      // Update other state variables as needed
-    } catch (error) {
-      console.error('Error fetching game data:', error);
-      showGameAlert('Failed to load game data. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   if (isLoading) {
     return (
