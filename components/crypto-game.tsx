@@ -1690,11 +1690,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const checkGameAvailability = async () => {
       try {
         console.log('Checking game availability...');
-        const response = await fetch('/api/health');
+        const response = await fetch('/api/health', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         console.log('Health check response:', JSON.stringify(data, null, 2));
 
-        if (response.ok && data.status === 'OK') {
+        if (data.status === 'OK') {
           console.log('Game is available');
           setGameStatus('available');
         } else {
@@ -1711,34 +1719,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
     checkGameAvailability();
   }, []);
-
-  if (gameStatus === 'loading') {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  if (gameStatus === 'unavailable') {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4">Game Unavailable</h1>
-          <p className="text-xl mb-4">Sorry, the game is currently unavailable. Please try again later.</p>
-          <p className="text-sm text-gray-400">If the problem persists, please contact support.</p>
-          {errorDetails && (
-            <details className="mt-4 text-left">
-              <summary className="cursor-pointer text-blue-400">Show Error Details</summary>
-              <pre className="mt-2 p-4 bg-gray-800 rounded overflow-x-auto">
-                {errorDetails}
-              </pre>
-            </details>
-          )}
-        </div>
-      </div>
-    );
-  }
 
   useEffect(() => {
     fetchUserData();

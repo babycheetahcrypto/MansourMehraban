@@ -14,10 +14,7 @@ interface HealthStatus {
     DATABASE_URL: string;
     TELEGRAM_BOT_TOKEN: string;
   };
-  api_url: string | undefined;
-  webapp_url: string | undefined;
   error?: string;
-  errorDetails?: string;
 }
 
 export default async function handler(
@@ -38,8 +35,6 @@ export default async function handler(
       DATABASE_URL: process.env.DATABASE_URL ? 'Set' : 'Not set',
       TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN ? 'Set' : 'Not set',
     },
-    api_url: process.env.NEXT_PUBLIC_API_URL,
-    webapp_url: process.env.NEXT_PUBLIC_WEBAPP_URL
   };
 
   try {
@@ -59,19 +54,13 @@ export default async function handler(
     healthStatus.status = 'Error';
     healthStatus.database = 'Failed to connect';
     healthStatus.databaseQuery = 'Failed';
-    healthStatus.error = 'Failed to connect to the database or perform query';
-    healthStatus.errorDetails = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error details:', healthStatus.errorDetails);
+    healthStatus.error = error instanceof Error ? error.message : 'Unknown error';
   } finally {
     await prisma.$disconnect()
   }
 
   console.log('Health check result:', JSON.stringify(healthStatus, null, 2));
 
-  if (healthStatus.status === 'OK') {
-    res.status(200).json(healthStatus);
-  } else {
-    res.status(500).json(healthStatus);
-  }
+  res.status(healthStatus.status === 'OK' ? 200 : 500).json(healthStatus);
 }
 

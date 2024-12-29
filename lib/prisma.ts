@@ -8,12 +8,16 @@ let prisma: PrismaClient
 
 if (process.env.NODE_ENV === 'production') {
   console.log('Initializing Prisma client in production mode');
-  prisma = new PrismaClient()
+  prisma = new PrismaClient({
+    log: ['query', 'info', 'warn', 'error'],
+  })
 } else {
   console.log('Initializing Prisma client in development mode');
   if (!global.prisma) {
     console.log('Creating new Prisma client instance');
-    global.prisma = new PrismaClient()
+    global.prisma = new PrismaClient({
+      log: ['query', 'info', 'warn', 'error'],
+    })
   } else {
     console.log('Reusing existing Prisma client instance');
   }
