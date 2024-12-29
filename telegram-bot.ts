@@ -1,6 +1,15 @@
 import { Telegraf, Markup, Context } from 'telegraf';
 import prisma from './lib/prisma';
 
+function logEnvironmentVariables() {
+  console.log('Environment variables:');
+  console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+  console.log('NEXT_PUBLIC_WEBAPP_URL:', process.env.NEXT_PUBLIC_WEBAPP_URL);
+  console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? 'Set' : 'Not set');
+}
+
+logEnvironmentVariables();
+
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
 // Add this check at the beginning of the file
@@ -16,6 +25,7 @@ async function checkApiHealth() {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
+    console.log('API health check response status:', response.status);
     if (response.ok) {
       const data = await response.json();
       console.log('API health check successful:', data);
@@ -32,12 +42,15 @@ async function checkApiHealth() {
 
 async function fetchWithRetry(url: string, options: RequestInit, retries = 3): Promise<Response> {
   try {
+    console.log(`Fetching: ${url}`);
     const response = await fetch(url, options);
+    console.log(`Fetch response status: ${response.status}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     return response;
   } catch (error) {
+    console.error(`Fetch error: ${error}`);
     if (retries > 0) {
       console.log(`Retrying fetch to ${url}. Attempts left: ${retries - 1}`);
       return fetchWithRetry(url, options, retries - 1);
