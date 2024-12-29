@@ -1,10 +1,12 @@
 import { Telegraf, Markup, Context } from 'telegraf';
+import prisma from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
 bot.command('start', async (ctx: Context) => {
   const telegramUser = ctx.from;
   if (!telegramUser) {
+    console.error('Error: Unable to get user information.');
     ctx.reply('Error: Unable to get user information.');
     return;
   }
@@ -24,14 +26,16 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    const response = await global.fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`);
+    console.log(`Fetching user data for Telegram ID: ${telegramUser.id}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`);
     let user;
 
     if (response.ok) {
       user = await response.json();
+      console.log('User data fetched successfully:', user);
     } else if (response.status === 404) {
-      // User not found, create a new user
-      const createResponse = await global.fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+      console.log('User not found, creating new user');
+      const createResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -46,15 +50,19 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         user = await createResponse.json();
         console.log('New user created:', user);
       } else {
-        throw new Error('Failed to create new user');
+        const errorText = await createResponse.text();
+        console.error('Failed to create new user:', errorText);
+        throw new Error(`Failed to create new user: ${errorText}`);
       }
     } else {
-      throw new Error('Failed to fetch or create user');
+      const errorText = await response.text();
+      console.error('Failed to fetch or create user:', errorText);
+      throw new Error(`Failed to fetch or create user: ${errorText}`);
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
 
-    // Send welcome message with photo
+    console.log('Sending welcome message');
     await ctx.replyWithPhoto(
       {
         url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
@@ -68,9 +76,11 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         ]),
       }
     );
+    console.log('Welcome message sent successfully');
   } catch (error) {
     console.error('Error in /start command:', error);
-    ctx.reply('An error occurred while setting up your game. Please try again later.');
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    ctx.reply(`An error occurred while setting up your game. Please try again later. Error details: ${errorMessage}`);
   }
 });
 
@@ -122,7 +132,8 @@ bot.on('web_app_data', async (ctx) => {
     ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {
     console.error('Error processing web app data:', error);
-    ctx.answerCbQuery('An error occurred while processing game data.');
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    ctx.answerCbQuery(`An error occurred while processing game data. Details: ${errorMessage}`);
   }
 });
 
