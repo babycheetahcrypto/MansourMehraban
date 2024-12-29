@@ -1691,7 +1691,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         if (response.ok) {
           const data = await response.json();
           setGameAvailable(data.status === 'OK');
+          if (data.status !== 'OK') {
+            console.error('Game unavailable. Health check response:', data);
+          }
         } else {
+          const errorText = await response.text();
+          console.error('Game unavailable. Health check failed:', response.status, errorText);
           setGameAvailable(false);
         }
       } catch (error) {

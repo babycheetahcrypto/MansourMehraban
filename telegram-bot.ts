@@ -31,7 +31,8 @@ async function checkApiHealth() {
       console.log('API health check successful:', data);
       return data.status === 'OK';
     } else {
-      console.error('API health check failed. Status:', response.status, 'Response:', await response.text());
+      const errorText = await response.text();
+      console.error('API health check failed. Status:', response.status, 'Response:', errorText);
       return false;
     }
   } catch (error) {
