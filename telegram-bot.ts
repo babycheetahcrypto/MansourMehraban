@@ -1,7 +1,9 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import prisma from './lib/prisma';
+import axios from 'axios';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
 
 bot.command('start', async (ctx: Context) => {
   const telegramUser = ctx.from;
@@ -25,21 +27,15 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    let user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
+    const response = await axios.post(`${API_BASE_URL}/user`, {
+      telegramId: telegramUser.id.toString(),
+      username: telegramUser.username || `user${telegramUser.id}`,
+      firstName: telegramUser.first_name,
+      lastName: telegramUser.last_name,
     });
 
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          telegramId: telegramUser.id.toString(),
-          username: telegramUser.username || `user${telegramUser.id}`,
-          firstName: telegramUser.first_name,
-          lastName: telegramUser.last_name,
-        },
-      });
-      console.log('New user created:', user);
-    }
+    const user = response.data;
+    console.log('User created or updated:', user);
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
 
@@ -82,35 +78,18 @@ bot.on('web_app_data', async (ctx) => {
 
   try {
     const parsedData = JSON.parse(data.text());
-    const user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
-    });
-
-    if (!user) {
-      ctx.reply('Error: User not found.');
-      return;
+    
+    const response = await axios.patch(`${API_BASE_URL}/user/${telegramUser.id}`, parsedData);
+    
+    if (response.status === 200) {
+      ctx.answerCbQuery('Game data updated successfully!');
+    } else {
+      throw new Error('Failed to update game data');
     }
-
-    // Update user data based on game actions
-    if (parsedData.action === 'tap') {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
-      });
-    } else if (parsedData.action === 'purchase') {
-    } else if (parsedData.action === 'claim') {
-      // Handle reward claim logic
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
-      });
-    }
-
-    ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {
     console.error('Error processing web app data:', error);
     ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
-export default bot;
 
+export default bot;

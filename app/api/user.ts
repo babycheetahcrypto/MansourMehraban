@@ -77,16 +77,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(500).json({ error: 'An error occurred while fetching the user.' });
     }
   } else if (req.method === 'PATCH') {
-    const { id, ...updateData } = req.body;
+    const { telegramId } = req.query;
+    const updateData = req.body;
 
-    if (!id) {
-      return res.status(400).json({ error: 'User ID is required' });
+    if (!telegramId) {
+      return res.status(400).json({ error: 'Telegram ID is required' });
     }
 
     try {
+      const user = await prisma.user.findUnique({
+        where: { telegramId: telegramId as string },
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      let updatedData = { ...updateData };
+
+      if (updateData.action === 'tap') {
+        updatedData = {
+          coins: user.coins + updateData.amount,
+        };
+      } else if (updateData.action === 'purchase') {
+        // Handle purchase logic here
+      } else if (updateData.action === 'claim') {
+        updatedData = {
+          coins: user.coins + updateData.amount,
+        };
+      }
+
       const updatedUser = await prisma.user.update({
-        where: { id },
-        data: updateData,
+        where: { telegramId: telegramId as string },
+        data: updatedData,
       });
 
       res.status(200).json(updatedUser);
