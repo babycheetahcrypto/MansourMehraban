@@ -8,12 +8,13 @@ function logEnvironmentVariables() {
   console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
   console.log('NEXT_PUBLIC_WEBAPP_URL:', process.env.NEXT_PUBLIC_WEBAPP_URL);
   console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? 'Set' : 'Not set');
+  console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
 }
 
 logEnvironmentVariables();
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  console.error('NEXT_PUBLIC_API_URL is not set. Please check your environment variables.');
+if (!process.env.NEXT_PUBLIC_API_URL || !process.env.NEXT_PUBLIC_WEBAPP_URL || !process.env.TELEGRAM_BOT_TOKEN || !process.env.DATABASE_URL) {
+  console.error('One or more required environment variables are not set. Please check your configuration.');
   process.exit(1);
 }
 
@@ -28,7 +29,7 @@ async function checkApiHealth() {
     if (response.ok) {
       const data = await response.json();
       console.log('API health check successful:', data);
-      return true;
+      return data.status === 'OK';
     } else {
       console.error('API health check failed. Status:', response.status, 'Response:', await response.text());
       return false;

@@ -5,15 +5,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log('Health check requested');
+  console.log('Debug endpoint requested');
   try {
     // Check database connection
     await prisma.$connect()
     console.log('Database connection successful');
     
-    // Check if we can perform a simple query
+    // Fetch some sample data
     const userCount = await prisma.user.count();
-    console.log(`Database query successful. User count: ${userCount}`);
+    const sampleUser = await prisma.user.findFirst();
     
     // Check environment variables
     const envVars = {
@@ -26,19 +26,23 @@ export default async function handler(
       status: 'OK', 
       timestamp: new Date().toISOString(),
       database: 'Connected',
-      databaseQuery: 'Successful',
       userCount: userCount,
+      sampleUser: sampleUser ? {
+        id: sampleUser.id,
+        telegramId: sampleUser.telegramId,
+        username: sampleUser.username,
+      } : null,
       environment: process.env.NODE_ENV,
       environmentVariables: envVars,
       api_url: process.env.NEXT_PUBLIC_API_URL,
       webapp_url: process.env.NEXT_PUBLIC_WEBAPP_URL
     })
   } catch (error) {
-    console.error('Health check failed:', error)
+    console.error('Debug check failed:', error)
     res.status(500).json({ 
       status: 'Error', 
       timestamp: new Date().toISOString(),
-      error: 'Failed to connect to the database or perform query',
+      error: 'Failed to perform debug checks',
       details: error instanceof Error ? error.message : 'Unknown error'
     })
   } finally {
