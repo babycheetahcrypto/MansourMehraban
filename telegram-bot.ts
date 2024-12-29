@@ -1,6 +1,15 @@
 import { Telegraf, Markup, Context } from 'telegraf';
 import prisma from './lib/prisma';
 
+function logEnvironmentVariables() {
+  console.log('Environment variables:');
+  console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+  console.log('NEXT_PUBLIC_WEBAPP_URL:', process.env.NEXT_PUBLIC_WEBAPP_URL);
+  console.log('BOT_TOKEN:', process.env.BOT_TOKEN ? 'Set' : 'Not set');
+}
+
+logEnvironmentVariables();
+
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
 // Add this check at the beginning of the file
@@ -55,22 +64,11 @@ bot.command('start', async (ctx: Context) => {
     return;
   }
 
-  const welcomeMessage = `
-Welcome *@${telegramUser.username || telegramUser.first_name}*! 🐾🎉
-
-Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't to miss! 💸
-
-What You Can Do Now:
-💰 Earn $BBCH: Play our mining game and start stacking coins.
-👥 Invite Friends: Share the game and earn bonus $BBCH for every friend who joins. More friends, more rewards!
-🎯 Complete Quests: Take on daily challenges to boost your earnings and unlock exclusive bonuses.
-
-Start earning today and be part of the next big upcoming airdrop. ✨
-Stay fast, stay fierce, stay Baby Cheetah! 🌟
-`;
-
   try {
-    if (!(await checkApiHealth())) {
+    console.log('Checking API health...');
+    const isHealthy = await checkApiHealth();
+    if (!isHealthy) {
+      console.error('API health check failed. Game is unavailable.');
       ctx.reply('Sorry, the game is currently unavailable. Please try again later.');
       return;
     }
@@ -123,7 +121,19 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
       },
       {
-        caption: welcomeMessage,
+        caption: `
+Welcome *@${telegramUser.username || telegramUser.first_name}*! 🐾🎉
+
+Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't to miss! 💸
+
+What You Can Do Now:
+💰 Earn $BBCH: Play our mining game and start stacking coins.
+👥 Invite Friends: Share the game and earn bonus $BBCH for every friend who joins. More friends, more rewards!
+🎯 Complete Quests: Take on daily challenges to boost your earnings and unlock exclusive bonuses.
+
+Start earning today and be part of the next big upcoming airdrop. ✨
+Stay fast, stay fierce, stay Baby Cheetah! 🌟
+`,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
           Markup.button.webApp('Play 🚀', gameUrl),
