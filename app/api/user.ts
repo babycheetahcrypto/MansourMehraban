@@ -41,6 +41,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         });
         console.log('New user created:', user);
+      } else {
+        user = await prisma.user.update({
+          where: { telegramId: telegramId },
+          data: { username, firstName, lastName },
+        });
+        console.log('User updated:', user);
       }
 
       res.status(200).json(user);
@@ -48,77 +54,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Error creating/updating user:', error);
       res.status(500).json({ error: 'An error occurred while creating/updating the user.' });
     }
-  } else if (req.method === 'GET') {
-    const { telegramId } = req.query;
-
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
-    }
-
-    try {
-      const user = await prisma.user.findUnique({
-        where: { telegramId: telegramId as string },
-        include: {
-          dailyReward: true,
-          shopItems: true,
-          premiumShopItems: true,
-          tasks: true,
-          trophies: true,
-        },
-      });
-
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      res.status(200).json(user);
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      res.status(500).json({ error: 'An error occurred while fetching the user.' });
-    }
-  } else if (req.method === 'PATCH') {
-    const { telegramId } = req.query;
-    const updateData = req.body;
-
-    if (!telegramId) {
-      return res.status(400).json({ error: 'Telegram ID is required' });
-    }
-
-    try {
-      const user = await prisma.user.findUnique({
-        where: { telegramId: telegramId as string },
-      });
-
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      let updatedData = { ...updateData };
-
-      if (updateData.action === 'tap') {
-        updatedData = {
-          coins: user.coins + updateData.amount,
-        };
-      } else if (updateData.action === 'purchase') {
-        // Handle purchase logic here
-      } else if (updateData.action === 'claim') {
-        updatedData = {
-          coins: user.coins + updateData.amount,
-        };
-      }
-
-      const updatedUser = await prisma.user.update({
-        where: { telegramId: telegramId as string },
-        data: updatedData,
-      });
-
-      res.status(200).json(updatedUser);
-    } catch (error) {
-      console.error('Error updating user:', error);
-      res.status(500).json({ error: 'An error occurred while updating the user.' });
-    }
   } else {
-    res.setHeader('Allow', ['POST', 'GET', 'PATCH']);
+    res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
