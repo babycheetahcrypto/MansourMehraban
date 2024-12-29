@@ -636,6 +636,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [gameAvailable, setGameAvailable] = useState(true);
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
@@ -1681,6 +1682,27 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     } finally {
       setIsLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const checkGameAvailability = async () => {
+      try {
+        const response = await fetch('/api/health');
+        if (response.ok) {
+          const data = await response.json();
+          setGameAvailable(data.status === 'OK');
+        } else {
+          setGameAvailable(false);
+        }
+      } catch (error) {
+        console.error('Error checking game availability:', error);
+        setGameAvailable(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkGameAvailability();
   }, []);
 
   useEffect(() => {
