@@ -3,6 +3,24 @@ import prisma from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
+async function checkApiHealth() {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/health`);
+    if (response.ok) {
+      const data = await response.json();
+      console.log('API health check successful:', data);
+      return true;
+    } else {
+      console.error('API health check failed:', await response.text());
+      return false;
+    }
+  } catch (error) {
+    console.error('API health check error:', error);
+    return false;
+  }
+}
+
+
 // Add this check at the beginning of the file
 if (!process.env.NEXT_PUBLIC_API_URL) {
   console.error('NEXT_PUBLIC_API_URL is not set. Please check your environment variables.');
@@ -33,8 +51,12 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 
   try {
     console.log(`Fetching user data for Telegram ID: ${telegramUser.id}`);
-    console.log(`API URL: ${process.env.NEXT_PUBLIC_API_URL}`); // Add this line for debugging
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`);
+    console.log(`API URL: ${process.env.NEXT_PUBLIC_API_URL}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`).catch(error => {
+      console.error('Fetch error:', error);
+      throw new Error(`Fetch failed: ${error.message}`);
+    });
+
     let user;
 
     if (response.ok) {
@@ -51,6 +73,9 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           firstName: telegramUser.first_name,
           lastName: telegramUser.last_name,
         }),
+      }).catch(error => {
+        console.error('Create user fetch error:', error);
+        throw new Error(`Create user fetch failed: ${error.message}`);
       });
 
       if (createResponse.ok) {
