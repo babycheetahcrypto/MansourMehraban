@@ -3,6 +3,12 @@ import prisma from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
+// Add this check at the beginning of the file
+if (!process.env.NEXT_PUBLIC_API_URL) {
+  console.error('NEXT_PUBLIC_API_URL is not set. Please check your environment variables.');
+  process.exit(1);
+}
+
 bot.command('start', async (ctx: Context) => {
   const telegramUser = ctx.from;
   if (!telegramUser) {
@@ -27,6 +33,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 
   try {
     console.log(`Fetching user data for Telegram ID: ${telegramUser.id}`);
+    console.log(`API URL: ${process.env.NEXT_PUBLIC_API_URL}`); // Add this line for debugging
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`);
     let user;
 
