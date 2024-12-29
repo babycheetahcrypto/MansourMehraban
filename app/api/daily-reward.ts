@@ -1,19 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/prisma';
+import { dbOperations } from 'telegram-bot';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const { userId } = req.query;
 
     if (!userId) {
-      return res.status(400).json({ error: 'User  ID is required' });
+      return res.status(400).json({ error: 'User ID is required' });
     }
 
     try {
-      const dailyReward = await prisma.dailyReward.findUnique({
-        where: { userId: userId as string },
-      });
-
+      const dailyReward = await dbOperations.getDailyReward(userId as string);
       res.status(200).json(dailyReward);
     } catch (error) {
       console.error('Failed to fetch daily reward data:', error);
@@ -23,16 +20,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { userId, lastClaimed, streak, day, completed } = req.body;
 
     if (!userId) {
-      return res.status(400).json({ error: 'User  ID is required' });
+      return res.status(400).json({ error: 'User ID is required' });
     }
 
     try {
-      const updatedDailyReward = await prisma.dailyReward.upsert({
-        where: { userId: userId as string },
-        update: { lastClaimed, streak, day, completed },
-        create: { userId: userId as string, lastClaimed, streak, day, completed },
-      });
-
+      const updatedDailyReward = await dbOperations.updateDailyReward(userId, { lastClaimed, streak, day, completed });
       res.status(200).json(updatedDailyReward);
     } catch (error) {
       console.error('Failed to update daily reward data:', error);

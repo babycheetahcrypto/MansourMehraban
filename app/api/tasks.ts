@@ -1,55 +1,27 @@
-import prisma from '@/lib/prisma';
+import { NextApiRequest, NextApiResponse } from 'next'
+import { dbOperations } from 'telegram-bot'
 
-export const createTask = async (userId: string, taskData: any) => {
-  const task = await prisma.task.create({
-    data: {
-      ...taskData,
-      userId: userId,
-    },
-  });
-  return task;
-};
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'GET') {
+    const { userId } = req.query;
 
+    try {
+      const tasks = await dbOperations.getTasks(userId as string);
+      res.status(200).json(tasks);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch tasks' });
+    }
+  } else if (req.method === 'PUT') {
+    const { taskId, taskData } = req.body;
 
-export const getTasks = async (userId: string) => {
-  const tasks = await prisma.task.findMany({
-    where: {
-      userId: userId,
-    },
-  });
-  return tasks;
-};
-
-export const getTaskById = async (userId: string, taskId: string) => {
-  const task = await prisma.task.findUnique({
-    where: {
-      id: taskId,
-      userId: userId,
-    },
-  });
-  return task;
-};
-
-export const updateTask = async (userId: string, taskId: string, taskData: any) => {
-  const task = await prisma.task.update({
-    data: {
-      ...taskData,
-    },
-    where: {
-      id: taskId,
-      userId: userId,
-    },
-  });
-  return task;
-};
-
-export const deleteTask = async (userId: string, taskId: string) => {
-  const task = await prisma.task.delete({
-    where: {
-      id: taskId,
-      userId: userId,
-    },
-  });
-  return task;
-};
-
+    try {
+      const updatedTask = await dbOperations.updateTask(taskId, taskData);
+      res.status(200).json(updatedTask);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update task' });
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'PUT']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}

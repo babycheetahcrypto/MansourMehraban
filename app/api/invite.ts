@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import { dbOperations } from 'telegram-bot'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -10,36 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-      })
-
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' })
-      }
-
-      // Update user's friendsCoins
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: {
-          friendsCoins: {
-            ...(user.friendsCoins as object),
-            [friendId]: 0,
-          },
-        },
-      })
-
-      // Add coins to the user for inviting a friend
-      const inviteReward = 2000
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          coins: {
-            increment: inviteReward,
-          },
-        },
-      })
-
+      const updatedUser = await dbOperations.inviteFriend(userId, friendId);
       res.status(200).json({ message: 'Friend invited successfully', user: updatedUser })
     } catch (error) {
       res.status(500).json({ error: 'Failed to process invitation' })
@@ -49,4 +20,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }
-
