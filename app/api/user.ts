@@ -24,7 +24,6 @@ function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: Function) 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Run the middleware
   await runMiddleware(req, res, cors)
-
   if (req.method === 'GET') {
     const { telegramId } = req.query;
 
