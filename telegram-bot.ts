@@ -26,13 +26,14 @@ async function checkApiHealth() {
       headers: { 'Content-Type': 'application/json' },
     });
     console.log('API health check response status:', response.status);
-    if (response.ok) {
-      const data = await response.json();
-      console.log('API health check successful:', data);
-      return data.status === 'OK';
+    const data = await response.json();
+    console.log('API health check response data:', JSON.stringify(data, null, 2));
+    
+    if (response.ok && data.status === 'OK') {
+      console.log('API health check successful');
+      return true;
     } else {
-      const errorText = await response.text();
-      console.error('API health check failed. Status:', response.status, 'Response:', errorText);
+      console.error('API health check failed. Status:', response.status, 'Data:', JSON.stringify(data, null, 2));
       return false;
     }
   } catch (error) {
@@ -89,7 +90,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
     const isHealthy = await checkApiHealth();
     if (!isHealthy) {
       console.error('API health check failed. Game is unavailable.');
-      ctx.reply('Sorry, the game is currently unavailable. Please try again later.');
+      ctx.reply('Sorry, the game is currently unavailable. Please try again later. Our team has been notified and is working on resolving the issue.');
       return;
     }
 
@@ -153,7 +154,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
   } catch (error) {
     console.error('Error in /start command:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    ctx.reply(`An error occurred while setting up your game. Please try again later. Error details: ${errorMessage}`);
+    ctx.reply(`An error occurred while setting up your game. Please try again later. Our team has been notified and is working on resolving the issue. Error details: ${errorMessage}`);
   }
 });
 
