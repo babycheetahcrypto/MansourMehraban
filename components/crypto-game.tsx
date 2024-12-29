@@ -1578,24 +1578,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const webApp = window.Telegram.WebApp;
           const telegramUser = webApp.initDataUnsafe.user;
           console.log('Telegram user data:', telegramUser);
-
+    
           if (telegramUser) {
             const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
-            console.log('Fetch response status:', response.status);
-
             if (response.ok) {
               const userData = await response.json();
               console.log('Fetched user data:', userData);
-              setUser(userData)
+              setUser(userData);
+            } else {
+              console.error('Failed to fetch user data:', await response.text());
             }
           } else {
             console.error('No Telegram user data available');
-            throw new Error('No Telegram user data available');
           }
         } else {
           console.error('Telegram WebApp not available');
-          throw new Error('Telegram WebApp not available');
         }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       } finally {
         setIsLoading(false);
       }
