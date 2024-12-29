@@ -3,9 +3,18 @@ import prisma from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
+// Add this check at the beginning of the file
+if (!process.env.NEXT_PUBLIC_API_URL) {
+  console.error('NEXT_PUBLIC_API_URL is not set. Please check your environment variables.');
+  process.exit(1);
+}
+
 async function checkApiHealth() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/health`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/health`, { 
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
     if (response.ok) {
       const data = await response.json();
       console.log('API health check successful:', data);
@@ -20,11 +29,21 @@ async function checkApiHealth() {
   }
 }
 
-
-// Add this check at the beginning of the file
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  console.error('NEXT_PUBLIC_API_URL is not set. Please check your environment variables.');
-  process.exit(1);
+async function fetchWithRetry(url: string, options: RequestInit, retries = 3): Promise<Response> {
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response;
+  } catch (error) {
+    if (retries > 0) {
+      console.log(`Retrying fetch to ${url}. Attempts left: ${retries - 1}`);
+      return fetchWithRetry(url, options, retries - 1);
+    } else {
+      throw error;
+    }
+  }
 }
 
 bot.command('start', async (ctx: Context) => {
@@ -50,11 +69,17 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
+    if (!(await checkApiHealth())) {
+      ctx.reply('Sorry, the game is currently unavailable. Please try again later.');
+      return;
+    }
+
     console.log(`Fetching user data for Telegram ID: ${telegramUser.id}`);
     console.log(`API URL: ${process.env.NEXT_PUBLIC_API_URL}`);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`).catch(error => {
-      console.error('Fetch error:', error);
-      throw new Error(`Fetch failed: ${error.message}`);
+    
+    const response = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
     });
 
     let user;
@@ -64,7 +89,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
       console.log('User data fetched successfully:', user);
     } else if (response.status === 404) {
       console.log('User not found, creating new user');
-      const createResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+      const createResponse = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -73,9 +98,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           firstName: telegramUser.first_name,
           lastName: telegramUser.last_name,
         }),
-      }).catch(error => {
-        console.error('Create user fetch error:', error);
-        throw new Error(`Create user fetch failed: ${error.message}`);
       });
 
       if (createResponse.ok) {
@@ -135,7 +157,10 @@ bot.on('web_app_data', async (ctx) => {
 
   try {
     const parsedData = JSON.parse(data.text());
-    const response = await global.fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`);
+    const response = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
     
     if (!response.ok) {
       throw new Error('Failed to fetch user data');
@@ -145,7 +170,7 @@ bot.on('web_app_data', async (ctx) => {
 
     // Update user data based on game actions
     if (parsedData.action === 'tap' || parsedData.action === 'claim') {
-      const updateResponse = await global.fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+      const updateResponse = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
