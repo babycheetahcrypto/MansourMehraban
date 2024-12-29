@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           level: level !== undefined ? level : undefined,
           exp: exp !== undefined ? exp : undefined,
-          unlockedLevels: unlockedLevels !== undefined ? unlockedLevels : undefined,
+          unlockedLevels: unlockedLevels !== undefined ? unlockedLevels :unlockedLevels !== undefined ? unlockedLevels : undefined,
         },
         select: { level: true, exp: true, unlockedLevels: true },
       });
@@ -52,3 +52,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+

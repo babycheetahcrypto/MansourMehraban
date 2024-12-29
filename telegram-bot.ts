@@ -1,5 +1,4 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import prisma from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
@@ -25,20 +24,32 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    let user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
-    });
+    const response = await global.fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`);
+    let user;
 
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
+    if (response.ok) {
+      user = await response.json();
+    } else if (response.status === 404) {
+      // User not found, create a new user
+      const createResponse = await global.fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           telegramId: telegramUser.id.toString(),
           username: telegramUser.username || `user${telegramUser.id}`,
           firstName: telegramUser.first_name,
           lastName: telegramUser.last_name,
-        },
+        }),
       });
-      console.log('New user created:', user);
+
+      if (createResponse.ok) {
+        user = await createResponse.json();
+        console.log('New user created:', user);
+      } else {
+        throw new Error('Failed to create new user');
+      }
+    } else {
+      throw new Error('Failed to fetch or create user');
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
@@ -82,28 +93,30 @@ bot.on('web_app_data', async (ctx) => {
 
   try {
     const parsedData = JSON.parse(data.text());
-    const user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
-    });
-
-    if (!user) {
-      ctx.reply('Error: User not found.');
-      return;
+    const response = await global.fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch user data');
     }
 
+    const user = await response.json();
+
     // Update user data based on game actions
-    if (parsedData.action === 'tap') {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
+    if (parsedData.action === 'tap' || parsedData.action === 'claim') {
+      const updateResponse = await global.fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          telegramId: user.telegramId,
+          coins: user.coins + parsedData.amount,
+        }),
       });
+
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update user data');
+      }
     } else if (parsedData.action === 'purchase') {
-    } else if (parsedData.action === 'claim') {
-      // Handle reward claim logic
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
-      });
+      // Handle purchase logic here
     }
 
     ctx.answerCbQuery('Game data updated successfully!');
@@ -114,3 +127,4 @@ bot.on('web_app_data', async (ctx) => {
 });
 
 export default bot;
+

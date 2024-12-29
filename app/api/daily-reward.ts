@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { userId } = req.query;
 
     if (!userId) {
-      return res.status(400).json({ error: 'User  ID is required' });
+      return res.status(400).json({ error: 'User ID is required' });
     }
 
     try {
@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { userId, lastClaimed, streak, day, completed } = req.body;
 
     if (!userId) {
-      return res.status(400).json({ error: 'User  ID is required' });
+      return res.status(400).json({ error: 'User ID is required' });
     }
 
     try {
@@ -43,3 +43,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+

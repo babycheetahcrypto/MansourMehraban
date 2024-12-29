@@ -78,6 +78,7 @@
     "@types/mongodb": "^4.0.6",
     "@types/mongoose": "^5.11.96",
     "@types/node": "latest",
+    "@types/node-fetch": "^2.6.12",
     "@types/react": "latest",
     "@types/react-dom": "^18.2.19",
     "@types/tailwindcss": "^3.0.11",
