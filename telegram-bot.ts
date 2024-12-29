@@ -1,6 +1,8 @@
 import { Telegraf, Markup, Context } from 'telegraf';
 import prisma from './lib/prisma';
 
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
+
 function logEnvironmentVariables() {
   console.log('Environment variables:');
   console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
@@ -10,9 +12,6 @@ function logEnvironmentVariables() {
 
 logEnvironmentVariables();
 
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
-
-// Add this check at the beginning of the file
 if (!process.env.NEXT_PUBLIC_API_URL) {
   console.error('NEXT_PUBLIC_API_URL is not set. Please check your environment variables.');
   process.exit(1);
@@ -61,6 +60,7 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 3): P
 }
 
 bot.command('start', async (ctx: Context) => {
+  console.log('Start command received');
   const telegramUser = ctx.from;
   if (!telegramUser) {
     console.error('Error: Unable to get user information.');
@@ -83,7 +83,10 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    if (!(await checkApiHealth())) {
+    console.log('Checking API health...');
+    const isHealthy = await checkApiHealth();
+    if (!isHealthy) {
+      console.error('API health check failed. Game is unavailable.');
       ctx.reply('Sorry, the game is currently unavailable. Please try again later.');
       return;
     }

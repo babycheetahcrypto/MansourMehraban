@@ -24,14 +24,19 @@ function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: Function) 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Run the middleware
   await runMiddleware(req, res, cors)
+  
+  console.log(`Received ${req.method} request to /api/user`);
+  
   if (req.method === 'GET') {
     const { telegramId } = req.query;
 
     if (!telegramId) {
+      console.error('GET request missing telegramId');
       return res.status(400).json({ error: 'Telegram ID is required' });
     }
 
     try {
+      console.log(`Fetching user data for Telegram ID: ${telegramId}`);
       const user = await prisma.user.findUnique({
         where: { telegramId: telegramId as string },
         include: {
@@ -44,9 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       if (!user) {
+        console.log(`User not found for Telegram ID: ${telegramId}`);
         return res.status(404).json({ error: 'User not found' });
       }
 
+      console.log(`User data fetched successfully for Telegram ID: ${telegramId}`);
       res.status(200).json(user);
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -56,10 +63,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { telegramId, ...updateData } = req.body;
 
     if (!telegramId) {
+      console.error('PATCH request missing telegramId');
       return res.status(400).json({ error: 'Telegram ID is required' });
     }
 
     try {
+      console.log(`Updating user data for Telegram ID: ${telegramId}`);
       const updatedUser = await prisma.user.update({
         where: { telegramId: telegramId as string },
         data: {
@@ -108,12 +117,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
+      console.log(`User data updated successfully for Telegram ID: ${telegramId}`);
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error('Error updating user:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   } else {
+    console.error(`Unsupported method: ${req.method}`);
     res.setHeader('Allow', ['GET', 'PATCH']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
