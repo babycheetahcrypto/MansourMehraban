@@ -43,12 +43,12 @@ export default async function handler(
   };
 
   try {
-    // Check database connection
+    console.log('Attempting to connect to the database...');
     await prisma.$connect()
     healthStatus.database = 'Connected';
     console.log('Database connection successful');
     
-    // Check if we can perform a simple query
+    console.log('Attempting to perform a simple query...');
     const userCount = await prisma.user.count();
     healthStatus.databaseQuery = 'Successful';
     healthStatus.userCount = userCount;
@@ -61,9 +61,12 @@ export default async function handler(
     healthStatus.databaseQuery = 'Failed';
     healthStatus.error = 'Failed to connect to the database or perform query';
     healthStatus.errorDetails = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error details:', healthStatus.errorDetails);
   } finally {
     await prisma.$disconnect()
   }
+
+  console.log('Health check result:', JSON.stringify(healthStatus, null, 2));
 
   if (healthStatus.status === 'OK') {
     res.status(200).json(healthStatus);

@@ -637,7 +637,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [gameAvailable, setGameAvailable] = useState(true);
+  const [gameStatus, setGameStatus] = useState<'loading' | 'available' | 'unavailable'>('loading');
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+  const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [clickPower, setClickPower] = useState(1);
   const [profitPerHour, setProfitPerHour] = useState(0);
   const [currentPage, setCurrentPage] = useState('home');
@@ -1687,28 +1689,56 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   useEffect(() => {
     const checkGameAvailability = async () => {
       try {
+        console.log('Checking game availability...');
         const response = await fetch('/api/health');
-        if (response.ok) {
-          const data = await response.json();
-          setGameAvailable(data.status === 'OK');
-          if (data.status !== 'OK') {
-            console.error('Game unavailable. Health check response:', data);
-          }
+        const data = await response.json();
+        console.log('Health check response:', JSON.stringify(data, null, 2));
+
+        if (response.ok && data.status === 'OK') {
+          console.log('Game is available');
+          setGameStatus('available');
         } else {
-          const errorText = await response.text();
-          console.error('Game unavailable. Health check failed:', response.status, errorText);
-          setGameAvailable(false);
+          console.error('Game is unavailable. Health check failed:', data);
+          setGameStatus('unavailable');
+          setErrorDetails(JSON.stringify(data, null, 2));
         }
       } catch (error) {
         console.error('Error checking game availability:', error);
-        setGameAvailable(false);
-      } finally {
-        setIsLoading(false);
+        setGameStatus('unavailable');
+        setErrorDetails(error instanceof Error ? error.message : 'Unknown error occurred');
       }
     };
 
     checkGameAvailability();
   }, []);
+
+  if (gameStatus === 'loading') {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (gameStatus === 'unavailable') {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-4">Game Unavailable</h1>
+          <p className="text-xl mb-4">Sorry, the game is currently unavailable. Please try again later.</p>
+          <p className="text-sm text-gray-400">If the problem persists, please contact support.</p>
+          {errorDetails && (
+            <details className="mt-4 text-left">
+              <summary className="cursor-pointer text-blue-400">Show Error Details</summary>
+              <pre className="mt-2 p-4 bg-gray-800 rounded overflow-x-auto">
+                {errorDetails}
+              </pre>
+            </details>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     fetchUserData();
