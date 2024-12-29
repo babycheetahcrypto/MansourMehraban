@@ -1730,6 +1730,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             webApp.themeParams.button_text_color
           );
         }
+      } catch (error) {
+        console.error('Error initializing game:', error);
+        // Handle the error appropriately, e.g., show an error message to the user
       } finally {
         setIsLoading(false);
       }
