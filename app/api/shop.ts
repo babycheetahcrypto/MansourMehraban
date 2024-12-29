@@ -1,34 +1,26 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { dbOperations } from 'telegram-bot'
+import prisma from '@/lib/prisma';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { userId, itemName, itemImage, itemPrice, isPremium, itemEffect, itemProfit } = req.body;
-
-    try {
-      let purchasedItem;
-      if (isPremium) {
-        purchasedItem = await dbOperations.purchaseItem(userId, {
-          name: itemName,
-          image: itemImage,
-          basePrice: itemPrice,
-          effect: itemEffect || '',
-        });
-      } else {
-        purchasedItem = await dbOperations.purchaseItem(userId, {
-          name: itemName,
-          image: itemImage,
-          basePrice: itemPrice,
-          baseProfit: itemProfit || 0,
-          level: 1,
-        });
-      }
-      res.status(200).json(purchasedItem);
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to purchase item' });
-    }
+export async function purchaseItem(userId: string, itemName: string, itemImage: string, itemPrice: number, isPremium: boolean, itemEffect?: string, itemProfit?: number) {
+  if (isPremium) {
+    return await prisma.premiumShopItem.create({
+      data: {
+        name: itemName,
+        image: itemImage,
+        basePrice: itemPrice,
+        effect: itemEffect || '',
+        user: { connect: { id: userId } },
+      },
+    });
   } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return await prisma.shopItem.create({
+      data: {
+        name: itemName,
+        image: itemImage,
+        basePrice: itemPrice,
+        baseProfit: itemProfit || 0,
+        level: 1,
+        user: { connect: { id: userId } },
+      },
+    });
   }
 }

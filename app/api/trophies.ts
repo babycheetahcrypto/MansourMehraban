@@ -1,19 +1,38 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { dbOperations } from 'telegram-bot'
+import prisma from '@/lib/prisma';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'PUT') {
-    const { userId, trophyId, data } = req.body;
 
-    try {
-      const updatedTrophy = await dbOperations.updateTrophy(userId, trophyId, data);
-      res.status(200).json(updatedTrophy);
-    } catch (error) {
-      console.error("Error updating trophy:", error);
-      res.status(500).json({ error: 'Failed to update trophy' });
-    }
-  } else {
-    res.setHeader('Allow', ['PUT']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+export const updateTrophy = async (userId: string, trophyId: string, data: any) => {
+  try {
+    const updatedTrophy = await prisma.trophy.update({
+      data,
+      where: {
+        id: trophyId,
+        userId: userId,
+      },
+    });
+    return updatedTrophy;
+  } catch (error) {
+    console.error("Error updating trophy:", error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
   }
-}
+};
+
+export const getTrophy = async (userId: string, trophyId: string) => {
+  try {
+    const trophy = await prisma.trophy.findUnique({
+      where: {
+        id: trophyId,
+        userId: userId,
+      },
+    });
+    return trophy;
+  } catch (error) {
+    console.error("Error getting trophy:", error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+

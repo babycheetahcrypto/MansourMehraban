@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { dbOperations } from 'telegram-bot'
+import prisma from '@/lib/prisma'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -10,11 +10,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const user = await dbOperations.getUser(userId);
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { level: true, exp: true, unlockedLevels: true },
+      });
+
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
-      res.status(200).json({ level: user.level, exp: user.exp, unlockedLevels: user.unlockedLevels });
+
+      res.status(200).json(user);
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -27,8 +32,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const updatedUser = await dbOperations.updateUser(userId, { level, exp, unlockedLevels });
-      res.status(200).json({ level: updatedUser.level, exp: updatedUser.exp, unlockedLevels: updatedUser.unlockedLevels });
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          level: level !== undefined ? level : undefined,
+          exp: exp !== undefined ? exp : undefined,
+          unlockedLevels: unlockedLevels !== undefined ? unlockedLevels : undefined,
+        },
+        select: { level: true, exp: true, unlockedLevels: true },
+      });
+
+      res.status(200).json(updatedUser);
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Internal server error' });
