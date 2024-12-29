@@ -11,6 +11,7 @@ if (!process.env.NEXT_PUBLIC_API_URL) {
 
 async function checkApiHealth() {
   try {
+    console.log(`Checking API health at: ${process.env.NEXT_PUBLIC_API_URL}/api/health`);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/health`, { 
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -20,7 +21,7 @@ async function checkApiHealth() {
       console.log('API health check successful:', data);
       return true;
     } else {
-      console.error('API health check failed:', await response.text());
+      console.error('API health check failed. Status:', response.status, 'Response:', await response.text());
       return false;
     }
   } catch (error) {
