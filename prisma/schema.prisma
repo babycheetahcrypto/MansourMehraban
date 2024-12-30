@@ -8,82 +8,67 @@ generator client {
 }
 
 model User {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  telegramId       String   @unique
-  username         String?
-  firstName        String?
-  lastName         String?
-  profilePhoto     String?
-  selectedCoinImage String?
-  coins            Int      @default(0)
-  level            Int      @default(1)
-  exp              Int      @default(0)
-  unlockedLevels   Int[]    @default([1])
-  clickPower       Int      @default(1)
-  friendsCoins     Json     @default("{}")
-  energy           Int      @default(2000)
-  pphAccumulated   Float    @default(0)
-  multiplier       Float    @default(1)
-  profitPerHour    Float    @default(0)
-  boosterCredits   Int      @default(1)
-  lastBoosterReset DateTime?
-  dailyReward      DailyReward?
-  shopItems        ShopItem[]
-  premiumShopItems PremiumShopItem[]
-  tasks            Task[]
-  trophies         Trophy[]
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  telegramId        String            @unique
+  username          String?
+  firstName         String?
+  lastName          String?
+  coins             Int               @default(0)
+  level             Int               @default(1)
+  experience        Int               @default(0)
+  dailyReward       DailyReward?
+  shopItems         ShopItem[]
+  premiumShopItems  PremiumShopItem[]
+  tasks             Task[]
+  trophies          Trophy[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 }
 
 model DailyReward {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String   @unique @db.ObjectId
-  lastClaimed DateTime?
-  streak      Int      @default(0)
-  day         Int      @default(1)
-  completed   Boolean  @default(false)
-  user        User     @relation(fields: [userId], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  lastClaim DateTime
+  streak    Int      @default(0)
 }
 
 model ShopItem {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String @db.ObjectId
-  name       String
-  image      String
-  basePrice  Int
-  baseProfit Int
-  level      Int    @default(1)
-  user       User   @relation(fields: [userId], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  itemId    String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PremiumShopItem {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String  @db.ObjectId
-  name      String
-  image     String
-  basePrice Int
-  effect    String
-  user      User    @relation(fields: [userId], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  itemId    String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Task {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String  @db.ObjectId
-  description String
-  reward      Int
-  progress    Int     @default(0)
-  completed   Boolean @default(false)
-  claimed     Boolean @default(false)
-  user        User    @relation(fields: [userId], references: [id])
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id])
+  taskId      String
+  progress    Int      @default(0)
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Trophy {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String  @db.ObjectId
-  name        String
-  description String
-  requirement Int
-  prize       Int
-  claimed     Boolean @default(false)
-  user        User    @relation(fields: [userId], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  trophyId  String
+  createdAt DateTime @default(now())
 }
 

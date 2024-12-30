@@ -156,7 +156,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
   }
 });
 
-// Handle game data updates
 bot.on('web_app_data', async (ctx) => {
   const telegramUser = ctx.from;
   const webAppData = ctx.webAppData;
@@ -186,7 +185,6 @@ bot.on('web_app_data', async (ctx) => {
 
     const user = await response.json();
 
-    // Update user data based on game actions
     if (parsedData.action === 'tap' || parsedData.action === 'claim') {
       const updateResponse = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
         method: 'PATCH',
