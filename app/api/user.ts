@@ -69,9 +69,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       console.log(`Updating user data for Telegram ID: ${telegramId}`);
-      const updatedUser = await prisma.user.update({
+      const updatedUser = await prisma.user.upsert({
         where: { telegramId: telegramId as string },
-        data: {
+        update: {
           ...updateData,
           dailyReward: updateData.dailyReward ? {
             upsert: {
@@ -107,6 +107,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               update: trophy,
             })),
           } : undefined,
+        },
+        create: {
+          telegramId: telegramId as string,
+          ...updateData,
         },
         include: {
           dailyReward: true,

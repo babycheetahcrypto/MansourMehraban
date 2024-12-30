@@ -49,6 +49,14 @@ export default async function handler(
     healthStatus.userCount = userCount;
     console.log(`Database query successful. User count: ${userCount}`);
     
+    // Additional check for required environment variables
+    const requiredEnvVars = ['NEXT_PUBLIC_API_URL', 'NEXT_PUBLIC_WEBAPP_URL', 'DATABASE_URL', 'TELEGRAM_BOT_TOKEN'];
+    const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+    
+    if (missingEnvVars.length > 0) {
+      throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+    }
+    
   } catch (error) {
     console.error('Health check failed:', error)
     healthStatus.status = 'Error';
