@@ -83,41 +83,45 @@ bot.command('start', async (ctx: Context) => {
     console.log(`Fetching user data for Telegram ID: ${telegramUser.id}`);
     console.log(`API URL: ${process.env.NEXT_PUBLIC_API_URL}`);
     
-    const response = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
-
     let user;
-
-    if (response.ok) {
-      user = await response.json();
-      console.log('User data fetched successfully:', user);
-    } else if (response.status === 404) {
-      console.log('User not found, creating new user');
-      const createResponse = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-        method: 'PATCH',
+    try {
+      const response = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`, {
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          telegramId: telegramUser.id.toString(),
-          username: telegramUser.username || `user${telegramUser.id}`,
-          firstName: telegramUser.first_name,
-          lastName: telegramUser.last_name,
-        }),
       });
 
-      if (createResponse.ok) {
-        user = await createResponse.json();
-        console.log('New user created:', user);
+      if (response.ok) {
+        user = await response.json();
+        console.log('User data fetched successfully:', user);
+      } else if (response.status === 404) {
+        console.log('User not found, creating new user');
+        const createResponse = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegramId: telegramUser.id.toString(),
+            username: telegramUser.username || `user${telegramUser.id}`,
+            firstName: telegramUser.first_name,
+            lastName: telegramUser.last_name,
+          }),
+        });
+
+        if (createResponse.ok) {
+          user = await createResponse.json();
+          console.log('New user created:', user);
+        } else {
+          throw new Error(`Failed to create new user: ${await createResponse.text()}`);
+        }
       } else {
-        const errorText = await createResponse.text();
-        console.error('Failed to create new user:', errorText);
-        throw new Error(`Failed to create new user: ${errorText}`);
+        throw new Error(`Failed to fetch or create user: ${await response.text()}`);
       }
-    } else {
-      const errorText = await response.text();
-      console.error('Failed to fetch or create user:', errorText);
-      throw new Error(`Failed to fetch or create user: ${errorText}`);
+    } catch (error) {
+      console.error('Error fetching or creating user:', error);
+      throw error;
+    }
+
+    if (!user) {
+      throw new Error('User object is undefined after fetch/create attempt');
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
