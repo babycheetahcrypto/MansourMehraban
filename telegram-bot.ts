@@ -1,138 +1,16 @@
 import { Telegraf, Markup, Context } from 'telegraf';
-import prisma from './lib/prisma';
+import  prisma  from './lib/prisma';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
-function logEnvironmentVariables() {
-  console.log('Environment variables:');
-  console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-  console.log('NEXT_PUBLIC_WEBAPP_URL:', process.env.NEXT_PUBLIC_WEBAPP_URL);
-  console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? 'Set' : 'Not set');
-  console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
-}
-
-logEnvironmentVariables();
-
-if (!process.env.NEXT_PUBLIC_API_URL || !process.env.NEXT_PUBLIC_WEBAPP_URL || !process.env.TELEGRAM_BOT_TOKEN || !process.env.DATABASE_URL) {
-  console.error('One or more required environment variables are not set. Please check your configuration.');
-  process.exit(1);
-}
-
-async function checkApiHealth() {
-  try {
-    console.log(`Checking API health at: ${process.env.NEXT_PUBLIC_API_URL}/api/health`);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/health`, { 
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    console.log('API health check response status:', response.status);
-    const data = await response.json();
-    console.log('API health check response data:', JSON.stringify(data, null, 2));
-    
-    if (response.ok && data.status === 'OK') {
-      console.log('API health check successful');
-      return true;
-    } else {
-      console.error('API health check failed. Status:', response.status, 'Data:', JSON.stringify(data, null, 2));
-      return false;
-    }
-  } catch (error) {
-    console.error('API health check error:', error);
-    return false;
-  }
-}
-
-async function fetchWithRetry(url: string, options: RequestInit, retries = 3): Promise<Response> {
-  try {
-    console.log(`Fetching: ${url}`);
-    const response = await fetch(url, options);
-    console.log(`Fetch response status: ${response.status}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response;
-  } catch (error) {
-    console.error(`Fetch error: ${error}`);
-    if (retries > 0) {
-      console.log(`Retrying fetch to ${url}. Attempts left: ${retries - 1}`);
-      return fetchWithRetry(url, options, retries - 1);
-    } else {
-      throw error;
-    }
-  }
-}
-
 bot.command('start', async (ctx: Context) => {
-  console.log('Start command received');
   const telegramUser = ctx.from;
   if (!telegramUser) {
-    console.error('Error: Unable to get user information.');
     ctx.reply('Error: Unable to get user information.');
     return;
   }
 
-  try {
-    console.log('Checking API health...');
-    const isHealthy = await checkApiHealth();
-    if (!isHealthy) {
-      console.error('API health check failed. Game is unavailable.');
-      ctx.reply('Sorry, the game is currently unavailable. Please try again later. Our team has been notified and is working on resolving the issue.');
-      return;
-    }
-
-    console.log(`Fetching user data for Telegram ID: ${telegramUser.id}`);
-    console.log(`API URL: ${process.env.NEXT_PUBLIC_API_URL}`);
-    
-    let user;
-    try {
-      const response = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (response.ok) {
-        user = await response.json();
-        console.log('User data fetched successfully:', user);
-      } else if (response.status === 404) {
-        console.log('User not found, creating new user');
-        const createResponse = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            telegramId: telegramUser.id.toString(),
-            username: telegramUser.username || `user${telegramUser.id}`,
-            firstName: telegramUser.first_name,
-            lastName: telegramUser.last_name,
-          }),
-        });
-
-        if (createResponse.ok) {
-          user = await createResponse.json();
-          console.log('New user created:', user);
-        } else {
-          throw new Error(`Failed to create new user: ${await createResponse.text()}`);
-        }
-      } else {
-        throw new Error(`Failed to fetch or create user: ${await response.text()}`);
-      }
-    } catch (error) {
-      console.error('Error fetching or creating user:', error);
-      throw error;
-    }
-
-    if (!user) {
-      throw new Error('User object is undefined after fetch/create attempt');
-    }
-
-    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
-
-    console.log('Sending welcome message');
-    await ctx.replyWithPhoto(
-      {
-        url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
-      },
-      {
-        caption: `
+  const welcomeMessage = `
 Welcome *@${telegramUser.username || telegramUser.first_name}*! 🐾🎉
 
 Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't to miss! 💸
@@ -144,7 +22,34 @@ What You Can Do Now:
 
 Start earning today and be part of the next big upcoming airdrop. ✨
 Stay fast, stay fierce, stay Baby Cheetah! 🌟
-`,
+`;
+
+  try {
+    let user = await prisma.user.findUnique({
+      where: { telegramId: telegramUser.id.toString() },
+    });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          telegramId: telegramUser.id.toString(),
+          username: telegramUser.username || `user${telegramUser.id}`,
+          firstName: telegramUser.first_name,
+          lastName: telegramUser.last_name,
+        },
+      });
+      console.log('New user created:', user);
+    }
+
+    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
+
+    // Send welcome message with photo
+    await ctx.replyWithPhoto(
+      {
+        url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
+      },
+      {
+        caption: welcomeMessage,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
           Markup.button.webApp('Play 🚀', gameUrl),
@@ -152,14 +57,13 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         ]),
       }
     );
-    console.log('Welcome message sent successfully');
   } catch (error) {
     console.error('Error in /start command:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    ctx.reply(`An error occurred while setting up your game. Please try again later. Our team has been notified and is working on resolving the issue. Error details: ${errorMessage}`);
+    ctx.reply('An error occurred while setting up your game. Please try again later.');
   }
 });
 
+// Handle game data updates
 bot.on('web_app_data', async (ctx) => {
   const telegramUser = ctx.from;
   const webAppData = ctx.webAppData;
@@ -178,41 +82,35 @@ bot.on('web_app_data', async (ctx) => {
 
   try {
     const parsedData = JSON.parse(data.text());
-    const response = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user?telegramId=${telegramUser.id}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+    const user = await prisma.user.findUnique({
+      where: { telegramId: telegramUser.id.toString() },
     });
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch user data');
+
+    if (!user) {
+      ctx.reply('Error: User not found.');
+      return;
     }
 
-    const user = await response.json();
-
-    if (parsedData.action === 'tap' || parsedData.action === 'claim') {
-      const updateResponse = await fetchWithRetry(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          telegramId: user.telegramId,
-          coins: user.coins + parsedData.amount,
-        }),
+    // Update user data based on game actions
+    if (parsedData.action === 'tap') {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { coins: user.coins + parsedData.amount },
       });
-
-      if (!updateResponse.ok) {
-        throw new Error('Failed to update user data');
-      }
     } else if (parsedData.action === 'purchase') {
-      // Handle purchase logic here
+    } else if (parsedData.action === 'claim') {
+      // Handle reward claim logic
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { coins: user.coins + parsedData.amount },
+      });
     }
 
     ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {
     console.error('Error processing web app data:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    ctx.answerCbQuery(`An error occurred while processing game data. Details: ${errorMessage}`);
+    ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
-
 export default bot;
 
