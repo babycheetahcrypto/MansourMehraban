@@ -1616,7 +1616,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        showGameAlert('An error occurred while setting up your game. Please try again later.');
       } finally {
         setIsLoading(false);
       }
