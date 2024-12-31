@@ -677,6 +677,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
   const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
   const [vibrationEnabled, setVibrationEnabled] = useState(true); // Added vibrationEnabled state
+  const [isGameReady, setIsGameReady] = useState(false);
 
   const handleWalletConnect = useCallback(
     (address: string) => {
@@ -1577,14 +1578,31 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const webApp = window.Telegram.WebApp;
           const telegramUser = webApp.initDataUnsafe.user;
           console.log('Telegram user data:', telegramUser);
-    
+  
           if (telegramUser) {
             const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
             if (response.ok) {
               const userData = await response.json();
               console.log('Fetched user data:', userData);
               setUser(userData);
-              setIsLoading(false); // Moved setIsLoading here
+              setShopItems(userData.shopItems);
+              setPremiumShopItems(userData.premiumShopItems);
+              setTasks(userData.tasks);
+              setDailyReward(userData.dailyReward || {
+                lastClaimed: null,
+                streak: 0,
+                day: 1,
+                completed: false,
+              });
+              setUnlockedLevels(userData.unlockedLevels);
+              setClickPower(userData.clickPower);
+              setProfitPerHour(userData.profitPerHour);
+              setEnergy(userData.energy);
+              setPphAccumulated(userData.pphAccumulated);
+              setMultiplier(userData.multiplier);
+              setSelectedCoinImage(userData.selectedCoinImage);
+              setFriendsCoins(userData.friendsCoins);
+              setIsGameReady(true);
             } else {
               console.error('Failed to fetch user data:', await response.text());
             }
@@ -1596,6 +1614,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+      } finally {
+        setIsLoading(false);
       }
     }, []);
   
@@ -1638,11 +1658,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           },
           body: JSON.stringify(updatedUser),
         });
-    
+  
         if (!response.ok) {
           throw new Error('Failed to save user data');
         }
-    
+  
         const savedUser = await response.json();
         setUser(savedUser);
         console.log('User data saved successfully');
@@ -3335,38 +3355,38 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <style>{styles}</style>
-          <div className="fixed inset-0 z-0 overflow-hidden">
-            <StarryBackground />
-          </div>
-          {renderHeader()}
-          <div
-            className="flex-grow pb-24"
-            style={{
-              marginBottom: '0',
-              marginTop: '0',
-            }}
-          >
-            {currentPage === 'home' && renderHome()}
-            {currentPage === 'shop' && renderShop()}
-            {currentPage === 'tasks' && renderTasks()}
-            {currentPage === 'ranking' && renderRanking()}
-            {currentPage === 'wallet' && renderWallet()}
-            {currentPage === 'invite' && renderInvite()}
-            {currentPage === 'friendsActivity' && renderFriendsActivity()}
-            {currentPage === 'levels' && renderLevels()}
-            {currentPage === 'dailyReward' && renderDailyReward()}
-            {currentPage === 'trophies' && renderTrophies()}
-          </div>
-          {renderbottom()}
+              <div className="fixed inset-0 z-0 overflow-hidden">
+                <StarryBackground />
+              </div>
+              {renderHeader()}
+              <div
+                className="flex-grow pb-24"
+                style={{
+                  marginBottom: '0',
+                  marginTop: '0',
+                }}
+              >
+                {currentPage === 'home' && renderHome()}
+                {currentPage === 'shop' && renderShop()}
+                {currentPage === 'tasks' && renderTasks()}
+                {currentPage === 'ranking' && renderRanking()}
+                {currentPage === 'wallet' && renderWallet()}
+                {currentPage === 'invite' && renderInvite()}
+                {currentPage === 'friendsActivity' && renderFriendsActivity()}
+                {currentPage === 'levels' && renderLevels()}
+                {currentPage === 'dailyReward' && renderDailyReward()}
+                {currentPage === 'trophies' && renderTrophies()}
+              </div>
+              {renderbottom()}
 
-          {/* Popup logic */}
-          {activePopups.has('pph') && (
-            <Popup
-              title="Earned"
-              onClose={() => {
-                hidePopup('pph');
-                claimPPH();
-              }}
+              {/* Popup logic */}
+              {activePopups.has('pph') && (
+                <Popup
+                  title="Earned"
+                  onClose={() => {
+                    hidePopup('pph');
+                    claimPPH();
+                  }}
             >
               <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
               <p className="mb-5 text-sm text-center text-white">
