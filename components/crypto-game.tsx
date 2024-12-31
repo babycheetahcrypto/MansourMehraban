@@ -1384,8 +1384,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             );
           }
         } catch (error) {
-          console.error('Error purchasing item:', error);
-          showGameAlert('Failed to purchase item. Please try again.');
+          console.error('Error purchasing premium item:', error);
         }
       } else {
         vibrate([100, 50, 100]);
@@ -1574,6 +1573,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   
     const fetchUserData = useCallback(async () => {
       try {
+        setIsLoading(true);
+  
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           const telegramUser = webApp.initDataUnsafe.user;
@@ -1585,32 +1586,33 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               const userData = await response.json();
               console.log('Fetched user data:', userData);
               setUser(userData);
-              setShopItems(userData.shopItems);
-              setPremiumShopItems(userData.premiumShopItems);
-              setTasks(userData.tasks);
+              setShopItems(userData.shopItems || []);
+              setPremiumShopItems(userData.premiumShopItems || []);
+              setTasks(userData.tasks || []);
               setDailyReward(userData.dailyReward || {
                 lastClaimed: null,
                 streak: 0,
                 day: 1,
                 completed: false,
               });
-              setUnlockedLevels(userData.unlockedLevels);
-              setClickPower(userData.clickPower);
-              setProfitPerHour(userData.profitPerHour);
-              setEnergy(userData.energy);
-              setPphAccumulated(userData.pphAccumulated);
-              setMultiplier(userData.multiplier);
-              setSelectedCoinImage(userData.selectedCoinImage);
-              setFriendsCoins(userData.friendsCoins);
-              setIsGameReady(true);
+              setUnlockedLevels(userData.unlockedLevels || [1]);
+              setClickPower(userData.clickPower || 1);
+              setProfitPerHour(userData.profitPerHour || 0);
+              setEnergy(userData.energy || 2000);
+              setPphAccumulated(userData.pphAccumulated || 0);
+              setMultiplier(userData.multiplier || 1);
+              setSelectedCoinImage(userData.selectedCoinImage || '');
+              setFriendsCoins(userData.friendsCoins || {});
             } else {
-              console.error('Failed to fetch user data:', await response.text());
+              const errorData = await response.json();
+              console.error('Failed to fetch user data:', errorData);
+              throw new Error(`Failed to fetch user data: ${errorData.error}`);
             }
           } else {
-            console.error('No Telegram user data available');
+            throw new Error('No Telegram user data available');
           }
         } else {
-          console.error('Telegram WebApp not available');
+          throw new Error('Telegram WebApp not available');
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -1618,6 +1620,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(false);
       }
     }, []);
+  
   
   
     useEffect(() => {
@@ -1658,11 +1661,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           },
           body: JSON.stringify(updatedUser),
         });
-  
+    
         if (!response.ok) {
-          throw new Error('Failed to save user data');
+          const errorData = await response.json();
+          throw new Error(`Failed to save user data: ${errorData.error}`);
         }
-  
+    
         const savedUser = await response.json();
         setUser(savedUser);
         console.log('User data saved successfully');
