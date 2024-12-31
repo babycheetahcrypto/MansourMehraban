@@ -1,6 +1,8 @@
-import { Telegraf, Markup, Context } from 'telegraf';
-import  prisma  from './lib/prisma';
+import { Telegraf, Context } from 'telegraf';
+import { PrismaClient } from '@prisma/client';
+import { User } from '@prisma/client';
 
+const prisma = new PrismaClient();
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
 bot.command('start', async (ctx: Context) => {
@@ -13,7 +15,7 @@ bot.command('start', async (ctx: Context) => {
   const welcomeMessage = `
 Welcome *@${telegramUser.username || telegramUser.first_name}*! 🐾🎉
 
-Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't to miss! 💸
+Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't want to miss! 💸
 
 What You Can Do Now:
 💰 Earn $BBCH: Play our mining game and start stacking coins.
@@ -36,9 +38,32 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
           username: telegramUser.username || `user${telegramUser.id}`,
           firstName: telegramUser.first_name,
           lastName: telegramUser.last_name,
+          coins: 0,
+          level: 1,
+          exp: 0,
+          clickPower: 1,
+          energy: 2000,
+          multiplier: 1,
+          profitPerHour: 0,
+          boosterCredits: 1,
+          unlockedLevels: [1],
+          friendsCoins: {},
+          pphAccumulated: 0,
+          selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
         },
       });
       console.log('New user created:', user);
+    } else {
+      // Update existing user's information
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          username: telegramUser.username || user.username,
+          firstName: telegramUser.first_name || user.firstName,
+          lastName: telegramUser.last_name || user.lastName,
+        },
+      });
+      console.log('Existing user updated:', user);
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
@@ -51,10 +76,12 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
       {
         caption: welcomeMessage,
         parse_mode: 'Markdown',
-        ...Markup.inlineKeyboard([
-          Markup.button.webApp('Play 🚀', gameUrl),
-          Markup.button.url('Join community', 'https://t.me/babycheetahcrypto'),
-        ]),
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'Play 🚀', web_app: { url: gameUrl } }],
+            [{ text: 'Join community', url: 'https://t.me/babycheetahcrypto' }],
+          ],
+        },
       }
     );
   } catch (error) {
@@ -73,15 +100,8 @@ bot.on('web_app_data', async (ctx) => {
     return;
   }
 
-  const data = webAppData.data;
-
-  if (!data) {
-    ctx.reply('Error: Unable to process game data.');
-    return;
-  }
-
   try {
-    const parsedData = JSON.parse(data.text());
+    const parsedData = JSON.parse(webAppData.data.json());
     const user = await prisma.user.findUnique({
       where: { telegramId: telegramUser.id.toString() },
     });
@@ -95,14 +115,20 @@ bot.on('web_app_data', async (ctx) => {
     if (parsedData.action === 'tap') {
       await prisma.user.update({
         where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
+        data: { coins: { increment: parsedData.amount } },
       });
     } else if (parsedData.action === 'purchase') {
+      // Handle purchase logic
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { coins: { decrement: parsedData.cost } },
+      });
+      // Add logic to update shop items or premium items
     } else if (parsedData.action === 'claim') {
       // Handle reward claim logic
       await prisma.user.update({
         where: { id: user.id },
-        data: { coins: user.coins + parsedData.amount },
+        data: { coins: { increment: parsedData.amount } },
       });
     }
 
@@ -112,5 +138,6 @@ bot.on('web_app_data', async (ctx) => {
     ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
+
 export default bot;
 

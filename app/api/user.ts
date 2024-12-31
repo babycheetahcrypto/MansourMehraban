@@ -1,24 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/prisma';
-import Cors from 'cors'
+import { PrismaClient } from '@prisma/client';
+import Cors from 'cors';
+
+const prisma = new PrismaClient();
 
 const cors = Cors({
   methods: ['GET', 'PATCH'],
-})
+});
 
 function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: Function) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result: any) => {
       if (result instanceof Error) {
-        return reject(result)
+        return reject(result);
       }
-      return resolve(result)
-    })
-  })
+      return resolve(result);
+    });
+  });
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await runMiddleware(req, res, cors)
+  await runMiddleware(req, res, cors);
   
   console.log(`Received ${req.method} request to /api/user`);
   
@@ -32,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       console.log(`Fetching user data for Telegram ID: ${telegramId}`);
-      const user = await prisma.user.findUnique({
+      let user = await prisma.user.findUnique({
         where: { telegramId: telegramId as string },
         include: {
           dailyReward: true,
@@ -44,14 +46,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       if (!user) {
-        console.log(`User not found for Telegram ID: ${telegramId}`);
-        return res.status(404).json({ error: 'User not found' });
+        console.log(`User not found for Telegram ID: ${telegramId}. Creating new user.`);
+        user = await prisma.user.create({
+          data: {
+            telegramId: telegramId as string,
+            coins: 0,
+            level: 1,
+            exp: 0,
+            clickPower: 1,
+            energy: 2000,
+            multiplier: 1,
+            profitPerHour: 0,
+            boosterCredits: 1,
+            unlockedLevels: [1],
+            friendsCoins: {},
+            pphAccumulated: 0,
+            selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+          },
+          include: {
+            dailyReward: true,
+            shopItems: true,
+            premiumShopItems: true,
+            tasks: true,
+            trophies: true,
+          },
+        });
       }
 
-      console.log(`User data fetched successfully for Telegram ID: ${telegramId}`);
+      console.log(`User data fetched/created successfully for Telegram ID: ${telegramId}`);
       res.status(200).json(user);
     } catch (error) {
-      console.error('Error fetching user:', error);
+      console.error('Error fetching/creating user:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   } else if (req.method === 'PATCH') {
