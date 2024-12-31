@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             unlockedLevels: [1],
             friendsCoins: {},
             pphAccumulated: 0,
-            selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+            selectedCoinImage: '',
           },
           include: {
             dailyReward: true,
