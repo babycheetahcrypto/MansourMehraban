@@ -648,7 +648,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const energyRef = useRef<HTMLDivElement>(null);
   const [pphAccumulated, setPphAccumulated] = useState(0);
   const [showPPHPopup, setShowPPHPopup] = useState(false);
-
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
@@ -676,8 +675,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
   const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
-  const [vibrationEnabled, setVibrationEnabled] = useState(true); // Added vibrationEnabled state
-  const [isGameReady, setIsGameReady] = useState(false);
+  const [vibrationEnabled, setVibrationEnabled] = useState(true);
 
   const handleWalletConnect = useCallback(
     (address: string) => {
@@ -1587,23 +1585,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               const userData = await response.json();
               console.log('Fetched user data:', userData);
               setUser(userData);
-              setShopItems(userData.shopItems || []);
-              setPremiumShopItems(userData.premiumShopItems || []);
-              setTasks(userData.tasks || []);
+              setShopItems(userData.shopItems);
+              setPremiumShopItems(userData.premiumShopItems);
+              setTasks(userData.tasks);
               setDailyReward(userData.dailyReward || {
                 lastClaimed: null,
                 streak: 0,
                 day: 1,
                 completed: false,
               });
-              setUnlockedLevels(userData.unlockedLevels || [1]);
-              setClickPower(userData.clickPower || 1);
-              setProfitPerHour(userData.profitPerHour || 0);
-              setEnergy(userData.energy || 2000);
-              setPphAccumulated(userData.pphAccumulated || 0);
-              setMultiplier(userData.multiplier || 1);
-              setSelectedCoinImage(userData.selectedCoinImage || '');
-              setFriendsCoins(userData.friendsCoins || {});
+              setUnlockedLevels(userData.unlockedLevels);
+              setClickPower(userData.clickPower);
+              setProfitPerHour(userData.profitPerHour);
+              setEnergy(userData.energy);
+              setPphAccumulated(userData.pphAccumulated);
+              setMultiplier(userData.multiplier);
+              setSelectedCoinImage(userData.selectedCoinImage);
+              setFriendsCoins(userData.friendsCoins);
             } else {
               console.error('Failed to fetch user data:', await response.text());
               throw new Error('Failed to fetch user data');
