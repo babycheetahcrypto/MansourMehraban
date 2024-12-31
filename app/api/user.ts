@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from './db';
+import prisma from '../../lib/prisma';
 import Cors from 'cors';
 
 const cors = Cors({
@@ -75,7 +75,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json(user);
     } catch (error) {
       console.error('Error fetching/creating user:', error);
-      res.status(500).json({ error: 'Internal server error' });
     }
   } else if (req.method === 'PATCH') {
     const { telegramId, ...updateData } = req.body;
@@ -87,9 +86,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       console.log(`Updating user data for Telegram ID: ${telegramId}`);
-      const updatedUser = await prisma.user.upsert({
+      const updatedUser = await prisma.user.update({
         where: { telegramId: telegramId as string },
-        update: {
+        data: {
           ...updateData,
           dailyReward: updateData.dailyReward ? {
             upsert: {
@@ -126,10 +125,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             })),
           } : undefined,
         },
-        create: {
-          telegramId: telegramId as string,
-          ...updateData,
-        },
         include: {
           dailyReward: true,
           shopItems: true,
@@ -143,7 +138,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error('Error updating user:', error);
-      res.status(500).json({ error: 'Internal server error' });
     }
   } else {
     console.error(`Unsupported method: ${req.method}`);

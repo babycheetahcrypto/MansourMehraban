@@ -1384,7 +1384,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             );
           }
         } catch (error) {
-          console.error('Error purchasing premium item:', error);
+          console.error('Error purchasing item:', error);
+          showGameAlert('Failed to purchase item. Please try again.');
         }
       } else {
         vibrate([100, 50, 100]);
@@ -1663,8 +1664,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         });
     
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Failed to save user data: ${errorData.error}`);
+          throw new Error('Failed to save user data');
         }
     
         const savedUser = await response.json();
@@ -1679,12 +1679,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   const fetchUserData = useCallback(async () => {
+    setIsLoading(true);
     try {
       if (window.Telegram && window.Telegram.WebApp) {
         const webApp = window.Telegram.WebApp;
         const telegramUser = webApp.initDataUnsafe.user;
         console.log('Telegram user data:', telegramUser);
-  
+
         if (telegramUser) {
           const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
           if (response.ok) {
@@ -1710,19 +1711,33 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             setFriendsCoins(userData.friendsCoins);
           } else {
             console.error('Failed to fetch user data:', await response.text());
+            throw new Error('Failed to fetch user data');
           }
         } else {
           console.error('No Telegram user data available');
+          throw new Error('No Telegram user data available');
         }
       } else {
         console.error('Telegram WebApp not available');
+        throw new Error('Telegram WebApp not available');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+      showGameAlert('An error occurred while setting up your game. Please try again later.');
     } finally {
       setIsLoading(false);
     }
   }, []);
+
+  const handleInitializationError = useCallback((error: Error) => {
+    console.error('Game initialization error:', error);
+    showGameAlert('An error occurred while setting up your game. Please try again later.');
+    // You can add additional error handling logic here, such as reporting to an error tracking service
+  }, []);
+
+  useEffect(() => {
+    fetchUserData().catch(handleInitializationError);
+  }, [fetchUserData, handleInitializationError]);
 
 
   useEffect(() => {
