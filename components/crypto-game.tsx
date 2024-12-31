@@ -677,6 +677,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [activePopups, setActivePopups] = useState<Set<string>>(new Set());
   const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
   const [vibrationEnabled, setVibrationEnabled] = useState(true); // Added vibrationEnabled state
+  const [isGameReady, setIsGameReady] = useState(false);
 
   const handleWalletConnect = useCallback(
     (address: string) => {
@@ -1223,7 +1224,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       event.preventDefault();
 
       if (energy >= 1 && currentPage === 'home') {
-        // Add vibration at the start
         vibrate(50);
 
         const clickValue = clickPower * multiplier;
@@ -1289,11 +1289,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
-      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1); // Changed multiplier to 1.5x (50% increase)
-      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1)); // Changed to 0.10x (10% increase)
+      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1);
+      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1));
 
       if (user.coins >= currentPrice) {
-        // Add vibration feedback
         vibrate([50, 50, 100]);
 
         try {
@@ -1304,7 +1303,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           setUser(updatedUser);
           await saveUserData(updatedUser);
 
-          // Update shop item level and recalculate profit per hour
           setShopItems((prevItems) =>
             prevItems.map((i) =>
               i.id === item.id
@@ -1316,8 +1314,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             )
           );
 
-          // Update profit per hour
-          const newProfit = currentProfit * 1.1; // Increase profit by 10%
+          const newProfit = currentProfit * 1.1;
           setProfitPerHour((prev) => prev + newProfit);
 
           setCongratulationPopup({ show: true, item: item });
@@ -1339,18 +1336,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           showGameAlert('Failed to purchase item. Please try again.');
         }
       } else {
-        // Add error vibration
         vibrate([100, 50, 100]);
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, vibrationEnabled] // Added vibrationEnabled
+    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, vibrationEnabled]
   );
 
   const buyPremiumItem = useCallback(
     async (item: PremiumShopItem) => {
       if (user.coins >= item.basePrice) {
-        // Add vibration feedback
         vibrate([50, 50, 100]);
 
         try {
@@ -1362,13 +1357,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           await saveUserData(updatedUser);
 
           if (item.id === 1 && item.boosterCredits !== undefined) {
-            // Booster Credits
             setUser((prevUser) => ({
               ...prevUser,
               boosterCredits: prevUser.boosterCredits + item.boosterCredits!,
             }));
           } else if (item.id === 2 && item.tap) {
-            // Cheetah Coin Corner
             setClickPower((prev) => prev + 1);
             setPremiumShopItems((prevItems) =>
               prevItems.map((i) =>
@@ -1395,12 +1388,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           showGameAlert('Failed to purchase item. Please try again.');
         }
       } else {
-        // Add error vibration
         vibrate([100, 50, 100]);
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, vibrationEnabled] // Added vibrationEnabled
+    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, vibrationEnabled]
   );
 
   const claimPPH = useCallback(() => {
@@ -1450,6 +1442,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + reward,
       }));
+      saveUserData({...user, coins: user.coins + reward}); // Added saveUserData call
 
       const newDay = (dailyReward.day % 12) + 1;
       const completed = newDay === 1;
@@ -1487,6 +1480,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         boosterCredits: prevUser.boosterCredits - 1,
       }));
+      saveUserData({...user, boosterCredits: user.boosterCredits -1}); // Added saveUserData call
       showGameAlert(
         `Activated 2x multiplier for 1 minute! Credits left: ${user.boosterCredits - 1}`
       );
@@ -1580,25 +1574,46 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   
     const fetchUserData = useCallback(async () => {
       try {
+        setIsLoading(true);
+  
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           const telegramUser = webApp.initDataUnsafe.user;
           console.log('Telegram user data:', telegramUser);
-    
+  
           if (telegramUser) {
             const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
             if (response.ok) {
               const userData = await response.json();
               console.log('Fetched user data:', userData);
               setUser(userData);
+              setShopItems(userData.shopItems || []);
+              setPremiumShopItems(userData.premiumShopItems || []);
+              setTasks(userData.tasks || []);
+              setDailyReward(userData.dailyReward || {
+                lastClaimed: null,
+                streak: 0,
+                day: 1,
+                completed: false,
+              });
+              setUnlockedLevels(userData.unlockedLevels || [1]);
+              setClickPower(userData.clickPower || 1);
+              setProfitPerHour(userData.profitPerHour || 0);
+              setEnergy(userData.energy || 2000);
+              setPphAccumulated(userData.pphAccumulated || 0);
+              setMultiplier(userData.multiplier || 1);
+              setSelectedCoinImage(userData.selectedCoinImage || '');
+              setFriendsCoins(userData.friendsCoins || {});
             } else {
-              console.error('Failed to fetch user data:', await response.text());
+              const errorData = await response.json();
+              console.error('Failed to fetch user data:', errorData);
+              throw new Error(`Failed to fetch user data: ${errorData.error}`);
             }
           } else {
-            console.error('No Telegram user data available');
+            throw new Error('No Telegram user data available');
           }
         } else {
-          console.error('Telegram WebApp not available');
+          throw new Error('Telegram WebApp not available');
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -1606,6 +1621,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setIsLoading(false);
       }
     }, []);
+  
   
   
     useEffect(() => {
@@ -1663,33 +1679,66 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   const fetchUserData = useCallback(async () => {
+    setIsLoading(true);
     try {
       if (window.Telegram && window.Telegram.WebApp) {
         const webApp = window.Telegram.WebApp;
         const telegramUser = webApp.initDataUnsafe.user;
         console.log('Telegram user data:', telegramUser);
-  
+
         if (telegramUser) {
           const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
           if (response.ok) {
             const userData = await response.json();
             console.log('Fetched user data:', userData);
             setUser(userData);
+            setShopItems(userData.shopItems);
+            setPremiumShopItems(userData.premiumShopItems);
+            setTasks(userData.tasks);
+            setDailyReward(userData.dailyReward || {
+              lastClaimed: null,
+              streak: 0,
+              day: 1,
+              completed: false,
+            });
+            setUnlockedLevels(userData.unlockedLevels);
+            setClickPower(userData.clickPower);
+            setProfitPerHour(userData.profitPerHour);
+            setEnergy(userData.energy);
+            setPphAccumulated(userData.pphAccumulated);
+            setMultiplier(userData.multiplier);
+            setSelectedCoinImage(userData.selectedCoinImage);
+            setFriendsCoins(userData.friendsCoins);
           } else {
             console.error('Failed to fetch user data:', await response.text());
+            throw new Error('Failed to fetch user data');
           }
         } else {
           console.error('No Telegram user data available');
+          throw new Error('No Telegram user data available');
         }
       } else {
         console.error('Telegram WebApp not available');
+        throw new Error('Telegram WebApp not available');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+      showGameAlert('An error occurred while setting up your game. Please try again later.');
     } finally {
       setIsLoading(false);
     }
   }, []);
+
+  const handleInitializationError = useCallback((error: Error) => {
+    console.error('Game initialization error:', error);
+    showGameAlert('An error occurred while setting up your game. Please try again later.');
+    // You can add additional error handling logic here, such as reporting to an error tracking service
+  }, []);
+
+  useEffect(() => {
+    fetchUserData().catch(handleInitializationError);
+  }, [fetchUserData, handleInitializationError]);
+
 
   useEffect(() => {
     const checkGameAvailability = async () => {
@@ -1808,6 +1857,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + profitPerHour / 3600,
       }));
+      saveUserData({...user, coins: user.coins + profitPerHour / 3600}); // Added saveUserData call
     }, 1000); // Check every second
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
@@ -1854,6 +1904,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const completed = newProgress >= 10;
           if (completed && !task.completed) {
             setUser((u) => ({ ...u, coins: u.coins + task.reward }));
+            saveUserData({...user, coins: user.coins + task.reward}); // Added saveUserData call
           }
           return { ...task, progress: newProgress, completed };
         }
@@ -2327,6 +2378,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                               ...prevUser,
                               coins: prevUser.coins + task.reward,
                             }));
+                            saveUserData({...user, coins: user.coins + task.reward}); // Added saveUserData call
                             setTasks((prevTasks) =>
                               prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
                             );
@@ -3322,38 +3374,38 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <style>{styles}</style>
-          <div className="fixed inset-0 z-0 overflow-hidden">
-          <StarryBackground />
-        </div>
-        {renderHeader()}
-        <div
-          className="flex-grow pb-24"
-          style={{
-            marginBottom: '0',
-            marginTop: '0', // Remove any top margin
-          }}
-        >
-            {currentPage === 'home' && renderHome()}
-            {currentPage === 'shop' && renderShop()}
-            {currentPage === 'tasks' && renderTasks()}
-            {currentPage === 'ranking' && renderRanking()}
-            {currentPage === 'wallet' && renderWallet()}
-            {currentPage === 'invite' && renderInvite()}
-            {currentPage === 'friendsActivity' && renderFriendsActivity()}
-            {currentPage === 'levels' && renderLevels()}
-            {currentPage === 'dailyReward' && renderDailyReward()}
-            {currentPage === 'trophies' && renderTrophies()}
-          </div>
-          {renderbottom()}
+              <div className="fixed inset-0 z-0 overflow-hidden">
+                <StarryBackground />
+              </div>
+              {renderHeader()}
+              <div
+                className="flex-grow pb-24"
+                style={{
+                  marginBottom: '0',
+                  marginTop: '0',
+                }}
+              >
+                {currentPage === 'home' && renderHome()}
+                {currentPage === 'shop' && renderShop()}
+                {currentPage === 'tasks' && renderTasks()}
+                {currentPage === 'ranking' && renderRanking()}
+                {currentPage === 'wallet' && renderWallet()}
+                {currentPage === 'invite' && renderInvite()}
+                {currentPage === 'friendsActivity' && renderFriendsActivity()}
+                {currentPage === 'levels' && renderLevels()}
+                {currentPage === 'dailyReward' && renderDailyReward()}
+                {currentPage === 'trophies' && renderTrophies()}
+              </div>
+              {renderbottom()}
 
-          {/* Popup logic */}
-          {activePopups.has('pph') && (
-            <Popup
-              title="Earned"
-              onClose={() => {
-                hidePopup('pph');
-                claimPPH();
-              }}
+              {/* Popup logic */}
+              {activePopups.has('pph') && (
+                <Popup
+                  title="Earned"
+                  onClose={() => {
+                    hidePopup('pph');
+                    claimPPH();
+                  }}
             >
               <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
               <p className="mb-5 text-sm text-center text-white">

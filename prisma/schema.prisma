@@ -32,8 +32,6 @@ model User {
   premiumShopItems PremiumShopItem[]
   tasks            Task[]
   trophies         Trophy[]
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
 }
 
 model DailyReward {
