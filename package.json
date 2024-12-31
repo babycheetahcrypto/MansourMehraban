@@ -52,7 +52,7 @@
     "lucide-react": "^0.374.0",
     "mogodb": "^0.0.1-security",
     "mongodb": "^5.9.2",
-    "mongoose": "^8.8.3",
+    "mongoose": "^8.9.3",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",

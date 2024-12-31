@@ -685,10 +685,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         walletAddress: address,
       }));
-      saveUserData({ walletAddress: address });
+      saveUserData({ walletAddress: address, telegramId: user.telegramId });
       console.log('Wallet connected to game:', address);
     },
-    [saveUserData]
+    [saveUserData, user.telegramId]
   );
 
   useEffect(() => {
@@ -1184,7 +1184,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               ...prevUser,
               coins: prevUser.coins + 2000,
             }));
-            saveUserData({ ...user, coins: user.coins + 2000 });
+            saveUserData({ ...user, coins: user.coins + 2000, telegramId: user.telegramId });
             showGameAlert('You earned 2000 coins for inviting a friend!');
           } else {
             const errorData = await response.json();
@@ -1196,7 +1196,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [invitedFriends, user, saveUserData]
+    [invitedFriends, user, saveUserData, user.telegramId]
   );
 
   const level = useMemo(() => {
@@ -1239,7 +1239,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         };
 
         setUser(updatedUser);
-        saveUserData(updatedUser);
+        saveUserData({ ...updatedUser, telegramId: user.telegramId });
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1284,7 +1284,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage, vibrationEnabled] // Added vibrationEnabled
+    [clickPower, multiplier, energy, saveUserData, user, currentPage, user.telegramId, vibrationEnabled] // Added vibrationEnabled
   );
 
   const buyItem = useCallback(
@@ -1301,7 +1301,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             coins: user.coins - currentPrice,
           };
           setUser(updatedUser);
-          await saveUserData(updatedUser);
+          await saveUserData({ ...updatedUser, telegramId: user.telegramId });
 
           setShopItems((prevItems) =>
             prevItems.map((i) =>
@@ -1340,7 +1340,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, vibrationEnabled]
+    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, user.telegramId, vibrationEnabled]
   );
 
   const buyPremiumItem = useCallback(
@@ -1354,7 +1354,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             coins: user.coins - item.basePrice,
           };
           setUser(updatedUser);
-          await saveUserData(updatedUser);
+          await saveUserData({ ...updatedUser, telegramId: user.telegramId });
 
           if (item.id === 1 && item.boosterCredits !== undefined) {
             setUser((prevUser) => ({
@@ -1392,7 +1392,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, vibrationEnabled]
+    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, user.telegramId, vibrationEnabled]
   );
 
   const claimPPH = useCallback(() => {
@@ -1402,12 +1402,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         coins: user.coins + pphAccumulated,
       };
       setUser(updatedUser);
-      saveUserData(updatedUser);
+      saveUserData({ ...updatedUser, telegramId: user.telegramId });
       setPphAccumulated(0);
       hidePopup('pph');
       setLastActiveTime(Date.now());
     }
-  }, [pphAccumulated, user, saveUserData]);
+  }, [pphAccumulated, user, saveUserData, user.telegramId]);
 
   const claimNewLevel = useCallback(() => {
     setUser((prevUser) => ({
@@ -1442,7 +1442,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + reward,
       }));
-      saveUserData({...user, coins: user.coins + reward}); // Added saveUserData call
+      saveUserData({...user, coins: user.coins + reward, telegramId: user.telegramId}); // Added saveUserData call
 
       const newDay = (dailyReward.day % 12) + 1;
       const completed = newDay === 1;
@@ -1464,7 +1464,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       vibrate([100, 50, 100]);
       showGameAlert('You have already claimed your daily reward today!');
     }
-  }, [dailyReward, user, saveUserData, vibrationEnabled]); // Added vibrationEnabled
+  }, [dailyReward, user, saveUserData, user.telegramId, vibrationEnabled]); // Added vibrationEnabled
 
   const getDailyReward = (day: number) => {
     const rewards = [100, 500, 700, 10000, 15000, 17000, 20000, 25000, 27000, 30000, 35000, 50000];
@@ -1480,7 +1480,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         boosterCredits: prevUser.boosterCredits - 1,
       }));
-      saveUserData({...user, boosterCredits: user.boosterCredits -1}); // Added saveUserData call
+      saveUserData({...user, boosterCredits: user.boosterCredits -1, telegramId: user.telegramId}); // Added saveUserData call
       showGameAlert(
         `Activated 2x multiplier for 1 minute! Credits left: ${user.boosterCredits - 1}`
       );
@@ -1500,7 +1500,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
       showGameAlert(`Multiplier active for ${remainingMultiplier} more seconds.`);
     }
-  }, [user.boosterCredits, multiplierEndTime]);
+  }, [user.boosterCredits, multiplierEndTime, user.telegramId]);
 
   const shareToSocialMedia = useCallback(
     (platform: string) => {
@@ -1652,7 +1652,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     };
 
     const saveUserData = useCallback(async (updatedUser: Partial<UserType>) => {
-      if (!updatedUser) return;
+      if (!updatedUser || !updatedUser.telegramId) return;
       try {
         console.log('Saving user data:', updatedUser);
         const response = await fetch('/api/user', {
@@ -1857,10 +1857,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + profitPerHour / 3600,
       }));
-      saveUserData({...user, coins: user.coins + profitPerHour / 3600}); // Added saveUserData call
+      saveUserData({...user, coins: user.coins + profitPerHour / 3600, telegramId: user.telegramId}); // Added saveUserData call
     }, 1000); // Check every second
     return () => clearInterval(timer);
-  }, [maxEnergy, profitPerHour]);
+  }, [maxEnergy, profitPerHour, user.telegramId]);
 
   // Show PPH popup
   useEffect(() => {
@@ -1904,14 +1904,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const completed = newProgress >= 10;
           if (completed && !task.completed) {
             setUser((u) => ({ ...u, coins: u.coins + task.reward }));
-            saveUserData({...user, coins: user.coins + task.reward}); // Added saveUserData call
+            saveUserData({...user, coins: user.coins + task.reward, telegramId: user.telegramId}); // Added saveUserData call
           }
           return { ...task, progress: newProgress, completed };
         }
         return task;
       })
     );
-  }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks]);
+  }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks, user.telegramId]);
 
 
   const renderHome = () => (
@@ -2378,7 +2378,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                               ...prevUser,
                               coins: prevUser.coins + task.reward,
                             }));
-                            saveUserData({...user, coins: user.coins + task.reward}); // Added saveUserData call
+                            saveUserData({...user, coins: user.coins + task.reward, telegramId: user.telegramId}); // Added saveUserData call
                             setTasks((prevTasks) =>
                               prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
                             );

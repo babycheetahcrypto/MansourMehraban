@@ -86,4 +86,3 @@ model Trophy {
   claimed     Boolean @default(false)
   user        User    @relation(fields: [userId], references: [id])
 }
-
