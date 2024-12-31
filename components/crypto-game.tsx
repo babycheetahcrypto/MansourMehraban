@@ -1223,7 +1223,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       event.preventDefault();
 
       if (energy >= 1 && currentPage === 'home') {
-        // Add vibration at the start
         vibrate(50);
 
         const clickValue = clickPower * multiplier;
@@ -1289,11 +1288,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
-      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1); // Changed multiplier to 1.5x (50% increase)
-      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1)); // Changed to 0.10x (10% increase)
+      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1);
+      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1));
 
       if (user.coins >= currentPrice) {
-        // Add vibration feedback
         vibrate([50, 50, 100]);
 
         try {
@@ -1304,7 +1302,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           setUser(updatedUser);
           await saveUserData(updatedUser);
 
-          // Update shop item level and recalculate profit per hour
           setShopItems((prevItems) =>
             prevItems.map((i) =>
               i.id === item.id
@@ -1316,8 +1313,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             )
           );
 
-          // Update profit per hour
-          const newProfit = currentProfit * 1.1; // Increase profit by 10%
+          const newProfit = currentProfit * 1.1;
           setProfitPerHour((prev) => prev + newProfit);
 
           setCongratulationPopup({ show: true, item: item });
@@ -1339,18 +1335,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           showGameAlert('Failed to purchase item. Please try again.');
         }
       } else {
-        // Add error vibration
         vibrate([100, 50, 100]);
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, vibrationEnabled] // Added vibrationEnabled
+    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, vibrationEnabled]
   );
 
   const buyPremiumItem = useCallback(
     async (item: PremiumShopItem) => {
       if (user.coins >= item.basePrice) {
-        // Add vibration feedback
         vibrate([50, 50, 100]);
 
         try {
@@ -1362,13 +1356,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           await saveUserData(updatedUser);
 
           if (item.id === 1 && item.boosterCredits !== undefined) {
-            // Booster Credits
             setUser((prevUser) => ({
               ...prevUser,
               boosterCredits: prevUser.boosterCredits + item.boosterCredits!,
             }));
           } else if (item.id === 2 && item.tap) {
-            // Cheetah Coin Corner
             setClickPower((prev) => prev + 1);
             setPremiumShopItems((prevItems) =>
               prevItems.map((i) =>
@@ -1395,12 +1387,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           showGameAlert('Failed to purchase item. Please try again.');
         }
       } else {
-        // Add error vibration
         vibrate([100, 50, 100]);
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, vibrationEnabled] // Added vibrationEnabled
+    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, vibrationEnabled]
   );
 
   const claimPPH = useCallback(() => {
@@ -1637,7 +1628,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     };
 
     const saveUserData = useCallback(async (updatedUser: Partial<UserType>) => {
-      if (!updatedUser || !updatedUser.telegramId) return; // Added check for telegramId
+      if (!updatedUser) return;
       try {
         console.log('Saving user data:', updatedUser);
         const response = await fetch('/api/user', {
@@ -1676,7 +1667,23 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             const userData = await response.json();
             console.log('Fetched user data:', userData);
             setUser(userData);
-            setIsLoading(false);
+            setShopItems(userData.shopItems);
+            setPremiumShopItems(userData.premiumShopItems);
+            setTasks(userData.tasks);
+            setDailyReward(userData.dailyReward || {
+              lastClaimed: null,
+              streak: 0,
+              day: 1,
+              completed: false,
+            });
+            setUnlockedLevels(userData.unlockedLevels);
+            setClickPower(userData.clickPower);
+            setProfitPerHour(userData.profitPerHour);
+            setEnergy(userData.energy);
+            setPphAccumulated(userData.pphAccumulated);
+            setMultiplier(userData.multiplier);
+            setSelectedCoinImage(userData.selectedCoinImage);
+            setFriendsCoins(userData.friendsCoins);
           } else {
             console.error('Failed to fetch user data:', await response.text());
           }
@@ -1688,8 +1695,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
+
 
   useEffect(() => {
     const checkGameAvailability = async () => {
@@ -3326,16 +3336,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <style>{styles}</style>
           <div className="fixed inset-0 z-0 overflow-hidden">
-          <StarryBackground />
-        </div>
-        {renderHeader()}
-        <div
-          className="flex-grow pb-24"
-          style={{
-            marginBottom: '0',
-            marginTop: '0', // Remove any top margin
-          }}
-        >
+            <StarryBackground />
+          </div>
+          {renderHeader()}
+          <div
+            className="flex-grow pb-24"
+            style={{
+              marginBottom: '0',
+              marginTop: '0',
+            }}
+          >
             {currentPage === 'home' && renderHome()}
             {currentPage === 'shop' && renderShop()}
             {currentPage === 'tasks' && renderTasks()}
