@@ -1284,8 +1284,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage, user.telegramId, vibrationEnabled] // Added vibrationEnabled
+    [clickPower, multiplier, energy, saveUserData, user, currentPage, user.telegramId, vibrationEnabled]
   );
+
 
   const buyItem = useCallback(
     async (item: ShopItem) => {
@@ -1573,9 +1574,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const [isLoading, setIsLoading] = useState(true);
   
     const fetchUserData = useCallback(async () => {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
-  
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           const telegramUser = webApp.initDataUnsafe.user;
@@ -1605,24 +1605,24 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               setSelectedCoinImage(userData.selectedCoinImage || '');
               setFriendsCoins(userData.friendsCoins || {});
             } else {
-              const errorData = await response.json();
-              console.error('Failed to fetch user data:', errorData);
-              throw new Error(`Failed to fetch user data: ${errorData.error}`);
+              console.error('Failed to fetch user data:', await response.text());
+              throw new Error('Failed to fetch user data');
             }
           } else {
+            console.error('No Telegram user data available');
             throw new Error('No Telegram user data available');
           }
         } else {
+          console.error('Telegram WebApp not available');
           throw new Error('Telegram WebApp not available');
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        showGameAlert('An error occurred while setting up your game. Please try again later.');
       } finally {
         setIsLoading(false);
       }
     }, []);
-  
-  
   
     useEffect(() => {
       fetchUserData();
@@ -1662,11 +1662,11 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           },
           body: JSON.stringify(updatedUser),
         });
-    
+  
         if (!response.ok) {
           throw new Error('Failed to save user data');
         }
-    
+  
         const savedUser = await response.json();
         setUser(savedUser);
         console.log('User data saved successfully');
