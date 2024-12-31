@@ -1450,6 +1450,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + reward,
       }));
+      saveUserData({...user, coins: user.coins + reward}); // Added saveUserData call
 
       const newDay = (dailyReward.day % 12) + 1;
       const completed = newDay === 1;
@@ -1487,6 +1488,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         boosterCredits: prevUser.boosterCredits - 1,
       }));
+      saveUserData({...user, boosterCredits: user.boosterCredits -1}); // Added saveUserData call
       showGameAlert(
         `Activated 2x multiplier for 1 minute! Credits left: ${user.boosterCredits - 1}`
       );
@@ -1591,6 +1593,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               const userData = await response.json();
               console.log('Fetched user data:', userData);
               setUser(userData);
+              setIsLoading(false); // Moved setIsLoading here
             } else {
               console.error('Failed to fetch user data:', await response.text());
             }
@@ -1602,8 +1605,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-      } finally {
-        setIsLoading(false);
       }
     }, []);
   
@@ -1636,7 +1637,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     };
 
     const saveUserData = useCallback(async (updatedUser: Partial<UserType>) => {
-      if (!updatedUser) return;
+      if (!updatedUser || !updatedUser.telegramId) return; // Added check for telegramId
       try {
         console.log('Saving user data:', updatedUser);
         const response = await fetch('/api/user', {
@@ -1675,6 +1676,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             const userData = await response.json();
             console.log('Fetched user data:', userData);
             setUser(userData);
+            setIsLoading(false);
           } else {
             console.error('Failed to fetch user data:', await response.text());
           }
@@ -1686,8 +1688,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
@@ -1808,6 +1808,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + profitPerHour / 3600,
       }));
+      saveUserData({...user, coins: user.coins + profitPerHour / 3600}); // Added saveUserData call
     }, 1000); // Check every second
     return () => clearInterval(timer);
   }, [maxEnergy, profitPerHour]);
@@ -1854,6 +1855,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const completed = newProgress >= 10;
           if (completed && !task.completed) {
             setUser((u) => ({ ...u, coins: u.coins + task.reward }));
+            saveUserData({...user, coins: user.coins + task.reward}); // Added saveUserData call
           }
           return { ...task, progress: newProgress, completed };
         }
@@ -2327,6 +2329,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                               ...prevUser,
                               coins: prevUser.coins + task.reward,
                             }));
+                            saveUserData({...user, coins: user.coins + task.reward}); // Added saveUserData call
                             setTasks((prevTasks) =>
                               prevTasks.map((t) => (t.id === task.id ? { ...t, claimed: true } : t))
                             );
