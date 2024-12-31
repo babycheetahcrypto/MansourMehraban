@@ -1584,7 +1584,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const webApp = window.Telegram.WebApp;
           const telegramUser = webApp.initDataUnsafe.user;
           console.log('Telegram user data:', telegramUser);
-  
+    
           if (telegramUser) {
             const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
             if (response.ok) {

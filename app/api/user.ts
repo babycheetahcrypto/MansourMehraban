@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import prisma from './db';
 import Cors from 'cors';
-
-const prisma = new PrismaClient();
 
 const cors = Cors({
   methods: ['GET', 'PATCH'],

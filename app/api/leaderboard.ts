@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import prisma from './db'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         orderBy: {
           coins: 'desc',
         },
-        take: 200,
+        take: 100,
       })
 
       const leaderboardWithRanks = leaderboard.map((user, index) => ({
@@ -27,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(200).json(leaderboardWithRanks)
     } catch (error) {
+      console.error('Failed to fetch leaderboard data:', error)
       res.status(500).json({ error: 'Failed to fetch leaderboard data' })
     }
   } else {
