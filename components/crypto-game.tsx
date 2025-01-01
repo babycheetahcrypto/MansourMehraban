@@ -757,7 +757,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       id: 6,
       name: 'Flash Nest',
       image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Flash%20Nest%203D%20ICON-A6avR3GCNvkEjhrHUhQ6oX6DPfSjc3.png',
+        'https://hebbkx1anhila5yf.publicblob.vercel-storage.com/Flash%20Nest%203D%20ICON-A6avR3GCNvkEjhrHUhQ6oX6DPfSjc3.png',
       basePrice: 2400,
       baseProfit: 1200,
       level: 1,
@@ -1616,6 +1616,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        showGameAlert('An error occurred while fetching your game data. Please try again later.');
       } finally {
         setIsLoading(false);
       }
@@ -1632,7 +1633,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         // You can update the user data or perform any other actions here
         // when the wallet is connected
       }
-    }, [connected, wallet]);
+        }, [connected, wallet]);
 
     useEffect(() => {
       if (userData) {
@@ -1659,21 +1660,39 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           },
           body: JSON.stringify(updatedUser),
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to save user data');
         }
-  
+
         const savedUser = await response.json();
         setUser(savedUser);
         console.log('User data saved successfully');
       } catch (error) {
         console.error('Error saving user data:', error);
+        showGameAlert('An error occurred while saving your game data. Please try again later.');
       }
     }, []);
 
     return { user, setUser, saveUserData, isLoading, fetchUserData };
   };
+
+  const checkDatabaseConnection = useCallback(async () => {
+    try {
+      const response = await fetch('/api/test-db');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Database connection test:', data);
+        return true;
+      } else {
+        console.error('Database connection test failed:', await response.text());
+        return false;
+      }
+    } catch (error) {
+      console.error('Error checking database connection:', error);
+      return false;
+    }
+  }, []);
 
   const fetchUserData = useCallback(async () => {
     setIsLoading(true);
@@ -1720,7 +1739,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      showGameAlert('An error occurred while setting up your game. Please try again later.');
+      showGameAlert('An error occurred while fetching your game data. Please try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -1736,6 +1755,106 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     fetchUserData().catch(handleInitializationError);
   }, [fetchUserData, handleInitializationError]);
 
+
+  useEffect(() => {
+    const checkGameAvailability = async () => {
+      try {
+        console.log('Checking game availability...');
+        const response = await fetch('/api/health', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Health check response:', JSON.stringify(data, null, 2));
+
+        if (data.status === 'OK') {
+          console.log('Game is available');
+          setGameStatus('available');
+        } else {
+          console.error('Game is unavailable. Health check failed:', data);
+          setGameStatus('unavailable');
+          setErrorDetails(JSON.stringify(data, null, 2));
+        }
+      } catch (error) {
+        console.error('Error checking game availability:', error);
+        setGameStatus('unavailable');
+        setErrorDetails(error instanceof Error ? error.message : 'Unknown error occurred');
+      }
+    };
+
+    checkGameAvailability();
+  }, []);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
+  useEffect(() => {
+    const initializeGame = async () => {
+      setIsLoading(true);
+      try {
+        const isConnected = await checkDatabaseConnection();
+        if (!isConnected) {
+          showGameAlert('Unable to connect to the game server. Please try again later.');
+          return;
+        }
+
+        await fetchUserData();
+
+        if (window.Telegram && window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp;
+          webApp.ready();
+          webApp.expand();
+
+          // Set the viewport height
+          const setViewportHeight = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+          };
+
+          setViewportHeight();
+          window.addEventListener('resize', setViewportHeight);
+
+          // Get user data from Telegram
+          const telegramUser = webApp.initDataUnsafe.user;
+          if (telegramUser) {
+            setUser((prevUser) => ({
+              ...prevUser,
+              name:
+                telegramUser.username ||
+                `${telegramUser.first_name} ${telegramUser.last_name || ''}`.trim(),
+              telegramId: telegramUser.id.toString(),
+              profilePhoto: telegramUser.photo_url || '',
+            }));
+          }
+
+          // Apply Telegram theme
+          document.body.style.setProperty('--tg-theme-bg-color', webApp.backgroundColor);
+          document.body.style.setProperty('--tg-theme-text-color', webApp.themeParams.text_color);
+          document.body.style.setProperty(
+            '--tg-theme-button-color',
+            webApp.themeParams.button_color
+          );
+          document.body.style.setProperty(
+            '--tg-theme-button-text-color',
+            webApp.themeParams.button_text_color
+          );
+        }
+      } catch (error) {
+        console.error('Error initializing game:', error);
+        showGameAlert('An error occurred while setting up your game. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeGame();
+  }, [checkDatabaseConnection, fetchUserData]);
 
   useEffect(() => {
     const checkGameAvailability = async () => {
