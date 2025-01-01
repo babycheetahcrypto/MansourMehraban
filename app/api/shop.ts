@@ -1,26 +1,63 @@
-import prisma from '@/lib/prisma';
+import { NextApiRequest, NextApiResponse } from 'next';
+import prisma from './../../lib/prisma';
 
-export async function purchaseItem(userId: string, itemName: string, itemImage: string, itemPrice: number, isPremium: boolean, itemEffect?: string, itemProfit?: number) {
-  if (isPremium) {
-    return await prisma.premiumShopItem.create({
-      data: {
-        name: itemName,
-        image: itemImage,
-        basePrice: itemPrice,
-        effect: itemEffect || '',
-        user: { connect: { id: userId } },
-      },
-    });
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'POST') {
+    const { userId, itemId } = req.body;
+
+    if (!userId || !itemId) {
+      return res.status(400).json({ error: 'User ID and Item ID are required' });
+    }
+
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { shopItems: true },
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const item = user.shopItems.find(item => item.id === itemId);
+
+      if (!item) {
+        return res.status(404).json({ error: 'Item not found' });
+      }
+
+      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1);
+
+      if (user.coins < currentPrice) {
+        return res.status(400).json({ error: 'Not enough coins' });
+      }
+
+      const updatedItem = await prisma.shopItem.update({
+        where: { id: itemId },
+        data: { level:{ increment: 1 } },
+      });
+
+      const newProfit = item.baseProfit * (1 + 0.1 * updatedItem.level);
+
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          coins: { decrement: currentPrice },
+          profitPerHour: { increment: newProfit },
+        },
+        include: { shopItems: true },
+      });
+
+      res.status(200).json({
+        updatedShopItems: updatedUser.shopItems,
+        newProfit: newProfit,
+      });
+    } catch (error) {
+      console.error('Error purchasing item:', error);
+      res.status(500).json({ error: 'Failed to process purchase' });
+    }
   } else {
-    return await prisma.shopItem.create({
-      data: {
-        name: itemName,
-        image: itemImage,
-        basePrice: itemPrice,
-        baseProfit: itemProfit || 0,
-        level: 1,
-        user: { connect: { id: userId } },
-      },
-    });
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+

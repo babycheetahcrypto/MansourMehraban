@@ -14,6 +14,7 @@ import { CheckCircle } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
+import axios from 'axios';
 
 const preloadImages = (imageUrls: string[]) => {
   imageUrls.forEach((url) => {
@@ -631,6 +632,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   );
 
+  const [error, setError] = useState<string | null>(null);
+
   const [currentShopTab, setCurrentShopTab] = useState<'regular' | 'premium'>('regular');
   const { connected, wallet } = useTonConnect();
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
@@ -1217,29 +1220,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [level]);
 
-  const clickCoin = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
-      event.preventDefault();
+  const clickCoin = useCallback(async (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    event.preventDefault();
 
-      if (energy >= 1 && currentPage === 'home') {
-        vibrate(50);
+    if (energy >= 1 && currentPage === 'home') {
+      const clickValue = clickPower * multiplier;
+      const newCoins = user.coins + clickValue;
+      const newExp = user.exp + 1;
+      const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
-        const clickValue = clickPower * multiplier;
-        const newCoins = user.coins + clickValue;
-        const newExp = user.exp + 1;
-        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
+      const updatedUser = {
+        ...user,
+        coins: newCoins,
+        exp: newExp % 100,
+        level: newLevel,
+        energy: Math.max(energy - 1, 0),
+      };
 
-        const updatedUser = {
-          ...user,
-          coins: newCoins,
-          exp: newExp % 100,
-          level: newLevel,
-        };
-
-        setUser(updatedUser);
-        saveUserData({ ...updatedUser, telegramId: user.telegramId });
-
-        setEnergy((prev) => Math.max(prev - 1, 0));
+      setUser(updatedUser);
+      await saveUserData(updatedUser);
 
         let clientX, clientY;
         if ('touches' in event) {
@@ -1286,61 +1285,41 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   );
 
 
-  const buyItem = useCallback(
-    async (item: ShopItem) => {
-      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1);
-      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1));
+  const buyItem = useCallback(async (item: ShopItem) => {
+    const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1);
 
-      if (user.coins >= currentPrice) {
-        vibrate([50, 50, 100]);
+    if (user.coins >= currentPrice) {
+      try {
+        const updatedUser = {
+          ...user,
+          coins: user.coins - currentPrice,
+        };
+        setUser(updatedUser);
+        await saveUserData(updatedUser);
 
-        try {
-          const updatedUser = {
-            ...user,
-            coins: user.coins - currentPrice,
-          };
-          setUser(updatedUser);
-          await saveUserData({ ...updatedUser, telegramId: user.telegramId });
+        const updatedItem = {
+          ...item,
+          level: item.level + 1,
+        };
 
-          setShopItems((prevItems) =>
-            prevItems.map((i) =>
-              i.id === item.id
-                ? {
-                    ...i,
-                    level: i.level + 1,
-                  }
-                : i
-            )
-          );
+        const response = await axios.post('/api/shop/buy', { userId: user.id, itemId: item.id });
+        const { updatedShopItems, newProfit } = response.data;
 
-          const newProfit = currentProfit * 1.1;
-          setProfitPerHour((prev) => prev + newProfit);
+        setShopItems(updatedShopItems);
+        setProfitPerHour((prev) => prev + newProfit);
 
-          setCongratulationPopup({ show: true, item: item });
-          showPopup('congratulation');
+        setCongratulationPopup({ show: true, item: updatedItem });
+        showPopup('congratulation');
 
-          if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.sendData(
-              JSON.stringify({
-                action: 'purchase',
-                item: item.name,
-                cost: currentPrice,
-                newLevel: item.level + 1,
-                profitIncrease: newProfit,
-              })
-            );
-          }
-        } catch (error) {
-          console.error('Error purchasing item:', error);
-          showGameAlert('Failed to purchase item. Please try again.');
-        }
-      } else {
-        vibrate([100, 50, 100]);
-        showGameAlert('Not enough coins!');
+        // ... (keep Telegram WebApp data sending if needed)
+      } catch (error) {
+        console.error('Error purchasing item:', error);
+        showGameAlert('Failed to purchase item. Please try again.');
       }
-    },
-    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, user.telegramId, vibrationEnabled]
-  );
+    } else {
+      showGameAlert('Not enough coins!');
+    }
+  }, [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup]);
 
   const buyPremiumItem = useCallback(
     async (item: PremiumShopItem) => {
@@ -1573,54 +1552,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   
     const fetchUserData = useCallback(async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        if (window.Telegram && window.Telegram.WebApp) {
-          const webApp = window.Telegram.WebApp;
-          const telegramUser = webApp.initDataUnsafe.user;
-          console.log('Telegram user data:', telegramUser);
-  
-          if (telegramUser) {
-            const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
-            if (response.ok) {
-              const userData = await response.json();
-              console.log('Fetched user data:', userData);
-              setUser(userData);
-              setShopItems(userData.shopItems);
-              setPremiumShopItems(userData.premiumShopItems);
-              setTasks(userData.tasks);
-              setDailyReward(userData.dailyReward || {
-                lastClaimed: null,
-                streak: 0,
-                day: 1,
-                completed: false,
-              });
-              setUnlockedLevels(userData.unlockedLevels);
-              setClickPower(userData.clickPower);
-              setProfitPerHour(userData.profitPerHour);
-              setEnergy(userData.energy);
-              setPphAccumulated(userData.pphAccumulated);
-              setMultiplier(userData.multiplier);
-              setSelectedCoinImage(userData.selectedCoinImage);
-              setFriendsCoins(userData.friendsCoins);
-            } else {
-              console.error('Failed to fetch user data:', await response.text());
-              throw new Error('Failed to fetch user data');
-            }
-          } else {
-            console.error('No Telegram user data available');
-            throw new Error('No Telegram user data available');
-          }
-        } else {
-          console.error('Telegram WebApp not available');
-          throw new Error('Telegram WebApp not available');
+        if (!user || !user.telegramId) {
+          throw new Error('User data is missing');
         }
+        const response = await axios.get(`/api/user?telegramId=${user.telegramId}`);
+        const fetchedUser = response.data;
+        setUser(fetchedUser);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        showGameAlert('An error occurred while fetching your game data. Please try again later.');
+        setError('Failed to load game data. Please try again.');
       } finally {
         setIsLoading(false);
       }
-    }, []);
+    }, [user]);
   
     useEffect(() => {
       fetchUserData();
@@ -1650,29 +1596,18 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     };
 
     const saveUserData = useCallback(async (updatedUser: Partial<UserType>) => {
-      if (!updatedUser || !updatedUser.telegramId) return;
       try {
-        console.log('Saving user data:', updatedUser);
-        const response = await fetch('/api/user', {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updatedUser),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to save user data');
+        if (!user || !user.telegramId) {
+          throw new Error('User data is missing');
         }
-
-        const savedUser = await response.json();
+        const response = await axios.patch('/api/user', { ...updatedUser, telegramId: user.telegramId });
+        const savedUser = response.data;
         setUser(savedUser);
-        console.log('User data saved successfully');
       } catch (error) {
         console.error('Error saving user data:', error);
-        showGameAlert('An error occurred while saving your game data. Please try again later.');
+        setError('Failed to save game data. Please try again.');
       }
-    }, []);
+    }, [user]);
 
     return { user, setUser, saveUserData, isLoading, fetchUserData };
   };
