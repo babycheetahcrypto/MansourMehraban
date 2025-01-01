@@ -49,18 +49,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         username: telegramUser.username || `user${telegramUser.id}`,
         firstName: telegramUser.first_name,
         lastName: telegramUser.last_name,
-        coins: 0,
-        level: 1,
-        exp: 0,
-        clickPower: 1,
-        energy: 2000,
-        multiplier: 1,
-        profitPerHour: 0,
-        boosterCredits: 1,
-        unlockedLevels: [1],
-        friendsCoins: {},
-        pphAccumulated: 0,
-        selectedCoinImage: '',
       });
       console.log('New user created:', telegramUser.id);
     } else {
