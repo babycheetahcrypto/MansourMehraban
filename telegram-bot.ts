@@ -1,6 +1,6 @@
 import { Telegraf, Context } from 'telegraf';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
-import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, Firestore } from 'firebase/firestore';
+import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -13,15 +13,23 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
+let app: FirebaseApp;
+let db: Firestore;
+
+try {
+  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  db = getFirestore(app);
+} catch (error) {
+  console.error('Error initializing Firebase:', error);
+}
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
 bot.command('start', async (ctx: Context) => {
   const telegramUser = ctx.from;
   if (!telegramUser) {
-    ctx.reply('Error: Unable to get user information.');
+    console.error('Error: Unable to get user information.');
+    ctx.reply('Error: Unable to get user information. Please try again.');
     return;
   }
 
@@ -40,6 +48,10 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
+    if (!db) {
+      throw new Error('Firebase not initialized');
+    }
+
     const userRef = doc(db, 'users', telegramUser.id.toString());
     let userDoc = await getDoc(userRef);
 
@@ -81,7 +93,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
     );
   } catch (error) {
     console.error('Error in /start command:', error);
-    ctx.reply('An error occurred while setting up your game. Please try again later.');
+    ctx.reply('An error occurred while setting up your game. Please try again later. Error details: ' + (error instanceof Error ? error.message : String(error)));
   }
 });
 
@@ -91,17 +103,23 @@ bot.on('web_app_data', async (ctx) => {
   const webAppData = ctx.webAppData;
 
   if (!telegramUser || !webAppData) {
-    ctx.reply('Error: Unable to process game data.');
+    console.error('Error: Unable to process game data. Missing user or web app data.');
+    ctx.reply('Error: Unable to process game data. Please try again.');
     return;
   }
 
   try {
+    if (!db) {
+      throw new Error('Firebase not initialized');
+    }
+
     const parsedData = JSON.parse(webAppData.data.json());
     const userRef = doc(db, 'users', telegramUser.id.toString());
     const userDoc = await getDoc(userRef);
 
     if (!userDoc.exists()) {
-      ctx.reply('Error: User not found.');
+      console.error('Error: User not found in database.');
+      ctx.reply('Error: User not found. Please start the game again.');
       return;
     }
 
@@ -126,7 +144,7 @@ bot.on('web_app_data', async (ctx) => {
     ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {
     console.error('Error processing web app data:', error);
-    ctx.answerCbQuery('An error occurred while processing game data.');
+    ctx.answerCbQuery('An error occurred while processing game data. Please try again. Error details: ' + (error instanceof Error ? error.message : String(error)));
   }
 });
 
