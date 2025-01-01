@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import GameClient from './game-client';
 import TelegramInitializer from './TelegramInitializer';
 

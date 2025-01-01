@@ -1643,14 +1643,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       }
     }, [userData]);
 
-    const handleCoinChange = (amount: number) => {
-      if (user) {
-        const updatedUser: UserData = { ...user, coins: user.coins + amount };
-        saveUserData(updatedUser);
-        onCoinsUpdate(updatedUser.coins);
-      }
-    };
-
     const saveUserData = useCallback(async (updatedUser: Partial<UserType>) => {
       if (!updatedUser || !updatedUser.telegramId) return;
       try {
@@ -1741,7 +1733,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      showGameAlert('An error occurred while fetching your game data. Please try again later.');
     } finally {
       setIsLoading(false);
     }
