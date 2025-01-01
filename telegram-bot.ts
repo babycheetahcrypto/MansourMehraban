@@ -1,8 +1,21 @@
 import { Telegraf, Context } from 'telegraf';
-import { PrismaClient } from '@prisma/client';
-import { User } from '@prisma/client';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 
-const prisma = new PrismaClient();
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+};
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const db = getFirestore(app);
+
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
 bot.command('start', async (ctx: Context) => {
@@ -27,46 +40,40 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    let user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
-    });
+    const userRef = doc(db, 'users', telegramUser.id.toString());
+    let userDoc = await getDoc(userRef);
 
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          telegramId: telegramUser.id.toString(),
-          username: telegramUser.username || `user${telegramUser.id}`,
-          firstName: telegramUser.first_name,
-          lastName: telegramUser.last_name,
-          coins: 0,
-          level: 1,
-          exp: 0,
-          clickPower: 1,
-          energy: 2000,
-          multiplier: 1,
-          profitPerHour: 0,
-          boosterCredits: 1,
-          unlockedLevels: [1],
-          friendsCoins: {},
-          pphAccumulated: 0,
-          selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
-        },
+    if (!userDoc.exists()) {
+      await setDoc(userRef, {
+        telegramId: telegramUser.id.toString(),
+        username: telegramUser.username || `user${telegramUser.id}`,
+        firstName: telegramUser.first_name,
+        lastName: telegramUser.last_name,
+        coins: 0,
+        level: 1,
+        exp: 0,
+        clickPower: 1,
+        energy: 2000,
+        multiplier: 1,
+        profitPerHour: 0,
+        boosterCredits: 1,
+        unlockedLevels: [1],
+        friendsCoins: {},
+        pphAccumulated: 0,
+        selectedCoinImage: '',
       });
-      console.log('New user created:', user);
+      console.log('New user created:', telegramUser.id);
     } else {
       // Update existing user's information
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          username: telegramUser.username || user.username,
-          firstName: telegramUser.first_name || user.firstName,
-          lastName: telegramUser.last_name || user.lastName,
-        },
+      await updateDoc(userRef, {
+        username: telegramUser.username || userDoc.data()?.username,
+        firstName: telegramUser.first_name || userDoc.data()?.firstName,
+        lastName: telegramUser.last_name || userDoc.data()?.lastName,
       });
-      console.log('Existing user updated:', user);
+      console.log('Existing user updated:', telegramUser.id);
     }
 
-    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${user.telegramId}`;
+    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${telegramUser.id}`;
 
     // Send welcome message with photo
     await ctx.replyWithPhoto(
@@ -102,33 +109,29 @@ bot.on('web_app_data', async (ctx) => {
 
   try {
     const parsedData = JSON.parse(webAppData.data.json());
-    const user = await prisma.user.findUnique({
-      where: { telegramId: telegramUser.id.toString() },
-    });
+    const userRef = doc(db, 'users', telegramUser.id.toString());
+    const userDoc = await getDoc(userRef);
 
-    if (!user) {
+    if (!userDoc.exists()) {
       ctx.reply('Error: User not found.');
       return;
     }
 
     // Update user data based on game actions
     if (parsedData.action === 'tap') {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: { increment: parsedData.amount } },
+      await updateDoc(userRef, {
+        coins: increment(parsedData.amount)
       });
     } else if (parsedData.action === 'purchase') {
       // Handle purchase logic
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: { decrement: parsedData.cost } },
+      await updateDoc(userRef, {
+        coins: increment(-parsedData.cost)
       });
       // Add logic to update shop items or premium items
     } else if (parsedData.action === 'claim') {
       // Handle reward claim logic
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { coins: { increment: parsedData.amount } },
+      await updateDoc(userRef, {
+        coins: increment(parsedData.amount)
       });
     }
 
