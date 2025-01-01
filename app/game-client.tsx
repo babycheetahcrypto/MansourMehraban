@@ -14,7 +14,6 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -47,26 +46,28 @@ export default function GameClient() {
             if (createResponse.ok) {
               const newUser = await createResponse.json();
               console.log('Created new user:', newUser);
-              setUserData(newUser);
+              setUserData(newUser.user);
             } else {
               console.error('Failed to create user:', await createResponse.text());
-              setError('Failed to create user. Please try again.');
+              throw new Error('Failed to create user');
             }
           } else {
             console.error('Failed to fetch user data:', await response.text());
-            setError('Failed to fetch user data. Please try again.');
+            throw new Error('Failed to fetch user data');
           }
         } else {
           console.error('No Telegram user data available');
-          setError('No Telegram user data available. Please try again.');
+          throw new Error('No Telegram user data available');
         }
       } else {
         console.error('Telegram WebApp not available');
-        setError('Telegram WebApp not available. Please try again.');
+        throw new Error('Telegram WebApp not available');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      setError('An error occurred while fetching user data. Please try again.');
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+      }
     }
   }, []);
 
@@ -88,14 +89,13 @@ export default function GameClient() {
         });
         if (response.ok) {
           const updatedUser = await response.json();
-          setUserData(updatedUser);
-          console.log('User data saved successfully:', updatedUser);
+          setUserData(updatedUser.user);
+          console.log('User data saved successfully:', updatedUser.user);
         } else {
           throw new Error('Failed to update user data');
         }
       } catch (error) {
         console.error('Error saving user data:', error);
-        setError('Failed to save user data. Please try again.');
       }
     },
     [userData]
@@ -107,12 +107,7 @@ export default function GameClient() {
     await saveUserData({ coins: updatedCoins });
   };
 
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
   return (
     <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} saveUserData={saveUserData} />
   );
 }
-
