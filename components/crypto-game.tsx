@@ -653,8 +653,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
   const [newLevel, setNewLevel] = useState(1);
   const [unlockedLevels, setUnlockedLevels] = useState([1]);
-  const [dailyReward, setDailyReward] = useState({
-    lastClaimed: null as string | null,
+  const [dailyReward, setDailyReward] = useState<{
+    lastClaimed: Date | null;
+    streak: number;
+    day: number;
+    completed: boolean;
+  }>({
+    lastClaimed: null,
     streak: 0,
     day: 1,
     completed: false,
@@ -1239,7 +1244,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         };
 
         setUser(updatedUser);
-        saveUserData({ ...updatedUser, telegramId: user.telegramId });
+        saveUserData(updatedUser);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1284,7 +1289,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage, user.telegramId, vibrationEnabled]
+    [clickPower, multiplier, energy, saveUserData, user, currentPage, vibrationEnabled]
   );
 
 
@@ -1302,21 +1307,22 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             coins: user.coins - currentPrice,
           };
           setUser(updatedUser);
-          await saveUserData({ ...updatedUser, telegramId: user.telegramId });
+          await saveUserData(updatedUser);
 
-          setShopItems((prevItems) =>
-            prevItems.map((i) =>
-              i.id === item.id
-                ? {
-                    ...i,
-                    level: i.level + 1,
-                  }
-                : i
-            )
+          const updatedShopItems = shopItems.map((i) =>
+            i.id === item.id
+              ? {
+                  ...i,
+                  level: i.level + 1,
+                }
+              : i
           );
+          setShopItems(updatedShopItems);
+          await saveUserData({ shopItems: updatedShopItems });
 
           const newProfit = currentProfit * 1.1;
           setProfitPerHour((prev) => prev + newProfit);
+          await saveUserData({ profitPerHour: profitPerHour + newProfit });
 
           setCongratulationPopup({ show: true, item: item });
           showPopup('congratulation');
@@ -1341,59 +1347,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, user.telegramId, vibrationEnabled]
-  );
-
-  const buyPremiumItem = useCallback(
-    async (item: PremiumShopItem) => {
-      if (user.coins >= item.basePrice) {
-        vibrate([50, 50, 100]);
-
-        try {
-          const updatedUser = {
-            ...user,
-            coins: user.coins - item.basePrice,
-          };
-          setUser(updatedUser);
-          await saveUserData({ ...updatedUser, telegramId: user.telegramId });
-
-          if (item.id === 1 && item.boosterCredits !== undefined) {
-            setUser((prevUser) => ({
-              ...prevUser,
-              boosterCredits: prevUser.boosterCredits + item.boosterCredits!,
-            }));
-          } else if (item.id === 2 && item.tap) {
-            setClickPower((prev) => prev + 1);
-            setPremiumShopItems((prevItems) =>
-              prevItems.map((i) =>
-                i.id === item.id ? { ...i, basePrice: i.basePrice * 2, tap: (i.tap || 0) + 1 } : i
-              )
-            );
-          }
-
-          setCongratulationPopup({ show: true, item: item });
-          showPopup('congratulation');
-
-          if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.sendData(
-              JSON.stringify({
-                action: 'purchase',
-                item: item.name,
-                cost: item.basePrice,
-                isPremium: true,
-              })
-            );
-          }
-        } catch (error) {
-          console.error('Error purchasing item:', error);
-          showGameAlert('Failed to purchase item. Please try again.');
-        }
-      } else {
-        vibrate([100, 50, 100]);
-        showGameAlert('Not enough coins!');
-      }
-    },
-    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, user.telegramId, vibrationEnabled]
+    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, shopItems, profitPerHour, vibrationEnabled]
   );
 
   const claimPPH = useCallback(() => {
@@ -1421,8 +1375,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const claimDailyReward = useCallback(() => {
     const now = new Date();
-    const lastClaimed = dailyReward.lastClaimed ? new Date(dailyReward.lastClaimed) : null;
-
+    const lastClaimed = dailyReward.lastClaimed;
+  
     if (
       !dailyReward.completed &&
       (!lastClaimed ||
@@ -1430,42 +1384,93 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         now.getMonth() !== lastClaimed.getMonth() ||
         now.getFullYear() !== lastClaimed.getFullYear())
     ) {
-      // Add success vibration
       vibrate([50, 100, 50]);
-
+  
       const newStreak =
         lastClaimed && (now.getTime() - lastClaimed.getTime()) / (1000 * 60 * 60 * 24) <= 1
           ? dailyReward.streak + 1
           : 1;
       const reward = getDailyReward(newStreak);
-
+  
       setUser((prevUser) => ({
         ...prevUser,
         coins: prevUser.coins + reward,
       }));
-      saveUserData({...user, coins: user.coins + reward, telegramId: user.telegramId}); // Added saveUserData call
-
+      saveUserData({...user, coins: user.coins + reward, telegramId: user.telegramId});
+  
       const newDay = (dailyReward.day % 12) + 1;
       const completed = newDay === 1;
-
+  
       setDailyReward({
-        lastClaimed: now.toISOString(),
+        lastClaimed: now,
         streak: newStreak,
         day: newDay,
         completed: completed,
       });
-
+  
       showGameAlert(
         `Claimed daily reward: ${formatNumber(reward)} Coins! Streak: ${newStreak} days`
       );
     } else if (dailyReward.completed) {
       showGameAlert('You have completed the 12-day reward cycle!');
     } else {
-      // Add error vibration
       vibrate([100, 50, 100]);
       showGameAlert('You have already claimed your daily reward today!');
     }
-  }, [dailyReward, user, saveUserData, user.telegramId, vibrationEnabled]); // Added vibrationEnabled
+  }, [dailyReward, user, saveUserData, user.telegramId, vibrationEnabled]);
+  
+  const buyPremiumItem = useCallback(
+    async (item: PremiumShopItem) => {
+      if (user.coins >= item.basePrice) {
+        vibrate([50, 50, 100]);
+  
+        try {
+          const updatedUser = {
+            ...user,
+            coins: user.coins - item.basePrice,
+          };
+          setUser(updatedUser);
+          await saveUserData({ ...updatedUser, telegramId: user.telegramId });
+  
+          if (item.id === 1 && item.boosterCredits !== undefined) {
+            setUser((prevUser) => ({
+              ...prevUser,
+              boosterCredits: prevUser.boosterCredits + item.boosterCredits!,
+            }));
+          } else if (item.id === 2 && item.tap) {
+            setClickPower((prev) => prev + 1);
+            setPremiumShopItems((prevItems) =>
+              prevItems.map((i) =>
+                i.id === item.id ? { ...i, basePrice: i.basePrice * 2, tap: (i.tap || 0) + 1 } : i
+              )
+            );
+          }
+  
+          setCongratulationPopup({ show: true, item: item });
+          showPopup('congratulation');
+  
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.sendData(
+              JSON.stringify({
+                action: 'purchase',
+                item: item.name,
+                cost: item.basePrice,
+                isPremium: true,
+              })
+            );
+          }
+        } catch (error) {
+          console.error('Error purchasing item:', error);
+          showGameAlert('Failed to purchase item. Please try again.');
+        }
+      } else {
+        vibrate([100, 50, 100]);
+        showGameAlert('Not enough coins!');
+      }
+    },
+    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, user.telegramId, vibrationEnabled]
+  );
+
 
   const getDailyReward = (day: number) => {
     const rewards = [100, 500, 700, 10000, 15000, 17000, 20000, 25000, 27000, 30000, 35000, 50000];
