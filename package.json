@@ -45,7 +45,6 @@
     "encoding": "^0.1.13",
     "express": "^4.21.1",
     "express-rate-limit": "^7.4.1",
-    "firebase": "^11.1.0",
     "framer-motion": "^11.14.4",
     "glob": "^11.0.0",
     "jose": "^5.2.0",
@@ -59,7 +58,9 @@
     "react-dom": "latest",
     "rimraf": "^6.0.1",
     "tailwind-merge": "^2.5.4",
-    "telegraf": "^4.16.3"
+    "telegraf": "^4.16.3",
+    "firebase": "^9.0.0",
+    "firebase-admin": "^11.0.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15.0.3",
