@@ -2,16 +2,32 @@ import { Telegraf, Context } from 'telegraf';
 import { app, db } from './firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
+// Add error checking for bot token
+if (!process.env.TELEGRAM_BOT_TOKEN) {
+  throw new Error('TELEGRAM_BOT_TOKEN is not set in environment variables');
+}
+
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+
+// Add error handler
+bot.catch((err: any, ctx: Context) => {
+  console.error('Bot error:', err);
+  ctx.reply('An error occurred. Our team has been notified.');
+});
 
 bot.command('start', async (ctx: Context) => {
-  const telegramUser = ctx.from;
-  if (!telegramUser) {
-    ctx.reply('Error: Unable to get user information.');
-    return;
-  }
+  try {
+    const telegramUser = ctx.from;
+    if (!telegramUser) {
+      throw new Error('Unable to get user information');
+    }
 
-  const welcomeMessage = `
+    // Validate required environment variables
+    if (!process.env.NEXT_PUBLIC_WEBAPP_URL) {
+      throw new Error('NEXT_PUBLIC_WEBAPP_URL is not set');
+    }
+
+    const welcomeMessage = `
 Welcome *@${telegramUser.username || telegramUser.first_name}*! 🐾🎉
 
 Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't want to miss! 💸
@@ -25,49 +41,78 @@ Start earning today and be part of the next big upcoming airdrop. ✨
 Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
-  try {
     const userRef = doc(db, 'users', telegramUser.id.toString());
-    let user = await getDoc(userRef);
+    const user = await getDoc(userRef);
+
+    // Initialize default user data
+    const defaultUserData = {
+      telegramId: telegramUser.id.toString(),
+      username: telegramUser.username || `user${telegramUser.id}`,
+      firstName: telegramUser.first_name,
+      lastName: telegramUser.last_name,
+      coins: 0,
+      level: 1,
+      exp: 0,
+      clickPower: 1,
+      energy: 2000,
+      multiplier: 1,
+      profitPerHour: 0,
+      boosterCredits: 1,
+      unlockedLevels: [1],
+      friendsCoins: {},
+      pphAccumulated: 0,
+      selectedCoinImage: '',
+      dailyReward: {
+        lastClaimed: null,
+        streak: 0,
+        day: 1,
+        completed: false
+      },
+      shopItems: [],
+      premiumShopItems: [],
+      tasks: [],
+      createdAt: new Date().toISOString(),
+      lastActive: new Date().toISOString()
+    };
 
     if (!user.exists()) {
-      await setDoc(userRef, {
-        telegramId: telegramUser.id.toString(),
-        username: telegramUser.username || `user${telegramUser.id}`,
-        firstName: telegramUser.first_name,
-        lastName: telegramUser.last_name,
-        coins: 0,
-        level: 1,
-        exp: 0,
-        clickPower: 1,
-        energy: 2000,
-        multiplier: 1,
-        profitPerHour: 0,
-        boosterCredits: 1,
-        unlockedLevels: [1],
-        friendsCoins: {},
-        pphAccumulated: 0,
-        selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
-      });
+      await setDoc(userRef, defaultUserData);
       console.log('New user created:', telegramUser.id);
     } else {
-      // Update existing user's information
+      // Update existing user's information while preserving their data
+      const userData = user.data();
       await updateDoc(userRef, {
-        username: telegramUser.username || user.data()?.username,
-        firstName: telegramUser.first_name || user.data()?.firstName,
-        lastName: telegramUser.last_name || user.data()?.lastName,
+        username: telegramUser.username || userData.username,
+        firstName: telegramUser.first_name || userData.firstName,
+        lastName: telegramUser.last_name || userData.lastName,
+        lastActive: new Date().toISOString()
       });
       console.log('Existing user updated:', telegramUser.id);
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${telegramUser.id}`;
 
-    // Send welcome message with photo
-    await ctx.replyWithPhoto(
-      {
-        url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
-      },
-      {
-        caption: welcomeMessage,
+    // Send welcome message with photo and error handling
+    try {
+      await ctx.replyWithPhoto(
+        {
+          url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
+        },
+        {
+          caption: welcomeMessage,
+          parse_mode: 'Markdown',
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: 'Play 🚀', web_app: { url: gameUrl } }],
+              [{ text: 'Join community', url: 'https://t.me/babycheetahcrypto' }],
+            ],
+          },
+        }
+      );
+    } catch (photoError) {
+      console.error('Error sending photo:', photoError);
+      // Fallback to text-only message if photo fails
+      await ctx.reply(welcomeMessage, {
         parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
@@ -75,58 +120,72 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
             [{ text: 'Join community', url: 'https://t.me/babycheetahcrypto' }],
           ],
         },
-      }
-    );
+      });
+    }
   } catch (error) {
     console.error('Error in /start command:', error);
-    ctx.reply('An error occurred while setting up your game. Please try again later.');
+    ctx.reply('An error occurred while setting up your game. Please try again in a few minutes. If the problem persists, contact our support.');
   }
 });
 
-// Handle game data updates
+// Handle game data updates with improved error handling
 bot.on('web_app_data', async (ctx) => {
-  const telegramUser = ctx.from;
-  const webAppData = ctx.webAppData;
-
-  if (!telegramUser || !webAppData) {
-    ctx.reply('Error: Unable to process game data.');
-    return;
-  }
-
   try {
-    const parsedData = JSON.parse(webAppData.data.json());
+    const telegramUser = ctx.from;
+    const webAppData = ctx.webAppData;
+
+    if (!telegramUser || !webAppData) {
+      throw new Error('Invalid game data or user information');
+    }
+
     const userRef = doc(db, 'users', telegramUser.id.toString());
     const userDoc = await getDoc(userRef);
 
     if (!userDoc.exists()) {
-      ctx.reply('Error: User not found.');
-      return;
+      throw new Error('User not found in database');
     }
 
-    // Update user data based on game actions
-    if (parsedData.action === 'tap') {
-      await updateDoc(userRef, {
-        coins: increment(parsedData.amount)
-      });
-    } else if (parsedData.action === 'purchase') {
-      // Handle purchase logic
-      await updateDoc(userRef, {
-        coins: increment(-parsedData.cost)
-      });
-      // Add logic to update shop items or premium items
-    } else if (parsedData.action === 'claim') {
-      // Handle reward claim logic
-      await updateDoc(userRef, {
-        coins: increment(parsedData.amount)
-      });
+    const parsedData = JSON.parse(webAppData.data.json());
+    
+    switch (parsedData.action) {
+      case 'tap':
+        await updateDoc(userRef, {
+          coins: increment(parsedData.amount),
+          lastActive: new Date().toISOString()
+        });
+        break;
+      case 'purchase':
+        await updateDoc(userRef, {
+          coins: increment(-parsedData.cost),
+          lastActive: new Date().toISOString()
+        });
+        break;
+      case 'claim':
+        await updateDoc(userRef, {
+          coins: increment(parsedData.amount),
+          lastActive: new Date().toISOString()
+        });
+        break;
+      default:
+        throw new Error('Invalid game action');
     }
 
-    ctx.answerCbQuery('Game data updated successfully!');
+    await ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {
     console.error('Error processing web app data:', error);
-    ctx.answerCbQuery('An error occurred while processing game data.');
+    await ctx.answerCbQuery('Failed to update game data. Please try again.');
   }
 });
+
+// Add launch error handling
+bot.launch().catch((err) => {
+  console.error('Failed to launch bot:', err);
+  process.exit(1);
+});
+
+// Enable graceful stop
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
 export default bot;
 
