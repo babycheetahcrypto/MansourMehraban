@@ -1,50 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../lib/prisma';
-import Cors from 'cors';
-
-const cors = Cors({
-  methods: ['GET', 'PATCH'],
-});
-
-function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: Function) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result: any) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await runMiddleware(req, res, cors);
-  
-  console.log(`Received ${req.method} request to /api/user`);
-  
   if (req.method === 'GET') {
     const { telegramId } = req.query;
 
     if (!telegramId) {
-      console.error('GET request missing telegramId');
       return res.status(400).json({ error: 'Telegram ID is required' });
     }
 
     try {
-      console.log(`Fetching user data for Telegram ID: ${telegramId}`);
       let user = await prisma.user.findUnique({
         where: { telegramId: telegramId as string },
         include: {
-          dailyReward: true,
           shopItems: true,
-          premiumShopItems: true,
           tasks: true,
-          trophies: true,
+          dailyReward: true,
         },
       });
 
       if (!user) {
-        console.log(`User not found for Telegram ID: ${telegramId}. Creating new user.`);
         user = await prisma.user.create({
           data: {
             telegramId: telegramId as string,
@@ -52,97 +27,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             level: 1,
             exp: 0,
             clickPower: 1,
-            energy: 2000,
-            multiplier: 1,
-            profitPerHour: 0,
-            boosterCredits: 1,
-            unlockedLevels: [1],
-            friendsCoins: {},
-            pphAccumulated: 0,
-            selectedCoinImage: '',
           },
           include: {
-            dailyReward: true,
             shopItems: true,
-            premiumShopItems: true,
             tasks: true,
-            trophies: true,
+            dailyReward: true,
           },
         });
       }
 
-      console.log(`User data fetched/created successfully for Telegram ID: ${telegramId}`);
       res.status(200).json(user);
     } catch (error) {
-      console.error('Error fetching/creating user:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error('Error fetching user:', error);
+      res.status(500).json({ error: 'Failed to fetch user data' });
     }
   } else if (req.method === 'PATCH') {
     const { telegramId, ...updateData } = req.body;
 
     if (!telegramId) {
-      console.error('PATCH request missing telegramId');
       return res.status(400).json({ error: 'Telegram ID is required' });
     }
 
     try {
-      console.log(`Updating user data for Telegram ID: ${telegramId}`);
       const updatedUser = await prisma.user.update({
         where: { telegramId: telegramId as string },
-        data: {
-          ...updateData,
-          dailyReward: updateData.dailyReward ? {
-            upsert: {
-              create: updateData.dailyReward,
-              update: updateData.dailyReward,
-            },
-          } : undefined,
-          shopItems: updateData.shopItems ? {
-            upsert: updateData.shopItems.map((item: any) => ({
-              where: { id: item.id },
-              create: item,
-              update: item,
-            })),
-          } : undefined,
-          premiumShopItems: updateData.premiumShopItems ? {
-            upsert: updateData.premiumShopItems.map((item: any) => ({
-              where: { id: item.id },
-              create: item,
-              update: item,
-            })),
-          } : undefined,
-          tasks: updateData.tasks ? {
-            upsert: updateData.tasks.map((task: any) => ({
-              where: { id: task.id },
-              create: task,
-              update: task,
-            })),
-          } : undefined,
-          trophies: updateData.trophies ? {
-            upsert: updateData.trophies.map((trophy: any) => ({
-              where: { id: trophy.id },
-              create: trophy,
-              update: trophy,
-            })),
-          } : undefined,
-        },
+        data: updateData,
         include: {
-          dailyReward: true,
           shopItems: true,
-          premiumShopItems: true,
           tasks: true,
-          trophies: true,
+          dailyReward: true,
         },
       });
 
-      console.log(`User data updated successfully for Telegram ID: ${telegramId}`);
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error('Error updating user:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Failed to update user data' });
     }
   } else {
-    console.error(`Unsupported method: ${req.method}`);
     res.setHeader('Allow', ['GET', 'PATCH']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }

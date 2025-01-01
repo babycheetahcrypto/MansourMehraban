@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from './../../lib/prisma';
+import prisma from '../../../lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -31,25 +31,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Not enough coins' });
       }
 
-      const updatedItem = await prisma.shopItem.update({
-        where: { id: itemId },
-        data: { level:{ increment: 1 } },
-      });
-
-      const newProfit = item.baseProfit * (1 + 0.1 * updatedItem.level);
-
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: {
-          coins: { decrement: currentPrice },
-          profitPerHour: { increment: newProfit },
-        },
-        include: { shopItems: true },
-      });
+      const [updatedItem, updatedUser] = await prisma.$transaction([
+        prisma.shopItem.update({
+          where: { id: itemId },
+          data: { level: { increment: 1 } },
+        }),
+        prisma.user.update({
+          where: { id: userId },
+          data: {
+            coins: { decrement: currentPrice },
+            profitPerHour: { increment: item.baseProfit },
+          },
+          include: { shopItems: true },
+        }),
+      ]);
 
       res.status(200).json({
-        updatedShopItems: updatedUser.shopItems,
-        newProfit: newProfit,
+        updatedUser,
+        newProfit: item.baseProfit * updatedItem.level,
       });
     } catch (error) {
       console.error('Error purchasing item:', error);
