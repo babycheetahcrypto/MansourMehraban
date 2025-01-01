@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../../lib/prisma';
+import { db } from '@/firebaseConfig';
+import { doc, getDoc, updateDoc, increment, runTransaction } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -10,32 +11,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const task = await prisma.task.findUnique({
-        where: { id: taskId },
+      await runTransaction(db, async (transaction) => {
+        const userDocRef = doc(db, 'users', userId);
+        const taskDocRef = doc(db, 'tasks', taskId);
+
+        const userDoc = await transaction.get(userDocRef);
+        const taskDoc = await transaction.get(taskDocRef);
+
+        if (!userDoc.exists()) {
+          throw new Error('User not found');
+        }
+
+        if (!taskDoc.exists()) {
+          throw new Error('Task not found');
+        }
+
+        const userData = userDoc.data();
+        const taskData = taskDoc.data();
+
+        transaction.update(userDocRef, {
+          coins: increment(taskData.reward),
+          exp: increment(taskData.reward),
+        });
+
+        transaction.update(taskDocRef, {
+          completed: true,
+        });
       });
 
-      if (!task) {
-        return res.status(404).json({ error: 'Task not found' });
-      }
-
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: {
-          coins: { increment: task.reward },
-          exp: { increment: task.reward }, // Using reward as exp since expReward doesn't exist
-          tasks: {
-            update: {
-              where: { id: taskId },
-              data: { completed: true },
-            },
-          },
-        },
-        include: { tasks: true },
-      });
+      const updatedUserDoc = await getDoc(doc(db, 'users', userId));
+      const updatedTaskDoc = await getDoc(doc(db, 'tasks', taskId));
 
       res.status(200).json({
-        updatedUser,
-        completedTask: task,
+        updatedUser: updatedUserDoc.data(),
+        completedTask: updatedTaskDoc.data(),
       });
     } catch (error) {
       console.error('Error completing task:', error);

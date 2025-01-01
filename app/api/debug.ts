@@ -1,5 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import db from '@/lib/db';
+import { collection, getDocs, limit, query } from 'firebase/firestore';
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,19 +8,19 @@ export default async function handler(
 ) {
   console.log('Debug endpoint requested');
   try {
-    // Check database connection
-    await prisma.$connect()
+    console.log('Attempting to connect to the database...');
+    const usersCollection = collection(db, 'users');
+    const usersQuery = query(usersCollection, limit(1));
+    const querySnapshot = await getDocs(usersQuery);
     console.log('Database connection successful');
     
-    // Fetch some sample data
-    const userCount = await prisma.user.count();
-    const sampleUser = await prisma.user.findFirst();
+    const userCount = querySnapshot.size;
+    const sampleUser = querySnapshot.docs[0]?.data();
     
-    // Check environment variables
     const envVars = {
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL ? 'Set' : 'Not set',
       NEXT_PUBLIC_WEBAPP_URL: process.env.NEXT_PUBLIC_WEBAPP_URL ? 'Set' : 'Not set',
-      DATABASE_URL: process.env.DATABASE_URL ? 'Set' : 'Not set',
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ? 'Set' : 'Not set',
     };
     
     res.status(200).json({ 
@@ -36,17 +37,15 @@ export default async function handler(
       environmentVariables: envVars,
       api_url: process.env.NEXT_PUBLIC_API_URL,
       webapp_url: process.env.NEXT_PUBLIC_WEBAPP_URL
-    })
+    });
   } catch (error) {
-    console.error('Debug check failed:', error)
+    console.error('Debug check failed:', error);
     res.status(500).json({ 
       status: 'Error', 
       timestamp: new Date().toISOString(),
       error: 'Failed to perform debug checks',
       details: error instanceof Error ? error.message : 'Unknown error'
-    })
-  } finally {
-    await prisma.$disconnect()
+    });
   }
 }
 

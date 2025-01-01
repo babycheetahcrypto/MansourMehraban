@@ -1,53 +1,48 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import { NextApiRequest, NextApiResponse } from 'next';
+import { db } from '@/firebaseConfig';
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { userId, friendId } = req.body
+    const { userId, friendId } = req.body;
 
     if (!userId || !friendId) {
-      return res.status(400).json({ error: 'User ID and Friend ID are required' })
+      return res.status(400).json({ error: 'User ID and Friend ID are required' });
     }
 
     try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-      })
+      const userDocRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userDocRef);
 
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' })
+      if (!userDoc.exists()) {
+        return res.status(404).json({ error: 'User not found' });
       }
 
+      const userData = userDoc.data();
+
       // Update user's friendsCoins
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: {
-          friendsCoins: {
-            ...(user.friendsCoins as object),
-            [friendId]: 0,
-          },
-        },
-      })
+      const updatedFriendsCoins = {
+        ...userData.friendsCoins,
+        [friendId]: 0,
+      };
 
       // Add coins to the user for inviting a friend
-      const inviteReward = 2000
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          coins: {
-            increment: inviteReward,
-          },
-        },
-      })
+      const inviteReward = 2000;
+      await updateDoc(userDocRef, {
+        friendsCoins: updatedFriendsCoins,
+        coins: increment(inviteReward),
+      });
 
-      res.status(200).json({ message: 'Friend invited successfully', user: updatedUser })
+      const updatedUserDoc = await getDoc(userDocRef);
+      const updatedUser = updatedUserDoc.data();
+
+      res.status(200).json({ message: 'Friend invited successfully', user: updatedUser });
     } catch (error) {
-      console.error('Error inviting friend:', error)
-      res.status(500).json({ error: 'Failed to process invitation' })
+      console.error('Error inviting friend:', error);
+      res.status(500).json({ error: 'Failed to process invitation' });
     }
   } else {
-    res.setHeader('Allow', ['POST'])
-    res.status(405).end(`Method ${req.method} Not Allowed`)
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
-

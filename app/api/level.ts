@@ -1,5 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import { NextApiRequest, NextApiResponse } from 'next';
+import { db } from '@/firebaseConfig';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -10,16 +11,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { level: true, exp: true, unlockedLevels: true },
-      });
+      const userDocRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userDocRef);
 
-      if (!user) {
+      if (!userDoc.exists()) {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      res.status(200).json(user);
+      const userData = userDoc.data();
+      res.status(200).json({
+        level: userData.level,
+        exp: userData.exp,
+        unlockedLevels: userData.unlockedLevels
+      });
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -32,17 +36,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: {
-          level: level !== undefined ? level : undefined,
-          exp: exp !== undefined ? exp : undefined,
-          unlockedLevels: unlockedLevels !== undefined ? unlockedLevels :unlockedLevels !== undefined ? unlockedLevels : undefined,
-        },
-        select: { level: true, exp: true, unlockedLevels: true },
-      });
+      const userDocRef = doc(db, 'users', userId);
+      const updateData: any = {};
+      if (level !== undefined) updateData.level = level;
+      if (exp !== undefined) updateData.exp = exp;
+      if (unlockedLevels !== undefined) updateData.unlockedLevels = unlockedLevels;
 
-      res.status(200).json(updatedUser);
+      await updateDoc(userDocRef, updateData);
+
+      const updatedUserDoc = await getDoc(userDocRef);
+      const updatedUserData = updatedUserDoc.data();
+
+      // Fix: Add null check before accessing properties
+      if (updatedUserData) {
+        res.status(200).json({
+          level: updatedUserData.level ?? null,
+          exp: updatedUserData.exp ?? null,
+          unlockedLevels: updatedUserData.unlockedLevels ?? null
+        });
+      } else {
+        res.status(500).json({ error: 'Failed to update user data' });
+      }
     } catch (error) {
       console.error('Database error:', error);
       res.status(500).json({ error: 'Internal server error' });

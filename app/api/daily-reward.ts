@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/prisma';
+import { db } from '@/firebaseConfig';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -10,11 +11,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const dailyReward = await prisma.dailyReward.findUnique({
-        where: { userId: userId as string },
-      });
+      const userDocRef = doc(db, 'users', userId as string);
+      const userDoc = await getDoc(userDocRef);
 
-      res.status(200).json(dailyReward);
+      if (!userDoc.exists()) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const userData = userDoc.data();
+      res.status(200).json(userData.dailyReward);
     } catch (error) {
       console.error('Failed to fetch daily reward data:', error);
       res.status(500).json({ error: 'Failed to fetch daily reward data' });
@@ -27,13 +32,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const updatedDailyReward = await prisma.dailyReward.upsert({
-        where: { userId: userId as string },
-        update: { lastClaimed, streak, day, completed },
-        create: { userId: userId as string, lastClaimed, streak, day, completed },
+      const userDocRef = doc(db, 'users', userId as string);
+      await updateDoc(userDocRef, {
+        'dailyReward.lastClaimed': lastClaimed,
+        'dailyReward.streak': streak,
+        'dailyReward.day': day,
+        'dailyReward.completed': completed
       });
 
-      res.status(200).json(updatedDailyReward);
+      const updatedUserDoc = await getDoc(userDocRef);
+      const updatedUserData = updatedUserDoc.data();
+      
+      // Fix: Add null check before accessing dailyReward
+      if (updatedUserData && updatedUserData.dailyReward) {
+        res.status(200).json(updatedUserData.dailyReward);
+      } else {
+        res.status(500).json({ error: 'Failed to update daily reward data' });
+      }
     } catch (error) {
       console.error('Failed to update daily reward data:', error);
       res.status(500).json({ error: 'Failed to update daily reward data' });

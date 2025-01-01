@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../../lib/prisma';
+import { db } from '@/firebaseConfig';
+import { doc, getDoc, updateDoc, runTransaction } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -10,45 +11,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: { shopItems: true },
+      const result = await runTransaction(db, async (transaction) => {
+        const userDocRef = doc(db, 'users', userId);
+        const itemDocRef = doc(db, 'shopItems', itemId);
+
+        const userDoc = await transaction.get(userDocRef);
+        const itemDoc = await transaction.get(itemDocRef);
+
+        if (!userDoc.exists()) {
+          throw new Error('User not found');
+        }
+
+        if (!itemDoc.exists()) {
+          throw new Error('Item not found');
+        }
+
+        const userData = userDoc.data();
+        const itemData = itemDoc.data();
+
+        const currentPrice = itemData.basePrice * Math.pow(1.5, itemData.level - 1);
+
+        if (userData.coins < currentPrice) {
+          throw new Error('Not enough coins');
+        }
+
+        const newLevel = itemData.level + 1;
+        const newProfit = itemData.baseProfit * newLevel;
+
+        transaction.update(userDocRef, {
+          coins: userData.coins - currentPrice,
+          profitPerHour: userData.profitPerHour + itemData.baseProfit,
+        });
+
+        transaction.update(itemDocRef, {
+          level: newLevel,
+        });
+
+        return { newProfit, updatedUser: { ...userData, coins: userData.coins - currentPrice, profitPerHour: userData.profitPerHour + itemData.baseProfit } };
       });
 
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      const item = user.shopItems.find(item => item.id === itemId);
-
-      if (!item) {
-        return res.status(404).json({ error: 'Item not found' });
-      }
-
-      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1);
-
-      if (user.coins < currentPrice) {
-        return res.status(400).json({ error: 'Not enough coins' });
-      }
-
-      const [updatedItem, updatedUser] = await prisma.$transaction([
-        prisma.shopItem.update({
-          where: { id: itemId },
-          data: { level: { increment: 1 } },
-        }),
-        prisma.user.update({
-          where: { id: userId },
-          data: {
-            coins: { decrement: currentPrice },
-            profitPerHour: { increment: item.baseProfit },
-          },
-          include: { shopItems: true },
-        }),
-      ]);
-
       res.status(200).json({
-        updatedUser,
-        newProfit: item.baseProfit * updatedItem.level,
+        updatedUser: result.updatedUser,
+        newProfit: result.newProfit,
       });
     } catch (error) {
       console.error('Error purchasing item:', error);
