@@ -10,10 +10,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'User ID and Item ID are required' });
     }
 
+    if (!db) {
+      return res.status(500).json({ error: 'Database not initialized' });
+    }
+
     try {
       const result = await runTransaction(db, async (transaction) => {
-        const userDocRef = doc(db, 'users', userId);
-        const itemDocRef = doc(db, 'shopItems', itemId);
+        const userDocRef = db ? doc(db, 'users', userId) : null;
+        const itemDocRef = db ? doc(db, 'shopItems', itemId) : null;
+
+        if (!userDocRef || !itemDocRef) {
+          throw new Error('Failed to create document references');
+        }
 
         const userDoc = await transaction.get(userDocRef);
         const itemDoc = await transaction.get(itemDocRef);
@@ -28,6 +36,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const userData = userDoc.data();
         const itemData = itemDoc.data();
+
+        if (!userData || !itemData) {
+          throw new Error('Invalid user or item data');
+        }
 
         const currentPrice = itemData.basePrice * Math.pow(1.5, itemData.level - 1);
 

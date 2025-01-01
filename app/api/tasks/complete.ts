@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/firebaseConfig';
 import { doc, getDoc, updateDoc, increment, runTransaction } from 'firebase/firestore';
 
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { userId, taskId } = req.body;
@@ -10,10 +11,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'User ID and Task ID are required' });
     }
 
+    if (!db) {
+      return res.status(500).json({ error: 'Database not initialized' });
+    }
+
     try {
       await runTransaction(db, async (transaction) => {
-        const userDocRef = doc(db, 'users', userId);
-        const taskDocRef = doc(db, 'tasks', taskId);
+        const userDocRef = db ? doc(db, 'users', userId) : null;
+        const taskDocRef = db ? doc(db, 'tasks', taskId) : null;
+
+        if (!userDocRef || !taskDocRef) {
+          throw new Error('Failed to create document references');
+        }
 
         const userDoc = await transaction.get(userDocRef);
         const taskDoc = await transaction.get(taskDocRef);
@@ -28,6 +37,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const userData = userDoc.data();
         const taskData = taskDoc.data();
+
+        if (!userData || !taskData) {
+          throw new Error('Invalid user or task data');
+        }
 
         transaction.update(userDocRef, {
           coins: increment(taskData.reward),

@@ -3,8 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { User } from '@/types/user';
-import { db } from '@/firebaseConfig';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
@@ -25,50 +23,37 @@ export default function GameClient() {
         console.log('Telegram user data:', telegramUser);
 
         if (telegramUser) {
-          const userDocRef = doc(db, 'users', telegramUser.id.toString());
-          const userDoc = await getDoc(userDocRef);
+          const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
+          console.log('Fetch response status:', response.status);
 
-          if (userDoc.exists()) {
-            const userData = userDoc.data() as User;
+          if (response.ok) {
+            const userData = await response.json();
             console.log('Fetched user data:', userData);
             setUserData(userData);
-          } else {
+          } else if (response.status === 404) {
             // User not found, create a new user
-            const newUser: User = {
-              id: telegramUser.id.toString(),
-              telegramId: telegramUser.id.toString(),
-              username: telegramUser.username || `user${telegramUser.id}`,
-              firstName: telegramUser.first_name,
-              lastName: telegramUser.last_name,
-              profilePhoto: telegramUser.photo_url || '',
-              coins: 0,
-              level: 1,
-              exp: 0,
-              shopItems: [],
-              premiumShopItems: [],
-              tasks: [],
-              dailyReward: {
-                lastClaimed: null,
-                streak: 0,
-                day: 1,
-                completed: false,
-              },
-              unlockedLevels: [1],
-              clickPower: 1,
-              friendsCoins: {},
-              energy: 2000,
-              pphAccumulated: 0,
-              multiplier: 1,
-              multiplierEndTime: null,
-              boosterCooldown: null,
-              selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
-              profitPerHour: 0,
-              boosterCredits: 1,
-              lastBoosterReset: null,
-            };
-            await setDoc(userDocRef, newUser);
-            console.log('Created new user:', newUser);
-            setUserData(newUser);
+            const createResponse = await fetch('/api/user', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                telegramId: telegramUser.id.toString(),
+                username: telegramUser.username || `user${telegramUser.id}`,
+                firstName: telegramUser.first_name,
+                lastName: telegramUser.last_name,
+                profilePhoto: telegramUser.photo_url || '',
+              }),
+            });
+            if (createResponse.ok) {
+              const newUser = await createResponse.json();
+              console.log('Created new user:', newUser);
+              setUserData(newUser.user);
+            } else {
+              console.error('Failed to create user:', await createResponse.text());
+              throw new Error('Failed to create user');
+            }
+          } else {
+            console.error('Failed to fetch user data:', await response.text());
+            throw new Error('Failed to fetch user data');
           }
         } else {
           console.error('No Telegram user data available');
@@ -94,10 +79,21 @@ export default function GameClient() {
     async (updatedUserData: Partial<User>) => {
       if (!userData) return;
       try {
-        const userDocRef = doc(db, 'users', userData.telegramId);
-        await updateDoc(userDocRef, updatedUserData);
-        setUserData((prevUserData) => ({ ...prevUserData!, ...updatedUserData }));
-        console.log('User data saved successfully:', updatedUserData);
+        const response = await fetch('/api/user', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegramId: userData.telegramId,
+            ...updatedUserData,
+          }),
+        });
+        if (response.ok) {
+          const updatedUser = await response.json();
+          setUserData(updatedUser.user);
+          console.log('User data saved successfully:', updatedUser.user);
+        } else {
+          throw new Error('Failed to update user data');
+        }
       } catch (error) {
         console.error('Error saving user data:', error);
       }
