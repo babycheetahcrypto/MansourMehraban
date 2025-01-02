@@ -1,4 +1,3 @@
-// db.ts
 import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, increment, runTransaction, DocumentReference, FieldValue } from 'firebase/firestore';
 import { getApp, getApps, initializeApp } from 'firebase/app';
 import { User } from '../types/user';
@@ -29,7 +28,7 @@ export async function getUser(userId: string): Promise<User | null> {
 
 export async function updateUser(userId: string, data: Partial<User>): Promise<void> {
   const userRef = doc(db, 'users', userId);
-  await updateDoc(userRef, data);
+  await setDoc(userRef, data, { merge: true });
 }
 
 export async function incrementUserCoins(userId: string, amount: number): Promise<void> {
@@ -69,3 +68,4 @@ export async function incrementGameDataField(userId: string, field: keyof GameDa
 
 export { increment, runTransaction, FieldValue };
 export default db;
+

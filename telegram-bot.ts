@@ -1,5 +1,5 @@
 import { Telegraf, Context } from 'telegraf';
-import { getUser, updateUser, createGameData, updateGameData, incrementGameDataField } from './lib/db';
+import { getUser, updateUser, createGameData } from './lib/db';
 import { User } from './types/user';
 import { GameData } from './types/game-data';
 
@@ -37,12 +37,9 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         firstName: telegramUser.first_name,
         lastName: telegramUser.last_name,
         coins: 0,
-        profilePhoto: '',
-        friendsCoins: {},
         level: 1,
         exp: 0,
-        shopItems: [],
-        premiumShopItems: [],
+        profilePhoto: '',
         clickPower: 1,
         energy: 2000,
         multiplier: 1,
@@ -51,6 +48,9 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         unlockedLevels: [1],
         pphAccumulated: 0,
         selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+        friendsCoins: {},
+        shopItems: [],
+        premiumShopItems: [],
         tasks: [],
         dailyReward: {
           lastClaimed: null,
@@ -91,18 +91,10 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         lastBoosterReset: null,
       };
       await createGameData(user.id, initialGameData);
-    } else {
-      // Update existing user's information
-      await updateUser(user.id, {
-        username: telegramUser.username || user.username,
-        firstName: telegramUser.first_name || user.firstName,
-        lastName: telegramUser.last_name || user.lastName,
-      });
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${telegramUser.id}`;
 
-    // Send welcome message with photo and game start button
     await ctx.replyWithPhoto(
       {
         url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
@@ -121,27 +113,6 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
   } catch (error) {
     console.error('Error in /start command:', error);
     ctx.reply('An error occurred while setting up your game. Please try again later.');
-  }
-});
-
-// Handle game data updates
-bot.on('web_app_data', async (ctx) => {
-  const telegramUser = ctx.from;
-  const webAppData = ctx.webAppData;
-
-  if (!telegramUser || !webAppData) {
-    ctx.reply('Error: Unable to process game data.');
-    return;
-  }
-
-  try {
-    const parsedData = JSON.parse(webAppData.data.json());
-    const userId = telegramUser.id.toString();
-
-    ctx.answerCbQuery('Game data updated successfully!');
-  } catch (error) {
-    console.error('Error processing web app data:', error);
-    ctx.answerCbQuery('An error occurred while processing game data.');
   }
 });
 

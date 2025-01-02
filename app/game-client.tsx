@@ -20,6 +20,9 @@ export default function GameClient() {
     try {
       if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
         const webApp = window.Telegram.WebApp;
+        webApp.ready();
+        webApp.expand();
+
         const telegramUser = webApp.initDataUnsafe.user;
         console.log('Telegram user data:', telegramUser);
 
