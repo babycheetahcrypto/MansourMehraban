@@ -3,14 +3,22 @@ import { getUser, updateUser, createGameData } from './lib/db';
 import { User } from './types/user';
 import { GameData } from './types/game-data';
 
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
+if (!process.env.TELEGRAM_BOT_TOKEN) {
+  console.error('TELEGRAM_BOT_TOKEN is not set in the environment variables');
+  process.exit(1);
+}
+
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 bot.command('start', async (ctx: Context) => {
   const telegramUser = ctx.from;
   if (!telegramUser) {
-    ctx.reply('Error: Unable to get user information.');
+    console.error('Unable to get user information');
+    await ctx.reply('Error: Unable to get user information.');
     return;
   }
+
+  console.log('Start command received from user:', telegramUser.id);
 
   const welcomeMessage = `
 Welcome *${telegramUser.first_name}*! 🐾🎉
@@ -30,6 +38,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
     let user = await getUser(telegramUser.id.toString());
 
     if (!user) {
+      console.log('Creating new user:', telegramUser.id);
       const newUser: User = {
         id: telegramUser.id.toString(),
         telegramId: telegramUser.id.toString(),
@@ -65,6 +74,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
       await updateUser(newUser.id, newUser);
       user = newUser;
 
+      console.log('Creating initial game data for user:', telegramUser.id);
       const initialGameData: GameData = {
         userId: user.id,
         level: 1,
@@ -93,7 +103,8 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
       await createGameData(user.id, initialGameData);
     }
 
-    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?startParam=${telegramUser.id}`;
+    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?startapp=${telegramUser.id}`;
+    console.log('Game URL:', gameUrl);
 
     await ctx.replyWithPhoto(
       {
@@ -110,9 +121,10 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         },
       }
     );
+    console.log('Welcome message sent successfully');
   } catch (error) {
     console.error('Error in /start command:', error);
-    ctx.reply('An error occurred while setting up your game. Please try again later.');
+    await ctx.reply('An error occurred while setting up your game. Please try again later.');
   }
 });
 
