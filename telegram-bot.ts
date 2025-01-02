@@ -1,5 +1,5 @@
 import { Telegraf, Context } from 'telegraf';
-import { db } from './firebaseConfig';
+import { db } from './firebase';
 import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 import { User } from './types/user';
 
@@ -49,7 +49,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         unlockedLevels: [1],
         friendsCoins: {},
         pphAccumulated: 0,
-        selectedCoinImage: '',
+        selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
         shopItems: [],
         premiumShopItems: [],
         tasks: [],
@@ -77,7 +77,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${telegramUser.id}`;
 
-    // Send welcome message with photo
+    // Send welcome message with photo and game start button
     await ctx.replyWithPhoto(
       {
         url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Golden%20Cheetah.jpg-lskB9XxIu4pBhjth9Pm42BIeveRNPq.jpeg',
@@ -87,7 +87,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
-            [{ text: 'Play 🚀', web_app: { url: gameUrl } }],
+            [{ text: 'Start Game 🚀', web_app: { url: gameUrl } }],
             [{ text: 'Join community', url: 'https://t.me/babycheetahcrypto' }],
           ],
         },
@@ -139,3 +139,4 @@ bot.on('web_app_data', async (ctx) => {
 });
 
 export default bot;
+
