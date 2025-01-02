@@ -93,7 +93,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
       await createGameData(user.id, initialGameData);
     }
 
-    const gameUrl = `https://t.me/${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}?start=${telegramUser.id}`;
+    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?userId=${telegramUser.id}`;
 
     await ctx.replyWithPhoto(
       {
@@ -104,7 +104,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
-            [{ text: 'Start Game 🚀', url: gameUrl }],
+            [{ text: 'Start Game 🚀', web_app: { url: gameUrl } }],
             [{ text: 'Join community', url: 'https://t.me/babycheetahcrypto' }],
           ],
         },

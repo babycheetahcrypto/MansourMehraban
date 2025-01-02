@@ -25,9 +25,7 @@ export default function GameClient() {
         webApp.expand();
 
         const telegramUser = webApp.initDataUnsafe.user;
-        const startParam = webApp.initDataUnsafe.start_param;
         console.log('Telegram user data:', telegramUser);
-        console.log('Start param:', startParam);
 
         if (telegramUser) {
           const user = await getUser(telegramUser.id.toString());
