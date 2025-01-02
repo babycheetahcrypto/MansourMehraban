@@ -93,7 +93,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
       await createGameData(user.id, initialGameData);
     }
 
-    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?userId=${telegramUser.id}`;
+    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?startParam=${telegramUser.id}`;
 
     await ctx.replyWithPhoto(
       {
