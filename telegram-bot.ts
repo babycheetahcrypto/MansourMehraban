@@ -2,7 +2,6 @@ import { Telegraf, Context } from 'telegraf';
 import { getUser, updateUser, createGameData, updateGameData, incrementGameDataField } from './lib/db';
 import { User } from './types/user';
 import { GameData } from './types/game-data';
-import { increment, FieldValue } from 'firebase/firestore';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 

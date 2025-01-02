@@ -1,4 +1,5 @@
-import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, increment, DocumentReference } from 'firebase/firestore';
+// db.ts
+import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, increment, runTransaction, DocumentReference, FieldValue } from 'firebase/firestore';
 import { getApp, getApps, initializeApp } from 'firebase/app';
 import { User } from '../types/user';
 import { GameData } from '../types/game-data';
@@ -66,6 +67,5 @@ export async function incrementGameDataField(userId: string, field: keyof GameDa
   });
 }
 
-export { increment };
+export { increment, runTransaction, FieldValue };
 export default db;
-
