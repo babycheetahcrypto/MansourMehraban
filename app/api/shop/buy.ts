@@ -17,17 +17,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const result = await runTransaction(db, async (transaction) => {
         const userDocRef = db ? doc(db, 'users', userId) : null;
+        const gameDataRef = db ? doc(db, 'gameData', userId) : null;
         const itemDocRef = db ? doc(db, 'shopItems', itemId) : null;
 
-        if (!userDocRef || !itemDocRef) {
+        if (!userDocRef || !gameDataRef || !itemDocRef) {
           throw new Error('Failed to create document references');
         }
 
         const userDoc = await transaction.get(userDocRef);
+        const gameDataDoc = await transaction.get(gameDataRef);
         const itemDoc = await transaction.get(itemDocRef);
 
-        if (!userDoc.exists()) {
-          throw new Error('User not found');
+        if (!userDoc.exists() || !gameDataDoc.exists()) {
+          throw new Error('User or game data not found');
         }
 
         if (!itemDoc.exists()) {
@@ -35,10 +37,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         const userData = userDoc.data();
+        const gameData = gameDataDoc.data();
         const itemData = itemDoc.data();
 
-        if (!userData || !itemData) {
-          throw new Error('Invalid user or item data');
+        if (!userData || !gameData || !itemData) {
+          throw new Error('Invalid user, game, or item data');
         }
 
         const currentPrice = itemData.basePrice * Math.pow(1.5, itemData.level - 1);
@@ -53,17 +56,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         transaction.update(userDocRef, {
           coins: userData.coins - currentPrice,
           profitPerHour: userData.profitPerHour + itemData.baseProfit,
+          clickPower: userData.clickPower + 1
+        });
+
+        transaction.update(gameDataRef, {
+          coins: gameData.coins - currentPrice,
+          profitPerHour: gameData.profitPerHour + itemData.baseProfit,
+          clickPower: gameData.clickPower + 1
         });
 
         transaction.update(itemDocRef, {
           level: newLevel,
         });
 
-        return { newProfit, updatedUser: { ...userData, coins: userData.coins - currentPrice, profitPerHour: userData.profitPerHour + itemData.baseProfit } };
+        return { 
+          newProfit, 
+          updatedUser: { 
+            ...userData, 
+            coins: userData.coins - currentPrice, 
+            profitPerHour: userData.profitPerHour + itemData.baseProfit,
+            clickPower: userData.clickPower + 1
+          },
+          updatedGameData: {
+            ...gameData,
+            coins: gameData.coins - currentPrice,
+            profitPerHour: gameData.profitPerHour + itemData.baseProfit,
+            clickPower: gameData.clickPower + 1
+          }
+        };
       });
 
       res.status(200).json({
         updatedUser: result.updatedUser,
+        updatedGameData: result.updatedGameData,
         newProfit: result.newProfit,
       });
     } catch (error) {

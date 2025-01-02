@@ -93,7 +93,7 @@ export async function getLeaderboard(): Promise<User[]> {
   try {
     console.log('Fetching leaderboard data');
     const usersRef = collection(db, 'users');
-    const q = query(usersRef, orderBy('coins', 'desc'), limit(100));
+    const q = query(usersRef, orderBy('coins', 'desc'), limit(200));
     const querySnapshot = await getDocs(q);
     const leaderboard = querySnapshot.docs.map(doc => doc.data() as User);
     console.log('Leaderboard data fetched successfully');
