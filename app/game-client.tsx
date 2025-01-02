@@ -151,10 +151,6 @@ export default function GameClient() {
     await saveUserData({ coins: updatedCoins });
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} saveUserData={saveUserData} />
   );
