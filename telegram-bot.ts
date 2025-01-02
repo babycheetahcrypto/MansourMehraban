@@ -1,7 +1,7 @@
 import { Telegraf, Context } from 'telegraf';
 import { getUser, updateUser, createGameData } from './lib/db';
-import { User } from './types/user';
-import { GameData } from './types/game-data';
+import { User } from '@/types/user';
+import { GameData } from '@/types/game-data';
 
 if (!process.env.TELEGRAM_BOT_TOKEN) {
   console.error('TELEGRAM_BOT_TOKEN is not set in the environment variables');

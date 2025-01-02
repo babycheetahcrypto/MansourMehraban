@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { User } from '@/types/user';
 import { getUser, updateUser, createUser, getGameData, updateGameData, createGameData } from '@/lib/db';
+import { db } from '@/lib/firebase';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
