@@ -14,6 +14,7 @@ import { CheckCircle } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
+import { getLeaderboard } from '@/lib/db';
 
 const preloadImages = (imageUrls: string[]) => {
   imageUrls.forEach((url) => {
@@ -630,7 +631,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   });
 
   const [error, setError] = useState<string | null>(null);
-
+  const [leaderboard, setLeaderboard] = useState<User[]>([]);
   const [currentShopTab, setCurrentShopTab] = useState<'regular' | 'premium'>('regular');
   const { connected, wallet } = useTonConnect();
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
@@ -1223,7 +1224,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   }, [level]);
 
   const clickCoin = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    async (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
       event.preventDefault();
 
       if (energy >= 1 && currentPage === 'home') {
@@ -1242,7 +1243,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         };
 
         setUser(updatedUser);
-        saveUserData(updatedUser);
+        await saveUserData(updatedUser);
+        await onCoinsUpdate(clickValue);
 
         setEnergy((prev) => Math.max(prev - 1, 0));
 
@@ -1287,7 +1289,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage, vibrationEnabled]
+    [clickPower, multiplier, energy, saveUserData, user, currentPage, vibrationEnabled, onCoinsUpdate]
   );
 
 
@@ -1306,6 +1308,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           };
           setUser(updatedUser);
           await saveUserData(updatedUser);
+          await onCoinsUpdate(-currentPrice);
 
           const updatedShopItems = shopItems.map((i) =>
             i.id === item.id
@@ -1345,7 +1348,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, shopItems, profitPerHour, vibrationEnabled]
+    [user, saveUserData, setUser, setProfitPerHour, setCongratulationPopup, shopItems, profitPerHour, vibrationEnabled, onCoinsUpdate]
   );
 
   const claimPPH = useCallback(() => {
@@ -1645,6 +1648,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         setUser(userData);
       }
     }, [userData]);
+
+    useEffect(() => {
+      const fetchLeaderboard = async () => {
+        try {
+          const leaderboardData = await getLeaderboard();
+          setLeaderboard(leaderboardData);
+        } catch (error) {
+          console.error('Error fetching leaderboard:', error);
+        }
+      };
+  
+      fetchLeaderboard();
+    }, []);
 
     const saveUserData = useCallback(async (updatedUser: Partial<UserType>) => {
       if (!updatedUser || !updatedUser.telegramId) return;

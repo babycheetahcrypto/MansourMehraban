@@ -14,16 +14,19 @@ const firebaseConfig = {
 let app: FirebaseApp;
 let db: Firestore;
 
-if (typeof window !== 'undefined' && !getApps().length) {
-  try {
-    app = initializeApp(firebaseConfig);
+if (typeof window !== 'undefined') {
+  if (!getApps().length) {
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      console.log('Firebase initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Firebase:', error);
+    }
+  } else {
+    app = getApps()[0];
     db = getFirestore(app);
-    console.log('Firebase initialized successfully');
-  } catch (error) {
-    console.error('Error initializing Firebase:', error);
   }
-} else {
-  console.log('Firebase already initialized or running on server');
 }
 
 export { db };

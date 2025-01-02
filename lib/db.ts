@@ -46,18 +46,6 @@ export async function createUser(userData: User): Promise<void> {
   }
 }
 
-export async function createGameData(userId: string, gameData: GameData): Promise<void> {
-  try {
-    console.log('Creating game data for userId:', userId);
-    const gameDataRef = doc(db, 'gameData', userId);
-    await setDoc(gameDataRef, gameData);
-    console.log('Game data created successfully for userId:', userId);
-  } catch (error) {
-    console.error('Error creating game data:', error);
-    throw error;
-  }
-}
-
 export async function getGameData(userId: string): Promise<GameData | null> {
   try {
     console.log('Fetching game data for userId:', userId);
@@ -85,6 +73,18 @@ export async function updateGameData(userId: string, gameData: Partial<GameData>
     console.log('Game data updated successfully for userId:', userId);
   } catch (error) {
     console.error('Error updating game data:', error);
+    throw error;
+  }
+}
+
+export async function createGameData(userId: string, gameData: GameData): Promise<void> {
+  try {
+    console.log('Creating game data for userId:', userId);
+    const gameDataRef = doc(db, 'gameData', userId);
+    await setDoc(gameDataRef, gameData);
+    console.log('Game data created successfully for userId:', userId);
+  } catch (error) {
+    console.error('Error creating game data:', error);
     throw error;
   }
 }
