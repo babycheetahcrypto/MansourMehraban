@@ -45,13 +45,6 @@ export default function GameClient() {
                 return {
                   ...prevUser,
                   ...gameData,
-                  lastBoosterReset: gameData.lastBoosterReset,
-                  multiplierEndTime: gameData.multiplierEndTime,
-                  boosterCooldown: gameData.boosterCooldown,
-                  dailyReward: {
-                    ...gameData.dailyReward,
-                    lastClaimed: gameData.dailyReward.lastClaimed,
-                  },
                 };
               });
             } else {
