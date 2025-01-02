@@ -1812,7 +1812,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       try {
         const isConnected = await checkDatabaseConnection();
         if (!isConnected) {
-          showGameAlert('Unable to connect to the game server. Please try again later.');
           return;
         }
 
