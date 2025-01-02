@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/firebaseConfig';
-import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -33,34 +33,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const userDocRef = doc(db, 'users', userId as string);
-      const gameDataRef = doc(db, 'gameData', userId as string);
-      
-      const reward = 1000; // Fixed daily reward
-
       await updateDoc(userDocRef, {
         'dailyReward.lastClaimed': lastClaimed,
         'dailyReward.streak': streak,
         'dailyReward.day': day,
         'dailyReward.completed': completed,
-        'coins': increment(reward)
-      });
-
-      await updateDoc(gameDataRef, {
-        'dailyReward.lastClaimed': lastClaimed,
-        'dailyReward.streak': streak,
-        'dailyReward.day': day,
-        'dailyReward.completed': completed,
-        'coins': increment(reward)
+        'dailyReward.reward': 1000 // Add this line to set a fixed daily reward
       });
 
       const updatedUserDoc = await getDoc(userDocRef);
       const updatedUserData = updatedUserDoc.data();
       
       if (updatedUserData && updatedUserData.dailyReward) {
-        res.status(200).json({
-          ...updatedUserData.dailyReward,
-          reward
-        });
+        res.status(200).json(updatedUserData.dailyReward);
       } else {
         res.status(500).json({ error: 'Failed to update daily reward data' });
       }
