@@ -1,7 +1,8 @@
 import { Telegraf, Context } from 'telegraf';
-import { db } from './firebase';
-import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { getUser, updateUser, createGameData, updateGameData, incrementGameDataField } from './lib/db';
 import { User } from './types/user';
+import { GameData } from './types/game-data';
+import { increment, FieldValue } from 'firebase/firestore';
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
 
@@ -27,10 +28,9 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    const userRef = doc(db, 'users', telegramUser.id.toString());
-    let userDoc = await getDoc(userRef);
+    let user = await getUser(telegramUser.id.toString());
 
-    if (!userDoc.exists()) {
+    if (!user) {
       const newUser: User = {
         id: telegramUser.id.toString(),
         telegramId: telegramUser.id.toString(),
@@ -38,16 +38,44 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         firstName: telegramUser.first_name,
         lastName: telegramUser.last_name,
         coins: 0,
+        profilePhoto: '',
+        friendsCoins: {},
         level: 1,
         exp: 0,
-        profilePhoto: '',
+        shopItems: [],
+        premiumShopItems: [],
         clickPower: 1,
         energy: 2000,
         multiplier: 1,
         profitPerHour: 0,
         boosterCredits: 1,
         unlockedLevels: [1],
-        friendsCoins: {},
+        pphAccumulated: 0,
+        selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+        tasks: [],
+        dailyReward: {
+          lastClaimed: null,
+          streak: 0,
+          day: 1,
+          completed: false,
+        },
+        multiplierEndTime: null,
+        boosterCooldown: null,
+        lastBoosterReset: null,
+      };
+      await updateUser(newUser.id, newUser);
+      user = newUser;
+
+      const initialGameData: GameData = {
+        userId: user.id,
+        level: 1,
+        exp: 0,
+        clickPower: 1,
+        energy: 2000,
+        multiplier: 1,
+        profitPerHour: 0,
+        boosterCredits: 1,
+        unlockedLevels: [1],
         pphAccumulated: 0,
         selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
         shopItems: [],
@@ -63,16 +91,14 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         boosterCooldown: null,
         lastBoosterReset: null,
       };
-      await setDoc(userRef, newUser);
-      console.log('New user created:', newUser);
+      await createGameData(user.id, initialGameData);
     } else {
       // Update existing user's information
-      await updateDoc(userRef, {
-        username: telegramUser.username || userDoc.data().username,
-        firstName: telegramUser.first_name || userDoc.data().firstName,
-        lastName: telegramUser.last_name || userDoc.data().lastName,
+      await updateUser(user.id, {
+        username: telegramUser.username || user.username,
+        firstName: telegramUser.first_name || user.firstName,
+        lastName: telegramUser.last_name || user.lastName,
       });
-      console.log('Existing user updated:', userDoc.data());
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${telegramUser.id}`;
@@ -111,25 +137,7 @@ bot.on('web_app_data', async (ctx) => {
 
   try {
     const parsedData = JSON.parse(webAppData.data.json());
-    const userRef = doc(db, 'users', telegramUser.id.toString());
-
-    // Update user data based on game actions
-    if (parsedData.action === 'tap') {
-      await updateDoc(userRef, {
-        coins: increment(parsedData.amount)
-      });
-    } else if (parsedData.action === 'purchase') {
-      // Handle purchase logic
-      await updateDoc(userRef, {
-        coins: increment(-parsedData.cost)
-      });
-      // Add logic to update shop items or premium items
-    } else if (parsedData.action === 'claim') {
-      // Handle reward claim logic
-      await updateDoc(userRef, {
-        coins: increment(parsedData.amount)
-      });
-    }
+    const userId = telegramUser.id.toString();
 
     ctx.answerCbQuery('Game data updated successfully!');
   } catch (error) {

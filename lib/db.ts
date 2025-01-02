@@ -1,7 +1,7 @@
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, increment, DocumentReference } from 'firebase/firestore';
 import { getApp, getApps, initializeApp } from 'firebase/app';
-import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 import { User } from '../types/user';
+import { GameData } from '../types/game-data';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -38,5 +38,34 @@ export async function incrementUserCoins(userId: string, amount: number): Promis
   });
 }
 
+export async function getGameData(userId: string): Promise<GameData | null> {
+  const gameDataRef = doc(db, 'gameData', userId);
+  const gameDataDoc = await getDoc(gameDataRef);
+  
+  if (gameDataDoc.exists()) {
+    return gameDataDoc.data() as GameData;
+  }
+  
+  return null;
+}
+
+export async function createGameData(userId: string, initialData: GameData): Promise<void> {
+  const gameDataRef = doc(db, 'gameData', userId);
+  await setDoc(gameDataRef, initialData);
+}
+
+export async function updateGameData(userId: string, data: Partial<GameData>): Promise<void> {
+  const gameDataRef = doc(db, 'gameData', userId);
+  await updateDoc(gameDataRef, data);
+}
+
+export async function incrementGameDataField(userId: string, field: keyof GameData, amount: number): Promise<void> {
+  const gameDataRef = doc(db, 'gameData', userId);
+  await updateDoc(gameDataRef, {
+    [field]: increment(amount)
+  });
+}
+
+export { increment };
 export default db;
 
