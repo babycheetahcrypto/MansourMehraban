@@ -1,9 +1,7 @@
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 import { User } from '@/types/user';
 import { GameData } from '@/types/game-data';
-
-console.log('Initializing database connection...');
 
 export async function getUser(userId: string): Promise<User | null> {
   try {
@@ -32,6 +30,18 @@ export async function updateUser(userId: string, userData: Partial<User>): Promi
     console.log('User data updated successfully for userId:', userId);
   } catch (error) {
     console.error('Error updating user:', error);
+    throw error;
+  }
+}
+
+export async function createUser(userData: User): Promise<void> {
+  try {
+    console.log('Creating new user with userId:', userData.id);
+    const userRef = doc(db, 'users', userData.id);
+    await setDoc(userRef, userData);
+    console.log('User created successfully for userId:', userData.id);
+  } catch (error) {
+    console.error('Error creating user:', error);
     throw error;
   }
 }
@@ -79,6 +89,20 @@ export async function updateGameData(userId: string, gameData: Partial<GameData>
   }
 }
 
-// Export the db instance
+export async function getLeaderboard(): Promise<User[]> {
+  try {
+    console.log('Fetching leaderboard data');
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, orderBy('coins', 'desc'), limit(100));
+    const querySnapshot = await getDocs(q);
+    const leaderboard = querySnapshot.docs.map(doc => doc.data() as User);
+    console.log('Leaderboard data fetched successfully');
+    return leaderboard;
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    return [];
+  }
+}
+
 export { db };
 

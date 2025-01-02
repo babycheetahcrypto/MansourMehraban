@@ -596,40 +596,38 @@ const formatNumber = (num: number, useShortFormat: boolean = true): string => {
 };
 
 const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUserData }) => {
-  const [user, setUser] = useState<UserType>(
-    userData || {
-      id: '',
-      telegramId: '',
-      username: '',
-      firstName: '',
-      lastName: '',
-      coins: 0,
-      level: 1,
-      exp: 0,
-      profilePhoto: '',
-      shopItems: [],
-      premiumShopItems: [],
-      tasks: [],
-      dailyReward: {
-        lastClaimed: null,
-        streak: 0,
-        day: 1,
-        completed: false,
-      },
-      unlockedLevels: [1],
-      clickPower: 1,
-      friendsCoins: {},
-      energy: 2000,
-      pphAccumulated: 0,
-      multiplier: 1,
-      multiplierEndTime: null,
-      boosterCooldown: null,
-      selectedCoinImage: levelImages[0],
-      profitPerHour: 0,
-      boosterCredits: 1,
-      lastBoosterReset: null,
-    }
-  );
+  const [user, setUser] = useState<User>(userData || {
+    id: '',
+    telegramId: '',
+    username: '',
+    firstName: '',
+    lastName: '',
+    coins: 0,
+    level: 1,
+    exp: 0,
+    profilePhoto: '',
+    shopItems: [],
+    premiumShopItems: [],
+    tasks: [],
+    dailyReward: {
+      lastClaimed: null,
+      streak: 0,
+      day: 1,
+      completed: false,
+    },
+    unlockedLevels: [1],
+    clickPower: 1,
+    friendsCoins: {},
+    energy: 2000,
+    pphAccumulated: 0,
+    multiplier: 1,
+    multiplierEndTime: null,
+    boosterCooldown: null,
+    selectedCoinImage: levelImages[0],
+    profitPerHour: 0,
+    boosterCredits: 1,
+    lastBoosterReset: null,
+  });
 
   const [error, setError] = useState<string | null>(null);
 
@@ -3488,38 +3486,38 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <style>{styles}</style>
-              <div className="fixed inset-0 z-0 overflow-hidden">
-                <StarryBackground />
-              </div>
-              {renderHeader()}
-              <div
-                className="flex-grow pb-24"
-                style={{
-                  marginBottom: '0',
-                  marginTop: '0',
-                }}
-              >
-                {currentPage === 'home' && renderHome()}
-                {currentPage === 'shop' && renderShop()}
-                {currentPage === 'tasks' && renderTasks()}
-                {currentPage === 'ranking' && renderRanking()}
-                {currentPage === 'wallet' && renderWallet()}
-                {currentPage === 'invite' && renderInvite()}
-                {currentPage === 'friendsActivity' && renderFriendsActivity()}
-                {currentPage === 'levels' && renderLevels()}
-                {currentPage === 'dailyReward' && renderDailyReward()}
-                {currentPage === 'trophies' && renderTrophies()}
-              </div>
-              {renderbottom()}
+          <div className="fixed inset-0 z-0 overflow-hidden">
+            <StarryBackground />
+          </div>
+          {renderHeader()}
+          <div
+            className="flex-grow pb-24"
+            style={{
+              marginBottom: '0',
+              marginTop: '0',
+            }}
+          >
+            {currentPage === 'home' && renderHome()}
+            {currentPage === 'shop' && renderShop()}
+            {currentPage === 'tasks' && renderTasks()}
+            {currentPage === 'ranking' && renderRanking()}
+            {currentPage === 'wallet' && renderWallet()}
+            {currentPage === 'invite' && renderInvite()}
+            {currentPage === 'friendsActivity' && renderFriendsActivity()}
+            {currentPage === 'levels' && renderLevels()}
+            {currentPage === 'dailyReward' && renderDailyReward()}
+            {currentPage === 'trophies' && renderTrophies()}
+          </div>
+          {renderbottom()}
 
-              {/* Popup logic */}
-              {activePopups.has('pph') && (
-                <Popup
-                  title="Earned"
-                  onClose={() => {
-                    hidePopup('pph');
-                    claimPPH();
-                  }}
+          {/* Popup logic */}
+          {activePopups.has('pph') && (
+            <Popup
+              title="Earned"
+              onClose={() => {
+                hidePopup('pph');
+                claimPPH();
+              }}
             >
               <p className="mb-2 text-xl text-center text-white">While you were away, you earned</p>
               <p className="mb-5 text-sm text-center text-white">

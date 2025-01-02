@@ -3,9 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { User } from '@/types/user';
-import { getUser, updateUser, createGameData } from '@/lib/db';
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getUser, updateUser, createUser, getGameData, updateGameData, createGameData } from '@/lib/db';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
@@ -15,21 +13,9 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   saveUserData: (userData: Partial<User>) => Promise<void>;
 }>;
 
-// Initialize Firebase
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -44,11 +30,21 @@ export default function GameClient() {
         console.log('Start param:', startParam);
 
         if (telegramUser) {
-          const user = await getUser(telegramUser.id.toString());
+          let user = await getUser(telegramUser.id.toString());
           
           if (user) {
             console.log('Fetched user data:', user);
             setUserData(user);
+
+            // Fetch game data
+            const gameData = await getGameData(user.id);
+            if (gameData) {
+              // Update user data with game data
+              setUserData(prevUser => ({
+                ...prevUser!,
+                ...gameData
+              }));
+            }
           } else {
             // User not found, create a new user
             const newUser: User = {
@@ -84,7 +80,7 @@ export default function GameClient() {
               lastBoosterReset: null,
             };
 
-            await updateUser(newUser.id, newUser);
+            await createUser(newUser);
             await createGameData(newUser.id, {
               userId: newUser.id,
               level: newUser.level,
@@ -122,6 +118,8 @@ export default function GameClient() {
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
       }
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -134,13 +132,14 @@ export default function GameClient() {
       if (!userData) return;
       try {
         await updateUser(userData.id, updatedUserData);
+        await updateGameData(userData.id, updatedUserData);
         setUserData((prevUserData) => ({
           ...prevUserData!,
           ...updatedUserData,
         }));
-        console.log('User data saved successfully:', updatedUserData);
+        console.log('User and game data saved successfully:', updatedUserData);
       } catch (error) {
-        console.error('Error saving user data:', error);
+        console.error('Error saving user and game data:', error);
       }
     },
     [userData]
