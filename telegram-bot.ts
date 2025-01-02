@@ -14,11 +14,13 @@ const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 async function saveUserData(userId: string, userData: User): Promise<void> {
   const userRef = doc(db, 'users', userId);
   await setDoc(userRef, userData, { merge: true });
+  console.log(`User data saved for user ${userId}`);
 }
 
 async function saveGameData(userId: string, gameData: GameData): Promise<void> {
   const gameDataRef = doc(db, 'gameData', userId);
   await setDoc(gameDataRef, gameData, { merge: true });
+  console.log(`Game data saved for user ${userId}`);
 }
 
 async function getUserData(userId: string): Promise<User | null> {
