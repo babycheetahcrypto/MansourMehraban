@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { User } from '@/types/user';
-import { GameData } from '@/types/game-data';
 import { getUser, updateUser, createUser, getGameData, updateGameData, createGameData } from '@/lib/db';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
@@ -17,7 +16,6 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -27,7 +25,9 @@ export default function GameClient() {
         webApp.expand();
 
         const telegramUser = webApp.initDataUnsafe.user;
+        const startParam = webApp.initDataUnsafe.start_param;
         console.log('Telegram user data:', telegramUser);
+        console.log('Start param:', startParam);
 
         if (telegramUser) {
           let user = await getUser(telegramUser.id.toString());
@@ -40,36 +40,10 @@ export default function GameClient() {
             const gameData = await getGameData(user.id);
             if (gameData) {
               // Update user data with game data
-              setUserData(prevUser => {
-                if (!prevUser) return null;
-                return {
-                  ...prevUser,
-                  ...gameData,
-                };
-              });
-            } else {
-              // Create game data if it doesn't exist
-              const newGameData: GameData = {
-                userId: user.id,
-                level: user.level,
-                exp: user.exp,
-                clickPower: user.clickPower,
-                energy: user.energy,
-                multiplier: user.multiplier,
-                profitPerHour: user.profitPerHour,
-                boosterCredits: user.boosterCredits,
-                unlockedLevels: user.unlockedLevels,
-                pphAccumulated: user.pphAccumulated,
-                selectedCoinImage: user.selectedCoinImage,
-                shopItems: user.shopItems,
-                premiumShopItems: user.premiumShopItems,
-                tasks: user.tasks,
-                dailyReward: user.dailyReward,
-                multiplierEndTime: user.multiplierEndTime,
-                boosterCooldown: user.boosterCooldown,
-                lastBoosterReset: user.lastBoosterReset,
-              };
-              await createGameData(user.id, newGameData);
+              setUserData(prevUser => ({
+                ...prevUser!,
+                ...gameData
+              }));
             }
           } else {
             // User not found, create a new user
@@ -107,7 +81,7 @@ export default function GameClient() {
             };
 
             await createUser(newUser);
-            const newGameData: GameData = {
+            await createGameData(newUser.id, {
               userId: newUser.id,
               level: newUser.level,
               exp: newUser.exp,
@@ -126,21 +100,24 @@ export default function GameClient() {
               multiplierEndTime: newUser.multiplierEndTime,
               boosterCooldown: newUser.boosterCooldown,
               lastBoosterReset: newUser.lastBoosterReset,
-            };
-            await createGameData(newUser.id, newGameData);
+            });
 
             console.log('Created new user:', newUser);
             setUserData(newUser);
           }
         } else {
-          setError('No Telegram user data available');
+          console.error('No Telegram user data available');
+          throw new Error('No Telegram user data available');
         }
       } else {
-        setError('Telegram WebApp not available');
+        console.error('Telegram WebApp not available');
+        throw new Error('Telegram WebApp not available');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      setError('Failed to load game data. Please try again.');
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -155,11 +132,7 @@ export default function GameClient() {
       if (!userData) return;
       try {
         await updateUser(userData.id, updatedUserData);
-        const gameDataUpdate: Partial<GameData> = {
-          ...updatedUserData,
-          userId: userData.id,
-        };
-        await updateGameData(userData.id, gameDataUpdate);
+        await updateGameData(userData.id, updatedUserData);
         setUserData((prevUserData) => ({
           ...prevUserData!,
           ...updatedUserData,
@@ -167,7 +140,6 @@ export default function GameClient() {
         console.log('User and game data saved successfully:', updatedUserData);
       } catch (error) {
         console.error('Error saving user and game data:', error);
-        setError('Failed to save game data. Please try again.');
       }
     },
     [userData]
@@ -181,10 +153,6 @@ export default function GameClient() {
 
   if (isLoading) {
     return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
   }
 
   return (
