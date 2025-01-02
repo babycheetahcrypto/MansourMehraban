@@ -6,59 +6,116 @@ import { User } from '@/types/user';
 import { GameData } from '@/types/game-data';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { getUser, createUser, getGameData, createGameData, updateUser, updateGameData } from '@/lib/db';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
 }) as React.ComponentType<{
   userData: User | null;
+  gameData: GameData | null;
   onCoinsUpdate: (amount: number) => Promise<void>;
   saveUserData: (userData: Partial<User>) => Promise<void>;
+  saveGameData: (gameData: Partial<GameData>) => Promise<void>;
+  totalClicks: number;
+  onClick: () => void;
 }>;
 
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
+  const [gameData, setGameData] = useState<GameData | null>(null);
+  const [totalClicks, setTotalClicks] = useState(0);
 
   const fetchUserData = useCallback(async (userId: string) => {
     try {
-      const userDocRef = doc(db, 'users', userId);
-      const userDoc = await getDoc(userDocRef);
+      let user = await getUser(userId);
+      let game = await getGameData(userId);
 
-      if (userDoc.exists()) {
-        const user = userDoc.data() as User;
-        setUserData(user);
-
-        // Set up real-time listener for user data
-        onSnapshot(userDocRef, (doc) => {
-          if (doc.exists()) {
-            setUserData(doc.data() as User);
-          }
-        });
-
-        // Fetch game data
-        const gameDataRef = doc(db, 'gameData', userId);
-        const gameDataDoc = await getDoc(gameDataRef);
-
-        if (gameDataDoc.exists()) {
-          const gameData = gameDataDoc.data() as GameData;
-          setUserData(prevUser => ({
-            ...prevUser!,
-            ...gameData
-          }));
-
-          // Set up real-time listener for game data
-          onSnapshot(gameDataRef, (doc) => {
-            if (doc.exists()) {
-              setUserData(prevUser => ({
-                ...prevUser!,
-                ...doc.data() as GameData
-              }));
-            }
-          });
-        }
-      } else {
-        console.error('User not found');
-        throw new Error('User not found');
+      if (!user) {
+        console.log('Creating new user:', userId);
+        const newUser: User = {
+          id: userId,
+          telegramId: userId,
+          username: `user${userId}`,
+          coins: 0,
+          level: 1,
+          exp: 0,
+          profilePhoto: '',
+          clickPower: 1,
+          energy: 2000,
+          multiplier: 1,
+          profitPerHour: 0,
+          boosterCredits: 1,
+          unlockedLevels: [1],
+          pphAccumulated: 0,
+          selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+          friendsCoins: {},
+          shopItems: [],
+          premiumShopItems: [],
+          tasks: [],
+          dailyReward: {
+            lastClaimed: null,
+            streak: 0,
+            day: 1,
+            completed: false,
+          },
+          multiplierEndTime: null,
+          boosterCooldown: null,
+          lastBoosterReset: null,
+        };
+        await createUser(newUser);
+        user = newUser;
       }
+
+      if (!game) {
+        console.log('Creating initial game data for user:', userId);
+        const initialGameData: GameData = {
+          userId: userId,
+          level: 1,
+          exp: 0,
+          clickPower: 1,
+          energy: 2000,
+          multiplier: 1,
+          profitPerHour: 0,
+          boosterCredits: 1,
+          unlockedLevels: [1],
+          pphAccumulated: 0,
+          selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+          shopItems: [],
+          premiumShopItems: [],
+          tasks: [],
+          dailyReward: {
+            lastClaimed: null,
+            streak: 0,
+            day: 1,
+            completed: false,
+          },
+          multiplierEndTime: null,
+          boosterCooldown: null,
+          lastBoosterReset: null,
+        };
+        await createGameData(userId, initialGameData);
+        game = initialGameData;
+      }
+
+      setUserData(user);
+      setGameData(game);
+
+      // Set up real-time listeners
+      const userDocRef = doc(db, 'users', userId);
+      const gameDataRef = doc(db, 'gameData', userId);
+
+      onSnapshot(userDocRef, (doc) => {
+        if (doc.exists()) {
+          setUserData(doc.data() as User);
+        }
+      });
+
+      onSnapshot(gameDataRef, (doc) => {
+        if (doc.exists()) {
+          setGameData(doc.data() as GameData);
+        }
+      });
+
     } catch (error) {
       console.error('Error fetching user data:', error);
       throw error;
@@ -72,9 +129,7 @@ export default function GameClient() {
       webApp.expand();
 
       const telegramUser = webApp.initDataUnsafe.user;
-      const startParam = webApp.initDataUnsafe.start_param;
       console.log('Telegram user data:', telegramUser);
-      console.log('Start param:', startParam);
 
       if (telegramUser) {
         fetchUserData(telegramUser.id.toString()).catch(error => {
@@ -98,18 +153,26 @@ export default function GameClient() {
     async (updatedUserData: Partial<User>) => {
       if (!userData) return;
       try {
-        const userRef = doc(db, 'users', userData.id);
-        await setDoc(userRef, updatedUserData, { merge: true });
-
-        const gameDataRef = doc(db, 'gameData', userData.id);
-        await setDoc(gameDataRef, updatedUserData, { merge: true });
-
-        console.log('User and game data saved successfully:', updatedUserData);
+        await updateUser(userData.id, updatedUserData);
+        console.log('User data saved successfully:', updatedUserData);
       } catch (error) {
-        console.error('Error saving user and game data:', error);
+        console.error('Error saving user data:', error);
       }
     },
     [userData]
+  );
+
+  const saveGameData = useCallback(
+    async (updatedGameData: Partial<GameData>) => {
+      if (!gameData) return;
+      try {
+        await updateGameData(gameData.userId, updatedGameData);
+        console.log('Game data saved successfully:', updatedGameData);
+      } catch (error) {
+        console.error('Error saving game data:', error);
+      }
+    },
+    [gameData]
   );
 
   const handleCoinsUpdate = async (amount: number) => {
@@ -118,8 +181,21 @@ export default function GameClient() {
     await saveUserData({ coins: updatedCoins });
   };
 
+  const handleClick = useCallback(() => {
+    setTotalClicks(prevClicks => prevClicks + 1);
+    // Add any additional click logic here
+  }, []);
+
   return (
-    <CryptoGame userData={userData} onCoinsUpdate={handleCoinsUpdate} saveUserData={saveUserData} />
+    <CryptoGame 
+      userData={userData}
+      gameData={gameData}
+      onCoinsUpdate={handleCoinsUpdate}
+      saveUserData={saveUserData}
+      saveGameData={saveGameData}
+      totalClicks={totalClicks}
+      onClick={handleClick}
+    />
   );
 }
 

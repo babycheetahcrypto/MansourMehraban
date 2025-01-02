@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/firebaseConfig';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -42,20 +42,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (exp !== undefined) updateData.exp = exp;
       if (unlockedLevels !== undefined) updateData.unlockedLevels = unlockedLevels;
 
-      await updateDoc(userDocRef, updateData);
+      const userDoc = await getDoc(userDocRef);
+      const userData = userDoc.data();
 
-      const updatedUserDoc = await getDoc(userDocRef);
-      const updatedUserData = updatedUserDoc.data();
+      if (userData) {
+        if (level !== undefined && level > userData.level) {
+          const levelUpReward = 1000 * level;
+          updateData.coins = increment(levelUpReward);
+        }
 
-      // Fix: Add null check before accessing properties
-      if (updatedUserData) {
-        res.status(200).json({
-          level: updatedUserData.level ?? null,
-          exp: updatedUserData.exp ?? null,
-          unlockedLevels: updatedUserData.unlockedLevels ?? null
-        });
+        await updateDoc(userDocRef, updateData);
+
+        const updatedUserDoc = await getDoc(userDocRef);
+        const updatedUserData = updatedUserDoc.data();
+
+        if (updatedUserData) {
+          res.status(200).json({
+            level: updatedUserData.level ?? null,
+            exp: updatedUserData.exp ?? null,
+            unlockedLevels: updatedUserData.unlockedLevels ?? null,
+            coins: updatedUserData.coins ?? null
+          });
+        } else {
+          res.status(500).json({ error: 'Failed to update user data' });
+        }
       } else {
-        res.status(500).json({ error: 'Failed to update user data' });
+        res.status(404).json({ error: 'User not found' });
       }
     } catch (error) {
       console.error('Database error:', error);

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/firebaseConfig';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -33,12 +33,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const userDocRef = doc(db, 'users', userId as string);
+      const reward = getDailyReward(streak);
       await updateDoc(userDocRef, {
         'dailyReward.lastClaimed': lastClaimed,
         'dailyReward.streak': streak,
         'dailyReward.day': day,
         'dailyReward.completed': completed,
-        'dailyReward.reward': 1000 // Add this line to set a fixed daily reward
+        'dailyReward.reward': reward,
+        coins: increment(reward)
       });
 
       const updatedUserDoc = await getDoc(userDocRef);
@@ -57,5 +59,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('Allow', ['GET', 'PATCH']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
+}
+
+function getDailyReward(day: number) {
+  const rewards = [100, 500, 700, 10000, 15000, 17000, 20000, 25000, 27000, 30000, 35000, 50000];
+  return rewards[(day - 1) % rewards.length];
 }
 

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/firebaseConfig';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 
 export const updateTrophy = async (userId: string, trophyId: string, data: any) => {
   try {
@@ -21,7 +21,10 @@ export const updateTrophy = async (userId: string, trophyId: string, data: any) 
 
     trophies[trophyIndex] = { ...trophies[trophyIndex], ...data };
 
-    await updateDoc(userDocRef, { trophies });
+    await updateDoc(userDocRef, { 
+      trophies,
+      coins: increment(data.claimed ? data.prize : 0)
+    });
 
     return trophies[trophyIndex];
   } catch (error) {
@@ -78,3 +81,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+

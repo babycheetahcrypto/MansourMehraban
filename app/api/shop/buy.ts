@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/firebaseConfig';
+import { db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc, runTransaction } from 'firebase/firestore';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,12 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const result = await runTransaction(db, async (transaction) => {
-        const userDocRef = db ? doc(db, 'users', userId) : null;
-        const itemDocRef = db ? doc(db, 'shopItems', itemId) : null;
-
-        if (!userDocRef || !itemDocRef) {
-          throw new Error('Failed to create document references');
-        }
+        const userDocRef = doc(db, 'users', userId);
+        const itemDocRef = doc(db, 'shopItems', itemId);
 
         const userDoc = await transaction.get(userDocRef);
         const itemDoc = await transaction.get(itemDocRef);

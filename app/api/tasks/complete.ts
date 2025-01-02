@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/firebaseConfig';
+import { db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc, increment, runTransaction } from 'firebase/firestore';
-
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -17,12 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       await runTransaction(db, async (transaction) => {
-        const userDocRef = db ? doc(db, 'users', userId) : null;
-        const taskDocRef = db ? doc(db, 'tasks', taskId) : null;
-
-        if (!userDocRef || !taskDocRef) {
-          throw new Error('Failed to create document references');
-        }
+        const userDocRef = doc(db, 'users', userId);
+        const taskDocRef = doc(db, 'tasks', taskId);
 
         const userDoc = await transaction.get(userDocRef);
         const taskDoc = await transaction.get(taskDocRef);
@@ -40,6 +35,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (!userData || !taskData) {
           throw new Error('Invalid user or task data');
+        }
+
+        if (taskData.completed) {
+          throw new Error('Task already completed');
         }
 
         transaction.update(userDocRef, {
