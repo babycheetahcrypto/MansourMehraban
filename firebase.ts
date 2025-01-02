@@ -22,8 +22,12 @@ if (typeof window !== 'undefined' && !getApps().length) {
   } catch (error) {
     console.error('Error initializing Firebase:', error);
   }
+} else if (getApps().length) {
+  app = getApps()[0];
+  db = getFirestore(app);
+  console.log('Firebase already initialized');
 } else {
-  console.log('Firebase already initialized or running on server');
+  console.log('Firebase initialization skipped (server-side)');
 }
 
 export { db };

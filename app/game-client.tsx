@@ -3,8 +3,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { User } from '@/types/user';
-import { getUser, updateUser, createUser, getGameData, updateGameData, createGameData } from '@/lib/db';
+import { GameData } from '@/types/game-data';
 import { db } from '@/lib/firebase';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
@@ -17,124 +18,92 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
 
-  const fetchUserData = useCallback(async () => {
+  const fetchUserData = useCallback(async (userId: string) => {
     try {
-      if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
-        const webApp = window.Telegram.WebApp;
-        webApp.ready();
-        webApp.expand();
+      const userDocRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userDocRef);
 
-        const telegramUser = webApp.initDataUnsafe.user;
-        const startParam = webApp.initDataUnsafe.start_param;
-        console.log('Telegram user data:', telegramUser);
-        console.log('Start param:', startParam);
+      if (userDoc.exists()) {
+        const user = userDoc.data() as User;
+        setUserData(user);
 
-        if (telegramUser) {
-          let user = await getUser(telegramUser.id.toString());
-          
-          if (user) {
-            console.log('Fetched user data:', user);
-            setUserData(user);
+        // Set up real-time listener for user data
+        onSnapshot(userDocRef, (doc) => {
+          if (doc.exists()) {
+            setUserData(doc.data() as User);
+          }
+        });
 
-            // Fetch game data
-            const gameData = await getGameData(user.id);
-            if (gameData) {
-              // Update user data with game data
+        // Fetch game data
+        const gameDataRef = doc(db, 'gameData', userId);
+        const gameDataDoc = await getDoc(gameDataRef);
+
+        if (gameDataDoc.exists()) {
+          const gameData = gameDataDoc.data() as GameData;
+          setUserData(prevUser => ({
+            ...prevUser!,
+            ...gameData
+          }));
+
+          // Set up real-time listener for game data
+          onSnapshot(gameDataRef, (doc) => {
+            if (doc.exists()) {
               setUserData(prevUser => ({
                 ...prevUser!,
-                ...gameData
+                ...doc.data() as GameData
               }));
             }
-          } else {
-            // User not found, create a new user
-            const newUser: User = {
-              id: telegramUser.id.toString(),
-              telegramId: telegramUser.id.toString(),
-              username: telegramUser.username || `user${telegramUser.id}`,
-              firstName: telegramUser.first_name,
-              lastName: telegramUser.last_name,
-              coins: 0,
-              level: 1,
-              exp: 0,
-              profilePhoto: telegramUser.photo_url || '',
-              clickPower: 1,
-              energy: 2000,
-              multiplier: 1,
-              profitPerHour: 0,
-              boosterCredits: 1,
-              unlockedLevels: [1],
-              pphAccumulated: 0,
-              selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
-              friendsCoins: {},
-              shopItems: [],
-              premiumShopItems: [],
-              tasks: [],
-              dailyReward: {
-                lastClaimed: null,
-                streak: 0,
-                day: 1,
-                completed: false,
-              },
-              multiplierEndTime: null,
-              boosterCooldown: null,
-              lastBoosterReset: null,
-            };
-
-            await createUser(newUser);
-            await createGameData(newUser.id, {
-              userId: newUser.id,
-              level: newUser.level,
-              exp: newUser.exp,
-              clickPower: newUser.clickPower,
-              energy: newUser.energy,
-              multiplier: newUser.multiplier,
-              profitPerHour: newUser.profitPerHour,
-              boosterCredits: newUser.boosterCredits,
-              unlockedLevels: newUser.unlockedLevels,
-              pphAccumulated: newUser.pphAccumulated,
-              selectedCoinImage: newUser.selectedCoinImage,
-              shopItems: newUser.shopItems,
-              premiumShopItems: newUser.premiumShopItems,
-              tasks: newUser.tasks,
-              dailyReward: newUser.dailyReward,
-              multiplierEndTime: newUser.multiplierEndTime,
-              boosterCooldown: newUser.boosterCooldown,
-              lastBoosterReset: newUser.lastBoosterReset,
-            });
-
-            console.log('Created new user:', newUser);
-            setUserData(newUser);
-          }
-        } else {
-          console.error('No Telegram user data available');
-          throw new Error('No Telegram user data available');
+          });
         }
       } else {
-        console.error('Telegram WebApp not available');
-        throw new Error('Telegram WebApp not available');
+        console.error('User not found');
+        throw new Error('User not found');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
-      }
+      throw error;
     }
   }, []);
 
   useEffect(() => {
-    fetchUserData();
+    if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+      const webApp = window.Telegram.WebApp;
+      webApp.ready();
+      webApp.expand();
+
+      const telegramUser = webApp.initDataUnsafe.user;
+      const startParam = webApp.initDataUnsafe.start_param;
+      console.log('Telegram user data:', telegramUser);
+      console.log('Start param:', startParam);
+
+      if (telegramUser) {
+        fetchUserData(telegramUser.id.toString()).catch(error => {
+          console.error('Failed to load game data:', error);
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
+          }
+        });
+      } else {
+        console.error('No Telegram user data available');
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.showAlert('Failed to load user data. Please try again.');
+        }
+      }
+    } else {
+      console.error('Telegram WebApp not available');
+    }
   }, [fetchUserData]);
 
   const saveUserData = useCallback(
     async (updatedUserData: Partial<User>) => {
       if (!userData) return;
       try {
-        await updateUser(userData.id, updatedUserData);
-        await updateGameData(userData.id, updatedUserData);
-        setUserData((prevUserData) => ({
-          ...prevUserData!,
-          ...updatedUserData,
-        }));
+        const userRef = doc(db, 'users', userData.id);
+        await setDoc(userRef, updatedUserData, { merge: true });
+
+        const gameDataRef = doc(db, 'gameData', userData.id);
+        await setDoc(gameDataRef, updatedUserData, { merge: true });
+
         console.log('User and game data saved successfully:', updatedUserData);
       } catch (error) {
         console.error('Error saving user and game data:', error);

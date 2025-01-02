@@ -1,5 +1,6 @@
 import { Telegraf, Context } from 'telegraf';
-import { getUser, updateUser, createGameData } from './lib/db';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from './firebase';
 import { User } from '@/types/user';
 import { GameData } from '@/types/game-data';
 
@@ -9,6 +10,22 @@ if (!process.env.TELEGRAM_BOT_TOKEN) {
 }
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+
+async function saveUserData(userId: string, userData: User): Promise<void> {
+  const userRef = doc(db, 'users', userId);
+  await setDoc(userRef, userData, { merge: true });
+}
+
+async function saveGameData(userId: string, gameData: GameData): Promise<void> {
+  const gameDataRef = doc(db, 'gameData', userId);
+  await setDoc(gameDataRef, gameData, { merge: true });
+}
+
+async function getUserData(userId: string): Promise<User | null> {
+  const userRef = doc(db, 'users', userId);
+  const userDoc = await getDoc(userRef);
+  return userDoc.exists() ? userDoc.data() as User : null;
+}
 
 bot.command('start', async (ctx: Context) => {
   const telegramUser = ctx.from;
@@ -35,7 +52,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    let user = await getUser(telegramUser.id.toString());
+    let user = await getUserData(telegramUser.id.toString());
 
     if (!user) {
       console.log('Creating new user:', telegramUser.id);
@@ -71,7 +88,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         boosterCooldown: null,
         lastBoosterReset: null,
       };
-      await updateUser(newUser.id, newUser);
+      await saveUserData(newUser.id, newUser);
       user = newUser;
 
       console.log('Creating initial game data for user:', telegramUser.id);
@@ -100,7 +117,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         boosterCooldown: null,
         lastBoosterReset: null,
       };
-      await createGameData(user.id, initialGameData);
+      await saveGameData(user.id, initialGameData);
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?startapp=${telegramUser.id}`;
