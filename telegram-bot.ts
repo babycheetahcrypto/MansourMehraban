@@ -13,7 +13,7 @@ bot.command('start', async (ctx: Context) => {
   }
 
   const welcomeMessage = `
-Welcome *@${telegramUser.username || telegramUser.first_name}*! 🐾🎉
+Welcome *${telegramUser.first_name}*! 🐾🎉
 
 Dive into the exciting world of Baby Cheetah, where crypto gaming meets fun, rewards, and community! 🚀💎 Earn Baby Cheetah Coins $BBCH, complete tasks, and get ready for an upcoming airdrop you won't want to miss! 💸
 
@@ -93,7 +93,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
       await createGameData(user.id, initialGameData);
     }
 
-    const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?start=${telegramUser.id}`;
+    const gameUrl = `https://t.me/${process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}?start=${telegramUser.id}`;
 
     await ctx.replyWithPhoto(
       {
@@ -104,7 +104,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
-            [{ text: 'Start Game 🚀', web_app: { url: gameUrl } }],
+            [{ text: 'Start Game 🚀', url: gameUrl }],
             [{ text: 'Join community', url: 'https://t.me/babycheetahcrypto' }],
           ],
         },

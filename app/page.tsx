@@ -1,10 +1,10 @@
-import GameClient from './game-client';
-import TelegramInitializer from './TelegramInitializer';
+import dynamic from 'next/dynamic';
+
+const GameClient = dynamic(() => import('./game-client'), { ssr: false });
 
 export default function Home() {
   return (
     <main>
-      <TelegramInitializer />
       <GameClient />
     </main>
   );

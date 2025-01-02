@@ -13,6 +13,7 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   saveUserData: (userData: Partial<User>) => Promise<void>;
 }>;
 
+
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
 
@@ -24,7 +25,9 @@ export default function GameClient() {
         webApp.expand();
 
         const telegramUser = webApp.initDataUnsafe.user;
+        const startParam = webApp.initDataUnsafe.start_param;
         console.log('Telegram user data:', telegramUser);
+        console.log('Start param:', startParam);
 
         if (telegramUser) {
           const user = await getUser(telegramUser.id.toString());
