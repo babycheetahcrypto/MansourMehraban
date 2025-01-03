@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { User } from '@/types/user';
 import { GameData } from '@/types/game-data';
 import { db } from '@/lib/firebase';
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { getUser, createUser, getGameData, createGameData, updateUser, updateGameData } from '@/lib/db';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
@@ -102,17 +101,22 @@ export default function GameClient() {
       const userDocRef = doc(db, 'users', userId);
       const gameDataRef = doc(db, 'gameData', userId);
 
-      onSnapshot(userDocRef, (doc) => {
+      const unsubscribeUser = onSnapshot(userDocRef, (doc) => {
         if (doc.exists()) {
           setUserData(doc.data() as User);
         }
       });
 
-      onSnapshot(gameDataRef, (doc) => {
+      const unsubscribeGame = onSnapshot(gameDataRef, (doc) => {
         if (doc.exists()) {
           setGameData(doc.data() as GameData);
         }
       });
+
+      return () => {
+        unsubscribeUser();
+        unsubscribeGame();
+      };
 
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -130,7 +134,7 @@ export default function GameClient() {
       console.log('Telegram user data:', telegramUser);
 
       if (telegramUser) {
-        fetchUserData(telegramUser.id.toString()).catch(error => {
+        const unsubscribe = fetchUserData(telegramUser.id.toString()).catch(error => {
           console.error('Failed to load game data:', error);
           if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
@@ -173,11 +177,11 @@ export default function GameClient() {
     [gameData]
   );
 
-  const handleCoinsUpdate = async (amount: number) => {
+  const handleCoinsUpdate = useCallback(async (amount: number) => {
     if (!userData) return;
     const updatedCoins = userData.coins + amount;
     await saveUserData({ coins: updatedCoins });
-  };
+  }, [userData, saveUserData]);
 
   return (
     <CryptoGame 
