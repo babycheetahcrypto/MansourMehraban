@@ -1,6 +1,4 @@
 import { ReactNode } from 'react';
-import { DocumentReference, Timestamp } from 'firebase/firestore';
-
 export interface User {
   id: string;
   telegramId: string;
@@ -33,8 +31,6 @@ export interface User {
   multiplierEndTime: string | null;
   boosterCooldown: string | null;
   lastBoosterReset: string | null;
-  lastUpdated?: Timestamp;
-  ref?: DocumentReference;
 }
 
 export type ShopItem = {
