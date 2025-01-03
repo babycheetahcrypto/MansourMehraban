@@ -1,8 +1,6 @@
 import { Telegraf, Context } from 'telegraf';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from './firebase';
+import { getUser, createUser } from '@/lib/db';
 import { User } from '@/types/user';
-import { GameData } from '@/types/game-data';
 
 if (!process.env.TELEGRAM_BOT_TOKEN) {
   console.error('TELEGRAM_BOT_TOKEN is not set in the environment variables');
@@ -10,24 +8,6 @@ if (!process.env.TELEGRAM_BOT_TOKEN) {
 }
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-
-async function saveUserData(userId: string, userData: User): Promise<void> {
-  const userRef = doc(db, 'users', userId);
-  await setDoc(userRef, userData, { merge: true });
-  console.log(`User data saved for user ${userId}`);
-}
-
-async function saveGameData(userId: string, gameData: GameData): Promise<void> {
-  const gameDataRef = doc(db, 'gameData', userId);
-  await setDoc(gameDataRef, gameData, { merge: true });
-  console.log(`Game data saved for user ${userId}`);
-}
-
-async function getUserData(userId: string): Promise<User | null> {
-  const userRef = doc(db, 'users', userId);
-  const userDoc = await getDoc(userRef);
-  return userDoc.exists() ? userDoc.data() as User : null;
-}
 
 bot.command('start', async (ctx: Context) => {
   const telegramUser = ctx.from;
@@ -54,7 +34,7 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
   try {
-    let user = await getUserData(telegramUser.id.toString());
+    let user = await getUser(telegramUser.id.toString());
 
     if (!user) {
       console.log('Creating new user:', telegramUser.id);
@@ -90,36 +70,8 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
         boosterCooldown: null,
         lastBoosterReset: null,
       };
-      await saveUserData(newUser.id, newUser);
+      await createUser(newUser);
       user = newUser;
-
-      console.log('Creating initial game data for user:', telegramUser.id);
-      const initialGameData: GameData = {
-        userId: user.id,
-        level: 1,
-        exp: 0,
-        clickPower: 1,
-        energy: 2000,
-        multiplier: 1,
-        profitPerHour: 0,
-        boosterCredits: 1,
-        unlockedLevels: [1],
-        pphAccumulated: 0,
-        selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
-        shopItems: [],
-        premiumShopItems: [],
-        tasks: [],
-        dailyReward: {
-          lastClaimed: null,
-          streak: 0,
-          day: 1,
-          completed: false,
-        },
-        multiplierEndTime: null,
-        boosterCooldown: null,
-        lastBoosterReset: null,
-      };
-      await saveGameData(user.id, initialGameData);
     }
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?startapp=${telegramUser.id}`;
@@ -148,4 +100,3 @@ Stay fast, stay fierce, stay Baby Cheetah! 🌟
 });
 
 export default bot;
-
