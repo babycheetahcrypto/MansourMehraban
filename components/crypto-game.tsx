@@ -25,7 +25,6 @@ const preloadImages = (imageUrls: string[]) => {
   });
 };
 
-
 // Keyframe animation
 const styles = `
   html, body {
@@ -633,6 +632,25 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [userRef]);
 
+  const saveToFirebase = useCallback(async (data: Partial<User>) => {
+    if (userRef) {
+      await updateDoc(userRef, {
+        ...data,
+        lastUpdated: serverTimestamp(),
+      });
+    }
+  }, [userRef]);
+
+  useEffect(() => {
+    const saveInterval = setInterval(() => {
+      if (userRef) {
+        saveToFirebase(user);
+      }
+    }, 5000); // Save every 5 seconds
+
+    return () => clearInterval(saveInterval);
+  }, [user, userRef, saveToFirebase]);
+
   useEffect(() => {
     const saveInterval = setInterval(() => {
       if (userRef) {
@@ -1187,30 +1205,29 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     }
   }, [level]);
 
-  const clickCoin = useCallback(
-    async (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
-      event.preventDefault();
+  const clickCoin = useCallback(async (event: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    event.preventDefault();
 
-      if (energy >= 1 && currentPage === 'home') {
-        vibrate(50);
+    if (energy >= 1 && currentPage === 'home') {
+      vibrate(50);
 
-        const clickValue = clickPower * multiplier;
-        const newCoins = user.coins + clickValue;
-        const newExp = user.exp + 1;
-        const newLevel = newExp >= 100 ? user.level + 1 : user.level;
+      const clickValue = clickPower * multiplier;
+      const newCoins = user.coins + clickValue;
+      const newExp = user.exp + 1;
+      const newLevel = newExp >= 100 ? user.level + 1 : user.level;
 
-        const updatedUser = {
-          ...user,
-          coins: newCoins,
-          exp: newExp % 100,
-          level: newLevel,
-        };
+      const updatedUser = {
+        ...user,
+        coins: newCoins,
+        exp: newExp % 100,
+        level: newLevel,
+      };
 
-        setUser(updatedUser);
-        await saveUserData(updatedUser);
-        await onCoinsUpdate(clickValue);
+      setUser(updatedUser);
+      await saveToFirebase(updatedUser);
+      await onCoinsUpdate(clickValue);
 
-        setEnergy((prev) => Math.max(prev - 1, 0));
+      setEnergy((prev) => Math.max(prev - 1, 0));
 
         let clientX, clientY;
         if ('touches' in event) {
@@ -1253,41 +1270,30 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [clickPower, multiplier, energy, saveUserData, user, currentPage, vibrationEnabled, onCoinsUpdate]
+    [clickPower, multiplier, energy, saveUserData, user, currentPage, vibrationEnabled, onCoinsUpdate, saveToFirebase]
   );
 
 
-  const buyItem = useCallback(
-    async (item: ShopItem) => {
-      const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1);
-      const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1));
+  const buyItem = useCallback(async (item: ShopItem) => {
+    const currentPrice = item.basePrice * Math.pow(1.5, item.level - 1);
+    const currentProfit = item.baseProfit * (1 + 0.1 * (item.level - 1));
 
-      if (user.coins >= currentPrice) {
-        vibrate([50, 50, 100]);
+    if (user.coins >= currentPrice) {
+      vibrate([50, 50, 100]);
 
-        try {
-          const updatedUser = {
-            ...user,
-            coins: user.coins - currentPrice,
-          };
-          setUser(updatedUser);
-          await saveUserData(updatedUser);
-          await onCoinsUpdate(-currentPrice);
+      try {
+        const updatedUser = {
+          ...user,
+          coins: user.coins - currentPrice,
+          shopItems: user.shopItems.map((i) =>
+            i.id === item.id ? { ...i, level: i.level + 1 } : i
+          ),
+          profitPerHour: user.profitPerHour + currentProfit * 1.1,
+        };
 
-          const updatedShopItems = shopItems.map((i) =>
-            i.id === item.id
-              ? {
-                  ...i,
-                  level: i.level + 1,
-                }
-              : i
-          );
-          setShopItems(updatedShopItems);
-          await saveUserData({ shopItems: updatedShopItems });
-
-          const newProfit = currentProfit * 1.1;
-          setProfitPerHour((prev) => prev + newProfit);
-          await saveUserData({ profitPerHour: profitPerHour + newProfit });
+        setUser(updatedUser);
+        await saveToFirebase(updatedUser);
+        await onCoinsUpdate(-currentPrice);
 
           setCongratulationPopup({ show: true, item: item });
           showPopup('congratulation');
@@ -1299,7 +1305,6 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
                 item: item.name,
                 cost: currentPrice,
                 newLevel: item.level + 1,
-                profitIncrease: newProfit,
               })
             );
           }
@@ -1357,21 +1362,19 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           : 1;
       const reward = getDailyReward(newStreak);
   
-      setUser((prevUser) => ({
-        ...prevUser,
-        coins: prevUser.coins + reward,
-      }));
-      saveUserData({...user, coins: user.coins + reward, telegramId: user.telegramId});
+      const updatedUser = {
+        ...user,
+        coins: user.coins + reward,
+        dailyReward: {
+          lastClaimed: now.toISOString(),
+          streak: newStreak,
+          day: (dailyReward.day % 12) + 1,
+          completed: (dailyReward.day % 12) + 1 === 1,
+        },
+      };
   
-      const newDay = (dailyReward.day % 12) + 1;
-      const completed = newDay === 1;
-  
-      setDailyReward({
-        lastClaimed: now,
-        streak: newStreak,
-        day: newDay,
-        completed: completed,
-      });
+      setUser(updatedUser);
+      saveToFirebase(updatedUser);
   
       showGameAlert(
         `Claimed daily reward: ${formatNumber(reward)} Coins! Streak: ${newStreak} days`
@@ -1382,7 +1385,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       vibrate([100, 50, 100]);
       showGameAlert('You have already claimed your daily reward today!');
     }
-  }, [dailyReward, user, saveUserData, vibrationEnabled]);
+  }, [dailyReward, user, saveToFirebase, vibrationEnabled]);
   
   const buyPremiumItem = useCallback(
     async (item: PremiumShopItem) => {

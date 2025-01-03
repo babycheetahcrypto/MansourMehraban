@@ -33,8 +33,8 @@ export interface User {
   multiplierEndTime: string | null;
   boosterCooldown: string | null;
   lastBoosterReset: string | null;
-  lastUpdated?: Timestamp; // Add Firestore timestamp
-  ref?: DocumentReference; // Add document reference
+  lastUpdated?: Timestamp;
+  ref?: DocumentReference;
 }
 
 export type ShopItem = {
