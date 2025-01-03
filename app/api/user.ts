@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getUser, updateUser, createUser } from '@/lib/db';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { User } from '@/types/user';
+import { GameData } from '@/types/game-data';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -9,9 +12,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const user = await getUser(telegramId as string);
-      if (user) {
-        res.status(200).json(user);
+      const userDocRef = doc(db, 'users', telegramId as string);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (userDoc.exists()) {
+        const userData = userDoc.data() as User;
+        
+        // Fetch game data
+        const gameDataDocRef = doc(db, 'gameData', telegramId as string);
+        const gameDataDoc = await getDoc(gameDataDocRef);
+        const gameData = gameDataDoc.exists() ? gameDataDoc.data() as GameData : null;
+
+        res.status(200).json({ user: userData, gameData });
       } else {
         res.status(404).json({ error: 'User not found' });
       }
@@ -20,29 +32,59 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(500).json({ error: 'Internal server error' });
     }
   } else if (req.method === 'PATCH') {
-    const userData = req.body;
-    if (!userData || !userData.id) {
-      return res.status(400).json({ error: 'Invalid user data' });
+    const { telegramId, userData, gameData } = req.body;
+    if (!telegramId || (!userData && !gameData)) {
+      return res.status(400).json({ error: 'Invalid data' });
     }
 
     try {
-      await updateUser(userData.id, userData);
-      res.status(200).json({ message: 'User updated successfully' });
+      const userDocRef = doc(db, 'users', telegramId);
+      const gameDataDocRef = doc(db, 'gameData', telegramId);
+
+      if (userData) {
+        await updateDoc(userDocRef, {
+          ...userData,
+          lastUpdated: serverTimestamp(),
+        });
+      }
+
+      if (gameData) {
+        await updateDoc(gameDataDocRef, {
+          ...gameData,
+          lastUpdated: serverTimestamp(),
+        });
+      }
+
+      res.status(200).json({ message: 'Data updated successfully' });
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error('Error updating data:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   } else if (req.method === 'POST') {
-    const userData = req.body;
-    if (!userData || !userData.id) {
-      return res.status(400).json({ error: 'Invalid user data' });
+    const { telegramId, userData, gameData } = req.body;
+    if (!telegramId || !userData || !gameData) {
+      return res.status(400).json({ error: 'Invalid data' });
     }
 
     try {
-      await createUser(userData);
-      res.status(201).json({ message: 'User created successfully' });
+      const userDocRef = doc(db, 'users', telegramId);
+      const gameDataDocRef = doc(db, 'gameData', telegramId);
+
+      await setDoc(userDocRef, {
+        ...userData,
+        createdAt: serverTimestamp(),
+        lastUpdated: serverTimestamp(),
+      });
+
+      await setDoc(gameDataDocRef, {
+        ...gameData,
+        createdAt: serverTimestamp(),
+        lastUpdated: serverTimestamp(),
+      });
+
+      res.status(201).json({ message: 'User and game data created successfully' });
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error('Error creating user and game data:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   } else {
