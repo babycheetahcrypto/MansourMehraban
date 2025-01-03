@@ -1,9 +1,12 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { User } from '@/types/user';
 import { GameData } from '@/types/game-data';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { getUser, createUser, getGameData, createGameData, updateUser, updateGameData } from '@/lib/db';
 
 const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   ssr: false,
@@ -19,15 +22,102 @@ export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [gameData, setGameData] = useState<GameData | null>(null);
 
-  const fetchUserData = useCallback(async (telegramId: string) => {
+  const fetchUserData = useCallback(async (userId: string) => {
     try {
-      const response = await fetch(`/api/user?telegramId=${telegramId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+      let user = await getUser(userId);
+      let game = await getGameData(userId);
+
+      if (!user) {
+        console.log('Creating new user:', userId);
+        const newUser: User = {
+          id: userId,
+          telegramId: userId,
+          username: `user${userId}`,
+          coins: 0,
+          level: 1,
+          exp: 0,
+          profilePhoto: '',
+          clickPower: 1,
+          energy: 2000,
+          multiplier: 1,
+          profitPerHour: 0,
+          boosterCredits: 1,
+          unlockedLevels: [1],
+          pphAccumulated: 0,
+          selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+          friendsCoins: {},
+          shopItems: [],
+          premiumShopItems: [],
+          tasks: [],
+          dailyReward: {
+            lastClaimed: null,
+            streak: 0,
+            day: 1,
+            completed: false,
+          },
+          multiplierEndTime: null,
+          boosterCooldown: null,
+          lastBoosterReset: null,
+        };
+        await createUser(newUser);
+        user = newUser;
       }
-      const data = await response.json();
-      setUserData(data.user);
-      setGameData(data.gameData);
+
+      if (!game) {
+        console.log('Creating initial game data for user:', userId);
+        const initialGameData: GameData = {
+          userId: userId,
+          level: 1,
+          exp: 0,
+          clickPower: 1,
+          energy: 2000,
+          multiplier: 1,
+          profitPerHour: 0,
+          boosterCredits: 1,
+          unlockedLevels: [1],
+          pphAccumulated: 0,
+          selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+          shopItems: [],
+          premiumShopItems: [],
+          tasks: [],
+          dailyReward: {
+            lastClaimed: null,
+            streak: 0,
+            day: 1,
+            completed: false,
+          },
+          multiplierEndTime: null,
+          boosterCooldown: null,
+          lastBoosterReset: null,
+        };
+        await createGameData(userId, initialGameData);
+        game = initialGameData;
+      }
+
+      setUserData(user);
+      setGameData(game);
+
+      // Set up real-time listeners
+      const userDocRef = doc(db, 'users', userId);
+      const gameDataRef = doc(db, 'gameData', userId);
+
+      const unsubscribeUser = onSnapshot(userDocRef, (doc) => {
+        if (doc.exists()) {
+          setUserData(doc.data() as User);
+        }
+      });
+
+      const unsubscribeGame = onSnapshot(gameDataRef, (doc) => {
+        if (doc.exists()) {
+          setGameData(doc.data() as GameData);
+        }
+      });
+
+      return () => {
+        unsubscribeUser();
+        unsubscribeGame();
+      };
+
     } catch (error) {
       console.error('Error fetching user data:', error);
       throw error;
@@ -44,7 +134,7 @@ export default function GameClient() {
       console.log('Telegram user data:', telegramUser);
 
       if (telegramUser) {
-        fetchUserData(telegramUser.id.toString()).catch(error => {
+        const unsubscribe = fetchUserData(telegramUser.id.toString()).catch(error => {
           console.error('Failed to load game data:', error);
           if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.showAlert('Failed to load game data. Please try again.');
@@ -65,20 +155,8 @@ export default function GameClient() {
     async (updatedUserData: Partial<User>) => {
       if (!userData) return;
       try {
-        const response = await fetch('/api/user', {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            telegramId: userData.telegramId,
-            userData: updatedUserData,
-          }),
-        });
-        if (!response.ok) {
-          throw new Error('Failed to save user data');
-        }
-        setUserData((prev) => ({ ...prev!, ...updatedUserData }));
+        await updateUser(userData.id, updatedUserData);
+        console.log('User data saved successfully:', updatedUserData);
       } catch (error) {
         console.error('Error saving user data:', error);
       }
@@ -90,20 +168,8 @@ export default function GameClient() {
     async (updatedGameData: Partial<GameData>) => {
       if (!gameData) return;
       try {
-        const response = await fetch('/api/user', {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            telegramId: gameData.userId,
-            gameData: updatedGameData,
-          }),
-        });
-        if (!response.ok) {
-          throw new Error('Failed to save game data');
-        }
-        setGameData((prev) => ({ ...prev!, ...updatedGameData }));
+        await updateGameData(gameData.userId, updatedGameData);
+        console.log('Game data saved successfully:', updatedGameData);
       } catch (error) {
         console.error('Error saving game data:', error);
       }
