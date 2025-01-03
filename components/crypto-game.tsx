@@ -2265,7 +2265,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
             <div>
               <h2 className="font-black text-base text-white">
-                {`${user.firstName || ''} ${user.lastName || ''}`.trim().slice(0, 8) + ((`${user.firstName || ''} ${user.lastName || ''}`.trim().length > 8) ? '...' : '')}
+              {user.username ? user.username.slice(0, 12) + (user.username.length > 12 ? '...' : '') : 'User'}
               </h2>
               <div className="text-sm text-white font-bold flex items-center">
                 <Image
