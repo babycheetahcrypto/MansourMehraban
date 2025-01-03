@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Wallet from '../components/wallet';
 import { TonConnectUI } from '@tonconnect/ui-react';
 import { useTonConnect } from '@/hooks/useTonConnect';
-import { User as UserType } from '@/types/user';
+import { User, ShopItem, PremiumShopItem, Task, LeaderboardEntry, UserData, WalletProps, CryptoGameProps } from '@/types/user';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -25,72 +25,6 @@ const preloadImages = (imageUrls: string[]) => {
   });
 };
 
-
-interface User extends UserType {}
-
-interface CryptoGameProps {
-  userData: UserType | null;
-  onCoinsUpdate: (amount: number) => Promise<void>;
-  saveUserData: (userData: Partial<UserType>) => Promise<void>;
-}
-
-type ShopItem = {
-  id: number;
-  name: string;
-  image: string;
-  basePrice: number;
-  baseProfit: number;
-  level: number;
-};
-
-type PremiumShopItem = {
-  id: number;
-  name: string;
-  image: string;
-  basePrice: number;
-  effect: string;
-  boosterCredits?: number;
-  tap?: number;
-};
-
-type Task = {
-  id: number;
-  description: string;
-  reward: number;
-  progress: number;
-  completed: boolean;
-  claimed: boolean;
-  icon: React.ReactNode;
-  action: () => void;
-  type?: 'video';
-  videoLink?: string;
-  secretCode?: string;
-  videoWatched?: boolean;
-  maxProgress?: number;
-};
-
-type LeaderboardEntry = {
-  id: string;
-  telegramId: string;
-  name: string;
-  username: true;
-  coins: number;
-  profitPerHour: number;
-  rank: number;
-};
-
-interface UserData extends Omit<User, 'dailyReward'> {
-  dailyReward: {
-    lastClaimed: Date | null;
-    streak: number;
-    day: number;
-    completed: boolean;
-  };
-}
-
-interface WalletProps {
-  coins: number;
-}
 
 // Keyframe animation
 const styles = `
@@ -1692,7 +1626,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       fetchLeaderboard();
     }, []);
 
-    const saveUserData = useCallback(async (updatedUser: Partial<UserType>) => {
+    const saveUserData = useCallback(async (updatedUser: Partial<User>) => {
       if (!updatedUser || !updatedUser.telegramId) return;
       try {
         console.log('Saving user data:', updatedUser);
