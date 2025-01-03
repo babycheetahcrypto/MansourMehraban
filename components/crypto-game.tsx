@@ -1542,55 +1542,65 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
   
-    const fetchUserData = useCallback(async () => {
-      setIsLoading(true);
-      try {
-        if (window.Telegram && window.Telegram.WebApp) {
+    useEffect(() => {
+      const fetchUserData = async () => {
+        if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           const telegramUser = webApp.initDataUnsafe.user;
-          console.log('Telegram user data:', telegramUser);
-  
+          
           if (telegramUser) {
-            const response = await fetch(`/api/user?telegramId=${telegramUser.id}`);
-            if (response.ok) {
-              const userData = await response.json();
-              console.log('Fetched user data:', userData);
-              setUser(userData);
-              setShopItems(userData.shopItems);
-              setPremiumShopItems(userData.premiumShopItems);
-              setTasks(userData.tasks);
-              setDailyReward(userData.dailyReward || {
-                lastClaimed: null,
-                streak: 0,
-                day: 1,
-                completed: false,
-              });
-              setUnlockedLevels(userData.unlockedLevels);
-              setClickPower(userData.clickPower);
-              setProfitPerHour(userData.profitPerHour);
-              setEnergy(userData.energy);
-              setPphAccumulated(userData.pphAccumulated);
-              setMultiplier(userData.multiplier);
-              setSelectedCoinImage(userData.selectedCoinImage);
-              setFriendsCoins(userData.friendsCoins);
-            } else {
-              console.error('Failed to fetch user data:', await response.text());
-              throw new Error('Failed to fetch user data');
-            }
-          } else {
-            console.error('No Telegram user data available');
-            throw new Error('No Telegram user data available');
+            const userDocRef = doc(db, 'users', telegramUser.id.toString());
+            const unsubscribe = onSnapshot(userDocRef, (doc) => {
+              if (doc.exists()) {
+                setUser(doc.data() as User);
+              } else {
+                // Create new user if not exists
+                const newUser: User = {
+                  id: telegramUser.id.toString(),
+                  telegramId: telegramUser.id.toString(),
+                  username: telegramUser.username || `user${telegramUser.id}`,
+                  firstName: telegramUser.first_name,
+                  lastName: telegramUser.last_name,
+                  coins: 0,
+                  level: 1,
+                  exp: 0,
+                  profilePhoto: telegramUser.photo_url || '',
+                  clickPower: 1,
+                  energy: 2000,
+                  multiplier: 1,
+                  profitPerHour: 0,
+                  boosterCredits: 1,
+                  unlockedLevels: [1],
+                  pphAccumulated: 0,
+                  selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+                  friendsCoins: {},
+                  shopItems: [],
+                  premiumShopItems: [],
+                  tasks: [],
+                  dailyReward: {
+                    lastClaimed: null,
+                    streak: 0,
+                    day: 1,
+                    completed: false,
+                  },
+                  multiplierEndTime: null,
+                  boosterCooldown: null,
+                  lastBoosterReset: null,
+                };
+                setDoc(userDocRef, newUser);
+                setUser(newUser);
+              }
+              setIsLoading(false);
+            });
+  
+            return () => unsubscribe();
           }
-        } else {
-          console.error('Telegram WebApp not available');
-          throw new Error('Telegram WebApp not available');
         }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        showGameAlert('An error occurred while fetching your game data. Please try again later.');
-      } finally {
+        setError('Failed to load user data');
         setIsLoading(false);
-      }
+      };
+  
+      fetchUserData();
     }, []);
   
     useEffect(() => {

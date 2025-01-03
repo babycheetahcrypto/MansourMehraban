@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc, collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection, query, orderBy, limit, getDocs, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
 import { User } from '@/types/user';
 import { GameData } from '@/types/game-data';
@@ -26,7 +26,10 @@ export async function updateUser(userId: string, userData: Partial<User>): Promi
   try {
     console.log('Updating user data for userId:', userId);
     const userRef = doc(db, 'users', userId);
-    await updateDoc(userRef, userData);
+    await updateDoc(userRef, {
+      ...userData,
+      lastUpdated: serverTimestamp()
+    });
     console.log('User data updated successfully for userId:', userId);
   } catch (error) {
     console.error('Error updating user:', error);
@@ -34,17 +37,7 @@ export async function updateUser(userId: string, userData: Partial<User>): Promi
   }
 }
 
-export async function createUser(userData: User): Promise<void> {
-  try {
-    console.log('Creating new user with userId:', userData.id);
-    const userRef = doc(db, 'users', userData.id);
-    await setDoc(userRef, userData);
-    console.log('User created successfully for userId:', userData.id);
-  } catch (error) {
-    console.error('Error creating user:', error);
-    throw error;
-  }
-}
+// ... [Other database operations]
 
 export async function getGameData(userId: string): Promise<GameData | null> {
   try {
@@ -69,7 +62,10 @@ export async function updateGameData(userId: string, gameData: Partial<GameData>
   try {
     console.log('Updating game data for userId:', userId);
     const gameDataRef = doc(db, 'gameData', userId);
-    await updateDoc(gameDataRef, gameData);
+    await updateDoc(gameDataRef, {
+      ...gameData,
+      lastUpdated: serverTimestamp()
+    });
     console.log('Game data updated successfully for userId:', userId);
   } catch (error) {
     console.error('Error updating game data:', error);
@@ -81,7 +77,11 @@ export async function createGameData(userId: string, gameData: GameData): Promis
   try {
     console.log('Creating game data for userId:', userId);
     const gameDataRef = doc(db, 'gameData', userId);
-    await setDoc(gameDataRef, gameData);
+    await setDoc(gameDataRef, {
+      ...gameData,
+      createdAt: serverTimestamp(),
+      lastUpdated: serverTimestamp()
+    });
     console.log('Game data created successfully for userId:', userId);
   } catch (error) {
     console.error('Error creating game data:', error);
@@ -104,4 +104,36 @@ export async function getLeaderboard(): Promise<User[]> {
   }
 }
 
+export async function createUser(userData: User): Promise<void> {
+  try {
+    console.log('Creating new user with userId:', userData.id);
+    const userRef = doc(db, 'users', userData.id);
+    await setDoc(userRef, {
+      ...userData,
+      createdAt: serverTimestamp(),
+      lastUpdated: serverTimestamp()
+    });
+    console.log('User created successfully for userId:', userData.id);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+}
+
+export async function updateUserCoins(userId: string, amount: number): Promise<void> {
+  try {
+    console.log(`Updating coins for userId: ${userId}, amount: ${amount}`);
+    const userRef = doc(db, 'users', userId);
+    await updateDoc(userRef, {
+      coins: amount,
+      lastUpdated: serverTimestamp()
+    });
+    console.log('Coins updated successfully for userId:', userId);
+  } catch (error) {
+    console.error('Error updating user coins:', error);
+    throw error;
+  }
+}
+
 export { db };
+
