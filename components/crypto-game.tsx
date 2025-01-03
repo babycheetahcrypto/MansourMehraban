@@ -6,14 +6,16 @@ import Wallet from '../components/wallet';
 import { TonConnectUI } from '@tonconnect/ui-react';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { User as UserType } from '@/types/user';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { CheckCircle } from 'lucide-react';
 import GamePopup from '../components/GamePopup';
 import { isMobile } from '../utils/deviceCheck';
 import PCMessage from '../components/PCMessage';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { getLeaderboard } from '@/lib/db';
 
 const preloadImages = (imageUrls: string[]) => {
@@ -683,6 +685,34 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   const [shownLevelUnlocks, setShownLevelUnlocks] = useState<Set<number>>(new Set());
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
 
+  const userRef = useMemo(() => (user.id ? doc(db, 'users', user.id) : null), [user.id]);
+
+  useEffect(() => {
+    if (userRef) {
+      const unsubscribe = onSnapshot(userRef, (doc) => {
+        if (doc.exists()) {
+          setUser(doc.data() as User);
+        }
+      });
+
+      return () => unsubscribe();
+    }
+  }, [userRef]);
+
+  useEffect(() => {
+    const saveInterval = setInterval(() => {
+      if (userRef) {
+        updateDoc(userRef, {
+          ...user,
+          lastUpdated: serverTimestamp(),
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(saveInterval);
+  }, [user, userRef]);
+
+
   const handleWalletConnect = useCallback(
     (address: string) => {
       setUser((prevUser) => ({
@@ -707,9 +737,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       ...trophies.map((trophy) => trophy.icon),
       ...shopItems.map((item) => item.image),
       ...premiumShopItems.map((item) => item.image),
-      // Add any other image URLs used in the game
     ];
-    // This ensures all images are preloaded in full quality
     preloadImages(allImageUrls);
   }, []);
 
@@ -1114,11 +1142,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       },
     },
   ]);
+
+
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<{ [key: number]: boolean }>({});
   const [secretCode, setSecretCode] = useState<string>('');
   const [currentTaskTab, setCurrentTaskTab] = useState<'active' | 'completed'>('active');
 
-  const vibrate = (pattern: number | number[]) => { // Added vibrate function
+  const vibrate = (pattern: number | number[]) => {
     if (typeof navigator !== 'undefined' && navigator.vibrate && vibrationEnabled) {
       navigator.vibrate(pattern);
     }
@@ -1200,7 +1230,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         }
       }
     },
-    [invitedFriends, user, saveUserData, user.telegramId]
+    [invitedFriends, user, saveUserData]
   );
 
   const level = useMemo(() => {
@@ -1363,7 +1393,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       hidePopup('pph');
       setLastActiveTime(Date.now());
     }
-  }, [pphAccumulated, user, saveUserData, user.telegramId]);
+  }, [pphAccumulated, user, saveUserData]);
 
   const claimNewLevel = useCallback(() => {
     setUser((prevUser) => ({
@@ -1418,7 +1448,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       vibrate([100, 50, 100]);
       showGameAlert('You have already claimed your daily reward today!');
     }
-  }, [dailyReward, user, saveUserData, user.telegramId, vibrationEnabled]);
+  }, [dailyReward, user, saveUserData, vibrationEnabled]);
   
   const buyPremiumItem = useCallback(
     async (item: PremiumShopItem) => {
@@ -1469,7 +1499,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         showGameAlert('Not enough coins!');
       }
     },
-    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, user.telegramId, vibrationEnabled]
+    [user, saveUserData, setUser, setPremiumShopItems, setClickPower, setCongratulationPopup, vibrationEnabled]
   );
 
 
@@ -1487,7 +1517,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         boosterCredits: prevUser.boosterCredits - 1,
       }));
-      saveUserData({...user, boosterCredits: user.boosterCredits -1, telegramId: user.telegramId}); // Added saveUserData call
+      saveUserData({...user, boosterCredits: user.boosterCredits -1, telegramId: user.telegramId});
       showGameAlert(
         `Activated 2x multiplier for 1 minute! Credits left: ${user.boosterCredits - 1}`
       );
@@ -1507,7 +1537,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
       showGameAlert(`Multiplier active for ${remainingMultiplier} more seconds.`);
     }
-  }, [user.boosterCredits, multiplierEndTime, user.telegramId]);
+  }, [user.boosterCredits, multiplierEndTime, user.telegramId, saveUserData]);
 
   const shareToSocialMedia = useCallback(
     (platform: string) => {
@@ -1984,10 +2014,10 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         ...prevUser,
         coins: prevUser.coins + profitPerHour / 3600,
       }));
-      saveUserData({...user, coins: user.coins + profitPerHour / 3600, telegramId: user.telegramId}); // Added saveUserData call
+      saveUserData({...user, coins: user.coins + profitPerHour / 3600, telegramId: user.telegramId});
     }, 1000); // Check every second
     return () => clearInterval(timer);
-  }, [maxEnergy, profitPerHour, user.telegramId]);
+  }, [maxEnergy, profitPerHour, user.telegramId, saveUserData]);
 
   // Show PPH popup
   useEffect(() => {
@@ -2031,21 +2061,21 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           const completed = newProgress >= 10;
           if (completed && !task.completed) {
             setUser((u) => ({ ...u, coins: u.coins + task.reward }));
-            saveUserData({...user, coins: user.coins + task.reward, telegramId: user.telegramId}); // Added saveUserData call
+            saveUserData({...user, coins: user.coins + task.reward, telegramId: user.telegramId});
           }
           return { ...task, progress: newProgress, completed };
         }
         return task;
       })
     );
-  }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks, user.telegramId]);
+  }, [level, user.level, user.coins, unlockedLevels, activePopups, shownLevelUnlocks, user.telegramId, saveUserData]);
 
 
   const renderHome = () => (
     <div className="flex flex-col items-center justify-between h-full p-4 relative overflow-hidden">
       <div className="w-full max-w-md flex flex-col justify-between h-full">
         <div>
-          <div className="flex space-x-2 mb-1 w-full"> {/* Reduced margin-bottom */}
+          <div className="flex space-x-2 mb-1 w-full">
             <div className="flex-1 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl p-2 backdrop-blur-md flex flex-col justify-center">
               <div className="flex justify-between items-center mb-1">
                 <div className="flex items-center">
@@ -2120,7 +2150,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 mb-2"> {/* Reduced margin-bottom */}
+          <div className="flex items-center justify-center gap-2 mb-2">
             <h1
               className={`font-black text-white font-extrabold overflow-hidden ${formatNumber(user.coins, false).length > 7 ? 'text-4xl' : 'text-5xl'}`}
             >
@@ -2177,7 +2207,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
           </button>
         </div>
 
-        <div className="w-full mb-1"> {/* Reduced bottom margin */}
+        <div className="w-full mb-1">
           <div className="w-full mb-1">
             <div className="flex justify-between text-sm mb-2 text-white font-bold">
               <span className="font-bold flex items-center gap-2">
