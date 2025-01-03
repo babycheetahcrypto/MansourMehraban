@@ -14,13 +14,12 @@ export interface GameData {
   premiumShopItems: any[];
   tasks: any[];
   dailyReward: {
-    lastClaimed: string;
+    lastClaimed: string | null;
     streak: number;
     day: number;
     completed: boolean;
   };
-  multiplierEndTime: string;
-  boosterCooldown: string;
-  lastBoosterReset: string;
+  multiplierEndTime: string | null;
+  boosterCooldown: string | null;
+  lastBoosterReset: string | null;
 }
-
