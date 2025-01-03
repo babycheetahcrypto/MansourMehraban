@@ -37,7 +37,21 @@ export async function updateUser(userId: string, userData: Partial<User>): Promi
   }
 }
 
-// ... [Other database operations]
+export async function createUser(userData: User): Promise<void> {
+  try {
+    console.log('Creating new user with userId:', userData.id);
+    const userRef = doc(db, 'users', userData.id);
+    await setDoc(userRef, {
+      ...userData,
+      createdAt: serverTimestamp(),
+      lastUpdated: serverTimestamp()
+    });
+    console.log('User created successfully for userId:', userData.id);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+}
 
 export async function getGameData(userId: string): Promise<GameData | null> {
   try {
@@ -101,37 +115,6 @@ export async function getLeaderboard(): Promise<User[]> {
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     return [];
-  }
-}
-
-export async function createUser(userData: User): Promise<void> {
-  try {
-    console.log('Creating new user with userId:', userData.id);
-    const userRef = doc(db, 'users', userData.id);
-    await setDoc(userRef, {
-      ...userData,
-      createdAt: serverTimestamp(),
-      lastUpdated: serverTimestamp()
-    });
-    console.log('User created successfully for userId:', userData.id);
-  } catch (error) {
-    console.error('Error creating user:', error);
-    throw error;
-  }
-}
-
-export async function updateUserCoins(userId: string, amount: number): Promise<void> {
-  try {
-    console.log(`Updating coins for userId: ${userId}, amount: ${amount}`);
-    const userRef = doc(db, 'users', userId);
-    await updateDoc(userRef, {
-      coins: amount,
-      lastUpdated: serverTimestamp()
-    });
-    console.log('Coins updated successfully for userId:', userId);
-  } catch (error) {
-    console.error('Error updating user coins:', error);
-    throw error;
   }
 }
 

@@ -1609,6 +1609,13 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   
 
     useEffect(() => {
+      if (userData) {
+        setUser(userData);
+      }
+    }, [userData]);
+
+
+    useEffect(() => {
       if (connected && wallet) {
         console.log('Wallet connected:', wallet.address);
         // You can update the user data or perform any other actions here
