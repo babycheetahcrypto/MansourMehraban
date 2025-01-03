@@ -53,74 +53,76 @@ Start earning today and be part of the next big upcoming airdrop. ✨
 Stay fast, stay fierce, stay Baby Cheetah! 🌟
 `;
 
-  try {
-    let user = await getUserData(telegramUser.id.toString());
+try {
+  let user = await getUserData(telegramUser.id.toString());
 
-    if (!user) {
-      console.log('Creating new user:', telegramUser.id);
-      const newUser: User = {
-        id: telegramUser.id.toString(),
-        telegramId: telegramUser.id.toString(),
-        username: telegramUser.username || `user${telegramUser.id}`,
-        firstName: telegramUser.first_name,
-        lastName: telegramUser.last_name,
-        coins: 0,
-        level: 1,
-        exp: 0,
-        profilePhoto: '',
-        clickPower: 1,
-        energy: 2000,
-        multiplier: 1,
-        profitPerHour: 0,
-        boosterCredits: 1,
-        unlockedLevels: [1],
-        pphAccumulated: 0,
-        selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
-        friendsCoins: {},
-        shopItems: [],
-        premiumShopItems: [],
-        tasks: [],
-        dailyReward: {
-          lastClaimed: null,
-          streak: 0,
-          day: 1,
-          completed: false,
-        },
-        multiplierEndTime: null,
-        boosterCooldown: null,
-        lastBoosterReset: null,
-      };
-      await saveUserData(newUser.id, newUser);
-      user = newUser;
+  if (!user) {
+    console.log('Creating new user:', telegramUser.id);
+    const now = new Date().toISOString();
+    const newUser: User = {
+      id: telegramUser.id.toString(),
+      telegramId: telegramUser.id.toString(),
+      username: telegramUser.username || `user${telegramUser.id}`,
+      firstName: telegramUser.first_name,
+      lastName: telegramUser.last_name,
+      coins: 0,
+      level: 1,
+      exp: 0,
+      profilePhoto: '',
+      clickPower: 1,
+      energy: 2000,
+      multiplier: 1,
+      profitPerHour: 0,
+      boosterCredits: 1,
+      unlockedLevels: [1],
+      pphAccumulated: 0,
+      selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+      friendsCoins: {},
+      shopItems: [],
+      premiumShopItems: [],
+      tasks: [],
+      dailyReward: {
+        lastClaimed: now,
+        streak: 0,
+        day: 1,
+        completed: false,
+      },
+      multiplierEndTime: now,
+      boosterCooldown: now,
+      lastBoosterReset: now,
+    };
+    await saveUserData(newUser.id, newUser);
+    user = newUser;
 
-      console.log('Creating initial game data for user:', telegramUser.id);
-      const initialGameData: GameData = {
-        userId: user.id,
-        level: 1,
-        exp: 0,
-        clickPower: 1,
-        energy: 2000,
-        multiplier: 1,
-        profitPerHour: 0,
-        boosterCredits: 1,
-        unlockedLevels: [1],
-        pphAccumulated: 0,
-        selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
-        shopItems: [],
-        premiumShopItems: [],
-        tasks: [],
-        dailyReward: {
-          lastClaimed: null,
-          streak: 0,
-          day: 1,
-          completed: false,
-        },
-        multiplierEndTime: null,
-        boosterCooldown: null,
-        lastBoosterReset: null,
-      };
-      await saveGameData(user.id, initialGameData);
-    }
+    console.log('Creating initial game data for user:', telegramUser.id);
+    const initialGameData: GameData = {
+      userId: user.id,
+      level: 1,
+      exp: 0,
+      clickPower: 1,
+      energy: 2000,
+      multiplier: 1,
+      profitPerHour: 0,
+      boosterCredits: 1,
+      unlockedLevels: [1],
+      pphAccumulated: 0,
+      selectedCoinImage: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broke%20Cheetah-FBrjrv6G0CRgHFPjLh3I4l3RGMONVS.png',
+      shopItems: [],
+      premiumShopItems: [],
+      tasks: [],
+      dailyReward: {
+        lastClaimed: now,
+        streak: 0,
+        day: 1,
+        completed: false,
+      },
+      multiplierEndTime: now,
+      boosterCooldown: now,
+      lastBoosterReset: now,
+    };
+    await saveGameData(user.id, initialGameData);
+  }
+
 
     const gameUrl = `${process.env.NEXT_PUBLIC_WEBAPP_URL}?startapp=${telegramUser.id}`;
     console.log('Game URL:', gameUrl);

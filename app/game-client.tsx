@@ -27,6 +27,8 @@ export default function GameClient() {
       let user = await getUser(userId);
       let game = await getGameData(userId);
 
+      const currentTime = new Date().toISOString();
+
       if (!user) {
         console.log('Creating new user:', userId);
         const newUser: User = {
@@ -50,14 +52,14 @@ export default function GameClient() {
           premiumShopItems: [],
           tasks: [],
           dailyReward: {
-            lastClaimed: null,
+            lastClaimed: currentTime,
             streak: 0,
             day: 1,
             completed: false,
           },
-          multiplierEndTime: null,
-          boosterCooldown: null,
-          lastBoosterReset: null,
+          multiplierEndTime: currentTime,
+          boosterCooldown: currentTime,
+          lastBoosterReset: currentTime,
         };
         await createUser(newUser);
         user = newUser;
@@ -81,14 +83,14 @@ export default function GameClient() {
           premiumShopItems: [],
           tasks: [],
           dailyReward: {
-            lastClaimed: null,
+            lastClaimed: currentTime,
             streak: 0,
             day: 1,
             completed: false,
           },
-          multiplierEndTime: null,
-          boosterCooldown: null,
-          lastBoosterReset: null,
+          multiplierEndTime: currentTime,
+          boosterCooldown: currentTime,
+          lastBoosterReset: currentTime,
         };
         await createGameData(userId, initialGameData);
         game = initialGameData;
@@ -103,13 +105,33 @@ export default function GameClient() {
 
       const unsubscribeUser = onSnapshot(userDocRef, (doc) => {
         if (doc.exists()) {
-          setUserData(doc.data() as User);
+          const userData = doc.data() as User;
+          setUserData({
+            ...userData,
+            dailyReward: {
+              ...userData.dailyReward,
+              lastClaimed: userData.dailyReward.lastClaimed || currentTime,
+            },
+            multiplierEndTime: userData.multiplierEndTime || currentTime,
+            boosterCooldown: userData.boosterCooldown || currentTime,
+            lastBoosterReset: userData.lastBoosterReset || currentTime,
+          });
         }
       });
 
       const unsubscribeGame = onSnapshot(gameDataRef, (doc) => {
         if (doc.exists()) {
-          setGameData(doc.data() as GameData);
+          const gameData = doc.data() as GameData;
+          setGameData({
+            ...gameData,
+            dailyReward: {
+              ...gameData.dailyReward,
+              lastClaimed: gameData.dailyReward.lastClaimed || currentTime,
+            },
+            multiplierEndTime: gameData.multiplierEndTime || currentTime,
+            boosterCooldown: gameData.boosterCooldown || currentTime,
+            lastBoosterReset: gameData.lastBoosterReset || currentTime,
+          });
         }
       });
 

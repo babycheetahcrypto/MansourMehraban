@@ -613,7 +613,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     premiumShopItems: [],
     tasks: [],
     dailyReward: {
-      lastClaimed: null,
+      lastClaimed: new Date().toISOString(),
       streak: 0,
       day: 1,
       completed: false,
@@ -624,13 +624,14 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     energy: 2000,
     pphAccumulated: 0,
     multiplier: 1,
-    multiplierEndTime: null,
-    boosterCooldown: null,
+    multiplierEndTime: new Date().toISOString(),
+    boosterCooldown: new Date().toISOString(),
     selectedCoinImage: levelImages[0],
     profitPerHour: 0,
     boosterCredits: 1,
-    lastBoosterReset: null,
+    lastBoosterReset: new Date().toISOString(),
   });
+
 
   const [error, setError] = useState<string | null>(null);
   const [leaderboard, setLeaderboard] = useState<User[]>([]);
@@ -666,8 +667,8 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
     completed: false,
   });
   const [multiplier, setMultiplier] = useState(1);
-  const [multiplierEndTime, setMultiplierEndTime] = useState<number | null>(null);
-  const [boosterCooldown, setBoosterCooldown] = useState<number | null>(null);
+  const [multiplierEndTime, setMultiplierEndTime] = useState<string>(user.multiplierEndTime);
+  const [boosterCooldown, setBoosterCooldown] = useState<string>(user.boosterCooldown);
   const [selectedCoinImage, setSelectedCoinImage] = useState(levelImages[0]);
   const [friendsCoins, setFriendsCoins] = useState<{ [key: string]: number }>({});
   const [congratulationPopup, setCongratulationPopup] = useState({
@@ -1314,7 +1315,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         // Send tap data to Telegram Mini App
         if (window.Telegram && window.Telegram.WebApp) {
           window.Telegram.WebApp.sendData(
-            JSON.stringify({ action: 'tap', amount: clickPower * multiplier })
+            JSON.stringify({ action: 'tap', amount: clickValue })
           );
         }
       }
@@ -1406,49 +1407,51 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const claimDailyReward = useCallback(() => {
     const now = new Date();
-    const lastClaimed = dailyReward.lastClaimed;
+    const lastClaimed = new Date(user.dailyReward.lastClaimed);
   
     if (
-      !dailyReward.completed &&
-      (!lastClaimed ||
-        now.getDate() !== lastClaimed.getDate() ||
+      !user.dailyReward.completed &&
+      (now.getDate() !== lastClaimed.getDate() ||
         now.getMonth() !== lastClaimed.getMonth() ||
         now.getFullYear() !== lastClaimed.getFullYear())
     ) {
       vibrate([50, 100, 50]);
   
       const newStreak =
-        lastClaimed && (now.getTime() - lastClaimed.getTime()) / (1000 * 60 * 60 * 24) <= 1
-          ? dailyReward.streak + 1
+        (now.getTime() - lastClaimed.getTime()) / (1000 * 60 * 60 * 24) <= 1
+          ? user.dailyReward.streak + 1
           : 1;
       const reward = getDailyReward(newStreak);
   
       setUser((prevUser) => ({
         ...prevUser,
         coins: prevUser.coins + reward,
+        dailyReward: {
+          ...prevUser.dailyReward,
+          lastClaimed: now.toISOString(),
+          streak: newStreak,
+          day: (prevUser.dailyReward.day % 12) + 1,
+          completed: (prevUser.dailyReward.day % 12) + 1 === 1,
+        },
       }));
-      saveUserData({...user, coins: user.coins + reward, telegramId: user.telegramId});
-  
-      const newDay = (dailyReward.day % 12) + 1;
-      const completed = newDay === 1;
-  
-      setDailyReward({
-        lastClaimed: now,
+      saveUserData({...user, coins: user.coins + reward, dailyReward: {
+        lastClaimed: now.toISOString(),
         streak: newStreak,
-        day: newDay,
-        completed: completed,
-      });
+        day: (user.dailyReward.day % 12) + 1,
+        completed: (user.dailyReward.day % 12) + 1 === 1,
+      }, telegramId: user.telegramId});
   
       showGameAlert(
         `Claimed daily reward: ${formatNumber(reward)} Coins! Streak: ${newStreak} days`
       );
-    } else if (dailyReward.completed) {
+    } else if (user.dailyReward.completed) {
       showGameAlert('You have completed the 12-day reward cycle!');
     } else {
       vibrate([100, 50, 100]);
       showGameAlert('You have already claimed your daily reward today!');
     }
-  }, [dailyReward, user, saveUserData, vibrationEnabled]);
+  }, [user, saveUserData, vibrationEnabled]);
+
   
   const buyPremiumItem = useCallback(
     async (item: PremiumShopItem) => {
@@ -1509,15 +1512,16 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
   };
 
   const activateMultiplier = useCallback(() => {
-    if (user.boosterCredits > 0 && !multiplierEndTime) {
+    if (user.boosterCredits > 0 && new Date(user.multiplierEndTime) <= new Date()) {
       setMultiplier(2);
-      const endTime = Date.now() + 1 * 60 * 1000; // 1 minute
-      setMultiplierEndTime(endTime);
+      const endTime = new Date(Date.now() + 1 * 60 * 1000); // 1 minute
+      setMultiplierEndTime(endTime.toISOString());
       setUser((prevUser) => ({
         ...prevUser,
         boosterCredits: prevUser.boosterCredits - 1,
+        multiplierEndTime: endTime.toISOString(),
       }));
-      saveUserData({...user, boosterCredits: user.boosterCredits -1, telegramId: user.telegramId});
+      saveUserData({...user, boosterCredits: user.boosterCredits - 1, multiplierEndTime: endTime.toISOString(), telegramId: user.telegramId});
       showGameAlert(
         `Activated 2x multiplier for 1 minute! Credits left: ${user.boosterCredits - 1}`
       );
@@ -1525,7 +1529,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       const cooldownTimer = setTimeout(
         () => {
           setMultiplier(1);
-          setMultiplierEndTime(null);
+          setMultiplierEndTime(new Date().toISOString());
         },
         1 * 60 * 1000
       );
@@ -1533,11 +1537,12 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
       return () => clearTimeout(cooldownTimer);
     } else if (user.boosterCredits === 0) {
       showGameAlert('No booster credits left. Wait for daily reset.');
-    } else if (multiplierEndTime) {
-      const remainingMultiplier = Math.ceil((multiplierEndTime - Date.now()) / 1000);
+    } else if (new Date(user.multiplierEndTime) > new Date()) {
+      const remainingMultiplier = Math.ceil((new Date(user.multiplierEndTime).getTime() - Date.now()) / 1000);
       showGameAlert(`Multiplier active for ${remainingMultiplier} more seconds.`);
     }
-  }, [user.boosterCredits, multiplierEndTime, user.telegramId, saveUserData]);
+  }, [user.boosterCredits, user.multiplierEndTime, user.telegramId, saveUserData]);
+
 
   const shareToSocialMedia = useCallback(
     (platform: string) => {
@@ -2282,7 +2287,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
               />
               <span className="font-bold">
                 {multiplierEndTime
-                  ? `Active (${Math.ceil((multiplierEndTime - Date.now()) / 1000)}s)`
+                  ? `Active (${Math.ceil((new Date(user.multiplierEndTime).getTime() - Date.now()) / 1000)}s)`
                   : user.boosterCredits === 0
                     ? 'No credits'
                     : `Booster (${user.boosterCredits})`}
@@ -3383,7 +3388,7 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
 
   const resetBoosterCredits = useCallback(() => {
     const now = new Date();
-    const lastReset = new Date(user.lastBoosterReset || 0);
+    const lastReset = new Date(user.lastBoosterReset);
     if (
       now.getDate() !== lastReset.getDate() ||
       now.getMonth() !== lastReset.getMonth() ||
@@ -3394,8 +3399,9 @@ const CryptoGame: React.FC<CryptoGameProps> = ({ userData, onCoinsUpdate, saveUs
         boosterCredits: 3,
         lastBoosterReset: now.toISOString(),
       }));
+      saveUserData({...user, boosterCredits: 3, lastBoosterReset: now.toISOString(), telegramId: user.telegramId});
     }
-  }, [user.lastBoosterReset]);
+  }, [user.lastBoosterReset, saveUserData, user]);
 
   useEffect(() => {
     resetBoosterCredits();
