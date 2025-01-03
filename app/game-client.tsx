@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { User } from '@/types/user';
 import { GameData } from '@/types/game-data';
 import { db } from '@/lib/firebase';
@@ -16,14 +17,11 @@ const CryptoGame = dynamic(() => import('@/components/crypto-game'), {
   onCoinsUpdate: (amount: number) => Promise<void>;
   saveUserData: (userData: Partial<User>) => Promise<void>;
   saveGameData: (gameData: Partial<GameData>) => Promise<void>;
-  totalClicks: number;
-  onClick: () => void;
 }>;
 
 export default function GameClient() {
   const [userData, setUserData] = useState<User | null>(null);
   const [gameData, setGameData] = useState<GameData | null>(null);
-  const [totalClicks, setTotalClicks] = useState(0);
 
   const fetchUserData = useCallback(async (userId: string) => {
     try {
@@ -181,11 +179,6 @@ export default function GameClient() {
     await saveUserData({ coins: updatedCoins });
   };
 
-  const handleClick = useCallback(() => {
-    setTotalClicks(prevClicks => prevClicks + 1);
-    // Add any additional click logic here
-  }, []);
-
   return (
     <CryptoGame 
       userData={userData}
@@ -193,8 +186,6 @@ export default function GameClient() {
       onCoinsUpdate={handleCoinsUpdate}
       saveUserData={saveUserData}
       saveGameData={saveGameData}
-      totalClicks={totalClicks}
-      onClick={handleClick}
     />
   );
 }
